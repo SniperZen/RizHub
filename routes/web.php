@@ -45,6 +45,8 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::get('/challenge', [StudentController::class, 'challenge'])->name('challenge');
     // Route::get('/dashboard', [StudentController::class, 'dashh'])->name('student.dashhboard');
     Route::get('/videos/{id}', [VideoController::class, 'show']);
+    Route::get('/guess-characters', [StudentController::class, 'GuessCharacterPicker']);
+    Route::get('/guess-characters', [StudentController::class, 'guessCharacters'])->name('guess-characters');
 
 });
 

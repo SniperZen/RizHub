@@ -82,6 +82,16 @@ class StudentController extends Controller
         ]);
     }
 
+    public function guessCharacters()
+    {
+        $characters = \App\Models\GuessCharacter::all(); // Example fetch
+        return Inertia::render('Challenge/GuessCharacter/page', [
+            'characters' => $characters
+        ]);
+    }
+
+
+
     public function updateAudioSettings(Request $request)
     {
         $user = Auth::user();
@@ -120,5 +130,14 @@ class StudentController extends Controller
     {
         $video = Video::findOrFail($id);
         return view('video-player', compact('video'));
+    }
+
+    public function GuessCharacterPicker()
+    {
+        $characters = GuessCharacter::all();
+
+        return Inertia::render('GuessCharacterPicker', [
+            'characters' => $characters
+        ]);
     }
 }

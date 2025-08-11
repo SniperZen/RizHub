@@ -117,6 +117,10 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
         window.location.href = `/challenge?page=${currentPage + 1}`;
     };
 
+    const handleProceed = () => {
+        router.visit(route('guess-characters')); 
+    };
+
     const handlePreviousPage = () => {
         window.location.href = `/challenge?page=${currentPage - 1}`;
     };
@@ -136,7 +140,7 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
     const openVideoModal = (kabanataId: number) => {
         const src = `/Video/K${kabanataId}.mp4`;
         setCurrentVideo(src);
-        setLastPlayedVideo(src); 
+        setLastPlayedVideo(src);
         setIsModalOpen(true);
         pauseBackgroundMusic();
     };
@@ -161,7 +165,7 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
     const proceedNext = () => {
         setShowEndModal(false);
         resumeBackgroundMusic();
-        handleNextPage();
+        handleProceed();
     };
 
 
@@ -246,7 +250,8 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                     <VideoModal
                         videoSrc={currentVideo}
                         onClose={closeModal}
-                        onVideoEnd={handleVideoEnded} // detect when ended
+                        onVideoEnd={handleVideoEnded}
+                        skippable={true} 
                     />
                 )}
 
