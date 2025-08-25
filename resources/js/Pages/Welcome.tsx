@@ -162,7 +162,7 @@ export default function Welcome({ auth }: PageProps) {
                             imgSrc="/Img/LandingPage/character/char-7.png"
                         />
                         <CharacterCard
-                            name="Teneyente Guevarra"
+                            name="Tenyente Guevarra"
                             detail="Si Tenyente Guevarra ay isang matapat na tenyente ng mga guwardiya sibil."
                             imgSrc="/Img/LandingPage/character/char-8.png"
                         />
