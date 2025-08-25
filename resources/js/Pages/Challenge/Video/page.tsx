@@ -4,7 +4,9 @@ interface VideoModalProps {
     videoSrc: string;
     onClose: () => void;
     onVideoEnd?: () => void;
+    onSkip?: () => void;
     skippable?: boolean;
+    showSkipOption?: boolean;
 }
 
 const VideoModal: React.FC<VideoModalProps> = ({
@@ -12,6 +14,8 @@ const VideoModal: React.FC<VideoModalProps> = ({
     onClose,
     onVideoEnd,
     skippable = true,
+    showSkipOption = false,
+    onSkip
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoDuration, setVideoDuration] = useState<number>(0);
@@ -23,7 +27,6 @@ const VideoModal: React.FC<VideoModalProps> = ({
         }
     }, []);
 
-    // Store duration when it's loaded
     const handleLoadedMetadata = () => {
         if (videoRef.current) {
             setVideoDuration(videoRef.current.duration);
@@ -31,39 +34,41 @@ const VideoModal: React.FC<VideoModalProps> = ({
     };
 
     const handleSkip = () => {
-        if (onVideoEnd) onVideoEnd();
+        if (onSkip) onSkip();
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
-            <div className="relative max-w-4xl w-full">
-                <video
-                    ref={videoRef}
-                    src={videoSrc}
-                    controls
-                    className="w-full rounded-lg"
-                    onLoadedMetadata={handleLoadedMetadata}
-                    onEnded={onVideoEnd}
-                />
+        <div className="fixed inset-0 bg-black z-50">
+            <video
+                ref={videoRef}
+                src={videoSrc}
+                controls
+                autoPlay
+                className="w-screen h-screen object-cover"
+                onLoadedMetadata={handleLoadedMetadata}
+                onEnded={onVideoEnd}
+                style={{
+                    filter: "grayscale(100%)",
+                }}
+            />
 
-                {/* Close button */}
+            {/* Close button */}
+            <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75 z-10"
+            >
+                ✕
+            </button>
+
+            {/* Skip button */}
+            {(showSkipOption || skippable) && (
                 <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-white text-2xl bg-black bg-opacity-50 rounded-full px-3 py-1 hover:bg-opacity-75"
+                    onClick={handleSkip}
+                    className="absolute bottom-6 right-6 text-white bg-black bg-opacity-50 rounded-md px-4 py-2 text-lg font-semibold hover:bg-opacity-75 transition z-10"
                 >
-                    ✕
+                    Skip
                 </button>
-
-                {/* Skip button */}
-                {skippable && (
-                    <button
-                        onClick={handleSkip}
-                        className="absolute bottom-4 right-4 text-white bg-black bg-opacity-50 rounded-md px-4 py-2 text-lg font-semibold hover:bg-opacity-75 transition"
-                    >
-                        Skip
-                    </button>
-                )}
-            </div>
+            )}
         </div>
     );
 };
