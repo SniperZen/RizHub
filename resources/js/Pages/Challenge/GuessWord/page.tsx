@@ -168,7 +168,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 total_score: score,
                 is_correct: false,
             });
-            setTimeLeft((prev) => Math.max(prev - 50, 0));
+            setTimeLeft((prev) => Math.max(prev - 5, 0));
             setPenalty(-5);
 
             setTimeout(() => setPenalty(null), 1000);
