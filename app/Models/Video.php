@@ -9,15 +9,23 @@ class Video extends Model
 {
     use HasFactory;
 
+    // Disable auto-incrementing since we're using kabanata IDs as video IDs
+    public $incrementing = false;
+    
+    // Set the key type to integer
+    protected $keyType = 'int';
+    
     protected $fillable = [
+        'id',
         'title',
-        'description',
         'file_path',
         'duration',
+        'kabanata_id' 
     ];
 
-    public function progress()
+    // Relationship to kabanata (using kabanata_id column)
+    public function kabanata()
     {
-        return $this->hasMany(VideoProgress::class);
+        return $this->belongsTo(Kabanata::class, 'kabanata_id');
     }
 }
