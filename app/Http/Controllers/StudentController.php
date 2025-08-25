@@ -300,10 +300,19 @@ class StudentController extends Controller
     public function Quiz($kabanataId)
     {
         $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
+
+        $kabanata = Kabanata::findOrFail($kabanataId);
+
+        $kabanataProgress = UserKabanataProgress::firstOrCreate([
+            'user_id' => auth()->id(),
+            'kabanata_id' => $kabanataId,
+        ]);
         
         return Inertia::render('Challenge/Quiz/page', [
             'kabanataId' => (int) $kabanataId,
             'quizzes' => $quizzes,
+            'kabanata_number' => $kabanata->number ?? $kabanata->id, 
+            'kabanata_title' => $kabanata->title,
         ]);
     }
 
