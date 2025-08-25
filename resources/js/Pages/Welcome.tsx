@@ -152,32 +152,33 @@ export default function Welcome({ auth }: PageProps) {
                         />
                         <CharacterCard
                             name="Padre Damaso"
-                            detail="Si Padre Damaso ay isang paring Pransiskano..."
+                            detail="Si Padre Damaso ay isang paring Pransiskano na matapos maglingkod nang mahabang panahon sa San Diego ay naipalipat sa ibang parokya. Siya ang tunay na ama ni Maria Clara."
                             imgSrc="/Img/LandingPage/character/char-3.png"
                         />
                         <CharacterCard
                             name="Crispin"
-                            detail="Si Crispin ay nakababatang anak ni Sisa..."
+                            detail="Si Crispin ay nakababatang anak ni Sisa. Siya ay isang sakristan at tagatugtog ng kampana sa simbahan ng San Diego."
                             imgSrc="/Img/LandingPage/character/char-4.png"
                         />
                         <CharacterCard
                             name="Sisa"
-                            detail="Si Sisa ay ina nina Crispin at Basilio..."
+                            detail="Si Sisa ay ina nina Crispin at Basilio. Siya ay martir na asawa ni Pedro na pabaya at malupit sa kanyang pamilya."
                             imgSrc="/Img/LandingPage/character/char-5.png"
                         />
                         <CharacterCard
                             name="Padre Salvi"
-                            detail="Si Padre Salvi ay humalili kay Padre Damaso..."
+                            detail="Si Padre Salvi ay humalili kay Padre Damaso bilang pari ng San Diego. 
+Siya ay may lihim na pagsinta kay Maria Clara."
                             imgSrc="/Img/LandingPage/character/char-6.png"
                         />
                         <CharacterCard
                             name="Kapitan Heneral"
-                            detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan..."
+                            detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan sa Pilipinas. Siya ang lumakad na maalisan ng pagka-ekskomunyon si Ibarra."
                             imgSrc="/Img/LandingPage/character/char-7.png"
                         />
                         <CharacterCard
-                            name="Teneyente Guevarra"
-                            detail="Si Tenyente Guevarra ay isang matapat na tenyente..."
+                            name="Tenyente Guevarra"
+                            detail="Si Tenyente Guevarra ay isang matapat na tenyente ng mga guwardiya sibil."
                             imgSrc="/Img/LandingPage/character/char-8.png"
                         />
                     </div>

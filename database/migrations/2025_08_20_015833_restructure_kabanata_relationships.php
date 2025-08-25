@@ -12,6 +12,9 @@ return new class extends Migration
         // First, drop existing foreign keys if they exist
         $this->dropExistingForeignKeys();
 
+        // Add missing columns before adding foreign keys
+        $this->addMissingColumns();
+
         // Then add all foreign keys
         $this->addAllForeignKeys();
     }
@@ -19,6 +22,7 @@ return new class extends Migration
     public function down()
     {
         $this->dropAllForeignKeys();
+        $this->removeAddedColumns();
     }
 
     private function dropExistingForeignKeys()
@@ -61,6 +65,30 @@ return new class extends Migration
         }
     }
 
+    private function addMissingColumns()
+    {
+        // Add kabanata_progress_id to video_progress table if it doesn't exist
+        if (Schema::hasTable('video_progress') && !Schema::hasColumn('video_progress', 'kabanata_progress_id')) {
+            Schema::table('video_progress', function (Blueprint $table) {
+                $table->unsignedBigInteger('kabanata_progress_id')->nullable()->after('user_id');
+            });
+        }
+
+        // Add kabanata_id to video_progress table if it doesn't exist
+        if (Schema::hasTable('video_progress') && !Schema::hasColumn('video_progress', 'kabanata_id')) {
+            Schema::table('video_progress', function (Blueprint $table) {
+                $table->unsignedBigInteger('kabanata_id')->nullable()->after('user_id');
+            });
+        }
+
+        // Add kabanata_id to guesscharacters table if it doesn't exist
+        if (Schema::hasTable('guesscharacters') && !Schema::hasColumn('guesscharacters', 'kabanata_id')) {
+            Schema::table('guesscharacters', function (Blueprint $table) {
+                $table->unsignedBigInteger('kabanata_id')->nullable();
+            });
+        }
+    }
+
     private function addAllForeignKeys()
     {
         // Videos table
@@ -94,11 +122,6 @@ return new class extends Migration
         // Video progress table
         if (Schema::hasTable('video_progress')) {
             Schema::table('video_progress', function (Blueprint $table) {
-                // Add kabanata_id if not exists
-                if (!Schema::hasColumn('video_progress', 'kabanata_id')) {
-                    $table->unsignedBigInteger('kabanata_id')->nullable()->after('user_id');
-                }
-                
                 $table->foreign('kabanata_id')->references('id')->on('kabanatas')->onDelete('cascade');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                 $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
@@ -169,6 +192,30 @@ return new class extends Migration
                     }
                 });
             }
+        }
+    }
+
+    private function removeAddedColumns()
+    {
+        // Remove kabanata_progress_id from video_progress table if it was added
+        if (Schema::hasTable('video_progress') && Schema::hasColumn('video_progress', 'kabanata_progress_id')) {
+            Schema::table('video_progress', function (Blueprint $table) {
+                $table->dropColumn('kabanata_progress_id');
+            });
+        }
+
+        // Remove kabanata_id from video_progress table if it was added
+        if (Schema::hasTable('video_progress') && Schema::hasColumn('video_progress', 'kabanata_id')) {
+            Schema::table('video_progress', function (Blueprint $table) {
+                $table->dropColumn('kabanata_id');
+            });
+        }
+
+        // Remove kabanata_id from guesscharacters table if it was added
+        if (Schema::hasTable('guesscharacters') && Schema::hasColumn('guesscharacters', 'kabanata_id')) {
+            Schema::table('guesscharacters', function (Blueprint $table) {
+                $table->dropColumn('kabanata_id');
+            });
         }
     }
 
