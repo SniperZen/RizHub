@@ -6,6 +6,7 @@ interface ModalProps {
   title: string;
   content: string;
   buttonText?: string;
+  bgImage?: string;
 }
 
 const InstructionModal: React.FC<ModalProps> = ({
@@ -14,6 +15,7 @@ const InstructionModal: React.FC<ModalProps> = ({
   title,
   content,
   buttonText = "Start Challenge",
+  bgImage = "/Img/Challenge/GuessChar/BG.png",
 }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [index, setIndex] = useState(0);
@@ -41,7 +43,7 @@ const InstructionModal: React.FC<ModalProps> = ({
     <div
       className="fixed inset-0 flex items-center justify-center z-50"
       style={{
-        backgroundImage: "url('/Img/Challenge/GuessChar/BG.png')",
+        backgroundImage: `url('${bgImage}')`, 
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

@@ -64,34 +64,30 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     // Timer draining
     useEffect(() => {
         if (instructionIndex < instructions.length) return;
-
+        if (!gameActive || isGameOver) return;
         if (timerRef.current) {
             clearInterval(timerRef.current);
-            timerRef.current = null;
         }
 
-        if (gameActive && !isGameOver && timeLeft > 0) {
-            timerRef.current = setInterval(() => {
-                setTimeLeft((prev) => {
-                    const newTime = +(prev - 0.05).toFixed(2);
-                    if (newTime <= 0) {
-                        if (timerRef.current) clearInterval(timerRef.current);
-                        setShowModal("timesup");
-                        setGameActive(false);
-                        return 0;
-                    }
-                    return newTime;
-                });
-            }, 50);
-
-            return () => {
-                if (timerRef.current) {
-                    clearInterval(timerRef.current);
-                    timerRef.current = null;
+        timerRef.current = setInterval(() => {
+            setTimeLeft((prev) => {
+                const newTime = +(prev - 0.05).toFixed(2);
+                if (newTime <= 0) {
+                    clearInterval(timerRef.current!);
+                    setShowModal("timesup");
+                    setGameActive(false);
+                    return 0;
                 }
-            };
-        }
-    }, [timeLeft, isGameOver, instructionIndex, gameActive]);
+                return newTime;
+            });
+        }, 50);
+
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+        };
+    }, [gameActive, isGameOver, instructionIndex]); 
 
     useEffect(() => {
         if (!gameActive) return;
@@ -272,6 +268,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 title={instructions[instructionIndex].title}
                 content={instructions[instructionIndex].content}
                 buttonText={instructions[instructionIndex].buttonText}
+                bgImage="/Img/Challenge/GuessWord/BG.png"
             />
         ) : (
 
