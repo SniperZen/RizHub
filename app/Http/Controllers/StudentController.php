@@ -9,16 +9,25 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvitationMail;
 use App\Models\Kabanata;
+use App\Models\GuessCharacter; 
+use App\Models\GuessWord; 
+use App\Models\GuessWordProgress;
+use App\Models\Quiz;
+use App\Models\QuizProgress;
+use App\Models\UserKabanataProgress;
+use App\Models\VideoProgress;
+use App\Models\Video;
+use App\Models\ImageGallery;
 
 class StudentController extends Controller
 {
     public function dash() {
         $user = Auth::user();
         return Inertia::render('Dashboard/page', [
-        'music' => $user->music ?? 40, 
-        'sound' => $user->sound ?? 70,
-        'name'  => $user->name ?? User101,
-    ]);
+            'music' => $user->music ?? 40, 
+            'sound' => $user->sound ?? 70,
+            'name'  => $user->name ?? 'User101',
+        ]);
     }
 
     public function exit()
@@ -56,40 +65,57 @@ class StudentController extends Controller
         $user = Auth::user();
         $page = $request->input('page', 1);
 
-        // Get kabanatas paginated
-        $kabanatas = \App\Models\Kabanata::paginate(7, ['*'], 'page', $page);
+        $kabanatas = Kabanata::paginate(7, ['*'], 'page', $page);
 
         // Get progress for these kabanatas for the user
-        $progress = \DB::table('user_kabanata_progress')
-            ->where('user_id', $user->id)
+        $progress = UserKabanataProgress::where('user_id', $user->id)
             ->whereIn('kabanata_id', $kabanatas->pluck('id'))
             ->get()
             ->keyBy('kabanata_id');
 
+        // Get video progress for these kabanatas
+        $videoProgress = [];
+        if ($progress->count() > 0) {
+            $videoProgress = VideoProgress::whereIn('kabanata_progress_id', $progress->pluck('id'))
+                ->get()
+                ->toArray();
+        }
+
         // Merge progress into kabanata data
-        $kabanatas->getCollection()->transform(function ($kabanata) use ($progress) {
+        $kabanatas->getCollection()->transform(function ($kabanata) use ($progress, $user) {
             $p = $progress[$kabanata->id] ?? null;
-            $kabanata->progress = $p->progress ?? 0;
-            $kabanata->stars = $p->stars ?? 0;
-            $kabanata->unlocked = $p->unlocked ?? false;
+            
+            // Initialize progress to 0
+            $totalScore = 0;
+            $maxPossible = 10;
+            
+            if ($p) {
+                // Get quiz total score (max 5)
+                $quizScore = QuizProgress::where('kabanata_progress_id', $p->id)
+                    ->sum('score');
+                
+                // Get guessword total score (max 5)
+                $guesswordScore = GuesswordProgress::where('kabanata_progress_id', $p->id)
+                    ->sum('total_score');
+                    
+                // Ensure we don't exceed max possible
+                $totalScore = min($quizScore + $guesswordScore, $maxPossible);
+            }
+
+            $kabanata->progress = $totalScore;
+            $kabanata->stars = $p ? $p->stars : 0;
+            $kabanata->unlocked = $p ? $p->unlocked : false;
+
             return $kabanata;
         });
 
         return Inertia::render('Challenge/page', [
             'kabanatas' => $kabanatas,
+            'videoProgress' => $videoProgress,
             'music' => $user->music ?? 40, 
             'sound' => $user->sound ?? 70,
         ]);
     }
-
-    public function guessCharacters()
-    {
-        $characters = \App\Models\GuessCharacter::all(); // Example fetch
-        return Inertia::render('Challenge/GuessCharacter/page', [
-            'characters' => $characters
-        ]);
-    }
-
 
 
     public function updateAudioSettings(Request $request)
@@ -104,23 +130,22 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'video' => 'required|mimes:mp4,mkv,avi,mov|max:500000', // 500MB
+            'video' => 'required|mimes:mp4,mkv,avi,mov|max:500000',
+            'kabanata_id' => 'required|exists:kabanatas,id',
         ]);
 
-        // Save file
         $file = $request->file('video');
         $path = $file->store('videos', 'public');
 
-        // Get duration in seconds
         $duration = FFProbe::create()
             ->format(storage_path("app/public/" . $path))
             ->get('duration');
 
-        // Insert into DB
         Video::create([
             'title' => $file->getClientOriginalName(),
             'file_path' => $path,
-            'duration' => intval($duration)
+            'duration' => intval($duration),
+            'kabanata_id' => $request->kabanata_id,
         ]);
 
         return response()->json(['message' => 'Video added successfully!']);
@@ -132,6 +157,46 @@ class StudentController extends Controller
         return view('video-player', compact('video'));
     }
 
+    public function saveVideoProgress(Request $request)
+    {
+        $request->validate([
+            'kabanata_id' => 'required|exists:kabanatas,id',
+            'completed' => 'required|boolean',
+            'seconds_watched' => 'sometimes|integer|min:0',
+            'perfect_score' => 'sometimes|boolean',
+        ]);
+
+        $user = Auth::user();
+        
+        // Get the video for this kabanata
+        $video = Video::where('kabanata_id', $request->kabanata_id)->first();
+        
+        if (!$video) {
+            return response()->json(['error' => 'Video not found for this kabanata'], 404);
+        }
+        
+        // Get kabanata progress for this user
+        $kabanataProgress = UserKabanataProgress::firstOrCreate([
+            'user_id' => $user->id,
+            'kabanata_id' => $request->kabanata_id,
+        ]);
+        
+        // Store video progress in session using KABANATA_ID as the key (not video_id)
+        $sessionKey = "video_progress_{$user->id}_{$request->kabanata_id}";
+        $progressData = [
+            'video_id' => $video->id,
+            'completed' => $request->completed,
+            'seconds_watched' => $request->seconds_watched ?? 0,
+            'perfect_score' => $request->perfect_score ?? false,
+            'kabanata_progress_id' => $kabanataProgress->id,
+        ];
+        
+        session()->put($sessionKey, $progressData);
+
+        return response()->json(['message' => 'Video progress saved to session']);
+    }
+
+
     public function GuessCharacterPicker()
     {
         $characters = GuessCharacter::all();
@@ -140,4 +205,450 @@ class StudentController extends Controller
             'characters' => $characters
         ]);
     }
+
+    public function guessCharacters(Request $request)
+    {
+        $characters = GuessCharacter::all();
+        $kabanataId = $request->input('kabanata');
+
+        $kabanata = Kabanata::find($kabanataId);
+
+        return Inertia::render('Challenge/GuessCharacter/page', [
+            'characters' => $characters,
+            'kabanata_id' => $kabanataId,
+            'kabanata_number' => $kabanata->id ?? 1,
+            'kabanata_title' => $kabanata->title ?? 'Unknown',
+        ]);
+    }
+
+    public function guessW($characterId, $kabanataId)
+    {
+        $character = GuessCharacter::findOrFail($characterId);
+        
+        // Get the kabanata details
+        $kabanata = Kabanata::findOrFail($kabanataId);
+
+        $questions = GuessWord::where('kabanata_id', $kabanataId)
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
+
+        // Get kabanata progress for this user and kabanata
+        $kabanataProgress = UserKabanataProgress::firstOrCreate([
+            'user_id' => auth()->id(),
+            'kabanata_id' => $kabanataId,
+        ]);
+
+        // ✅ Get saved progress for this player using kabanata_progress_id
+        $progress = GuessWordProgress::where('kabanata_progress_id', $kabanataProgress->id)
+            ->where('character_id', $characterId)
+            ->first();
+
+        return Inertia::render('Challenge/GuessWord/page', [
+            'character' => $character,
+            'questions' => $questions,
+            'kabanataId' => (int) $kabanataId,
+            'kabanata_number' => $kabanata->id, // Add this
+            'kabanata_title' => $kabanata->title, // Add this
+            'savedProgress' => $progress ? $progress->current_index : 0,
+        ]);
+    }
+
+    public function saveProgress(Request $request)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'kabanata_id' => 'required|exists:kabanatas,id',
+            'character_id' => 'required|exists:guesscharacters,id',
+            'question_id' => 'required|exists:guess_words,id',
+            'current_index' => 'required|integer|min:0',
+            'completed' => 'sometimes|boolean',
+            'total_score' => 'required|integer|min:0',
+            'perfect_score' => 'sometimes|boolean',
+            'is_correct' => 'required|boolean',
+        ]);
+
+        $user = Auth::user();
+        
+        // Store guessword progress in session
+        $sessionKey = "guessword_progress_{$user->id}_{$request->kabanata_id}";
+        $progressData = session()->get($sessionKey, []);
+        
+        $progressData = [
+            'character_id' => $validated['character_id'],
+            'question_id' => $validated['question_id'],
+            'current_index' => $validated['current_index'],
+            'completed' => $validated['completed'] ?? false,
+            'total_score' => $validated['total_score'],
+            'perfect_score' => $validated['perfect_score'] ?? false,
+            'is_correct' => $validated['is_correct'],
+        ];
+        
+        session()->put($sessionKey, $progressData);
+    }
+
+
+    private function calculateStars($score)
+    {
+        if ($score >= 5) return 3;
+        if ($score === 4) return 2;
+        if ($score === 3) return 1;
+        return 0;
+    }
+
+
+    public function Quiz($kabanataId)
+    {
+        $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
+        
+        return Inertia::render('Challenge/Quiz/page', [
+            'kabanataId' => (int) $kabanataId,
+            'quizzes' => $quizzes,
+        ]);
+    }
+
+    public function shows($kabanataId)
+    {
+        $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
+        $kabanata = Kabanata::findOrFail($kabanataId);
+        
+        // Get user progress if authenticated
+        $userProgress = null;
+        if (Auth::check()) {
+            $userProgress = $this->getQuizProgress(Auth::id(), $kabanataId);
+        }
+
+        return Inertia::render('Challenge/Quiz/Page', [
+            'kabanataId' => (int) $kabanataId,
+            'kabanataTitle' => $kabanata->title,
+            'quizzes' => $quizzes,
+            'userProgress' => $userProgress,
+        ]);
+    }
+
+    /**
+     * Save quiz progress.
+     */
+    public function saveProgresss(Request $request)
+    {
+        $request->validate([
+            'kabanata_id' => 'required|exists:kabanatas,id',
+            'quiz_id' => 'required|exists:quizzes,id',
+            'selected_answer' => 'required|in:A,B,C',
+            'score' => 'required|integer',
+            'question_number' => 'required|integer',
+            'total_questions' => 'required|integer',
+            'completed' => 'sometimes|boolean',
+        ]);
+
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = Auth::user();
+    
+        // 1. Get or create the kabanata progress record FIRST
+        $kabanataProgress = UserKabanataProgress::firstOrCreate([
+            'user_id' => $user->id,
+            'kabanata_id' => $request->kabanata_id,
+        ]);
+
+        $quiz = Quiz::findOrFail($request->quiz_id);
+        $isCorrect = $quiz->correct_answer === $request->selected_answer;
+        
+        // 2. Check if a progress record for this specific quiz already exists in the DATABASE
+        $existingProgress = QuizProgress::where([
+            'kabanata_progress_id' => $kabanataProgress->id,
+            'quiz_id' => $request->quiz_id,
+        ])->first();
+
+        // 3. Decide if we should save this new attempt
+        $shouldSave = false;
+        $reason = '';
+
+        if (!$existingProgress) {
+            // No record exists, so we save this first attempt.
+            $shouldSave = true;
+            $reason = 'first_attempt';
+        } elseif ($request->score > $existingProgress->score) {
+            // A record exists, but the new score is HIGHER. We save the better attempt.
+            $shouldSave = true;
+            $reason = 'higher_score';
+        } else {
+            // A record exists and the new score is LOWER or equal. We don't save it.
+            $shouldSave = false;
+            $reason = 'score_not_higher';
+        }
+
+        // 4. Store the decision and data in the session
+        $sessionKey = "quiz_progress_{$user->id}_{$request->kabanata_id}";
+        $progressData = session()->get($sessionKey, []);
+        
+        $progressData[$request->quiz_id] = [
+            'selected_answer' => $request->selected_answer,
+            'is_correct' => $isCorrect,
+            'score' => $request->score,
+            'question_number' => $request->question_number,
+            'total_questions' => $request->total_questions,
+            'completed' => $request->completed ?? false,
+            'should_save_to_db' => $shouldSave,
+            'save_reason' => $reason,
+        ];
+        
+        session()->put($sessionKey, $progressData);
+
+    }
+
+    public function complete(Request $request)
+    {
+        $request->validate([
+            'kabanata_id' => 'required|exists:kabanatas,id',
+            'score' => 'required|integer',
+            'total_questions' => 'required|integer',
+        ]);
+
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = Auth::user();
+        
+        // Get kabanata progress
+        $kabanataProgress = UserKabanataProgress::firstOrCreate([
+            'user_id' => $user->id,
+            'kabanata_id' => $request->kabanata_id,
+        ]);
+
+        // Get all session data for this kabanata
+        $quizSessionKey = "quiz_progress_{$user->id}_{$request->kabanata_id}";
+        $guesswordSessionKey = "guessword_progress_{$user->id}_{$request->kabanata_id}";
+        $videoSessionKey = "video_progress_{$user->id}_{$request->kabanata_id}";
+
+        $quizProgressData = session()->get($quizSessionKey, []);
+        $guesswordProgressData = session()->get($guesswordSessionKey, []);
+        $videoProgressData = session()->get($videoSessionKey, []);
+
+        foreach ($quizProgressData as $quizId => $data) {
+            // Only proceed if the session data is flagged to be saved
+            if ($data['should_save_to_db'] ?? false) {
+                // Check if ANY record already exists with this kabanata_progress_id
+                $existingRecord = QuizProgress::where([
+                    'kabanata_progress_id' => $kabanataProgress->id,
+                ])->first();
+
+                if ($existingRecord) {
+                    // UPDATE existing record only if new score is higher
+                    // This maintains the ONE record per kabanata_progress_id rule
+                    if ($data['score'] > $existingRecord->score) {
+                        $existingRecord->update([
+                            'quiz_id' => $quizId, // Update the quiz_id too
+                            'selected_answer' => $data['selected_answer'],
+                            'is_correct' => $data['is_correct'],
+                            'score' => $data['score'],
+                            'question_number' => $data['question_number'],
+                            'total_questions' => $data['total_questions'],
+                            'completed' => $data['completed'] ?? false,
+                        ]);
+                    }
+                    // If score is not higher, do nothing (keep the existing record)
+                } else {
+                    // CREATE new record only if no record exists for this kabanata_progress_id
+                    QuizProgress::create([
+                        'kabanata_progress_id' => $kabanataProgress->id,
+                        'quiz_id' => $quizId,
+                        'selected_answer' => $data['selected_answer'],
+                        'is_correct' => $data['is_correct'],
+                        'score' => $data['score'],
+                        'question_number' => $data['question_number'],
+                        'total_questions' => $data['total_questions'],
+                        'completed' => $data['completed'] ?? false,
+                    ]);
+                }
+            }
+        }
+
+        // Save guessword progress to database if exists in session
+        if (!empty($guesswordProgressData)) {
+            // Get the highest existing score for this kabanata (regardless of character)
+            $existingGuesswordProgress = GuesswordProgress::where([
+                'kabanata_progress_id' => $kabanataProgress->id,
+            ])->orderBy('total_score', 'desc')->first();
+
+            // Only create/update if new score is higher than existing or no record exists
+            if (!$existingGuesswordProgress || $guesswordProgressData['total_score'] > $existingGuesswordProgress->total_score) {
+                if ($existingGuesswordProgress) {
+                    // Update existing record with higher score
+                    $existingGuesswordProgress->update([
+                        'character_id' => $guesswordProgressData['character_id'],
+                        'question_id' => $guesswordProgressData['question_id'],
+                        'current_index' => $guesswordProgressData['current_index'],
+                        'completed' => $guesswordProgressData['completed'],
+                        'total_score' => $guesswordProgressData['total_score'],
+                    ]);
+                } else {
+                    // Create new record if none exists
+                    GuesswordProgress::create([
+                        'kabanata_progress_id' => $kabanataProgress->id,
+                        'character_id' => $guesswordProgressData['character_id'],
+                        'question_id' => $guesswordProgressData['question_id'],
+                        'current_index' => $guesswordProgressData['current_index'],
+                        'completed' => $guesswordProgressData['completed'],
+                        'total_score' => $guesswordProgressData['total_score'],
+                    ]);
+                }
+            }
+            // If new score is not higher, do nothing (don't create duplicate)
+        }
+
+        if (!empty($videoProgressData)) {
+            // Use updateOrCreate to ensure only one record exists per combination
+            VideoProgress::updateOrCreate(
+                [
+                    'video_id' => $videoProgressData['video_id'],
+                    'kabanata_progress_id' => $videoProgressData['kabanata_progress_id'],
+                ],
+                [
+                    'completed' => $videoProgressData['completed'],
+                    'seconds_watched' => $videoProgressData['seconds_watched'],
+                    'perfect_score' => $videoProgressData['perfect_score'] ?? false,
+                ]
+            );
+        }
+
+        // Clear all session data
+        session()->forget($quizSessionKey);
+        session()->forget($guesswordSessionKey);
+        session()->forget($videoSessionKey);
+
+        // Calculate final scores for star calculation
+        $finalQuizScore = QuizProgress::where('kabanata_progress_id', $kabanataProgress->id)
+            ->sum('score');
+        
+        // Get the highest guessword score for this kabanata
+        $finalGuesswordScore = GuesswordProgress::where('kabanata_progress_id', $kabanataProgress->id)
+            ->max('total_score') ?? 0;
+        
+        $totalScore = min($finalQuizScore + $finalGuesswordScore, 10);
+        
+        // Update kabanata progress with the total score
+        $kabanataProgress->progress = $totalScore;
+        
+        // Calculate stars based on guessword score (3 points = 1 star, 4 points = 2 stars, 5 points = 3 stars)
+        $stars = $this->calculateStars($finalGuesswordScore);
+        
+        // Update stars only if the new calculation is higher than current stars
+        if ($stars > $kabanataProgress->stars) {
+            $kabanataProgress->stars = $stars;
+        }
+
+        // Mark current kabanata as completed and unlocked
+        $kabanataProgress->unlocked = true;
+        $kabanataProgress->save();
+
+        // Unlock the next kabanata
+        $nextKabanataId = $request->kabanata_id + 1;
+        
+        if (Kabanata::where('id', $nextKabanataId)->exists()) {
+            UserKabanataProgress::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'kabanata_id' => $nextKabanataId,
+                ],
+                [
+                    'unlocked' => true,
+                ]
+            );
+        }
+
+        return Inertia::location(route('challenge'));
+    }
+    /**
+     * Get user's quiz progress for a specific kabanata.
+     */
+    private function getQuizProgress($userId, $kabanataId)
+    {
+        $kabanataProgress = UserKabanataProgress::where('user_id', $userId)
+            ->where('kabanata_id', $kabanataId)
+            ->first();
+
+        if (!$kabanataProgress) {
+            return null;
+        }
+
+        $quizProgress = QuizProgress::where('kabanata_progress_id', $kabanataProgress->id)
+            ->get();
+
+        return [
+            'total_score' => $quizProgress->sum('score'),
+            'total_questions' => $quizProgress->count(),
+            'correct_answers' => $quizProgress->where('is_correct', true)->count(),
+        ];
+    }
+
+    /**
+     * Reset user's progress for a specific kabanata.
+     */
+    public function resetProgress($kabanataId)
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $kabanataProgress = UserKabanataProgress::where('user_id', Auth::id())
+            ->where('kabanata_id', $kabanataId)
+            ->first();
+
+        if ($kabanataProgress) {
+            // Delete related progress records
+            QuizProgress::where('kabanata_progress_id', $kabanataProgress->id)->delete();
+            GuessWordProgress::where('kabanata_progress_id', $kabanataProgress->id)->delete();
+            
+            // Reset kabanata progress
+            $kabanataProgress->update([
+                'progress' => 0,
+                'stars' => 0,
+                'unlocked' => false,
+            ]);
+        }
+    }
+
+    public function sample(){
+        return Inertia::render('sample');
+    }
+
+    public function gallery()
+    {
+        $user = Auth::user();
+        
+        // Get all images with their kabanata
+        $images = ImageGallery::with('kabanata')
+            ->orderBy('kabanata_id')
+            ->get();
+
+        // For each image, check if it should be unlocked based on guessword progress
+        $images->each(function ($image) use ($user) {
+            // Get the kabanata progress for this user and kabanata
+            $kabanataProgress = UserKabanataProgress::where('user_id', $user->id)
+                ->where('kabanata_id', $image->kabanata_id)
+                ->first();
+                
+            // Check if there's a completed guessword progress with perfect score (5)
+            $guesswordProgress = null;
+            if ($kabanataProgress) {
+                $guesswordProgress = GuesswordProgress::where('kabanata_progress_id', $kabanataProgress->id)
+                    ->where('completed', true)
+                    ->where('total_score', 5) // Perfect score
+                    ->first();
+            }
+            
+            // Unlock the image if perfect score was achieved
+            $image->unlocked = (bool) $guesswordProgress;
+            $image->image_url = asset($image->image_url);
+        });
+
+        return Inertia::render('Dashboard/ImageGallery/page', [
+            'images' => $images
+        ]);
+    }
+
 }
