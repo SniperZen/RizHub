@@ -199,7 +199,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const handleProceed = () => {
-        router.visit(route("challenge.quiz", { kabanataId }));
+        router.visit(route("challenge.quiz", { kabanataId, kabanata_number, kabanata_title }));
     };
 
     const instructions = [
@@ -268,7 +268,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 title={instructions[instructionIndex].title}
                 content={instructions[instructionIndex].content}
                 buttonText={instructions[instructionIndex].buttonText}
-                bgImage="/Img/Challenge/GuessWord/BG.png"
+                bgImage="/Img/Challenge/GuessChar/BG.png"
             />
         ) : (
 
