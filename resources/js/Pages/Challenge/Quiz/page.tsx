@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { router } from '@inertiajs/react';
+import InstructionModal from '../../../Components/InstructionModal';
 
 interface QuizData {
     id: number;
@@ -13,10 +14,12 @@ interface QuizData {
 
 interface QuizProps {
     kabanataId: number;
+    kabanata_number: number;
+    kabanata_title: string;
     quizzes: QuizData[];
 }
 
-export default function Quiz({ kabanataId, quizzes }: QuizProps) {
+export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quizzes }: QuizProps) {
     const [selectedQuizzes, setSelectedQuizzes] = useState<QuizData[]>([]);
     const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -26,6 +29,31 @@ export default function Quiz({ kabanataId, quizzes }: QuizProps) {
     const [completed, setCompleted] = useState(false);
     const [lives, setLives] = useState(3);
     const [lostHearts, setLostHearts] = useState<number[]>([]);
+    const [instructionIndex, setInstructionIndex] = useState(0);
+
+    // Instruction modals content
+    const instructions = [
+        {
+            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            content: `Welcome to the Quiz Challenge! \n\nIn this activity, you'll be tested on your knowledge of this kabanata. You need to achieve a perfect score (5/5) to proceed to the next challenge.`,
+            buttonText: "Next",
+        },
+        {
+            title: `HOW TO PLAY`,
+            content: `1. Read each question carefully\n2. Drag and drop the correct answer to the drop zone\n3. You have 3 lives - be careful with your answers!\n4. Get all 5 questions right to unlock the next challenge`,
+            buttonText: "Next",
+        },
+        {
+            title: `IMPORTANT RULES`,
+            content: `⚠️ Perfect score required to proceed\n⚠️ You lose a life for each wrong answer\n⚠️ Game over if you run out of lives\n⚠️ Try again if you don't get all answers correct`,
+            buttonText: "Next",
+        },
+        {
+            title: `READY TO START?`,
+            content: `Remember: Drag the answer options to the drop zone below each question. Good luck! \n\nHanda ka na ba?`,
+            buttonText: "Start Quiz",
+        }
+    ];
 
     // Select 5 random quizzes from the list
     useEffect(() => {
@@ -50,14 +78,19 @@ export default function Quiz({ kabanataId, quizzes }: QuizProps) {
         e.preventDefault();
         const answer = e.dataTransfer.getData("answer");
         setSelectedAnswer(answer);
+        
+        // Auto-submit when an answer is dropped
+        setTimeout(() => {
+            checkAnswer(answer);
+        }, 100);
     };
 
-    const checkAnswer = () => {
-        if (selectedAnswer && currentQuiz) {
+    const checkAnswer = (answer: string) => {
+        if (currentQuiz) {
             const correct =
-                (selectedAnswer === 'A' && currentQuiz.correct_answer === 'A') ||
-                (selectedAnswer === 'B' && currentQuiz.correct_answer === 'B') ||
-                (selectedAnswer === 'C' && currentQuiz.correct_answer === 'C');
+                (answer === 'A' && currentQuiz.correct_answer === 'A') ||
+                (answer === 'B' && currentQuiz.correct_answer === 'B') ||
+                (answer === 'C' && currentQuiz.correct_answer === 'C');
             
             setIsCorrect(correct);
             setShowResult(true);
@@ -86,7 +119,7 @@ export default function Quiz({ kabanataId, quizzes }: QuizProps) {
                 router.post(route('quiz.saveProgress'), {
                     kabanata_id: kabanataId,
                     quiz_id: currentQuiz.id,
-                    selected_answer: selectedAnswer,
+                    selected_answer: answer,
                     score: newScore,
                     question_number: currentQuizIndex + 1,
                     total_questions: selectedQuizzes.length,
@@ -165,6 +198,25 @@ export default function Quiz({ kabanataId, quizzes }: QuizProps) {
         });
     };
 
+    // Show instruction modals if not all have been shown yet
+    if (instructionIndex < instructions.length) {
+        return (
+            <InstructionModal
+                isOpen={true}
+                onClose={() => {
+                    if (instructionIndex < instructions.length - 1) {
+                        setInstructionIndex(instructionIndex + 1);
+                    } else {
+                        setInstructionIndex(instructions.length);
+                    }
+                }}
+                title={instructions[instructionIndex].title}
+                content={instructions[instructionIndex].content}
+                buttonText={instructions[instructionIndex].buttonText}
+                bgImage="/Img/Challenge/Quiz/BG.png"
+            />
+        );
+    }
 
     if (completed) {
         const isPerfectScore = score === selectedQuizzes.length;
@@ -228,107 +280,106 @@ export default function Quiz({ kabanataId, quizzes }: QuizProps) {
     return (
         <div className="min-h-screen flex flex-col items-center justify-start bg-amber-50 p-6 bg-cover bg-center" 
              style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
+            <div className="absolute top-4 left-4 flex items-center">
+                <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
+                    KABANATA {kabanata_number}:
+                </div>
+                <div className="text-white font-bold px-2 py-2 text-2xl">
+                    {kabanata_title}
+                </div>
+            </div>
             
-            {/* Header */}
-            <div className="text-center mb-6">
-                <h1 className="text-4xl font-bold text-amber-800 mb-2">QUIZ</h1>
-                <p className="text-lg text-gray-600">Kabanata {kabanataId}</p>
-                <p className="text-sm text-red-600 font-bold mt-2">
-                    ⚠️ Perfect score (5/5) required to proceed
-                </p>
-            </div>
+            <div className='flex flex-col items-center justify-center relative w-[750px] h-[600px] bg-transparent'>
+                <img
+                    src="/Img/Challenge/Quiz/modalBG.png"
+                    alt="Wooden Frame"
+                    className="w-full h-auto"
+                />
+                <div className='absolute top-[20px] left-1/2 -translate-x-1/2 flex flex-col justify-center items-center w-full h-full'>
+                    {/* Lives Display */}
+                    <div className="absolute top-[45px] mb-4 flex items-center">
+                        <div className="flex">
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                lostHearts.includes(index) ? null : (
+                                    <span 
+                                        key={index} 
+                                        className="text-4xl mx-1 text-red-500"
+                                    >
+                                        ❤️
+                                    </span>
+                                )
+                            ))}
+                        </div>
+                    </div>
 
-            {/* Lives Display */}
-            <div className="mb-4 flex items-center">
-                <span className="text-lg font-bold text-red-600 mr-2">Lives:</span>
-                <div className="flex">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                        lostHearts.includes(index) ? null : (
-                            <span 
-                                key={index} 
-                                className="text-2xl mx-1 text-red-500"
-                            >
-                                ❤️
-                            </span>
-                        )
-                    ))}
-                </div>
-            </div>
+                    {/* Question */}
+                    <div className="absolute top-[95px] p-6 rounded-lg mb-6 w-full max-w-2xl">
+                        <div className='width-full text-center'>
+                            <p className="text-xl font-black text-white mb-4">Question {currentQuizIndex + 1}: {currentQuiz.question}</p>
+                        </div>
+                    </div>
 
-            {/* Progress Bar */}
-            <div className="w-full max-w-2xl mb-6">
-                <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-amber-800">
-                        Question {currentQuizIndex + 1} of {selectedQuizzes.length}
-                    </span>
-                    <span className="text-sm font-medium text-amber-800">
-                        Score: {score}/{selectedQuizzes.length}
-                    </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    {/* Drop Zone */}
                     <div 
-                        className="bg-amber-600 h-2.5 rounded-full transition-all duration-300" 
-                        style={{ width: `${((currentQuizIndex + 1) / selectedQuizzes.length) * 100}%` }}
-                    ></div>
+                        className="absolute top-[290px] bg-gray-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-md min-h-[40px] flex items-center justify-center"
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                    >
+                        {selectedAnswer ? (
+                            <p className="text-xl font-bold text-amber-800">
+                                {selectedAnswer === 'A' && currentQuiz.choice_a}
+                                {selectedAnswer === 'B' && currentQuiz.choice_b}
+                                {selectedAnswer === 'C' && currentQuiz.choice_c}
+                            </p>
+                        ) : (
+                            <p className="text-gray-500">DROP HERE THE ANSWER</p>
+                        )}
+                    </div>
+
+                    {/* Answer Options */}
+                    <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-4 mb-6 w-full max-w-2xl">
+                        <div 
+                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, 'A')}
+                        >
+                            <p className="text-lg font-medium">{currentQuiz.choice_a}</p>
+                        </div>
+                        <div 
+                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, 'B')}
+                        >
+                            <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
+                        </div>
+                        <div 
+                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, 'C')}
+                        >
+                            <p className="text-lg font-medium">{currentQuiz.choice_c}</p>
+                        </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className=" absolute bottom-0 w-full max-w-lg mb-6">
+                        {/* <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-amber-800">
+                                Question {currentQuizIndex + 1} of {selectedQuizzes.length}
+                            </span>
+                            <span className="text-sm font-medium text-amber-800">
+                                Score: {score}/{selectedQuizzes.length}
+                            </span>
+                        </div> */}
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div 
+                                className="bg-amber-600 h-2.5 rounded-full transition-all duration-300" 
+                                style={{ width: `${((currentQuizIndex + 1) / selectedQuizzes.length) * 100}%` }}
+                            ></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {/* Question */}
-            <div className="bg-white p-6 rounded-lg shadow-md mb-6 w-full max-w-2xl">
-                <p className="text-xl font-semibold text-gray-800 mb-4">{currentQuiz.question}</p>
-                <p className="text-lg italic text-gray-600 mb-2">Drag your answer to the box below</p>
-            </div>
-
-            {/* Answer Options */}
-            <div className="flex flex-wrap justify-center gap-4 mb-6 w-full max-w-2xl">
-                <div 
-                    className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, 'A')}
-                >
-                    <p className="text-lg font-medium">{currentQuiz.choice_a}</p>
-                </div>
-                <div 
-                    className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, 'B')}
-                >
-                    <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
-                </div>
-                <div 
-                    className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, 'C')}
-                >
-                    <p className="text-lg font-medium">{currentQuiz.choice_c}</p>
-                </div>
-            </div>
-
-            {/* Drop Zone */}
-            <div 
-                className="bg-gray-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-2xl min-h-32 flex items-center justify-center"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-            >
-                {selectedAnswer ? (
-                    <p className="text-xl font-bold text-amber-800">
-                        {selectedAnswer === 'A' && currentQuiz.choice_a}
-                        {selectedAnswer === 'B' && currentQuiz.choice_b}
-                        {selectedAnswer === 'C' && currentQuiz.choice_c}
-                    </p>
-                ) : (
-                    <p className="text-gray-500">DROP HERE THE ANSWER</p>
-                )}
-            </div>
-
-            {/* Submit Button */}
-            <button 
-                onClick={checkAnswer}
-                disabled={!selectedAnswer}
-                className={`px-8 py-3 rounded-lg text-white font-bold text-lg mb-4 ${!selectedAnswer ? 'bg-gray-400' : 'bg-amber-600 hover:bg-amber-700'}`}
-            >
-                Submit Answer
-            </button>
 
             {/* Result Modal */}
             {showResult && (
