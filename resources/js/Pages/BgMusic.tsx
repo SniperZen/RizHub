@@ -17,7 +17,6 @@ export default function BgMusic({
                 audioRef.current.pause();
             } else {
                 audioRef.current.play().catch(() => {
-                    // Autoplay may be blocked
                 });
             }
         }
