@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Erica+One&display=swap');
+
+@font-face {
+  font-family: 'Black Han Sans';
+  src: url('/fonts/BlackHanSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
