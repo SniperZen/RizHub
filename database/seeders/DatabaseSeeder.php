@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(KabanataSeeder::class);
         $this->call(GuessCharacterSeeder::class);
+        $this->call(GuessWordSeeder::class);
+        $this->call(QuizSeeder::class);
+        $this->call(ImageGallerySeeder::class);
     }
 }

@@ -27,4 +27,16 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($this->isHttpException($exception)) {
+            if ($exception->getStatusCode() === 403) {
+                return \Inertia\Inertia::render('Errors/Forbidden');
+            }
+        }
+
+        return parent::render($request, $exception);
+    }
+
 }

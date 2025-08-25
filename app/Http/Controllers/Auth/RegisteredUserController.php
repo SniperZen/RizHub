@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Video;
 use App\Models\User;
+use App\Models\UserKabanataProgress;
 use Illuminate\Support\Facades\DB;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -45,32 +46,29 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Create progress for all kabanatas, unlock only the first
         $kabanatas = \App\Models\Kabanata::orderBy('id')->get();
         foreach ($kabanatas as $idx => $kabanata) {
-            \DB::table('user_kabanata_progress')->insert([
+            $kabanataProgress = UserKabanataProgress::create([
                 'user_id' => $user->id,
                 'kabanata_id' => $kabanata->id,
                 'progress' => 0,
                 'stars' => 0,
                 'unlocked' => $idx === 0,
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
-        }
 
-        // Create video progress 
-         $videos = Video::all();
-            foreach ($videos as $video) {
-                DB::table('video_progress')->insert([
-                    'user_id' => $user->id,
-                    'video_id' => $video->id,
-                    'seconds_watched' => 0,
-                    'completed' => false,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            // // Create video progress for each video in this kabanata
+            // $videos = Video::where('kabanata_id', $kabanata->id)->get();
+            // foreach ($videos as $video) {
+            //     DB::table('video_progress')->insert([
+            //         'kabanata_progress_id' => $kabanataProgress->id,
+            //         'video_id' => $video->id,
+            //         'seconds_watched' => 0,
+            //         'completed' => false,
+            //         'created_at' => now(),
+            //         'updated_at' => now(),
+            //     ]);
+            // }
+        }
 
         event(new Registered($user));
 

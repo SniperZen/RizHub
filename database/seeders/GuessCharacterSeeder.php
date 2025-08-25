@@ -12,17 +12,24 @@ class GuessCharacterSeeder extends Seeder
      * Run the database seeds.
      */
     public function run()
-    {
-        DB::table('guesscharacters')->insert([
-            ['c_name' => 'Crisostomo Ibarra', 'filename' => 'char-1.png'],
-            ['c_name' => 'Maria Clara', 'filename' => 'char-2.png'],
-            ['c_name' => 'Padre Damaso', 'filename' => 'char-3.png'],
-            ['c_name' => 'Crispin', 'filename' => 'char-4.png'],
-            ['c_name' => 'Sisa', 'filename' => 'char-5.png'],
-            ['c_name' => 'Padre Sibyla', 'filename' => 'char-6.png'],
-            ['c_name' => 'Kapitan Heneral', 'filename' => 'char-7.png'],
-            ['c_name' => 'Tenyente Guevarra', 'filename' => 'char-8.png'],
-        ]);
+{
+    $characters = [
+        ['c_name' => 'Crisostomo Ibarra', 'filename' => 'char-1'],
+        ['c_name' => 'Maria Clara', 'filename' => 'char-2'],
+        ['c_name' => 'Padre Damaso', 'filename' => 'char-3'],
+        ['c_name' => 'Crispin', 'filename' => 'char-4'],
+        ['c_name' => 'Sisa', 'filename' => 'char-5'],
+        ['c_name' => 'Padre Sibyla', 'filename' => 'char-6'],
+        ['c_name' => 'Kapitan Heneral', 'filename' => 'char-7'],
+        ['c_name' => 'Tenyente Guevarra', 'filename' => 'char-8'],
+    ];
+
+    foreach ($characters as $char) {
+        DB::table('guesscharacters')->updateOrInsert(
+            ['c_name' => $char['c_name']], // Search by name
+            ['filename' => $char['filename']] // Update filename if exists
+        );
     }
+}
 
 }

@@ -244,6 +244,7 @@ export default function Dashboard({ music: initialMusic, sound: initialSound, na
                             type="button"
                             className="transition hover:scale-110 focus:outline-none"
                             aria-label="Star Folder"
+                            onClick={() => router.get(route('image.gallery'))}
                         >
                             <img src="/Img/Dashboard/star-folder.png" alt="Star Folder" className="w-20" />
                         </button>
@@ -634,17 +635,17 @@ export default function Dashboard({ music: initialMusic, sound: initialSound, na
                     </div>
                 )}
                    <ShareModal 
-                                                isOpen={showShare} 
-                                                onClose={() => setShowShare(false)} 
-                                            />
-                                            <Delete
-                                        isOpen={showDeleteModal}
-                                        onClose={() => setShowDeleteModal(false)}
-                                        onSuccess={() => {
-                                            setShowDeleteModal(false);
-                                            setShowAccount(false);
-                                        }}
-                                    />
+                        isOpen={showShare} 
+                        onClose={() => setShowShare(false)} 
+                    />
+                    <Delete
+                        isOpen={showDeleteModal}
+                        onClose={() => setShowDeleteModal(false)}
+                        onSuccess={() => {
+                            setShowDeleteModal(false);
+                            setShowAccount(false);
+                        }}
+                    />
             </div>
         </StudentLayout>
     );

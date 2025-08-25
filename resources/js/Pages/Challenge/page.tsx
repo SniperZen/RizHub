@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { router, Link } from "@inertiajs/react";
 import StudentLayout from "../../Layouts/StudentLayout";
 import VideoModal from "../Challenge/Video/page"; 
+import PreVideoModal from "./Video/Modal/page";
 
 interface Kabanata {
     id: number;
@@ -14,6 +15,15 @@ interface Kabanata {
     sound: number;
 }
 
+interface VideoProgress {
+    kabanata_progress_id: number;
+    video_id: number;
+    completed: boolean;
+    seconds_watched: number;
+    created_at: string;
+    updated_at: string;
+}
+
 interface KabanatasPaginated {
     current_page: number;
     last_page: number;
@@ -24,9 +34,10 @@ interface PageProps {
     kabanatas: KabanatasPaginated;
     music: number;
     sound: number;
+    videoProgress: VideoProgress[];
 }
 
-const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sound: initialSound }) => {
+const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sound: initialSound, videoProgress }) => {
     const [currentPage] = useState(kabanatas.current_page);
     const [music, setMusic] = useState(initialMusic);
     const [volume, setVolume] = useState(initialSound);
@@ -37,10 +48,14 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [showEndModal, setShowEndModal] = useState(false);
     const [lastPlayedVideo, setLastPlayedVideo] = useState<string>("");
-
-    // Modal state
+    const [selectedKabanataId, setSelectedKabanataId] = useState<number | null>(null);
+    const [showPreVideoModal, setShowPreVideoModal] = useState(false);
+    const [pendingKabanataId, setPendingKabanataId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentVideo, setCurrentVideo] = useState<string>("");
+    const [hasVideoEnded, setHasVideoEnded] = useState(false);
+    const [videoCompleted, setVideoCompleted] = useState<Record<number, boolean>>({});
+    const [retryCounts, setRetryCounts] = useState<Record<number, number>>({}); // Track retry counts per kabanata
 
     const positions = [
         { top: "55%", left: "9%" },
@@ -51,6 +66,53 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
         { top: "34%", left: "79%" },
         { top: "48%", left: "93%" },
     ];
+
+    const [debugInfo, setDebugInfo] = useState<string[]>([]);
+
+    const addDebugLog = (message: string) => {
+        console.log(`[DEBUG] ${message}`);
+        setDebugInfo(prev => [...prev.slice(-10), message]); // Keep last 10 logs
+    };
+
+    useEffect(() => {
+    addDebugLog("📘 Kabanata Page Mounted");
+    addDebugLog(`Received ${videoProgress.length} video progress records`);
+    
+    console.log("📘 Kabanata Progress Status:");
+    kabanatas.data.forEach((k) => {
+        console.log({
+            id: k.id,
+            title: k.kabanata,
+            unlocked: k.unlocked,
+            stars: k.stars,
+            progress: `${k.progress}/10`
+        });
+    });
+    
+    // Log all video progress data received from backend
+    console.log("🎥 Video Progress Data:", videoProgress);
+    videoProgress.forEach((progress, index) => {
+        addDebugLog(`Video Progress ${index + 1}: Video ID ${progress.video_id}, Completed: ${progress.completed}, Kabanata Progress ID: ${progress.kabanata_progress_id}`);
+    });
+
+    const kabanataCompletionMap: Record<number, boolean> = {};
+    kabanatas.data.forEach(kabanata => {
+        const videoCompleted = videoProgress.some(vp => vp.video_id === kabanata.id && vp.completed);
+        
+        kabanataCompletionMap[kabanata.id] = videoCompleted;
+        addDebugLog(`Kabanata ${kabanata.id} completion: ${kabanataCompletionMap[kabanata.id]}`);
+    });
+    
+    setVideoCompleted(kabanataCompletionMap);
+    
+    // Initialize retry counts
+    const initialRetryCounts: Record<number, number> = {};
+    kabanatas.data.forEach(k => {
+        initialRetryCounts[k.id] = 0;
+    });
+    setRetryCounts(initialRetryCounts);
+}, [kabanatas, videoProgress]);
+
 
     const saveAudioSettings = useCallback(() => {
         router.post(
@@ -137,37 +199,107 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
             audioRef.current.play().catch(e => console.log("Music play error:", e));
         }
     };
+
+    const saveVideoProgress = useCallback((kabanataId: number, completed: boolean, secondsWatched = 0) => {
+        router.post(route("student.saveVideoProgress"), {
+            kabanata_id: kabanataId,
+            completed: completed,
+            seconds_watched: secondsWatched
+        });
+        // local state update
+        if (completed) {
+        setVideoCompleted(prev => ({
+            ...prev,
+            [kabanataId]: true
+        }));
+        addDebugLog(`Marked kabanata ${kabanataId} as completed in local state`);
+    }
+}, []);
+
     const openVideoModal = (kabanataId: number) => {
-        const src = `/Video/K${kabanataId}.mp4`;
-        setCurrentVideo(src);
-        setLastPlayedVideo(src);
-        setIsModalOpen(true);
-        pauseBackgroundMusic();
+        setPendingKabanataId(kabanataId);
+        setShowPreVideoModal(true);
+        setHasVideoEnded(false);
+    };
+
+    const handleProceedToVideo = () => {
+        setShowPreVideoModal(false);
+        if (pendingKabanataId !== null) {
+            const src = `/Video/K${pendingKabanataId}.mp4`;
+            setCurrentVideo(src);
+            setLastPlayedVideo(src);
+            setSelectedKabanataId(pendingKabanataId);
+            setIsModalOpen(true);
+            pauseBackgroundMusic();
+        }
+    };
+
+    const handleLater = () => {
+        setShowPreVideoModal(false);
+        setPendingKabanataId(null);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setCurrentVideo("");
-        resumeBackgroundMusic(); 
+        resumeBackgroundMusic();
     };
 
     const handleVideoEnded = () => {
-        setIsModalOpen(false); 
-        setShowEndModal(true); 
+        if (selectedKabanataId !== null) {
+            saveVideoProgress(selectedKabanataId, true);
+            setVideoCompleted(prev => ({
+                ...prev,
+                [selectedKabanataId]: true
+            }));
+        }
+        setIsModalOpen(false);
+        setShowEndModal(true);
+        setHasVideoEnded(true);
     };
 
     const retryVideo = () => {
         setShowEndModal(false);
         setCurrentVideo(lastPlayedVideo);
         setIsModalOpen(true);
+        
+        // Increment retry count for this kabanata
+        if (selectedKabanataId !== null) {
+            setRetryCounts(prev => ({
+                ...prev,
+                [selectedKabanataId]: (prev[selectedKabanataId] || 0) + 1
+            }));
+        }
     };
 
     const proceedNext = () => {
         setShowEndModal(false);
         resumeBackgroundMusic();
-        handleProceed();
+
+        if (selectedKabanataId !== null) {
+            router.visit(route('guess-characters', { kabanata: selectedKabanataId }));
+        }
     };
 
+    // Check if video has been completed before for a specific kabanata
+    const isVideoCompleted = (kabanataId: number) => {
+        return videoCompleted[kabanataId] || false;
+    };
+
+    // Check if video should be skippable based on retry count
+    const isVideoSkippable = (kabanataId: number) => {
+        const retryCount = retryCounts[kabanataId] || 0;
+        return retryCount > 0;
+    };
+
+    // Handle skip video action
+    const handleSkipVideo = (kabanataId: number) => {
+        setVideoCompleted(prev => ({
+            ...prev,
+            [kabanataId]: true
+        }));
+        router.visit(route('guess-characters', { kabanata: kabanataId }));
+    };
 
     return (
         <StudentLayout pauseMusic={isModalOpen}>
@@ -215,31 +347,38 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                         >
                             <p className="font-[Risque] text-[20px] text-black">{k.kabanata.toLowerCase()}</p>
 
-                            <div
-                                className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
-                                onClick={() => k.unlocked && openVideoModal(k.id)}
-                            >
-                                {k.unlocked ? (
-                                    <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
-                                ) : (
-                                    <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
-                                )}
+                            <div className="relative">
+                                <div
+                                    className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+                                    onClick={() => k.unlocked && openVideoModal(k.id)}
+                                >
+                                    {k.unlocked ? (
+                                        <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
+                                    ) : (
+                                        <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
+                                    )}
+                                </div>
                             </div>
 
                             {k.unlocked && (
                                 <div className="mt-2 flex flex-col items-center">
                                     <div className="flex space-x-1">
-                                        {[...Array(k.stars)].map((_, i) => (
-                                            <span key={i} className="material-icons text-yellow-400 text-xl">star</span>
+                                        {[...Array(3)].map((_, i) => (
+                                            <img 
+                                                key={i} 
+                                                src="/Img/Challenge/star.png" 
+                                                alt="star" 
+                                                className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
+                                            />
                                         ))}
                                     </div>
                                     <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
-                                        <div
-                                            className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
-                                            style={{ width: `${(k.progress / 10) * 100}%` }}
-                                        ></div>
-                                    </div>
-                                    <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
+                                    <div
+                                        className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
+                                        style={{ width: `${(k.progress / 10) * 100}%` }}
+                                    ></div>
+                                </div>
+                                <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
                                 </div>
                             )}
                         </div>
@@ -251,7 +390,9 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                         videoSrc={currentVideo}
                         onClose={closeModal}
                         onVideoEnd={handleVideoEnded}
-                        skippable={true} 
+                        skippable={selectedKabanataId !== null && isVideoSkippable(selectedKabanataId)}
+                        showSkipOption={pendingKabanataId !== null && isVideoCompleted(pendingKabanataId)}
+                        onSkip={() => selectedKabanataId !== null && handleSkipVideo(selectedKabanataId)}
                     />
                 )}
 
@@ -278,6 +419,16 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                     </div>
                 )}
             </div>
+
+            {showPreVideoModal && (
+                <PreVideoModal
+                    isOpen={showPreVideoModal}
+                    onClose={handleLater}
+                    onProceed={handleProceedToVideo}
+                    showSkipOption={pendingKabanataId !== null && isVideoCompleted(pendingKabanataId)}
+                    onSkip={() => pendingKabanataId !== null && handleSkipVideo(pendingKabanataId)}
+                />
+            )}
         </StudentLayout>
     );
 };
