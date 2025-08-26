@@ -18,15 +18,24 @@ use App\Models\UserKabanataProgress;
 use App\Models\VideoProgress;
 use App\Models\Video;
 use App\Models\ImageGallery;
+use App\Models\Notification;
+use App\Mail\ImageUnlockMail;
 
 class StudentController extends Controller
 {
     public function dash() {
         $user = Auth::user();
+        $unreadNotifications = $user->unreadNotifications()->count();
+        $notifications = $user->notifications()
+        ->orderBy('created_at', 'desc')
+        ->get();
+        
         return Inertia::render('Dashboard/page', [
             'music' => $user->music ?? 40, 
             'sound' => $user->sound ?? 70,
             'name'  => $user->name ?? 'User101',
+            'unreadNotifications' => $unreadNotifications,
+            'notifications' => $notifications,
         ]);
     }
 
@@ -193,7 +202,7 @@ class StudentController extends Controller
         
         session()->put($sessionKey, $progressData);
 
-        return response()->json(['message' => 'Video progress saved to session']);
+        // return response()->json(['message' => 'Video progress saved to session']);
     }
 
 
@@ -569,8 +578,57 @@ class StudentController extends Controller
             );
         }
 
+        $totalScore = min($finalQuizScore + $finalGuesswordScore, 10);
+    
+    // Update kabanata progress with the total score
+    $kabanataProgress->progress = $totalScore;
+    
+    // Calculate stars based on guessword score
+    $stars = $this->calculateStars($finalGuesswordScore);
+    
+    // Update stars only if the new calculation is higher than current stars
+    if ($stars > $kabanataProgress->stars) {
+        $kabanataProgress->stars = $stars;
+    }
+
+    // Check if this achievement unlocks any images
+    if ($finalGuesswordScore === 5) {
+        $this->checkAndNotifyImageUnlocks($user, $request->kabanata_id);
+    }
+
         return Inertia::location(route('challenge'));
     }
+
+    private function checkAndNotifyImageUnlocks($user, $kabanataId)
+{
+    $images = ImageGallery::where('kabanata_id', $kabanataId)->get();
+    
+    foreach ($images as $image) {
+        // Check if this image should be unlocked but notification not sent yet
+        $alreadyNotified = Notification::where('user_id', $user->id)
+            ->where('type', 'image_unlock')
+            ->where('message', 'like', '%Kabanata ' . $kabanataId . '%')
+            ->exists();
+
+        if (!$alreadyNotified) {
+            // Create notification
+            $notification = Notification::create([
+                'user_id' => $user->id,
+                'title' => 'New Image Unlocked! 🎉',
+                'message' => 'Congratulations! You unlocked a new image from Kabanata ' . $kabanataId . '. Check your gallery to view it!',
+                'type' => 'image_unlock',
+                'is_read' => false,
+            ]);
+
+            // Send email notification
+            try {
+                Mail::to($user->email)->queue(new ImageUnlockMail($notification, $image));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send image unlock email: ' . $e->getMessage());
+            }
+        }
+    }
+}
     /**
      * Get user's quiz progress for a specific kabanata.
      */
@@ -658,6 +716,101 @@ class StudentController extends Controller
         return Inertia::render('Dashboard/ImageGallery/page', [
             'images' => $images
         ]);
+    }
+
+    public function notifications()
+    {
+        $user = Auth::user();
+        $notifications = $user->notifications()
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'notifications' => $notifications
+        ]);
+    }
+
+    public function markAsRead()
+    {
+        $user = Auth::user();
+        $user->notifications()->update(['is_read' => true]);
+
+        // return response()->json(['success' => true]);
+    }
+
+    public function sendNotification(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+            'type' => 'nullable|string'
+        ]);
+
+        Notification::create([
+            'user_id' => $request->user_id,
+            'title' => $request->title,
+            'message' => $request->message,
+            'type' => $request->type ?? 'general',
+        ]);
+
+        // return response()->json(['success' => true]);
+    }
+
+    public function markAsReads(Request $request)
+    {
+        $request->validate([
+            'notification_id' => 'required|exists:notifications,id'
+        ]);
+
+        $notification = Notification::where('id', $request->notification_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $notification->update(['is_read' => true]);
+
+        // return response()->json(['success' => true]);
+    }
+
+    public function markAsUnread(Request $request)
+    {
+        $request->validate([
+            'notification_id' => 'required|exists:notifications,id'
+        ]);
+
+        $notification = Notification::where('id', $request->notification_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $notification->update(['is_read' => false]);
+
+        // return response()->json(['success' => true]);
+    }
+
+    public function markAllAsRead()
+    {
+        Notification::where('user_id', Auth::id())
+            ->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function destroy($id)
+    {
+        $notification = Notification::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $notification->delete();
+
+        // return response()->json(['success' => true]);
+    }
+
+    public function destroyAll()
+    {
+        Notification::where('user_id', Auth::id())->delete();
+
+        // return response()->json(['success' => true]);
     }
 
 }

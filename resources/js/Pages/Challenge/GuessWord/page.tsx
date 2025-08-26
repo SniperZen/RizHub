@@ -37,20 +37,31 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     const [isAnimating, setIsAnimating] = useState(false);
     const [penalty, setPenalty] = useState<null | number>(null);
 
-    // Timer
     const totalTime = 60;
     const [timeLeft, setTimeLeft] = useState(totalTime);
 
     const currentQ = questions[currentIndex];
     const isCorrect = currentGuess.join("") === currentQ.answer;
+    
+    const shouldAutoFill = (char: string) => {
+        return /[^A-Za-z0-9]/.test(char);
+    };
 
     useEffect(() => {
-        if (currentGuess.length === currentQ.answer.length && gameActive) {
+        const initialGuess = currentQ.answer.split("").map(char => {
+            return shouldAutoFill(char) ? char : "";
+        });
+        setCurrentGuess(initialGuess);
+    }, [currentQ]);
+
+    useEffect(() => {
+        if (currentGuess.length > 0 && currentGuess.every((char, i) => 
+            char !== "" || shouldAutoFill(currentQ.answer[i])
+        )) {
             checkAnswer();
         }
-    }, [currentGuess, currentQ.answer, gameActive]);
+    }, [currentGuess]);
 
-    // Handle unlock animation when score reaches 5
     useEffect(() => {
         if (score === 5 && !isUnlocked) {
             setIsAnimating(true);
@@ -61,10 +72,10 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         }
     }, [score, isUnlocked]);
 
-    // Timer draining
     useEffect(() => {
         if (instructionIndex < instructions.length) return;
         if (!gameActive || isGameOver) return;
+        
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
@@ -116,14 +127,38 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const addLetter = (letter: string) => {
-        if (gameActive && currentGuess.length < currentQ.answer.length) {
-            setCurrentGuess([...currentGuess, letter]);
+        if (!gameActive) return;
+        
+        let nextEmptyIndex = -1;
+        for (let i = 0; i < currentQ.answer.length; i++) {
+            if (!currentGuess[i] && !shouldAutoFill(currentQ.answer[i])) {
+                nextEmptyIndex = i;
+                break;
+            }
+        }
+        
+        if (nextEmptyIndex !== -1) {
+            const newGuess = [...currentGuess];
+            newGuess[nextEmptyIndex] = letter;
+            setCurrentGuess(newGuess);
         }
     };
 
     const removeLetter = () => {
-        if (gameActive) {
-            setCurrentGuess(currentGuess.slice(0, -1));
+        if (!gameActive) return;
+        
+        let lastFilledIndex = -1;
+        for (let i = currentGuess.length - 1; i >= 0; i--) {
+            if (currentGuess[i] && !shouldAutoFill(currentQ.answer[i])) {
+                lastFilledIndex = i;
+                break;
+            }
+        }
+        
+        if (lastFilledIndex !== -1) {
+            const newGuess = [...currentGuess];
+            newGuess[lastFilledIndex] = "";
+            setCurrentGuess(newGuess);
         }
     };
 
@@ -131,8 +166,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         if (!gameActive) return;
 
         if (isCorrect) {
-            const randomMessage =
-                successMessages[Math.floor(Math.random() * successMessages.length)];
+            const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
             setSuccessMessage(randomMessage);
 
             setScore((prevScore) => {
@@ -170,7 +204,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
             });
             setTimeLeft((prev) => Math.max(prev - 5, 0));
             setPenalty(-5);
-
             setTimeout(() => setPenalty(null), 1000);
             setShowModal("wrong");
         }
@@ -180,7 +213,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
     const nextQuestion = () => {
         setShowModal(null);
-        setCurrentGuess([]);
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
             setGameActive(true);
@@ -271,7 +303,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 bgImage="/Img/Challenge/GuessChar/BG.png"
             />
         ) : (
-
             <>
                 <div className="absolute top-[200px] right-[440px] flex flex-col items-center gap-[30px]">
                     <div className="relative w-20 h-20 mb-4">
@@ -287,8 +318,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             <div
                                 className="absolute top-0 left-0 w-full h-full rounded-full"
                                 style={{
-                                    background:
-                                        "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), transparent 60%)",
+                                    background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), transparent 60%)",
                                 }}
                             />
                         </div>
@@ -318,9 +348,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             {kabanata_title}
                         </div>
                     </div>
-                    <div
-                        className="flex flex-col items-center justify-start p-6"
-                    >
+                    <div className="flex flex-col items-center justify-start p-6">
                         <div className="relative w-[550px] h-[250px] flex items-center justify-center">
                             <img
                                 src="/Img/Challenge/GuessWord/modalBG.png"
@@ -331,7 +359,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 <span className="text-white text-lg font-semibold">
                                     {currentIndex + 1}/{questions.length}
                                 </span>
-
                                 <p className="text-white italic mt-3 font-bold leading-relaxed">
                                     {currentQ.question}
                                 </p>
@@ -341,10 +368,17 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             <div className="flex-1 text-5xl tracking-widest font-mono text-center text-white font-black">
                                 {currentQ.answer
                                     .split("")
-                                    .map((_, i) => (currentGuess[i] ? currentGuess[i] : "_"))
-                                    .join(" ")}
+                                    .map((char, i) => {
+                                    if (char === " ") return "\u00A0";
+                                    if (shouldAutoFill(char)) {
+                                        return char;
+                                    } else {
+                                        return currentGuess[i] ? currentGuess[i] : "_";
+                                    }
+                                    })
+                                    .join(" ")
+                                }
                             </div>
-
                             <div className="flex flex-row gap-3">
                                 <button
                                     className="h-12 w-24 flex items-center justify-center 
@@ -361,7 +395,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             </div>
                         </div>
 
-                        {/* Keyboard */}
                         <div className="flex flex-col items-center gap-3 mt-10">
                             {keyboardLayout.map((row, rowIndex) => (
                                 <div key={rowIndex} className="flex gap-3">
@@ -384,19 +417,14 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             ))}
                         </div>
 
-                        {/* Modals */}
                         {showModal && (
                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                             <div className="relative w-[600px] bg-transparent">
-                            {/* Wooden Frame Background */}
                             <img
                                 src="/Img/Challenge/GuessWord/wooden_frame.png"
                                 alt="Wooden Frame"
                                 className="w-full h-auto"
                             />
-
-                            {/* Stars at the top */}
-                             
                                 <div className="absolute top-[50px] left-1/2 -translate-x-1/2 flex gap-4">
                                 {(showModal === "finished") && (
                                     <>
@@ -409,7 +437,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                             `}
                                         >
                                             {i < stars ? (
-                                            // Filled Star SVG
                                             <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                                                 <defs>
                                                 <filter id="ds" x="-20%" y="-20%" width="140%" height="140%">
@@ -467,7 +494,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                     </>
                                 )}
                                 </div>
-                            {/* Modal Content */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[140px]">
                                 <h2 className="font-erica 
                                     text-[48px] leading-[72px] 
@@ -535,13 +561,11 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                                                 <path d="M0,10 Q20,5 40,10 T80,10 T120,10 T160,10" stroke="#A0522D" strokeWidth="2" fill="none" />
                                                                 <path d="M0,15 Q20,10 40,15 T80,15 T120,15 T160,15" stroke="#A0522D" strokeWidth="1" fill="none" />
                                                             </pattern>
-                                                            
                                                             <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                                                 <stop offset="0%" stopColor="#d4d4d4" />
                                                                 <stop offset="50%" stopColor="#f8f8f8" />
                                                                 <stop offset="100%" stopColor="#d4d4d4" />
                                                             </linearGradient>
-                                                            
                                                             <filter id="dropshadow" height="130%">
                                                                 <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
                                                                 <feOffset dx="2" dy="2" result="offsetblur" />
@@ -666,10 +690,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                         )}
 
                         <style>{`
-                            @keyframes ripple {
-                                0%, 100% { transform: translateY(0); }
-                                50% { transform: translateY(-3px); }
-                            }
                             .stroke-text {
                                 -webkit-text-stroke: 5px #D35D28;
                             }
