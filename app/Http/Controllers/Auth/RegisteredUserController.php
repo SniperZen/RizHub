@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Video;
 use App\Models\User;
 use App\Models\UserKabanataProgress;
+use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -13,9 +14,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Mail\WelcomeNotificationMail;
 
 class RegisteredUserController extends Controller
 {
@@ -55,19 +58,22 @@ class RegisteredUserController extends Controller
                 'stars' => 0,
                 'unlocked' => $idx === 0,
             ]);
+        }
 
-            // // Create video progress for each video in this kabanata
-            // $videos = Video::where('kabanata_id', $kabanata->id)->get();
-            // foreach ($videos as $video) {
-            //     DB::table('video_progress')->insert([
-            //         'kabanata_progress_id' => $kabanataProgress->id,
-            //         'video_id' => $video->id,
-            //         'seconds_watched' => 0,
-            //         'completed' => false,
-            //         'created_at' => now(),
-            //         'updated_at' => now(),
-            //     ]);
-            // }
+        // Create welcome notification
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'title' => 'Welcome to RizHub!',
+            'message' => 'Hello ' . $user->name . '! Welcome to RizHub. We\'re excited to have you on board. Start your journey with Noli Me Tangere Challenge!',
+            'type' => 'welcome',
+            'is_read' => false,
+        ]);
+
+        // Send welcome email
+        try {
+            Mail::to($user->email)->send(new WelcomeNotificationMail($notification));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
 
         event(new Registered($user));
