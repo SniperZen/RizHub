@@ -440,23 +440,46 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                 )}
 
                 {showEndModal && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h2 className="text-xl font-bold mb-4">Video Finished</h2>
-                            <p className="mb-6">Would you like to retry the video or proceed?</p>
-                            <div className="flex justify-center space-x-4">
-                                <button
-                                    onClick={retryVideo}
-                                    className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
-                                >
-                                    Retry
-                                </button>
-                                <button
-                                    onClick={proceedNext}
-                                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg"
-                                >
-                                    Proceed
-                                </button>
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
+                        <div className="relative w-full max-w-2xl">
+                        <img
+                            src="/Img/Challenge/vidModal.png"
+                            alt="Wooden Modal"
+                            className="w-full h-auto"
+                        />
+                            <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-10">
+                                <p className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-28">
+                                    <span className="text-[#B26D42]">
+                                        Would you like to{" "}
+                                        <span className="underline decoration-wavy decoration-[#FF7E47]">
+                                        retry the video
+                                        </span>{" "}
+                                        or{" "}
+                                        <span className="underline decoration-wavy decoration-[#FFA500]">
+                                        proceed to the challenge?
+                                        </span>
+                                    </span>
+                                </p>
+
+                                <div className="flex gap-6 mt-36 flex-wrap justify-center">
+                                    <button
+                                        onClick={retryVideo}
+                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FFD93D] to-[#FFB300] shadow-[4px_8px_0_#C48C00] border-4 border-[#E6C17B] text-white text-2xl font-extrabold relative transition hover:scale-105"
+                                    >
+                                        Retry
+                                        <span className="absolute top-3 w-4 h-4 bg-white/80 rounded-full"></span>
+                                        <span className="absolute top-7 right-8 w-[10px] h-[10px] bg-white/60 rounded-full"></span>
+                                    </button>
+
+                                    <button
+                                        onClick={proceedNext}
+                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#34D399] to-[#059669] shadow-[4px_8px_0_#047857] border-4 border-[#6EE7B7] text-white text-2xl font-extrabold relative transition hover:scale-105"
+                                    >
+                                        Proceed
+                                        <span className="absolute top-3 w-4 h-4 bg-white/80 rounded-full"></span>
+                                        <span className="absolute top-7 right-8 w-[10px] h-[10px] bg-white/60 rounded-full"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
