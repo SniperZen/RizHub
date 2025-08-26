@@ -30,6 +30,10 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     const [lives, setLives] = useState(3);
     const [lostHearts, setLostHearts] = useState<number[]>([]);
     const [instructionIndex, setInstructionIndex] = useState(0);
+    const [showLockTooltip, setShowLockTooltip] = useState(false);
+    const [showGiftTooltip, setShowGiftTooltip] = useState(false);
+    const [isUnlocked, setIsUnlocked] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     // Instruction modals content
     const instructions = [
@@ -63,6 +67,17 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
             setSelectedQuizzes(selected);
         }
     }, [quizzes]);
+
+    // Handle unlock animation when score reaches 5
+    useEffect(() => {
+        if (score === 5 && !isUnlocked) {
+            setIsAnimating(true);
+            setTimeout(() => {
+                setIsUnlocked(true);
+                setIsAnimating(false);
+            }, 2000);
+        }
+    }, [score, isUnlocked]);
 
     const currentQuiz = selectedQuizzes[currentQuizIndex];
 
@@ -176,7 +191,29 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         setLostHearts([]);
     };
 
-    const proceedToNextPage = () => {
+    const proceedToHomePage = () => {
+        const isPerfectScore = score === selectedQuizzes.length;
+        
+        router.post(route('quiz.complete'), {
+            kabanata_id: kabanataId,
+            score: score,
+            total_questions: selectedQuizzes.length,
+            perfect_score: isPerfectScore,
+        }, {
+            onSuccess: (response) => {
+                console.log('Quiz completed successfully', response);
+                if (response.props.perfect_score) {
+                    console.log('Perfect score achieved! Guessword and video progress updated.');
+                }
+                router.visit(route('challenge'));
+            },
+            onError: (errors) => {
+                console.error('Failed to complete quiz:', errors);
+            }
+        });
+    };
+
+    const proceedToKabanataPage = () => {
         const isPerfectScore = score === selectedQuizzes.length;
         
         router.post(route('quiz.complete'), {
@@ -224,47 +261,259 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-amber-50 p-6 bg-cover bg-center" 
                  style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
-                <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
-                    <h2 className="text-2xl font-bold mb-4">
-                        {isPerfectScore ? "🎉 Perfect Score! 🎉" : "Quiz Completed!"}
-                    </h2>
-                    <p className="text-lg mb-2">Your final score: {score}/{selectedQuizzes.length}</p>
-                    
-                    {isPerfectScore ? (
-                        <>
-                            <p className="text-green-600 font-bold text-lg mb-4">
+                
+                {/* Wooden Frame Modal */}
+                <div className="relative w-[600px] bg-transparent">
+                    <img
+                        src="/Img/Challenge/GuessWord/wooden_frame.png"
+                        alt="Wooden Frame"
+                        className="w-full h-auto"
+                    />
+
+                    {/* Stars at the top */}
+                    <div className="absolute top-[50px] left-1/2 -translate-x-1/2 flex gap-4">
+                        {isPerfectScore && (
+                            <>
+                                {[...Array(3)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={`flex items-center justify-center
+                                            ${i === 1 ? "w-[70px] h-[70px]" : "w-12 h-12"}
+                                            ${i === 0 || i === 2 ? "translate-y-[25px]" : ""}
+                                        `}
+                                    >
+                                        {i < 3 ? (
+                                            // Filled Star SVG
+                                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                                                <defs>
+                                                <filter id="ds" x="-20%" y="-20%" width="140%" height="140%">
+                                                    <feOffset dy="2" in="SourceAlpha" result="off" />
+                                                    <feGaussianBlur stdDeviation="2" in="off" result="blur" />
+                                                    <feColorMatrix
+                                                    type="matrix"
+                                                    values="0 0 0 0 0
+                                                            0 0 0 0 0
+                                                            0 0 0 0 0
+                                                            0 0 0 .35 0"
+                                                    in="blur"
+                                                    />
+                                                    <feMerge>
+                                                    <feMergeNode />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                    </feMerge>
+                                                </filter>
+                                                <linearGradient id="gold" x1="0" x2="0" y1="0" y2="1">
+                                                    <stop offset="0%" stopColor="#FFE682" />
+                                                    <stop offset="45%" stopColor="#FFC837" />
+                                                    <stop offset="100%" stopColor="#FF9F0F" />
+                                                </linearGradient>
+                                                <radialGradient id="gloss" cx="30%" cy="30%" r="70%">
+                                                    <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
+                                                    <stop offset="60%" stopColor="rgba(255,255,255,0.0)" />
+                                                </radialGradient>
+                                                </defs>
+                                                <polygon
+                                                points="32,5 39,22 58,24 44,37 48,56 32,46 16,56 20,37 6,24 25,22"
+                                                fill="url(#gold)"
+                                                stroke="#A66300"
+                                                strokeWidth="2.5"
+                                                strokeLinejoin="round"
+                                                filter="url(#ds)"
+                                                />
+                                                <polygon
+                                                points="32,5 39,22 58,24 44,37 48,56 32,46 16,56 20,37 6,24 25,22"
+                                                fill="url(#gloss)"
+                                                />
+                                            </svg>
+                                        ) : (
+                                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                                                <polygon
+                                                points="32,5 39,22 58,24 44,37 48,56 32,46 16,56 20,37 6,24 25,22"
+                                                fill="none"
+                                                stroke="#C7A15A"
+                                                strokeWidth="3"
+                                                strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        )}
+                                    </div>
+                                ))}
+                            </>
+                        )}
+                    </div>
+
+                    {/* Modal Content */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[140px]">
+                        <h2 className="font-erica 
+                            text-[48px] leading-[72px] 
+                            font-black 
+                            text-[#F6D65A] 
+                            stroke-text"
+                        >
+                            {isPerfectScore ? "PERFECT SCORE!" : "QUIZ COMPLETED!"}
+                        </h2>
+                        
+                        <p className="text-white text-lg mb-3">
+                            Your final score: {score}/{selectedQuizzes.length}
+                        </p>
+
+                        {isPerfectScore ? (
+                            <p className="text-white text-lg mb-3">
                                 Congratulations! You got all answers correct!
                             </p>
-                            <button 
-                                onClick={proceedToNextPage} 
-                                className="bg-green-500 text-white px-6 py-2 rounded-lg mt-4"
-                            >
-                                Proceed to Next Page
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            {lives <= 0 ? (
-                                <p className="text-red-600 font-bold text-lg mb-4">
-                                    You ran out of lives!
-                                </p>
+                        ) : (
+                            <>
+                                {lives <= 0 ? (
+                                    <p className="text-red-500 text-lg mb-3">
+                                        You ran out of lives!
+                                    </p>
+                                ) : (
+                                    <p className="text-red-500 text-lg mb-3">
+                                        You need a perfect score (5/5) to proceed.
+                                    </p>
+                                )}
+                            </>
+                        )}
+
+                        {/* Gift/Lock Section */}
+                        <div className="relative flex items-center justify-center w-32 h-32 my-3">
+                            {isPerfectScore ? (
+                                <>
+                                    <img
+                                        src="/Img/Challenge/GuessWord/fireworks.png"
+                                        alt="Fireworks"
+                                        className="absolute inset-0 w-full h-full animate-pulse"
+                                    />
+                                    <div 
+                                        className="absolute z-10 w-24 h-24 m-auto inset-0 flex items-center justify-center"
+                                        onMouseEnter={() => setShowGiftTooltip(true)}
+                                        onMouseLeave={() => setShowGiftTooltip(false)}
+                                    >
+                                        <img
+                                            src="/Img/Challenge/GuessWord/gift.png"
+                                            alt="Reward Gift"
+                                            className="w-full h-full"
+                                        />
+                                    </div>
+                                    {isAnimating && (
+                                        <div className="absolute inset-0 flex items-center justify-center z-30">
+                                            <circle cx="50%" cy="50%" r="15" stroke="#FFD700" strokeWidth="2" fill="none" strokeDasharray="5,2">
+                                                <animate attributeName="r" from="8" to="20" dur="2s" fill="freeze" />
+                                                <animate attributeName="opacity" from="1" to="0" dur="2s" fill="freeze" />
+                                            </circle>
+                                            <circle cx="50%" cy="50%" r="10" stroke="#FFD700" strokeWidth="2" fill="none">
+                                                <animate attributeName="r" from="5" to="15" dur="2s" fill="freeze" />
+                                                <animate attributeName="opacity" from="1" to="0" dur="2s" fill="freeze" />
+                                            </circle>
+                                        </div>
+                                    )}
+                                </>
                             ) : (
-                                <p className="text-red-600 font-bold text-lg mb-4">
-                                    You need a perfect score (5/5) to proceed.
-                                </p>
+                                <>
+                                    <div className="absolute inset-0 bg-black bg-opacity-60 rounded-lg z-20 flex items-center justify-center">
+                                        <svg
+                                            width="64"
+                                            height="64"
+                                            viewBox="0 0 64 64"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="w-16 h-16"
+                                            onMouseEnter={() => setShowLockTooltip(true)}
+                                            onMouseLeave={() => setShowLockTooltip(false)}
+                                        >
+                                            <defs>
+                                                <pattern id="woodTexture" patternUnits="userSpaceOnUse" width="100" height="20" patternTransform="rotate(30)">
+                                                    <rect width="100" height="20" fill="#8B4513" />
+                                                    <path d="M0,10 Q20,5 40,10 T80,10 T120,10 T160,10" stroke="#A0522D" strokeWidth="2" fill="none" />
+                                                    <path d="M0,15 Q20,10 40,15 T80,15 T120,15 T160,15" stroke="#A0522D" strokeWidth="1" fill="none" />
+                                                </pattern>
+                                                
+                                                <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                    <stop offset="0%" stopColor="#d4d4d4" />
+                                                    <stop offset="50%" stopColor="#f8f8f8" />
+                                                    <stop offset="100%" stopColor="#d4d4d4" />
+                                                </linearGradient>
+                                                
+                                                <filter id="dropshadow" height="130%">
+                                                    <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                                                    <feOffset dx="2" dy="2" result="offsetblur" />
+                                                    <feComponentTransfer>
+                                                        <feFuncA type="linear" slope="0.5" />
+                                                    </feComponentTransfer>
+                                                    <feMerge> 
+                                                        <feMergeNode />
+                                                        <feMergeNode in="SourceGraphic" />
+                                                    </feMerge>
+                                                </filter>
+                                            </defs>
+                                            <rect x="12" y="20" width="40" height="30" rx="5" fill="url(#woodTexture)" filter="url(#dropshadow)" />
+                                            <path
+                                                d="M20,20 C20,10 44,10 44,20"
+                                                stroke="url(#metalGradient)"
+                                                strokeWidth="12"
+                                                fill="none"
+                                                strokeLinecap="round"
+                                            />
+                                            <circle cx="32" cy="35" r="5" fill="#333" />
+                                            <rect x="30" y="35" width="4" height="12" rx="1" fill="#333" />
+                                            <path d="M17,25 Q27,23 32,35 Q37,23 47,25" stroke="rgba(255,255,255,0.3)" strokeWidth="2" fill="none" />
+                                        </svg>
+                                    </div>
+                                    {showLockTooltip && (
+                                        <div className="absolute top-full mt-2 bg-white text-black p-3 rounded-lg shadow-lg z-30 w-64">
+                                            <p className="text-sm font-semibold">
+                                                Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
+                                            </p>
+                                        </div>
+                                    )}
+                                </>
                             )}
-                            <p className="text-gray-600 mb-4">
-                                Please try again to get all answers correct.
-                            </p>
-                            <button 
-                                onClick={restartQuiz} 
-                                className="bg-blue-500 text-white px-6 py-2 rounded-lg mt-4"
-                            >
-                                Try Again
-                            </button>
-                        </>
-                    )}
+                        </div>
+                        
+                        {showGiftTooltip && isPerfectScore && (
+                            <div className="absolute top-52 mt-2 bg-white text-black p-3 rounded-lg shadow-lg z-30 w-64">
+                                <p className="text-sm font-semibold text-center">
+                                    The image gallery for Kabanata {kabanata_number}: {kabanata_title} has been unlocked!
+                                    Please complete the course by proceeding to the next challenge.
+                                </p>
+                            </div>
+                        )}
+                        
+                        <div className="flex gap-4 mt-[125px]">     
+                            {isPerfectScore ? (
+                                <>
+                                    <button className="rounded-full p-3 relative" onClick={proceedToHomePage}>
+                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
+                                    </button>
+                                    <button
+                                        className="rounded-full p-3 relative"
+                                        onClick={proceedToKabanataPage}
+                                    >
+                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
+                                    </button>
+                                </>
+                                
+                            ) : (
+                                <>
+                                    <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
+                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
+                                    </button>
+                                    <button
+                                        onClick={restartQuiz}
+                                        className="rounded-full p-3 relative"
+                                    >
+                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </div>
+
+                <style>{`
+                    .stroke-text {
+                        -webkit-text-stroke: 5px #D35D28;
+                    }
+                `}</style>
             </div>
         );
     }
@@ -363,14 +612,6 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
                     {/* Progress Bar */}
                     <div className=" absolute bottom-0 w-full max-w-lg mb-6">
-                        {/* <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-medium text-amber-800">
-                                Question {currentQuizIndex + 1} of {selectedQuizzes.length}
-                            </span>
-                            <span className="text-sm font-medium text-amber-800">
-                                Score: {score}/{selectedQuizzes.length}
-                            </span>
-                        </div> */}
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
                             <div 
                                 className="bg-amber-600 h-2.5 rounded-full transition-all duration-300" 
@@ -383,41 +624,70 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
             {/* Result Modal */}
             {showResult && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg text-center shadow-xl max-w-md">
-                        {isCorrect ? (
-                            <>
-                                <p className="text-green-600 font-bold text-xl mb-4">Correct!</p>
-                                <p className="mb-4">Good job! Your answer is right.</p>
-                                <button 
-                                    onClick={nextQuestion}
-                                    className="bg-green-500 text-white px-6 py-2 rounded-lg"
-                                >
-                                    {currentQuizIndex < selectedQuizzes.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="relative w-[600px] bg-transparent">
+                        {/* Wooden Frame Background */}
+                        <img
+                            src="/Img/Challenge/GuessWord/wooden_frame.png"
+                            alt="Wooden Frame"
+                            className="w-full h-auto"
+                        />
+
+                        {/* Modal Content */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[140px]">
+                            <h2 className="font-erica 
+                                text-[48px] leading-[72px] 
+                                font-black 
+                                text-[#F6D65A] 
+                                stroke-text"
+                            >
+                                {isCorrect ? "CORRECT!" : "INCORRECT!"}
+                            </h2>
+                            
+                            {isCorrect ? (
+                                <p className="text-white text-lg mb-3">Tama ang sagot!</p>
+                            ) : (
+                                <p className="text-red-500 text-lg mb-3">
+                                    Mali! Ang tamang sagot ay: {
+                                        currentQuiz.correct_answer === 'A' ? currentQuiz.choice_a :
+                                        currentQuiz.correct_answer === 'B' ? currentQuiz.choice_b :
+                                        currentQuiz.choice_c
+                                    }
+                                </p>
+                            )}
+
+                            <div className="flex gap-4 mt-[200px]">
+                                <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
+                                    <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
                                 </button>
-                            </>
-                        ) : (
-                            <>
-                                <p className="text-red-600 font-bold text-xl mb-4">Incorrect!</p>
-                                <p className="mb-2">The correct answer is: {
-                                    currentQuiz.correct_answer === 'A' ? currentQuiz.choice_a :
-                                    currentQuiz.correct_answer === 'B' ? currentQuiz.choice_b :
-                                    currentQuiz.choice_c
-                                }</p>
-                                <p className="mb-4 text-red-500">You lost a life! {lives - 1} remaining.</p>
-                                <div className="flex gap-3 justify-center">
-                                    <button 
-                                        onClick={tryAgain}
-                                        className="bg-blue-500 text-white px-6 py-2 rounded-lg"
+                                {isCorrect ? (
+                                    <button
+                                        onClick={nextQuestion}
+                                        className="rounded-full p-3 relative"
                                     >
-                                        Try Again
+                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
                                     </button>
-                                </div>
-                            </>
-                        )}
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={tryAgain}
+                                            className="rounded-full p-3 relative"
+                                        >
+                                            <img src="/Img/Challenge/GuessWord/restart.png" alt="Try Again" className="w-[60px] h-[60px]" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
+
+            <style>{`
+                .stroke-text {
+                    -webkit-text-stroke: 5px #D35D28;
+                }
+            `}</style>
         </div>
     );
 }

@@ -57,6 +57,14 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::get('/api/quiz/{kabanataId}/progress', [StudentController::class, 'getProgress'])->name('api.quiz.progress');
     Route::delete('/api/quiz/{kabanataId}/reset', [StudentController::class, 'resetProgress'])->name('api.quiz.reset');
     Route::get('/Dashboard/image-gallery', [StudentController::class, 'gallery'])->name('image.gallery');
+    Route::get('/notifications', [StudentController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/mark-as-read', [StudentController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/send-notification', [StudentController::class, 'sendNotification'])->name('send.notification');
+    Route::post('/notifications/mark-as-read', [StudentController::class, 'markAsReads'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-as-unread', [StudentController::class, 'markAsUnread'])->name('notifications.markAsUnread');
+    Route::post('/notifications/mark-all-read', [StudentController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::delete('/notifications/{notification}', [StudentController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications', [StudentController::class, 'destroyAll'])->name('notifications.destroyAll');
 });
 
 // Route::get('/login', [LoginController::class, 'login'])->name('login');

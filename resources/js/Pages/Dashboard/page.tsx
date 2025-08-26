@@ -7,15 +7,33 @@ import Delete from '../../../js/Pages/Dashboard/Partial/Delete';
 import LogoutModal from '../../../js/Pages/Dashboard/Partial/LogoutModal';
 import ShareModal from '../../../js/Pages/Dashboard/Partial/ShareModal';
 import { PageProps } from '@/types';
+import MailModal from '../../../js/Pages/Dashboard/Partial/MailModal';
 
+export interface AppNotification {
+    id: number;
+    user_id: number;
+    title: string;
+    message: string;
+    type: string;
+    is_read: boolean;
+    created_at: string;
+    updated_at: string;
+}
 interface DashboardProps {
     music: number;
     sound: number;
     name : string;
+    unreadNotifications: number;
+    notifications: AppNotification[];
 }
 
-export default function Dashboard({ music: initialMusic, sound: initialSound, name: initialName }: DashboardProps) {
-
+export default function Dashboard({ 
+    music: initialMusic, 
+    sound: initialSound, 
+    name: initialName, 
+    unreadNotifications: initialUnreadNotifications,
+    notifications: initialNotifications
+}: DashboardProps) {
 
     const [showSettings, setShowSettings] = useState(false);
     const [showAccount, setShowAccount] = useState(false);
@@ -30,6 +48,8 @@ export default function Dashboard({ music: initialMusic, sound: initialSound, na
     const [showShare, setShowShare] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [showMail, setShowMail] = useState(false);
+    const [unreadCount, setUnreadCount] = useState(initialUnreadNotifications);
     const [formData, setFormData] = useState({
         currentPassword: '',
         newPassword: '',
@@ -193,6 +213,13 @@ export default function Dashboard({ music: initialMusic, sound: initialSound, na
         patch(route('profile.update'));
     };
 
+    const markAsRead = () => {
+        router.post(route('notifications.markAsRead'), {}, {
+            onSuccess: () => {
+                setUnreadCount(0);
+            }
+        });
+    };
 
     return (
         <StudentLayout>
@@ -250,10 +277,19 @@ export default function Dashboard({ music: initialMusic, sound: initialSound, na
                         </button>
                         <button
                             type="button"
-                            className="transition hover:scale-110 focus:outline-none"
+                            className="transition hover:scale-110 focus:outline-none relative"
                             aria-label="Mail"
+                            onClick={() => {
+                                setShowMail(true);
+                                markAsRead();
+                            }}
                         >
                             <img src="/Img/Dashboard/mail.png" alt="Mail" className="w-20 h-14" />
+                            {unreadCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                                    {unreadCount > 9 ? '9+' : unreadCount}
+                                </span>
+                            )}
                         </button>
                         <Button
                             className="transition hover:scale-110 focus:outline-none"
@@ -645,6 +681,11 @@ export default function Dashboard({ music: initialMusic, sound: initialSound, na
                             setShowDeleteModal(false);
                             setShowAccount(false);
                         }}
+                    />
+                    <MailModal 
+                        isOpen={showMail} 
+                        onClose={() => setShowMail(false)}
+                        notifications={initialNotifications as any}
                     />
             </div>
         </StudentLayout>
