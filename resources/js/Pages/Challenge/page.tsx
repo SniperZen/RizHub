@@ -35,9 +35,11 @@ interface PageProps {
     music: number;
     sound: number;
     videoProgress: VideoProgress[];
+    showVideo?: boolean;
+    kabanataId?: number;
 }
 
-const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sound: initialSound, videoProgress }) => {
+const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sound: initialSound, videoProgress, showVideo = false, kabanataId = null}) => {
     const [currentPage] = useState(kabanatas.current_page);
     const [music, setMusic] = useState(initialMusic);
     const [volume, setVolume] = useState(initialSound);
@@ -55,7 +57,7 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
     const [currentVideo, setCurrentVideo] = useState<string>("");
     const [hasVideoEnded, setHasVideoEnded] = useState(false);
     const [videoCompleted, setVideoCompleted] = useState<Record<number, boolean>>({});
-    const [retryCounts, setRetryCounts] = useState<Record<number, number>>({}); // Track retry counts per kabanata
+    const [retryCounts, setRetryCounts] = useState<Record<number, number>>({});
 
     const positions = [
         { top: "55%", left: "9%" },
@@ -75,43 +77,72 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
     };
 
     useEffect(() => {
-    addDebugLog("📘 Kabanata Page Mounted");
-    addDebugLog(`Received ${videoProgress.length} video progress records`);
-    
-    console.log("📘 Kabanata Progress Status:");
-    kabanatas.data.forEach((k) => {
-        console.log({
-            id: k.id,
-            title: k.kabanata,
-            unlocked: k.unlocked,
-            stars: k.stars,
-            progress: `${k.progress}/10`
-        });
-    });
-    
-    // Log all video progress data received from backend
-    console.log("🎥 Video Progress Data:", videoProgress);
-    videoProgress.forEach((progress, index) => {
-        addDebugLog(`Video Progress ${index + 1}: Video ID ${progress.video_id}, Completed: ${progress.completed}, Kabanata Progress ID: ${progress.kabanata_progress_id}`);
-    });
-
-    const kabanataCompletionMap: Record<number, boolean> = {};
-    kabanatas.data.forEach(kabanata => {
-        const videoCompleted = videoProgress.some(vp => vp.video_id === kabanata.id && vp.completed);
+        addDebugLog("📘 Kabanata Page Mounted");
+        addDebugLog(`Received ${videoProgress.length} video progress records`);
         
-        kabanataCompletionMap[kabanata.id] = videoCompleted;
-        addDebugLog(`Kabanata ${kabanata.id} completion: ${kabanataCompletionMap[kabanata.id]}`);
-    });
-    
-    setVideoCompleted(kabanataCompletionMap);
-    
-    // Initialize retry counts
-    const initialRetryCounts: Record<number, number> = {};
-    kabanatas.data.forEach(k => {
-        initialRetryCounts[k.id] = 0;
-    });
-    setRetryCounts(initialRetryCounts);
-}, [kabanatas, videoProgress]);
+        console.log("📘 Kabanata Progress Status:");
+        kabanatas.data.forEach((k) => {
+            console.log({
+                id: k.id,
+                title: k.kabanata,
+                unlocked: k.unlocked,
+                stars: k.stars,
+                progress: `${k.progress}/10`
+            });
+        });
+        
+        // Log all video progress data received from backend
+        console.log("🎥 Video Progress Data:", videoProgress);
+        videoProgress.forEach((progress, index) => {
+            addDebugLog(`Video Progress ${index + 1}: Video ID ${progress.video_id}, Completed: ${progress.completed}, Kabanata Progress ID: ${progress.kabanata_progress_id}`);
+        });
+
+        const kabanataCompletionMap: Record<number, boolean> = {};
+        kabanatas.data.forEach(kabanata => {
+            const videoCompleted = videoProgress.some(vp => vp.video_id === kabanata.id && vp.completed);
+            
+            kabanataCompletionMap[kabanata.id] = videoCompleted;
+            addDebugLog(`Kabanata ${kabanata.id} completion: ${kabanataCompletionMap[kabanata.id]}`);
+        });
+        
+        setVideoCompleted(kabanataCompletionMap);
+        
+        // Initialize retry counts
+        const initialRetryCounts: Record<number, number> = {};
+        kabanatas.data.forEach(k => {
+            initialRetryCounts[k.id] = 0;
+        });
+        setRetryCounts(initialRetryCounts);
+
+        // Check if we need to show a video for a newly unlocked kabanata
+        const urlParams = new URLSearchParams(window.location.search);
+        const showVideoParam = urlParams.get('showVideo');
+        const kabanataIdParam = urlParams.get('kabanataId');
+        
+        if (showVideoParam === 'true' && kabanataIdParam) {
+            const kabanataId = parseInt(kabanataIdParam);
+            
+            // Find the kabanata in our data
+            const kabanata = kabanatas.data.find(k => k.id === kabanataId);
+            
+            if (kabanata && kabanata.unlocked && !isVideoCompleted(kabanataId)) {
+                // Show the pre-video modal for this kabanata
+                setPendingKabanataId(kabanataId);
+                setShowPreVideoModal(true);
+                
+                // Clean up the URL
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, '', newUrl);
+            }
+        }
+    }, [kabanatas, videoProgress]);
+
+    useEffect(() => {
+        if (showVideo && kabanataId) {
+            setPendingKabanataId(kabanataId);
+            setShowPreVideoModal(true);
+        }
+    }, [showVideo, kabanataId]);
 
 
     const saveAudioSettings = useCallback(() => {
@@ -121,6 +152,18 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
             { preserveScroll: true, preserveState: true }
         );
     }, [music, volume, isMusicMuted, isVolumeMuted]);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const showVideoParam = urlParams.get('showVideo');
+        const kabanataIdParam = urlParams.get('kabanataId');
+        
+        if (showVideoParam === 'true' && kabanataIdParam) {
+            const kabanataId = parseInt(kabanataIdParam);
+            setPendingKabanataId(kabanataId);
+            setShowPreVideoModal(true);
+        }
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
