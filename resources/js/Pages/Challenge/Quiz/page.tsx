@@ -359,7 +359,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
                         {isPerfectScore ? (
                             <p className="text-white text-lg mb-3">
-                                Congratulations! You got all answers correct!
+                                {/* Congratulations! You got all answers correct! */}
                             </p>
                         ) : (
                             <>
@@ -648,11 +648,12 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                 <p className="text-white text-lg mb-3">Tama ang sagot!</p>
                             ) : (
                                 <p className="text-red-500 text-lg mb-3">
-                                    Mali! Ang tamang sagot ay: {
+                                    Mali ang sagot!
+                                    {/* Mali! Ang tamang sagot ay: {
                                         currentQuiz.correct_answer === 'A' ? currentQuiz.choice_a :
                                         currentQuiz.correct_answer === 'B' ? currentQuiz.choice_b :
                                         currentQuiz.choice_c
-                                    }
+                                    } */}
                                 </p>
                             )}
 

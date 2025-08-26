@@ -5,97 +5,130 @@
     <title>New Image Unlocked!</title>
     <style>
         body { 
-            font-family: 'Arial', sans-serif; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
             line-height: 1.6; 
             color: #3D2410; 
-            background-color: #f9f3e9;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
         .container { 
-            max-width: 600px; 
+            max-width: 640px; 
             margin: 0 auto; 
-            background: white;
-            border-radius: 15px;
+            background: #ffffff;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
         }
         .header { 
-            background: linear-gradient(135deg, #FF6A00, #D5703A); 
-            padding: 30px; 
+            background: linear-gradient(135deg, #FF7E47, #D95D2D); 
+            padding: 40px 20px; 
             text-align: center; 
             color: white; 
         }
-        .logo {
-            max-width: 120px;
-            margin-bottom: 15px;
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0;
+            font-size: 16px;
+            opacity: 0.9;
         }
         .content { 
-            padding: 30px; 
+            padding: 35px; 
+        }
+        .content h2 {
+            font-size: 22px;
+            margin-top: 0;
+            color: #2C1810;
+        }
+        .content p {
+            margin: 15px 0;
+            font-size: 15px;
+            color: #4B3A2A;
         }
         .button { 
             display: inline-block; 
-            padding: 15px 30px; 
-            background: linear-gradient(135deg, #FF6A00, #D5703A);
+            padding: 14px 28px; 
+            background: linear-gradient(135deg, #FF7E47, #D95D2D);
             color: white; 
             text-decoration: none; 
-            border-radius: 25px;
+            border-radius: 30px;
+            font-size: 16px;
             font-weight: bold;
-            margin: 20px 0;
-            border: none;
-            cursor: pointer;
+            margin: 25px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: linear-gradient(135deg, #FF8F5A, #E96D3D);
         }
         .image-preview {
             text-align: center;
-            margin: 20px 0;
+            margin: 25px 0;
         }
         .image-preview img {
             max-width: 100%;
             height: auto;
             border-radius: 10px;
-            border: 3px solid #FFB84C;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 3px solid #FFD180;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .image-caption {
+            font-size: 14px;
+            color: #6B5B4A;
+            margin-top: 10px;
+            font-style: italic;
         }
         .footer {
             text-align: center;
-            padding: 20px;
-            background: #3D2410;
-            color: white;
+            padding: 25px;
+            background: #2C1810;
+            color: #e0d6cc;
+            font-size: 13px;
+        }
+        .footer p {
+            margin: 6px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        
+        <!-- Header -->
         <div class="header">
-            <h1>🎉 New Image Unlocked!</h1>
+            <h1>New Image Unlocked!</h1>
             <p>Congratulations on your achievement!</p>
         </div>
         
+        <!-- Content -->
         <div class="content">
-            <h2>Hello {{ $user->name }}! 👋</h2>
+            <h2>Hello {{ $user->name }}</h2>
             
             <p>{{ $notification->message }}</p>
             
             <div class="image-preview">
-                <img src="{{ $image->image_url }}" alt="Unlocked Image from Kabanata {{ $image->kabanata->number }}" 
-                     style="max-height: 300px; object-fit: contain;">
-                <p class="text-sm text-gray-600 mt-2">
-                    Kabanata {{ $image->kabanata->number }}: {{ $image->kabanata->title }}
+                <img src="{{ $image->image_url }}" alt="Unlocked Image from Kabanata {{ $image->kabanata->number }}">
+                <p class="image-caption">
+                    Kabanata {{ $image->kabanata->number }} — {{ $image->kabanata->title }}
                 </p>
             </div>
 
-            <p>This image has been added to your personal gallery collection. Keep completing challenges to unlock more images!</p>
+            <p>This image has been added to your personal gallery collection. Keep completing challenges to unlock more!</p>
             
             <div style="text-align: center;">
-                <a href="{{ url('/image-gallery') }}" class="button">View Your Gallery</a>
+                <a href="{{ url('image.gallery') }}" class="button">View Your Gallery</a>
             </div>
             
-            <p>Continue your journey through Noli Me Tangere and discover more hidden treasures!</p>
+            <p>Continue your journey through <em>Noli Me Tangere</em> and discover more hidden treasures!</p>
             
             <p>Happy exploring!<br>
             <strong>The RizHub Team</strong></p>
         </div>
         
+        <!-- Footer -->
         <div class="footer">
             <p>&copy; {{ date('Y') }} RizHub. All rights reserved.</p>
             <p>Experience Philippine literature in a whole new way</p>
