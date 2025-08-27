@@ -22,6 +22,7 @@ interface VideoProgress {
     seconds_watched: number;
     created_at: string;
     updated_at: string;
+    kabanata_id?: number; 
 }
 
 interface KabanatasPaginated {
@@ -121,21 +122,18 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
         
         if (showVideoParam === 'true' && kabanataIdParam) {
             const kabanataId = parseInt(kabanataIdParam);
-            
-            // Find the kabanata in our data
             const kabanata = kabanatas.data.find(k => k.id === kabanataId);
             
             if (kabanata && kabanata.unlocked && !isVideoCompleted(kabanataId)) {
-                // Show the pre-video modal for this kabanata
-                setPendingKabanataId(kabanataId);
-                setShowPreVideoModal(true);
-                
-                // Clean up the URL
-                const newUrl = window.location.pathname;
-                window.history.replaceState({}, '', newUrl);
+            setPendingKabanataId(kabanataId);
+            setShowPreVideoModal(true);
+            
+            // Clean up the URL
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
             }
         }
-    }, [kabanatas, videoProgress]);
+    }, [kabanatas, videoProgress, kabanatas.data]);
 
     useEffect(() => {
         if (showVideo && kabanataId) {
@@ -152,19 +150,7 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
             { preserveScroll: true, preserveState: true }
         );
     }, [music, volume, isMusicMuted, isVolumeMuted]);
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const showVideoParam = urlParams.get('showVideo');
-        const kabanataIdParam = urlParams.get('kabanataId');
-        
-        if (showVideoParam === 'true' && kabanataIdParam) {
-            const kabanataId = parseInt(kabanataIdParam);
-            setPendingKabanataId(kabanataId);
-            setShowPreVideoModal(true);
-        }
-    }, []);
-
+    
     useEffect(() => {
         const timer = setTimeout(() => {
             saveAudioSettings();

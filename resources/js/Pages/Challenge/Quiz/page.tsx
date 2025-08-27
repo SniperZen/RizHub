@@ -224,13 +224,21 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         }, {
             onSuccess: (response) => {
                 console.log('Quiz completed successfully', response);
-                if (response.props.perfect_score) {
-                    console.log('Perfect score achieved! Guessword and video progress updated.');
+                if (isPerfectScore) {
+                    console.log('Perfect score achieved!');
+                    
+                    // Navigate to kabanata page with parameters to show next kabanata video
+                    router.visit(route('challenge', {
+                        showVideo: true,
+                        kabanataId: kabanataId + 1 // This will show the next kabanata
+                    }));
+                } else {
+                    router.visit(route('challenge'));
                 }
-                router.visit(route('challenge'));
             },
             onError: (errors) => {
                 console.error('Failed to complete quiz:', errors);
+                router.visit(route('challenge'));
             }
         });
     };

@@ -146,9 +146,9 @@ class StudentController extends Controller
         $file = $request->file('video');
         $path = $file->store('videos', 'public');
 
-        $duration = FFProbe::create()
-            ->format(storage_path("app/public/" . $path))
-            ->get('duration');
+        // Create FFProbe instance properly
+        $ffprobe = FFProbe::create();
+        $duration = $ffprobe->format(storage_path("app/public/" . $path))->get('duration');
 
         Video::create([
             'title' => $file->getClientOriginalName(),
@@ -157,8 +157,15 @@ class StudentController extends Controller
             'kabanata_id' => $request->kabanata_id,
         ]);
 
-        return response()->json(['message' => 'Video added successfully!']);
+        // return response()->json(['message' => 'Video added successfully!']);
     }
+
+    private function getSessionKey($type, $kabanataId)
+    {
+        $userId = Auth::id();
+        return "{$type}_progress_{$userId}_{$kabanataId}";
+    }
+
 
     public function show($id)
     {
