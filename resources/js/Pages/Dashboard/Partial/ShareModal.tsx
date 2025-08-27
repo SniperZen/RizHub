@@ -71,7 +71,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, initialEmail =
                     
                     <div className="mt-20 mb-8 w-full max-w-md">
                         {/* Email Invitation Section */}
-                        <div className="mb-8">
+                        <div className="mb-[35px] relative">
                             <h3 className="text-[#3D2410] text-2xl font-bold mb-4">Invite via Email</h3>
                             <div className="flex gap-2">
                                 <input
@@ -94,10 +94,10 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, initialEmail =
                                 </button>
                             </div>
                             {sendError && (
-                                <p className="text-red-500 text-sm mt-2">{sendError}</p>
+                                <p className="absolute text-red-500 text-sm mt-[5px]">{sendError}</p>
                             )}
                             {sendSuccess && (
-                                <p className="text-green-600 text-sm mt-2">Invitation sent successfully!</p>
+                                <p className="absolute text-green-600 text-sm mt-2">Invitation sent successfully!</p>
                             )}
                         </div>
                         
