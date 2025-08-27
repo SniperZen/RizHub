@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import StudentLayout from "../../../Layouts/StudentLayout";
-import { router, usePage } from "@inertiajs/react";
+import { router, usePage, Link } from "@inertiajs/react";
 import { PageProps as InertiaPageProps } from "@inertiajs/core";
 
 interface PageData {
@@ -170,29 +170,22 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
         style={{ backgroundImage: "url('/Img/Dashboard/ImageGallery/BG.png')" }}
       >
         {/* Header */}
-        <div className="flex justify-between items-center w-full p-6">
-          <div className="flex items-center space-x-2">
-            <div className="bg-orange-500 text-white font-bold px-3 py-1 rounded">
-              Riz
-            </div>
-            <span className="text-xl font-bold text-black">Hub</span>
+        <div className="flex items-center justify-between px-8 py-4 w-full">
+          <div className="relative z-20 flex items-center">
+            <img src="/Img/LandingPage/Title.png" alt="RizHub Logo" className="h-[70px] w-auto" />
           </div>
           <div className="flex space-x-4">
-            <button className="w-12 h-12 rounded-full bg-gradient-to-b from-orange-400 to-orange-600 border-2 border-white shadow-lg flex items-center justify-center text-white text-xl">
-              🎵
+            <button className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+              <img src="/Img/Dashboard/music.png" alt="Music" className="w-full h-[63px]" />
             </button>
-            <button className="w-12 h-12 rounded-full bg-gradient-to-b from-orange-400 to-orange-600 border-2 border-white shadow-lg flex items-center justify-center text-white text-xl">
-              🔊
+            <button className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+              <img src="/Img/Dashboard/volume.png" alt="Volume" className="w-full h-auto" />
             </button>
-            <button
-              onClick={refreshGallery}
-              className="w-12 h-12 rounded-full bg-gradient-to-b from-orange-400 to-orange-600 border-2 border-white shadow-lg flex items-center justify-center text-white text-xl"
-            >
-              ↩
-            </button>
+            <Link href={route("dashboard")} className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+              <img src="/Img/Dashboard/back.png" alt="Back" className="w-full h-auto" />
+            </Link>
           </div>
         </div>
-
         {/* Progress Indicator
         <div className="w-11/12 max-w-6xl bg-white bg-opacity-90 rounded-lg p-4 mb-4 shadow">
           <div className="flex items-center">
@@ -207,8 +200,31 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
             </span>
           </div>
         </div> */}
-
-        <div className="flex mt-4 w-11/12 max-w-6xl shadow-2xl overflow-hidden bg-[#fdf6e3] border-8 border-[#6b4226] rounded-lg">
+        <div className="flex justify-between w-11/12 max-w-6xl px-10 mt-[20px]">
+          <button
+            onClick={prevPage}
+            disabled={currentIndex === 0}
+            className={`px-6 py-2 rounded-lg font-bold ${
+            currentIndex === 0
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-[#6b4226] hover:bg-orange-600 text-white"
+            }`}
+          >
+            ←
+          </button>
+          <button
+            onClick={nextPage}
+            disabled={currentIndex >= images.length - 2}
+            className={`px-6 py-2 rounded-lg font-bold ${
+              currentIndex >= images.length - 2
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#6b4226] hover:bg-orange-600 text-white"
+            }`}
+          >
+            →
+          </button>
+        </div>
+        <div className="flex mt-8 w-11/12 max-w-6xl shadow-2xl overflow-hidden bg-[#fdf6e3] border-8 border-[#6b4226] rounded-lg">
             {/* Left Page */}
             <div className="w-1/2 p-6 border-r-4 border-[#6b4226]">
                 {images[currentIndex] && (
@@ -302,32 +318,6 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
             aria-label="Next level"
           >
             ↓
-          </button>
-        </div>
-
-        {/* Navigation Arrows (left/right pages) */}
-        <div className="flex justify-between w-full px-10 mt-8">
-          <button
-            onClick={prevPage}
-            disabled={currentIndex === 0}
-            className={`px-6 py-2 rounded-lg font-bold ${
-              currentIndex === 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#6b4226] hover:bg-orange-600 text-white"
-            }`}
-          >
-            ←
-          </button>
-          <button
-            onClick={nextPage}
-            disabled={currentIndex >= images.length - 2}
-            className={`px-6 py-2 rounded-lg font-bold ${
-              currentIndex >= images.length - 2
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#6b4226] hover:bg-orange-600 text-white"
-            }`}
-          >
-            →
           </button>
         </div>
 
