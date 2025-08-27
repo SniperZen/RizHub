@@ -32,9 +32,9 @@ return new class extends Migration
             'guess_words' => ['kabanata_id'],
             'quizzes' => ['kabanata_id'],
             'guesscharacters' => ['kabanata_id'],
-            'video_progress' => ['user_id', 'kabanata_progress_id', 'video_id', 'kabanata_id'],
-            'guessword_progress' => ['user_id', 'kabanata_progress_id', 'character_id', 'kabanata_id', 'question_id'],
-            'quiz_progress' => ['user_id', 'kabanata_progress_id', 'kabanata_id', 'quiz_id'],
+            'video_progress' => ['user_id', 'video_id', 'kabanata_id'], // Removed kabanata_progress_id
+            'guessword_progress' => ['user_id', 'character_id', 'kabanata_id', 'question_id'],
+            'quiz_progress' => ['user_id', 'kabanata_id', 'quiz_id'], // Removed kabanata_progress_id
             'user_kabanata_progress' => ['user_id', 'kabanata_id'],
         ];
 
@@ -43,9 +43,6 @@ return new class extends Migration
                 Schema::table($tableName, function (Blueprint $table) use ($columns) {
                     foreach ($columns as $column) {
                         if (Schema::hasColumn($table->getTable(), $column)) {
-                            // Generate the foreign key constraint name
-                            $constraintName = $this->getForeignKeyName($table->getTable(), $column);
-                            
                             // Check if the foreign key exists before trying to drop it
                             $foreignKeys = DB::select("
                                 SELECT CONSTRAINT_NAME 
@@ -67,13 +64,6 @@ return new class extends Migration
 
     private function addMissingColumns()
     {
-        // Add kabanata_progress_id to video_progress table if it doesn't exist
-        if (Schema::hasTable('video_progress') && !Schema::hasColumn('video_progress', 'kabanata_progress_id')) {
-            Schema::table('video_progress', function (Blueprint $table) {
-                $table->unsignedBigInteger('kabanata_progress_id')->nullable()->after('user_id');
-            });
-        }
-
         // Add kabanata_id to video_progress table if it doesn't exist
         if (Schema::hasTable('video_progress') && !Schema::hasColumn('video_progress', 'kabanata_id')) {
             Schema::table('video_progress', function (Blueprint $table) {
@@ -124,7 +114,6 @@ return new class extends Migration
             Schema::table('video_progress', function (Blueprint $table) {
                 $table->foreign('kabanata_id')->references('id')->on('kabanatas')->onDelete('cascade');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
                 $table->foreign('video_id')->references('id')->on('videos')->onDelete('cascade');
             });
         }
@@ -133,7 +122,6 @@ return new class extends Migration
         if (Schema::hasTable('guessword_progress')) {
             Schema::table('guessword_progress', function (Blueprint $table) {
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
                 $table->foreign('character_id')->references('id')->on('guesscharacters')->onDelete('cascade');
                 $table->foreign('kabanata_id')->references('id')->on('kabanatas')->onDelete('cascade');
                 $table->foreign('question_id')->references('id')->on('guess_words')->onDelete('cascade');
@@ -144,7 +132,6 @@ return new class extends Migration
         if (Schema::hasTable('quiz_progress')) {
             Schema::table('quiz_progress', function (Blueprint $table) {
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
                 $table->foreign('kabanata_id')->references('id')->on('kabanatas')->onDelete('cascade');
                 $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade');
             });
@@ -166,9 +153,9 @@ return new class extends Migration
             'guess_words' => ['kabanata_id'],
             'quizzes' => ['kabanata_id'],
             'guesscharacters' => ['kabanata_id'],
-            'video_progress' => ['user_id', 'kabanata_progress_id', 'video_id', 'kabanata_id'],
-            'guessword_progress' => ['user_id', 'kabanata_progress_id', 'character_id', 'kabanata_id', 'question_id'],
-            'quiz_progress' => ['user_id', 'kabanata_progress_id', 'kabanata_id', 'quiz_id'],
+            'video_progress' => ['user_id', 'video_id', 'kabanata_id'],
+            'guessword_progress' => ['user_id', 'character_id', 'kabanata_id', 'question_id'],
+            'quiz_progress' => ['user_id', 'kabanata_id', 'quiz_id'],
             'user_kabanata_progress' => ['user_id', 'kabanata_id'],
         ];
 
@@ -197,13 +184,6 @@ return new class extends Migration
 
     private function removeAddedColumns()
     {
-        // Remove kabanata_progress_id from video_progress table if it was added
-        if (Schema::hasTable('video_progress') && Schema::hasColumn('video_progress', 'kabanata_progress_id')) {
-            Schema::table('video_progress', function (Blueprint $table) {
-                $table->dropColumn('kabanata_progress_id');
-            });
-        }
-
         // Remove kabanata_id from video_progress table if it was added
         if (Schema::hasTable('video_progress') && Schema::hasColumn('video_progress', 'kabanata_id')) {
             Schema::table('video_progress', function (Blueprint $table) {
