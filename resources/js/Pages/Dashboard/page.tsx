@@ -50,6 +50,9 @@ export default function Dashboard({
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showMail, setShowMail] = useState(false);
     const [unreadCount, setUnreadCount] = useState(initialUnreadNotifications);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
     const [formData, setFormData] = useState({
         currentPassword: '',
         newPassword: '',
@@ -210,7 +213,13 @@ export default function Dashboard({
 
     const submitProfileUpdate = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route('profile.update'));
+        patch(route('dashboard.profile.update'), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                console.log('Profile updated successfully');
+            }
+        });
     };
 
     const markAsRead = () => {

@@ -32,6 +32,7 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/dashboard/profile-update', [ProfileController::class, 'dashboardUpdate'])->name('dashboard.profile.update'); 
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
     Route::post('/student-exit', [StudentController::class, 'exit'])->name('student.exit');
