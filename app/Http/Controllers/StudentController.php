@@ -123,6 +123,7 @@ class StudentController extends Controller
             'videoProgress' => $videoProgress,
             'music' => $user->music ?? 40, 
             'sound' => $user->sound ?? 70,
+            'studentName' => auth()->user()->name,
         ]);
     }
 

@@ -18,9 +18,13 @@ export default {
                 inter: ['Inter', 'sans-serif'],
                 'black-han-sans': ['Black Han Sans', 'sans-serif'],
                 erica: ["'Erica One'", "cursive"],
+                lavish: ['"Lavishly Yours"', 'cursive'],
             },
             textShadow: {
                 custom: "-3px 5px 0px #282725",
+            },
+            animation: {
+              'spin-slow': 'spin 12s linear infinite',
             },
         },
     },

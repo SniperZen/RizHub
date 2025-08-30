@@ -496,8 +496,8 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 </div>
                             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[140px]">
                                 <h2 className="font-erica 
-                                    text-[48px] leading-[72px] 
-                                    font-black 
+                                    text-[58px] leading-[72px] 
+                                    font-bold 
                                     text-[#F6D65A] 
                                     stroke-text"
                                 >
