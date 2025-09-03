@@ -437,11 +437,11 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                                 <p className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-28">
                                     <span className="text-[#B26D42]">
                                         Would you like to{" "}
-                                        <span className="underline decoration-wavy decoration-[#FF7E47]">
+                                        <span className="decoration-[#FF7E47]">
                                         retry the video
                                         </span>{" "}
                                         or{" "}
-                                        <span className="underline decoration-wavy decoration-[#FFA500]">
+                                        <span className="decoration-[#FFA500]">
                                         proceed to the challenge?
                                         </span>
                                     </span>
@@ -450,7 +450,7 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
                                 <div className="flex gap-6 mt-36 flex-wrap justify-center">
                                     <button
                                         onClick={retryVideo}
-                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FFD93D] to-[#FFB300] shadow-[4px_8px_0_#C48C00] border-4 border-[#E6C17B] text-white text-2xl font-extrabold relative transition hover:scale-105"
+                                        className="w-auto h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
                                     >
                                         Retry
                                         <span className="absolute top-3 w-4 h-4 bg-white/80 rounded-full"></span>
@@ -459,7 +459,7 @@ const KabanataPage: React.FC<PageProps> = ({ kabanatas, music: initialMusic, sou
 
                                     <button
                                         onClick={proceedNext}
-                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#34D399] to-[#059669] shadow-[4px_8px_0_#047857] border-4 border-[#6EE7B7] text-white text-2xl font-extrabold relative transition hover:scale-105"
+                                        className="w-auto h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-[#FFA500] to-[#D76D00] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
                                     >
                                         Proceed
                                         <span className="absolute top-3 w-4 h-4 bg-white/80 rounded-full"></span>
