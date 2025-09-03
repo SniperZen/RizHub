@@ -395,7 +395,12 @@
         };
 
         return (
-            <StudentLayout pauseMusic={isModalOpen}>
+            <StudentLayout 
+                pauseMusic={isModalOpen}
+                musicVolume={currentMusic}
+                soundVolume={currentSound}
+                onVolumeChange={handleAudioSettingsChange}
+            >
                 <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('/Img/Challenge/BG3.png')" }}>
                     {/* Header */}
                     <div className="flex items-center justify-between px-8 py-4">

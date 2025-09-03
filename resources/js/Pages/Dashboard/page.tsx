@@ -230,8 +230,32 @@ export default function Dashboard({
         });
     };
 
+    const handleVolumeChange = (newMusic: number, newSound: number) => {
+        setMusic(newMusic);
+        setVolume(newSound);
+        
+        // Save settings immediately when changed via external controls
+        router.post(route('student.saveSettings'), { 
+            music: isMusicMuted ? 0 : newMusic, 
+            sound: isVolumeMuted ? 0 : newSound 
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log("Settings saved successfully");
+            },
+            onError: () => {
+                console.error("Failed to save settings");
+            }
+        });
+    };
+
+
     return (
-        <StudentLayout>
+        <StudentLayout
+            musicVolume={music}
+            soundVolume={volume}
+            onVolumeChange={handleVolumeChange}
+        >
             <div className="min-h-screen w-full flex">
                 <img
                     src="/Img/Dashboard/BG.png"
