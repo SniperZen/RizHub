@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import StudentLayout from "../../../Layouts/StudentLayout";
-import { router, usePage, Link } from "@inertiajs/react";
-import { PageProps as InertiaPageProps } from "@inertiajs/core";
+import { router, Link } from "@inertiajs/react";
+import AudioControls from "../../../Components/AudioControls";
 
 interface PageData {
   id: number;
@@ -15,29 +15,54 @@ interface PageData {
   updated_at: string;
 }
 
-interface PageProps extends InertiaPageProps {
+interface PageProps {
   images: PageData[];
+  music: number;
+  sound: number;
 }
 
-const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
+const ImageGalleryPage: React.FC<PageProps> = ({ music, sound, images: initialImages }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { props } = usePage<PageProps>();
-  
-  const images = props.images || initialImages || [];
-
-  const getImageUrl = (imagePath: string) => {
-    
-    if (imagePath.startsWith('http')) return imagePath;
-    
-    if (imagePath.startsWith('/')) return imagePath;
-
-    return `/${imagePath}`;
-  };
-
+  const [currentMusic, setCurrentMusic] = useState<number | null>(null);
+  const [currentSound, setCurrentSound] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const sideNavRef = useRef<HTMLDivElement | null>(null);
 
+  // Wait for audio settings to load from props
+  useEffect(() => {
+    if (music !== undefined && sound !== undefined) {
+      setCurrentMusic(music);
+      setCurrentSound(sound);
+      setIsLoading(false);
+      
+      // Update audio element if it exists
+      const bgMusic = document.getElementById("bg-music") as HTMLAudioElement;
+      if (bgMusic) {
+        bgMusic.volume = (music ?? 50) / 100;
+      }
+    }
+  }, [music, sound]);
+
+  const images = initialImages || [];
   const totalSpreads = Math.max(0, Math.ceil(images.length / 2));
   const lastStartIndex = Math.max(0, (totalSpreads - 1) * 2);
+
+  const handleAudioSettingsChange = (newMusic: number, newSound: number) => {
+    setCurrentMusic(newMusic);
+    setCurrentSound(newSound);
+    
+    // Update audio elements
+    const bgMusic = document.getElementById("bg-music") as HTMLAudioElement;
+    if (bgMusic) {
+      bgMusic.volume = newMusic / 100;
+    }
+  };
+
+  const getImageUrl = (imagePath: string) => {
+    if (imagePath.startsWith('http')) return imagePath;
+    if (imagePath.startsWith('/')) return imagePath;
+    return `/${imagePath}`;
+  };
 
   const nextPage = () => {
     if (currentIndex < images.length - 2) {
@@ -60,10 +85,6 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
           ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
       });
     }
-  };
-
-  const refreshGallery = () => {
-    router.reload({ only: ["images"] });
   };
 
   const playGuesswordGame = (kabanataId: number) => {
@@ -163,6 +184,17 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
   // Count unlocked images
   const unlockedCount = images.filter(img => img.unlocked).length;
 
+  // Show loading state while audio settings are being loaded
+  if (isLoading) {
+    return (
+      <StudentLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-lg">Loading audio settings...</div>
+        </div>
+      </StudentLayout>
+    );
+  }
+
   return (
     <StudentLayout>
       <div
@@ -174,40 +206,21 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
           <div className="relative z-20 flex items-center">
             <img src="/Img/LandingPage/Title.png" alt="RizHub Logo" className="h-[70px] w-auto" />
           </div>
-          <div className="flex space-x-4">
-            <button className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-              <img src="/Img/Dashboard/music.png" alt="Music" className="w-full h-[63px]" />
-            </button>
-            <button className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-              <img src="/Img/Dashboard/volume.png" alt="Volume" className="w-full h-auto" />
-            </button>
-            <Link href={route("dashboard")} className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-              <img src="/Img/Dashboard/back.png" alt="Back" className="w-full h-auto" />
-            </Link>
-          </div>
+          <AudioControls 
+            initialMusic={currentMusic ?? 50}
+            initialSound={currentSound ?? 70}
+            onSettingsChange={handleAudioSettingsChange}
+          />
         </div>
-        {/* Progress Indicator
-        <div className="w-11/12 max-w-6xl bg-white bg-opacity-90 rounded-lg p-4 mb-4 shadow">
-          <div className="flex items-center">
-            <div className="w-full bg-gray-200 rounded-full h-4">
-              <div 
-                className="bg-green-500 h-4 rounded-full" 
-                style={{ width: `${(unlockedCount / images.length) * 100}%` }}
-              ></div>
-            </div>
-            <span className="ml-4 text-sm font-medium">
-              {unlockedCount} / {images.length} Unlocked
-            </span>
-          </div>
-        </div> */}
+
         <div className="flex justify-between w-11/12 max-w-6xl px-10 mt-[20px]">
           <button
             onClick={prevPage}
             disabled={currentIndex === 0}
             className={`px-6 py-2 rounded-lg font-bold ${
-            currentIndex === 0
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-[#6b4226] hover:bg-orange-600 text-white"
+              currentIndex === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#6b4226] hover:bg-orange-600 text-white"
             }`}
           >
             ←
@@ -224,49 +237,50 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages }) => {
             →
           </button>
         </div>
+
         <div className="flex mt-8 w-11/12 max-w-6xl shadow-2xl overflow-hidden bg-[#fdf6e3] border-8 border-[#6b4226] rounded-lg">
-            {/* Left Page */}
-            <div className="w-1/2 p-6 border-r-4 border-[#6b4226]">
-                {images[currentIndex] && (
-                <>
-                    {/* Chapter bar */}
-                    <div className="bg-[#6b4226] text-white text-center py-2 mb-4 font-semibold relative">
-                    <span>
-                        KABANATA {images[currentIndex].kabanata_id}:{" "}
-                        {images[currentIndex].title.toUpperCase()}
-                    </span>
-                    </div>
+          {/* Left Page */}
+          <div className="w-1/2 p-6 border-r-4 border-[#6b4226]">
+            {images[currentIndex] && (
+              <>
+                {/* Chapter bar */}
+                <div className="bg-[#6b4226] text-white text-center py-2 mb-4 font-semibold relative">
+                  <span>
+                    KABANATA {images[currentIndex].kabanata_id}:{" "}
+                    {images[currentIndex].title.toUpperCase()}
+                  </span>
+                </div>
 
-                    {/* Page content */}
-                    {!images[currentIndex].unlocked 
-                    ? renderLockedContent(images[currentIndex])
-                    : renderUnlockedContent(images[currentIndex], currentIndex)
-                    }
-                </>
-                )}
-            </div>
+                {/* Page content */}
+                {!images[currentIndex].unlocked 
+                  ? renderLockedContent(images[currentIndex])
+                  : renderUnlockedContent(images[currentIndex], currentIndex)
+                }
+              </>
+            )}
+          </div>
 
-            {/* Right Page */}
-            <div className="w-1/2 p-6">
-                {images[currentIndex + 1] && (
-                <>
-                    {/* Chapter bar */}
-                    <div className="bg-[#6b4226] text-white text-center py-2 mb-4 font-semibold relative">
-                    <span>
-                        KABANATA {images[currentIndex + 1].kabanata_id}:{" "}
-                        {images[currentIndex + 1].title.toUpperCase()}
-                    </span>
-                    </div>
+          {/* Right Page */}
+          <div className="w-1/2 p-6">
+            {images[currentIndex + 1] && (
+              <>
+                {/* Chapter bar */}
+                <div className="bg-[#6b4226] text-white text-center py-2 mb-4 font-semibold relative">
+                  <span>
+                    KABANATA {images[currentIndex + 1].kabanata_id}:{" "}
+                    {images[currentIndex + 1].title.toUpperCase()}
+                  </span>
+                </div>
 
-                    {/* Page content */}
-                    {!images[currentIndex + 1].unlocked 
-                    ? renderLockedContent(images[currentIndex + 1])
-                    : renderUnlockedContent(images[currentIndex + 1], currentIndex + 1)
-                    }
-                </>
-                )}
-            </div>
-            </div>
+                {/* Page content */}
+                {!images[currentIndex + 1].unlocked 
+                  ? renderLockedContent(images[currentIndex + 1])
+                  : renderUnlockedContent(images[currentIndex + 1], currentIndex + 1)
+                }
+              </>
+            )}
+          </div>
+        </div>
 
         <div className="absolute left-4 top-1/3 bg-[#8b5e3c] rounded-lg shadow p-2 flex flex-col items-center max-h-[300px] overflow-hidden">
           {/* Up (one level) */}

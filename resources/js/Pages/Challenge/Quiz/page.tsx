@@ -227,18 +227,22 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 if (isPerfectScore) {
                     console.log('Perfect score achieved!');
                     
-                    // Navigate to kabanata page with parameters to show next kabanata video
-                    router.visit(route('challenge', {
-                        showVideo: true,
-                        kabanataId: kabanataId + 1 // This will show the next kabanata
-                    }));
+                    // Use get instead of visit for client-side navigation
+                    router.get(route('challenge', {
+                    showVideo: true,
+                    kabanataId: kabanataId + 1
+                }), {
+                    preserveState: true,
+                    preserveScroll: true
+                });
+
                 } else {
-                    router.visit(route('challenge'));
+                    router.get(route('challenge'));
                 }
             },
             onError: (errors) => {
                 console.error('Failed to complete quiz:', errors);
-                router.visit(route('challenge'));
+                router.get(route('challenge'));
             }
         });
     };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 import InstructionModal from "../../../Components/InstructionModal";
+import StudentLayout from "../../../Layouts/StudentLayout";
 
 interface GuessCharacter {
   id: number;
@@ -54,7 +55,7 @@ export default function Page({
         // ⏳ After 3 seconds, redirect
         setTimeout(() => {
           const finalCharacterId = characters[current].id;
-          window.location.href = `/challenge/guessword/${finalCharacterId}/${kabanata_id}`;
+          router.visit(`/challenge/guessword/${finalCharacterId}/${kabanata_id}`);
         }, 3000);
 
         return;
@@ -82,93 +83,95 @@ export default function Page({
   };
 
   return (
-    <div
-      className="relative w-full h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG.png')" }}
-    >
-      {/* Instruction Modal */}
-      <InstructionModal
-        isOpen={showModal}
-        onClose={startSpinning}
-        title={`KABANATA ${kabanata_number}: ${kabanata_title}`}
-        content={modalContent}
-        buttonText="Start Choosing Character"
-      />
+    <StudentLayout>
+      <div
+        className="relative w-full h-screen bg-cover bg-center"
+        style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG.png')" }}
+      >
+        {/* Instruction Modal */}
+        <InstructionModal
+          isOpen={showModal}
+          onClose={startSpinning}
+          title={`KABANATA ${kabanata_number}: ${kabanata_title}`}
+          content={modalContent}
+          buttonText="Start Choosing Character"
+        />
 
-      {/* Title */}
-      <div className="absolute top-4 left-4 flex items-center">
-        <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
-          KABANATA {kabanata_number}:
-        </div>
-        <div className="text-white font-bold px-2 py-2 text-2xl">
-          {kabanata_title}
-        </div>
-      </div>
-
-      {/* Icons */}
-      <div className="absolute top-4 right-4 flex gap-4">
-        <img src="/Img/UI/music_icon.png" alt="music" className="w-12 h-12" />
-        <img src="/Img/UI/sound_icon.png" alt="sound" className="w-12 h-12" />
-        <img src="/Img/UI/settings_icon.png" alt="settings" className="w-12 h-12" />
-      </div>
-
-      {/* Main Content - Only show when not in modal and characters exist */}
-      {!showModal && characters.length > 0 && (
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          <div className="relative flex flex-col items-center">
-            {/* Character Display */}
-            <div className="flex items-center justify-center w-[1100px] h-[300px]">
-              {isSpinning ? (
-                <>
-                  <img
-                    src="/Img/Challenge/GuessChar/ModalBG2.png"
-                    alt="modal background"
-                    className="absolute w-[1000px] h-auto"
-                  />
-                  <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
-                    {[...getVisibleCharacters()]
-                      .sort(() => Math.random() - 0.5)
-                      .map((char, index) => (
-                        <div
-                          key={char.id}
-                          className="text-center flex-shrink-0 flex flex-col items-center"
-                          style={{ width: "140px", margin: "0 16px" }}
-                        >
-                          <img
-                            src={`/Img/LandingPage/character/${char.filename}.png`}
-                            alt={char.c_name}
-                            className={`w-28 h-36 object-contain ${
-                              index === half ? "scale-125" : "opacity-70"
-                            } transition-all duration-300`}
-                          />
-                          <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
-                        </div>
-                      ))}
-                  </div>
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center">
-                  <img
-                    src="/Img/Challenge/GuessChar/ModalBG.png"
-                    alt="modal"
-                    className="w-[550px]"
-                  />
-                  <div className="flex flex-col items-center justify-center -mt-[300px]">
-                    <img
-                      src={`/Img/LandingPage/character/${characters[currentIndex].filename}.png`}
-                      alt={characters[currentIndex].c_name}
-                      className="w-40 h-48 object-contain drop-shadow-lg"
-                    />
-                    <p className="mt-4 font-black text-3xl">
-                      {characters[currentIndex].c_name}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
+        {/* Title */}
+        <div className="absolute top-4 left-4 flex items-center">
+          <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
+            KABANATA {kabanata_number}:
+          </div>
+          <div className="text-white font-bold px-2 py-2 text-2xl">
+            {kabanata_title}
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Icons */}
+        <div className="absolute top-4 right-4 flex gap-4">
+          <img src="/Img/UI/music_icon.png" alt="music" className="w-12 h-12" />
+          <img src="/Img/UI/sound_icon.png" alt="sound" className="w-12 h-12" />
+          <img src="/Img/UI/settings_icon.png" alt="settings" className="w-12 h-12" />
+        </div>
+
+        {/* Main Content - Only show when not in modal and characters exist */}
+        {!showModal && characters.length > 0 && (
+          <div className="flex flex-col items-center justify-center h-full gap-8">
+            <div className="relative flex flex-col items-center">
+              {/* Character Display */}
+              <div className="flex items-center justify-center w-[1100px] h-[300px]">
+                {isSpinning ? (
+                  <>
+                    <img
+                      src="/Img/Challenge/GuessChar/ModalBG2.png"
+                      alt="modal background"
+                      className="absolute w-[1000px] h-auto"
+                    />
+                    <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
+                      {[...getVisibleCharacters()]
+                        .sort(() => Math.random() - 0.5)
+                        .map((char, index) => (
+                          <div
+                            key={char.id}
+                            className="text-center flex-shrink-0 flex flex-col items-center"
+                            style={{ width: "140px", margin: "0 16px" }}
+                          >
+                            <img
+                              src={`/Img/LandingPage/character/${char.filename}.png`}
+                              alt={char.c_name}
+                              className={`w-28 h-36 object-contain ${
+                                index === half ? "scale-125" : "opacity-70"
+                              } transition-all duration-300`}
+                            />
+                            <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
+                          </div>
+                        ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center">
+                    <img
+                      src="/Img/Challenge/GuessChar/ModalBG.png"
+                      alt="modal"
+                      className="w-[550px]"
+                    />
+                    <div className="flex flex-col items-center justify-center -mt-[300px]">
+                      <img
+                        src={`/Img/LandingPage/character/${characters[currentIndex].filename}.png`}
+                        alt={characters[currentIndex].c_name}
+                        className="w-40 h-48 object-contain drop-shadow-lg"
+                      />
+                      <p className="mt-4 font-black text-3xl">
+                        {characters[currentIndex].c_name}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </StudentLayout>
   );
 }

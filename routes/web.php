@@ -66,6 +66,10 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::post('/notifications/mark-all-read', [StudentController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
     Route::delete('/notifications/{notification}', [StudentController::class, 'destroy'])->name('notifications.destroy');
     Route::delete('/notifications', [StudentController::class, 'destroyAll'])->name('notifications.destroyAll');
+    Route::post('/user/update-settings', [StudentController::class, 'updateSettings'])->name('student.updateSettings');
+    Route::post('/api/user/save-settings', [StudentController::class, 'saveSettings']);
+    Route::get('/api/user/settings', [StudentController::class, 'getSettings']);
+
 });
 
 // Route::get('/login', [LoginController::class, 'login'])->name('login');
