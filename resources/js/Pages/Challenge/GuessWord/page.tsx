@@ -124,11 +124,13 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     useEffect(() => {
-        if (hasProcessedCorrect) return; 
+        if (hasProcessedCorrect) return;
 
-        if (currentGuess.length > 0 && currentGuess.every((char, i) => 
-            char !== "" || shouldAutoFill(currentQ.answer[i])
-        )) {
+        const allFilled = currentQ.answer.split("").every((char, i) =>
+            shouldAutoFill(char) || (currentGuess[i] && currentGuess[i] !== "")
+        );
+
+        if (allFilled) {
             checkAnswer();
         }
     }, [currentGuess, hasProcessedCorrect]);
@@ -236,11 +238,17 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const checkAnswer = () => {
+        const allFilled = currentQ.answer.split("").every((char, i) =>
+            shouldAutoFill(char) || (currentGuess[i] && currentGuess[i] !== "")
+        );
+        if (!allFilled) return;
+
         if (!gameActive || hasProcessedCorrect) return;
 
+
         if (isCorrect) {
-            playSound(correctSoundRef);
             setHasProcessedCorrect(true);
+            playSound(correctSoundRef);
             setAnswerStatus("correct");
             setGameActive(false);
 
@@ -252,7 +260,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     character_id: character.id,
                     kabanata_id: kabanataId,
                     question_id: currentQ.id,
-                    current_index: currentIndex + 1,
+                    current_index: currentIndex,
                     completed: isGameFinished,
                     total_score: newScore,
                     is_correct: true,

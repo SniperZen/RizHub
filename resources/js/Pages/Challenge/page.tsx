@@ -55,7 +55,7 @@
         completedKabanatasCount = 0, 
         studentName = "Student"
     }) => {
-        const [currentPage] = useState(kabanatas.current_page);
+        const [currentPage, setCurrentPage] = useState(kabanatas.current_page);
         const [currentMusic, setCurrentMusic] = useState(music);
         const [currentSound, setCurrentSound] = useState(sound);
         const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -73,6 +73,7 @@
         const [screenSize, setScreenSize] = useState<"desktop" | "tablet" | "mobile">("desktop");
         const [showCertificateModal, setShowCertificateModal] = useState(false);
         const [completedCount, setCompletedCount] = useState(completedKabanatasCount);
+        const [isLoading, setIsLoading] = useState(false);
 
         // Filter kabanatas -based on development needs
         const filteredKabanatas = {
@@ -201,10 +202,10 @@
             }
 
             // Check if all kabanatas are completed
-            const allCompleted = filteredKabanatas.data.every(k => isVideoCompleted(k.id));
-            if (allCompleted && filteredKabanatas.data.length > 0) {
-                setShowCertificateModal(true);
-            }
+            // const allCompleted = filteredKabanatas.data.every(k => isVideoCompleted(k.id));
+            // if (allCompleted && filteredKabanatas.data.length > 0) {
+            //     setShowCertificateModal(true);
+            // }
         }, [ videoProgress]);
 
         useEffect(() => {
@@ -227,7 +228,9 @@
         };
 
         const handleNextPage = () => {
-            router.get(`/challenge?page=${currentPage + 1}`);
+            if (currentPage < totalPages) {
+                router.get(`/challenge?page=${currentPage + 1}&per_page=${itemsPerPage}`);
+            }
         };
         
         const handleProceed = () => {
@@ -235,8 +238,9 @@
         };
 
         const handlePreviousPage = () => {
-            router.get(`/challenge?page=${currentPage - 1}`);
-
+            if (currentPage > 1) {
+                router.get(`/challenge?page=${currentPage - 1}&per_page=${itemsPerPage}`);
+            }
         };
 
         const pauseBackgroundMusic = () => {
@@ -268,11 +272,6 @@
             // Update completed count
             const newCount = Object.values({...videoCompleted, [kabanataId]: true}).filter(v => v).length;
             setCompletedCount(newCount);
-            
-            // Check if all kabanatas are completed
-            if (newCount === 64) {
-                setShowCertificateModal(true);
-            }
         }
     }, [videoCompleted]);
 
@@ -362,21 +361,50 @@
         };
 
         useEffect(() => {
-            const updateItemsPerPage = () => {
-                if (window.innerWidth < 640) {
-                    setItemsPerPage(3); // small screens (mobile)
-                } else if (window.innerWidth < 1024) {
-                    setItemsPerPage(5); // tablets
-                } else {
-                    setItemsPerPage(7); // desktops
+    const updateItemsPerPage = () => {
+        let newItemsPerPage;
+        let newScreenSize: "desktop" | "tablet" | "mobile";
+
+        if (window.innerWidth < 640) {
+            newItemsPerPage = 3;
+            newScreenSize = "mobile";
+        } else if (window.innerWidth < 1024) {
+            newItemsPerPage = 5;
+            newScreenSize = "tablet";
+        } else {
+            newItemsPerPage = 7;
+            newScreenSize = "desktop";
+        }
+
+        const newTotalPages = Math.ceil(64 / newItemsPerPage);
+        const adjustedPage = currentPage > newTotalPages ? newTotalPages : currentPage;
+
+        // Only update and reload if something changed
+        if (newItemsPerPage !== itemsPerPage || adjustedPage !== currentPage) {
+            setItemsPerPage(newItemsPerPage);
+            setScreenSize(newScreenSize);
+            setIsLoading(true);
+            // Update currentPage state if needed
+            if (adjustedPage !== currentPage) setCurrentPage(adjustedPage);
+            router.get(
+                `/challenge?page=${adjustedPage}&per_page=${newItemsPerPage}`,
+                {},
+                {
+                    preserveState: true,
+                    onFinish: () => setIsLoading(false)
                 }
-            };
+            );
+        }
+    };
 
-            updateItemsPerPage();
-            window.addEventListener("resize", updateItemsPerPage);
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
 
-            return () => window.removeEventListener("resize", updateItemsPerPage);
-        }, []);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+}, [itemsPerPage, currentPage]);
+
+        const totalKabanatas = 64;
+        const totalPages = Math.ceil(totalKabanatas / itemsPerPage);
 
         // Handle certificate claiming
         const handleClaimCertificate = () => {
@@ -413,27 +441,42 @@
                             onSettingsChange={handleAudioSettingsChange}
                         />
                     </div>
-                    <div className="absolute top-[18%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-                        <div className="flex justify-center items-center gap-6">
+                    <div className="absolute top-[18%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-[900px] px-2">
+                        <div className="flex justify-center items-center gap-2 md:gap-6 w-full">
                             {/* Navigation arrows */}
-                            <button disabled={currentPage <= 1} onClick={handlePreviousPage}
-                                className={` h-20 z-50 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition"}`}>
-                                <img src="/Img/Challenge/ALeft.png" alt="Previous" className="h-20" />
+                            <button 
+                                disabled={currentPage <= 1} 
+                                onClick={handlePreviousPage}
+                                className={`z-50 flex-shrink-0 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition"}`}
+                            >
+                                <img 
+                                    src="/Img/Challenge/ALeft.png" 
+                                    alt="Previous" 
+                                    className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                />
                             </button>
-                            <div className="relative w-[800px] h-[150px]">
+
+                            <div className="relative flex-1 flex justify-center items-center">
                                 <img 
                                     src="/Img/Challenge/banner-bg.png" 
                                     alt="Banner background" 
-                                    className="absolute w-full h-full object-contain"
+                                    className="w-full max-w-[600px] h-auto object-contain"
                                 />
                             </div>
-                            <button disabled={currentPage >= filteredKabanatas.last_page} onClick={handleNextPage}
-                                className={`h-20 z-50 ${currentPage >= filteredKabanatas.last_page ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition"}`}>
-                                <img src="/Img/Challenge/ARight.png" alt="Next" className="h-20" />
+
+                            <button 
+                                disabled={currentPage >= totalPages} 
+                                onClick={handleNextPage}
+                                className={`z-50 flex-shrink-0 ${currentPage >= totalPages ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition"}`}
+                            >
+                                <img 
+                                    src="/Img/Challenge/ARight.png" 
+                                    alt="Next" 
+                                    className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                />
                             </button>
                         </div>
                     </div>
-
                     {/* Progress indicator
                     <div className="absolute top-28 right-8 bg-white/80 rounded-lg p-3 z-10">
                         <div className="text-center">
@@ -708,4 +751,4 @@
         );
     };
 
-    export default KabanataPage;
+export default KabanataPage;

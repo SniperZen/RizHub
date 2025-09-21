@@ -80,8 +80,9 @@ class StudentController extends Controller
     {
         $user = Auth::user();
         $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 7);
 
-        $kabanatas = Kabanata::paginate(7, ['*'], 'page', $page);
+        $kabanatas = Kabanata::where('id', '<=', 64)->paginate($perPage, ['*'], 'page', $page);
 
         // Get progress for these kabanatas for the user
         $progress = UserKabanataProgress::where('user_id', $user->id)
