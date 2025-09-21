@@ -80,7 +80,7 @@
             data: kabanatas.data.filter(k => k.id <= 64)
         };
 
-        //testing purposes only - remove this on production
+        // testing purposes only - remove this on production
         // const filteredKabanatas = {
         // ...kabanatas,
         // data: kabanatas.data

@@ -14,6 +14,8 @@ class Kabanata extends Model
     protected $fillable = [
         'kabanata',
         'content',
+        'title',
+        'unlocked',
     ];
 
     public function videos()
