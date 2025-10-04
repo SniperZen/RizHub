@@ -26,10 +26,7 @@ export default function Page({
   const [isSpinning, setIsSpinning] = useState(false); // Start as false
   const [showModal, setShowModal] = useState(true); // Show modal initially
 
-  const modalContent = `The system will randomly pick one character for you to protect in the upcoming challenge. They will be trapped inside a failing elevator — pass the challenge to save them before the doors close, but fail, and the elevator will drop with your character inside.
-
-*Ang sistema ay pipili nang sapalaran ng isang karakter na lyong poprotektahan sa paparating na hamon. Siya ay makukulong sa isang bumabagsak na elevator — ipasa ang hamon upang mailigtas siya bago magsara ang pinto, ngunit kung mahigo ka, babagsak ang elevator kasama ang lyong karakter sa loob.*`;
-
+  const modalContent = `RRandom na pipili ang system ng karakter na ililigtas mo. Siya ay nasa loob ng isang kulungan — tapusin ang hamon para mailigtas, pero kapag nabigo, hindi mo maililigtas ang karakter.`;
   const startSpinning = () => {
     setShowModal(false);
     setIsSpinning(true);

@@ -3,10 +3,24 @@ import StudentLayout from "../../../Layouts/StudentLayout";
 import { router, Link } from "@inertiajs/react";
 import AudioControls from "../../../Components/AudioControls";
 
+// Sound playing function
+const playSound = (soundPath: string, volume: number = 70) => {
+  try {
+    const audio = new Audio(soundPath);
+    audio.volume = volume / 100;
+    audio.play().catch(error => {
+      console.log("Sound play failed:", error);
+    });
+  } catch (error) {
+    console.log("Sound error:", error);
+  }
+};
+
 interface PageData {
   id: number;
   kabanata_id: number;
   title: string;
+  title_description: string;
   description: string;
   image_url: string;
   category: string;
@@ -21,42 +35,17 @@ interface PageProps {
   sound: number;
 }
 
-const ImageGalleryPage: React.FC<PageProps> = ({ music, sound, images: initialImages }) => {
+const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, sound }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentMusic, setCurrentMusic] = useState<number | null>(null);
-  const [currentSound, setCurrentSound] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const sideNavRef = useRef<HTMLDivElement | null>(null);
-
-  // Wait for audio settings to load from props
-  useEffect(() => {
-    if (music !== undefined && sound !== undefined) {
-      setCurrentMusic(music);
-      setCurrentSound(sound);
-      setIsLoading(false);
-      
-      // Update audio element if it exists
-      const bgMusic = document.getElementById("bg-music") as HTMLAudioElement;
-      if (bgMusic) {
-        bgMusic.volume = (music ?? 50) / 100;
-      }
-    }
-  }, [music, sound]);
 
   const images = initialImages || [];
   const totalSpreads = Math.max(0, Math.ceil(images.length / 2));
   const lastStartIndex = Math.max(0, (totalSpreads - 1) * 2);
 
-  const handleAudioSettingsChange = (newMusic: number, newSound: number) => {
-    setCurrentMusic(newMusic);
-    setCurrentSound(newSound);
-    
-    // Update audio elements
-    const bgMusic = document.getElementById("bg-music") as HTMLAudioElement;
-    if (bgMusic) {
-      bgMusic.volume = newMusic / 100;
-    }
-  };
+  // Use the sound prop for volume
+  const volume = sound || 70;
 
   const getImageUrl = (imagePath: string) => {
     if (imagePath.startsWith('http')) return imagePath;
@@ -93,32 +82,35 @@ const ImageGalleryPage: React.FC<PageProps> = ({ music, sound, images: initialIm
 
   const goUpOneLevel = () => {
     if (currentIndex >= 2) {
-      const newIndex = currentIndex - 2;
-      setCurrentIndex(newIndex);
-      requestAnimationFrame(() => {
-        document
-          .getElementById(`page-btn-${newIndex}`)
-          ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      });
+      setCurrentIndex(currentIndex - 2);
     }
   };
 
   const goDownOneLevel = () => {
     if (currentIndex < lastStartIndex) {
-      const newIndex = currentIndex + 2;
-      setCurrentIndex(newIndex);
-      requestAnimationFrame(() => {
-        document
-          .getElementById(`page-btn-${newIndex}`)
-          ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      });
+      setCurrentIndex(currentIndex + 2);
     }
+  };
+
+  // Add state for easy adjustments
+  const [headerTop, setHeaderTop] = useState(-130); // initial Y offset (px)
+  const [headerHeight, setHeaderHeight] = useState(450); // initial height (px)
+
+  const [pageGroup, setPageGroup] = useState(0);
+
+  // Handle back to dashboard with sound
+  const handleBackToDashboard = () => {
+    playSound("/Music/Sound.mp3", volume);
+    // Add a small delay to allow sound to play before navigation
+    setTimeout(() => {
+      router.get(route('dashboard'));
+    }, 100);
   };
 
   // Function to handle locked content
   const renderLockedContent = (image: PageData) => {
     return (
-      <div className="bg-[#fff8dc] border-4 border-green-900 rounded p-4 text-center shadow-inner relative">
+      <div className="bg-[#fff8dc] border-4 border-[#6b4226] rounded p-4 text-center shadow-inner relative">
         <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center flex-col z-10 p-4 rounded">
           <div className="text-6xl mb-4">🔒</div>
           <p className="text-white font-bold text-lg mb-2">This content is locked</p>
@@ -154,12 +146,12 @@ const ImageGalleryPage: React.FC<PageProps> = ({ music, sound, images: initialIm
   // Function to render unlocked content
   const renderUnlockedContent = (image: PageData, index: number) => {
     return (
-      <div className="bg-[#fff8dc] border-4 border-green-900 rounded p-4 text-center shadow-inner">
+      <div className="bg-[#fff8dc] border-4 border-[#6b4226] rounded p-4 text-center shadow-inner">
         <div className="flex justify-between items-center mb-2">
           <h4 className="text-lg font-bold">
             {image.category}
           </h4>
-          <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+          <div className="bg-[#6b4226] text-white text-xs px-2 py-1 rounded-full">
             Unlocked
           </div>
         </div>
@@ -169,14 +161,11 @@ const ImageGalleryPage: React.FC<PageProps> = ({ music, sound, images: initialIm
           className="mx-auto mb-4 w-full h-40 object-cover"
         />
         <h5 className="font-bold italic">
-          {image.title}
+          {image.title_description}
         </h5>
         <p className="text-sm text-gray-700 mt-2">
           {image.description}
         </p>
-        <div className="mt-4 text-sm font-bold">
-          {(index + 1).toString().padStart(2, "0")}
-        </div>
       </div>
     );
   };
@@ -184,157 +173,347 @@ const ImageGalleryPage: React.FC<PageProps> = ({ music, sound, images: initialIm
   // Count unlocked images
   const unlockedCount = images.filter(img => img.unlocked).length;
 
-  // Show loading state while audio settings are being loaded
-  if (isLoading) {
-    return (
-      <StudentLayout>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-lg">Loading audio settings...</div>
-        </div>
-      </StudentLayout>
-    );
-  }
-
   return (
     <StudentLayout>
+
+      <img
+        src="/Img/Dashboard/b-im2.png"
+        alt="Noli Me Tangere BG"
+        className="absolute inset-0 w-full h-full object-cover z-20  pointer-events-none"
+        style={{
+          animation: "floating 6s ease-in-out infinite"
+        }}
+      />
+
+      <style>
+        {`
+          @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+          }
+        `}
+      </style>
+
       <div
         className="relative min-h-screen bg-cover bg-center flex flex-col items-center"
-        style={{ backgroundImage: "url('/Img/Dashboard/ImageGallery/BG.png')" }}
+        style={{ backgroundImage: "url('/Img/Dashboard/BG1.png')" }} 
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-4 w-full">
-          <div className="relative z-20 flex items-center">
-            <img src="/Img/LandingPage/Title.png" alt="RizHub Logo" className="h-[70px] w-auto" />
+        <div className="flex items-center justify-center w-full relative mt-20 mb-2 z-40">
+          <div className="flex items-center justify-center w-full">
+            <div className="absolute right-8">
+            </div>
           </div>
-          <AudioControls 
-            initialMusic={currentMusic ?? 50}
-            initialSound={currentSound ?? 70}
-            onSettingsChange={handleAudioSettingsChange}
+        </div>
+
+        {/* RizHub Challenge Header - Positioned above book with smooth heartbeat effect */}
+        <div
+          className="absolute left-1/2 transform -translate-x-1/2 w-full flex justify-center z-30 pointer-events-none"
+          style={{ top: `${headerTop}px` }}
+        >
+          <img 
+            src="\Img\Dashboard\t-bg3.png" 
+            alt="RizHub Challenge" 
+            style={{ 
+              height: `${headerHeight}px`, 
+              width: "auto", 
+              opacity: 0.9,
+              animation: "smoothHeartbeat 4s ease-in-out infinite"
+            }}
           />
         </div>
 
-        <div className="flex justify-between w-11/12 max-w-6xl px-10 mt-[20px]">
-          <button
-            onClick={prevPage}
-            disabled={currentIndex === 0}
-            className={`px-6 py-2 rounded-lg font-bold ${
-              currentIndex === 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#6b4226] hover:bg-orange-600 text-white"
-            }`}
-          >
-            ←
-          </button>
-          <button
-            onClick={nextPage}
-            disabled={currentIndex >= images.length - 2}
-            className={`px-6 py-2 rounded-lg font-bold ${
-              currentIndex >= images.length - 2
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#6b4226] hover:bg-orange-600 text-white"
-            }`}
-          >
-            →
-          </button>
-        </div>
-
-        <div className="flex mt-8 w-11/12 max-w-6xl shadow-2xl overflow-hidden bg-[#fdf6e3] border-8 border-[#6b4226] rounded-lg">
-          {/* Left Page */}
-          <div className="w-1/2 p-6 border-r-4 border-[#6b4226]">
-            {images[currentIndex] && (
-              <>
-                {/* Chapter bar */}
-                <div className="bg-[#6b4226] text-white text-center py-2 mb-4 font-semibold relative">
-                  <span>
-                    KABANATA {images[currentIndex].kabanata_id}:{" "}
-                    {images[currentIndex].title.toUpperCase()}
-                  </span>
-                </div>
-
-                {/* Page content */}
-                {!images[currentIndex].unlocked 
-                  ? renderLockedContent(images[currentIndex])
-                  : renderUnlockedContent(images[currentIndex], currentIndex)
-                }
-              </>
-            )}
-          </div>
-
-          {/* Right Page */}
-          <div className="w-1/2 p-6">
-            {images[currentIndex + 1] && (
-              <>
-                {/* Chapter bar */}
-                <div className="bg-[#6b4226] text-white text-center py-2 mb-4 font-semibold relative">
-                  <span>
-                    KABANATA {images[currentIndex + 1].kabanata_id}:{" "}
-                    {images[currentIndex + 1].title.toUpperCase()}
-                  </span>
-                </div>
-
-                {/* Page content */}
-                {!images[currentIndex + 1].unlocked 
-                  ? renderLockedContent(images[currentIndex + 1])
-                  : renderUnlockedContent(images[currentIndex + 1], currentIndex + 1)
-                }
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="absolute left-4 top-1/3 bg-[#8b5e3c] rounded-lg shadow p-2 flex flex-col items-center max-h-[300px] overflow-hidden">
-          {/* Up (one level) */}
-          <button
-            onClick={goUpOneLevel}
-            disabled={currentIndex === 0 || totalSpreads === 0}
-            className="w-10 h-10 bg-[#6b4226] text-white rounded mb-2 font-bold hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed"
-            aria-label="Previous level"
-          >
-            ↑
-          </button>
-
-          {/* Page Buttons */}
-          <div
-            id="side-nav"
-            ref={sideNavRef}
-            className="overflow-y-auto max-h-[220px] scroll-smooth"
-          >
-            {Array.from({ length: totalSpreads }, (_, i) => i * 2).map(
-              (pageIndex) => {
-                const isUnlocked = images[pageIndex]?.unlocked;
-                return (
-                  <button
-                    id={`page-btn-${pageIndex}`}
-                    key={pageIndex}
-                    onClick={() => isUnlocked && goToPage(pageIndex)}
-                    className={`w-10 h-10 border-2 border-[#6b4226] rounded mb-2 font-bold block ${
-                      currentIndex === pageIndex
-                        ? "bg-orange-500 text-white"
-                        : isUnlocked 
-                          ? "bg-[#fdf6e3] text-[#6b4226] hover:bg-orange-200"
-                          : "bg-gray-400 text-gray-600 cursor-not-allowed"
-                    }`}
-                    disabled={!isUnlocked}
-                    title={!isUnlocked ? "Complete the guessword game to unlock" : ""}
-                  >
-                    {pageIndex / 2 + 1}
-                  </button>
-                );
+        <style>
+          {`
+            @keyframes smoothHeartbeat {
+              0% { 
+                transform: translateY(-6px) scale(1);
+                filter: brightness(1);
               }
-            )}
-          </div>
+              15% { 
+                transform: translateY(-6px) scale(1.03);
+                filter: brightness(1.1);
+              }
+              30% { 
+                transform: translateY(-6px) scale(1);
+                filter: brightness(1);
+              }
+              45% { 
+                transform: translateY(-6px) scale(1.02);
+                filter: brightness(1.05);
+              }
+              60% { 
+                transform: translateY(-6px) scale(1);
+                filter: brightness(1);
+              }
+              100% { 
+                transform: translateY(-6px) scale(1);
+                filter: brightness(1);
+              }
+            }
 
-          {/* Down (one level) */}
+            @keyframes bookHeartbeat {
+              0% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+              20% { 
+                transform: scale(1.005);
+                filter: brightness(1.02) contrast(1.01);
+              }
+              40% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+              60% { 
+                transform: scale(1.003);
+                filter: brightness(1.01) contrast(1.005);
+              }
+              80% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+              100% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+            }
+
+            @keyframes contentHeartbeat {
+              0% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+              20% { 
+                transform: scale(1.002);
+                filter: brightness(1.01) contrast(1.005);
+              }
+              40% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+              60% { 
+                transform: scale(1.001);
+                filter: brightness(1.005) contrast(1.002);
+              }
+              80% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+              100% { 
+                transform: scale(1);
+                filter: brightness(1) contrast(1);
+              }
+            }
+
+            /* Alternative more subtle heartbeat */
+            @keyframes gentleHeartbeat {
+              0% { 
+                transform: translateY(-6px) scale(1);
+                opacity: 0.9;
+              }
+              25% { 
+                transform: translateY(-6px) scale(1.02);
+                opacity: 0.95;
+              }
+              50% { 
+                transform: translateY(-6px) scale(1);
+                opacity: 0.9;
+              }
+              75% { 
+                transform: translateY(-6px) scale(1.015);
+                opacity: 0.92;
+              }
+              100% { 
+                transform: translateY(-6px) scale(1);
+                opacity: 0.9;
+              }
+            }
+
+            /* Pulsing glow effect */
+            @keyframes pulseGlow {
+              0% {
+                transform: translateY(-6px) scale(1);
+                filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+              }
+              50% {
+                transform: translateY(-6px) scale(1.02);
+                filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+              }
+              100% {
+                transform: translateY(-6px) scale(1);
+                filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+              }
+            }
+          `}
+        </style>
+
+        {/* Updated Back Button with Image and Sound */}
+        <div className="absolute left-5 top-5 transform z-50">
           <button
-            onClick={goDownOneLevel}
-            disabled={currentIndex >= lastStartIndex || totalSpreads === 0}
-            className="w-10 h-10 bg-[#6b4226] text-white rounded mt-2 font-bold hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed"
-            aria-label="Next level"
+            onClick={handleBackToDashboard}
+            onMouseEnter={() => playSound("/sounds/button-hover.mp3", volume)}
+            className="bg-transparent transition hover:scale-105 flex items-center justify-center"
+            aria-label="Back to Dashboard"
+            title="Back to Dashboard"
+            style={{
+              animation: "contentHeartbeat 5s ease-in-out infinite"
+            }}
           >
-            ↓
+            <img 
+              src="/Img/Dashboard/back.png" 
+              alt="Back to Dashboard" 
+              className="w-14 h-14 object-contain"
+            />
           </button>
         </div>
 
+        {/* Fixed Book Container - No scrolling */}
+        <div className="relative flex w-11/12 max-w-6xl h-[87.5vh] min-h-[550px] max-h-[740px] overflow-hidden z-10">
+          {/* Background image with heartbeat effect */}
+          <img 
+            src="/Img/Dashboard/book-bg1.png"
+            alt="Background" 
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            style={{
+              animation: "bookHeartbeat 5s ease-in-out infinite"
+            }}
+          />
+
+          {/* Content Container with heartbeat effect */}
+          <div 
+            className="absolute w-full h-full z-50 flex"
+            style={{
+              animation: "contentHeartbeat 5s ease-in-out infinite"
+            }}
+          >
+            {/* Left Page Content */}
+            <div className="w-1/2 p-6 flex flex-col">
+              {images[currentIndex] && (
+                <div className="flex flex-col items-center ml-20 mt-3">
+                  {/* Chapter bar with left navigation button */}
+                  <div className="flex items-center justify-center w-4/5 max-w-sm mb-2 mt-4 z-40 relative">
+                    <button
+                      onClick={prevPage}
+                      disabled={currentIndex === 0}
+                      className={`px-4 py-2 rounded-l-lg font-bold text-lg flex-shrink-0 mr-2 z-50 relative ${
+                        currentIndex === 0
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-[#6b4226] hover:bg-orange-600 text-white"
+                      }`}
+                    >
+                      ←
+                    </button>
+                    <div className="bg-[#6b4226] text-white text-center py-2 font-semibold flex-1 z-40 relative">
+                      <span className="text-base">
+                        KABANATA {images[currentIndex].kabanata_id}:{" "}
+                        {images[currentIndex].title.toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="w-12 bg-[#6b4226] rounded-r-lg flex-shrink-0 z-40 relative"></div>
+                  </div>
+
+                  {/* Page content - Centered and Larger */}
+                  <div className="w-4/5 max-w-lg flex flex-col justify-start items-center text-center scale-90 z-30 relative">
+                    {!images[currentIndex].unlocked 
+                      ? renderLockedContent(images[currentIndex])
+                      : renderUnlockedContent(images[currentIndex], currentIndex)
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right Page Content */}
+            <div className="w-1/2 p-6 flex flex-col">
+              {images[currentIndex + 1] && (
+                <div className="flex flex-col items-center mr-20 mt-3">
+                  {/* Chapter bar with right navigation button */}
+                  <div className="flex items-center justify-center w-4/5 max-w-sm mb-2 mt-4 z-40 relative">
+                    <div className="w-12 bg-[#6b4226] rounded-l-lg flex-shrink-0 z-40 relative"></div>
+                    <div className="bg-[#6b4226] text-white text-center py-2 font-semibold flex-1 z-40 relative">
+                      <span className="text-base">
+                        KABANATA {images[currentIndex + 1].kabanata_id}:{" "}
+                        {images[currentIndex + 1].title.toUpperCase()}
+                      </span>
+                    </div>
+                    <button
+                      onClick={nextPage}
+                      disabled={currentIndex >= images.length - 2}
+                      className={`px-4 py-2 rounded-r-lg font-bold text-lg flex-shrink-0 ml-2 z-50 relative ${
+                        currentIndex >= images.length - 2
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-[#6b4226] hover:bg-orange-600 text-white"
+                      }`}
+                    >
+                      →
+                    </button>
+                  </div>
+
+                  {/* Page content - Centered and Larger */}
+                  <div className="w-4/5 max-w-lg flex flex-col justify-start items-center text-center scale-90 z-30 relative">
+                    {!images[currentIndex + 1].unlocked 
+                      ? renderLockedContent(images[currentIndex + 1])
+                      : renderUnlockedContent(images[currentIndex + 1], currentIndex + 1)
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Horizontal Page Navigation - Chunked Paging */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-[#8b5e3c] rounded-lg shadow-lg p-3 flex items-center space-x-2 max-w-[80%] z-50">
+            {/* Left Navigation Button */}
+            <button
+              onClick={() => setPageGroup((prev) => Math.max(prev - 1, 0))}
+              disabled={pageGroup === 0}
+              className="w-8 h-8 bg-[#6b4226] text-white rounded font-bold hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+              aria-label="Previous group"
+            >
+              ←
+            </button>
+
+            {/* Number Buttons */}
+            <div className="flex flex-nowrap space-x-2 py-1 px-2">
+              {Array.from({ length: totalSpreads }, (_, i) => i * 2)
+                .slice(pageGroup * 10, pageGroup * 10 + 10) // show only 10 at a time
+                .map((pageIndex) => {
+                  const isUnlocked = images[pageIndex]?.unlocked;
+                  return (
+                    <button
+                      id={`page-btn-${pageIndex}`}
+                      key={pageIndex}
+                      onClick={() => isUnlocked && goToPage(pageIndex)}
+                      className={`w-8 h-8 border-2 border-[#6b4226] rounded font-bold flex-shrink-0 ${
+                        currentIndex === pageIndex
+                          ? "bg-orange-500 text-white"
+                          : isUnlocked 
+                            ? "bg-[#fdf6e3] text-[#6b4226] hover:bg-orange-200"
+                            : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                      }`}
+                      disabled={!isUnlocked}
+                      title={!isUnlocked ? "Complete the guessword game to unlock" : `Page ${pageIndex / 2 + 1}`}
+                    >
+                      {pageIndex / 2 + 1}
+                    </button>
+                  );
+                })}
+            </div>
+
+            {/* Right Navigation Button */}
+            <button
+              onClick={() => setPageGroup((prev) => prev + 1)}
+              disabled={(pageGroup + 1) * 10 >= totalSpreads}
+              className="w-8 h-8 bg-[#6b4226] text-white rounded font-bold hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+              aria-label="Next group"
+            >
+              →
+            </button>
+          </div>
+        </div>
+        
         {/* Empty State */}
         {images.length === 0 && (
           <div className="text-center py-12">

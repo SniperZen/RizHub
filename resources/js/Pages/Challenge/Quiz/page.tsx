@@ -39,22 +39,22 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     const instructions = [
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `Welcome to the Quiz Challenge! \n\nIn this activity, you'll be tested on your knowledge of this kabanata. You need to achieve a perfect score (5/5) to proceed to the next challenge.`,
+            content: `MMagaling! Ikaw ay nagtagumpay sa unang pagsubok.`,
             buttonText: "Next",
         },
         {
-            title: `HOW TO PLAY`,
-            content: `1. Read each question carefully\n2. Drag and drop the correct answer to the drop zone\n3. You have 3 lives - be careful with your answers!\n4. Get all 5 questions right to unlock the next challenge`,
+            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            content: `NNgayon, tingnan natin kung malalagpasan mo ang huling pagsubok...`,
             buttonText: "Next",
         },
         {
-            title: `IMPORTANT RULES`,
-            content: `⚠️ Perfect score required to proceed\n⚠️ You lose a life for each wrong answer\n⚠️ Game over if you run out of lives\n⚠️ Try again if you don't get all answers correct`,
+            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            content: `SSa pagkakataon na ito, kailangan mong makakuha ng perpektong marka para mabuksan mo ang susunod na hamon.`,
             buttonText: "Next",
         },
         {
-            title: `READY TO START?`,
-            content: `Remember: Drag the answer options to the drop zone below each question. Good luck! \n\nHanda ka na ba?`,
+            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            content: `HHanda ka na ba? May tatlong beses na pagkakataon ka lamang para makuha ang perpektong sagot.`,
             buttonText: "Start Quiz",
         }
     ];

@@ -144,10 +144,10 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                             <div className="text-center">
                                 <Link
-                                    href={route("login")}
+                                    href={route("welcome")}
                                     className="text-sm text-gray-200 hover:text-gray-100 transition-colors duration-200"
                                 >
-                                    Back to Login
+                                    Back to Home
                                 </Link>
                             </div>
                         </form>

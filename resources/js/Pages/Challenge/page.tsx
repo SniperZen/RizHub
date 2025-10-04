@@ -76,23 +76,23 @@
         const [isLoading, setIsLoading] = useState(false);
 
         // Filter kabanatas -based on development needs
-        const filteredKabanatas = {
-            ...kabanatas,
-            data: kabanatas.data.filter(k => k.id <= 64)
-        };
+        // const filteredKabanatas = {
+        //     ...kabanatas,
+        //     data: kabanatas.data.filter(k => k.id <= 64)
+        // };
 
         // testing purposes only - remove this on production
-        // const filteredKabanatas = {
-        // ...kabanatas,
-        // data: kabanatas.data
-        //     .filter(k => k.id <= 64)
-        //     .map(k => ({
-        //     ...k,
-        //     progress: 10,
-        //     stars: 3,
-        //     unlocked: true
-        //     }))
-        // };
+        const filteredKabanatas = {
+        ...kabanatas,
+        data: kabanatas.data
+            .filter(k => k.id <= 64)
+            .map(k => ({
+            ...k,
+            progress: 10,
+            stars: 3,
+            unlocked: true
+            }))
+        };
 
         // Positions for different screen sizes
         const desktopPositions = [
@@ -119,15 +119,15 @@
             { top: "55%", left: "85%" },
         ];
 
-        const buildingOffsets = [
-            "-70px",  
-            "-150px",
-            "-100px",
-            "-160px",
-            "-100px",
-            "-160px",
-            "-100px",
-        ];
+        // const buildingOffsets = [
+        //     "-70px",  
+        //     "-150px",
+        //     "-100px",
+        //     "-160px",
+        //     "-100px",
+        //     "-160px",
+        //     "-100px",
+        // ];
 
         const getPositions = () => {
             if (itemsPerPage === 7) return desktopPositions;
@@ -429,9 +429,9 @@
                 soundVolume={currentSound}
                 onVolumeChange={handleAudioSettingsChange}
             >
-                <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('/Img/Challenge/BG3.png')" }}>
+                <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('/Img/Challenge/bg4.jpg')" }}>
                     {/* Header */}
-                    <div className="flex items-center justify-between px-8 py-4">
+                    <div className="flex items-center justify-between px-8 py-4"> 
                         <div className="relative z-20 flex items-center">
                             <img src="/Img/LandingPage/Title.png" alt="RizHub Logo" className="h-[70px] w-auto" />
                         </div>
@@ -655,7 +655,7 @@
                         )}
                     </div>
 
-                    <div className="w-full flex flex-row justify-center items-end mt-[-100px] relative z-0">
+                    {/* <div className="w-full flex flex-row justify-center items-end mt-[-100px] relative z-0">
                         {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
                             <div 
                                 key={`building-${k.id}`}
@@ -669,7 +669,7 @@
                                 />
                             </div>
                         ))}
-                    </div>
+                    </div> */}
 
                     {isModalOpen && (
                         <VideoModal
@@ -694,11 +694,11 @@
                                     <p className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-28">
                                         <span className="text-[#B26D42]">
                                             Would you like to{" "}
-                                            <span className="underline decoration-wavy decoration-[#FF7E47]">
+                                            <span className="decoration-[#FF7E47]">
                                             retry the video
                                             </span>{" "}
                                             or{" "}
-                                            <span className="underline decoration-wavy decoration-[#FFA500]">
+                                            <span className="decoration-[#FFA500]">
                                             proceed to the challenge?
                                             </span>
                                         </span>
@@ -707,7 +707,7 @@
                                     <div className="flex gap-6 mt-36 flex-wrap justify-center">
                                         <button
                                             onClick={retryVideo}
-                                            className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FFD93D] to-[#FFB300] shadow-[4px_8px_0_#C48C00] border-4 border-[#E6C17B] text-white text-2xl font-extrabold relative transition hover:scale-105"
+                                            className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
                                         >
                                             Retry
                                             <span className="absolute top-3 w-4 h-4 bg-white/80 rounded-full"></span>
@@ -716,7 +716,7 @@
 
                                         <button
                                             onClick={proceedNext}
-                                            className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#34D399] to-[#059669] shadow-[4px_8px_0_#047857] border-4 border-[#6EE7B7] text-white text-2xl font-extrabold relative transition hover:scale-105"
+                                            className="w-auto h-[60px] px-8 w-auto h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
                                         >
                                             Proceed
                                             <span className="absolute top-3 w-4 h-4 bg-white/80 rounded-full"></span>

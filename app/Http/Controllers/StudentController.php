@@ -39,6 +39,23 @@ class StudentController extends Controller
         ]);
     }
 
+        public function help()
+        {
+            $user = Auth::user();
+            $unreadNotifications = $user->unreadNotifications()->count();
+            $notifications = $user->notifications()
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            return Inertia::render('Dashboard/help/page', [ // Make sure this path matches your React component
+                'music' => $user->music ?? 40, 
+                'sound' => $user->sound ?? 70,
+                'name'  => $user->name ?? 'User101',
+                'unreadNotifications' => $unreadNotifications,
+                'notifications' => $notifications,
+            ]);
+        }
+
     public function exit()
     {
         Auth::logout();

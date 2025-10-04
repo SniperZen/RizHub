@@ -7,6 +7,7 @@ import TermsOfServiceModal from '../Pages/Login/TermsOfServiceModal';
 import PrivacyPolicyModal from '../Pages/Login/PrivacyPolicyModal';
 import { motion, AnimatePresence, Easing} from "framer-motion";
 
+
 // Preload background images
 const preloadImages = () => {
   const imageUrls = [
@@ -299,7 +300,7 @@ export default function Welcome({ auth }: PageProps) {
                     variants={itemVariants}
                     transition={{ delay: 0.2 }}
                   >
-                    <div className="relative" style={{ 
+                   <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden" style={{ 
                       width: '100%', 
                       maxWidth: '1900px',
                       height: '570px',
@@ -689,9 +690,10 @@ type LoginModalProps = {
 };
 
 
-function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal}: LoginModalProps) {
+function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: LoginModalProps) {
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
     // Login form state
     const { data: loginData, setData: setLoginData, post: loginPost, processing: loginProcessing, errors: loginErrors, reset: loginReset } = useForm({
@@ -708,9 +710,19 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal}: Lo
         terms: false,
     });
 
+    // Password validation checks
+    const passwordChecks = {
+        hasUppercase: /[A-Z]/.test(regData.password),
+        hasLowercase: /[a-z]/.test(regData.password),
+        hasNumber: /[0-9]/.test(regData.password),
+        hasSpecialChar: /[~!@#\$%\^&\*\(\)\-_\+=\|\\\{\}\[\]:;"'<>,\.\?\/]/.test(regData.password),
+        hasMinLength: regData.password.length >= 8
+    };
+
     const handleClose = () => {
         loginReset('password');
         regReset('password');
+        setIsPasswordFocused(false);
         onClose();
     };
 
@@ -737,66 +749,66 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal}: Lo
     if (!open) return null;
 
     return (
-<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm p-4">
-  {/* Login/Signup Toggle Buttons */}
-      <div className="absolute top-6 right-6 bg-[#5F290E] rounded-full flex">
-          <button
-            className={`px-10 py-3 md:px-12 md:py-4 rounded-full font-extrabold text-lg md:text-xl lg:text-2xl transition-all duration-200 focus:outline-none flex-1
-              ${isLogin ? 'bg-[#E26F42] text-white z-[100]' : 'bg-transparent text-white'}
-            `}
-            style={isLogin ? {} : { borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-            onClick={() => setIsLogin(true)}
-          >
-            access
-          </button>
-          <button
-            className={`px-6 py-3 md:px-12 md:py-4 rounded-full font-extrabold text-lg md:text-xl lg:text-2xl transition-all duration-200 focus:outline-none flex-1
-              ${!isLogin ? 'bg-[#E26F42] text-white z-[100]' : 'bg-transparent text-white'}
-            `}
-            style={!isLogin ? {} : { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-            onClick={() => setIsLogin(false)}
-          >
-            join
-          </button>
-        </div>
-  <div className="w-full max-w-2xl mx-auto flex rounded-2xl overflow-hidden shadow-2xl relative">
-  {/* Left Side Image */}
-<div className="hidden md:flex w-1/2 bg-orange-100 items-center justify-center relative">
-    <img
-        src="\Img\LandingPage\character\noli-form.gif"
-        alt="Login Illustration"
-        className="w-full h-full object-cover"
-    />
-    
-{/* Centered Text Overlay */}
-<div className="absolute inset-0 flex py-40 p-6 text-center">
-  {/* Smooth glowing background */}
-  <div className="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-orange-500/20 to-orange-700/30 
-                  blur-3xl animate-pulse opacity-70 -z-10"></div>
-
-  <h2 className="text-[#FA7816] text-xl md:text-2Sxl font-extrabold drop-shadow-md leading-snug max-w-2xl">
-    {isLogin ? (
-      "Hello! Ready to continue your adventure?"
-    ) : (
-      "Get ready to learn, play, and win—because in RizHub, education becomes an adventure!"
-    )}
-  </h2>
-</div>
-</div>
-    {/* Right Side Form */}
-<div className="bg-[#FA7816] w-full md:w-1/2 p-4 md:p-4 relative flex flex-col items-center justify-center">
-            {/* Close Button */}
-            <button
-                className="absolute top-2 right-3 md:top-3 md:right-4 text-white text-xl hover:text-[#5A3416] font-bold"
-                onClick={handleClose}
-                aria-label="Close"
-            >✕</button>
-            <div className="w-full flex flex-col items-center">
-                {isLogin && (
-                    <img src="/Img/LandingPage/Login/quill.png" alt="Quill Icon" className="w-10 h-10 md:w-14 md:h-14 mb-1" />
-                )}
-                <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-4 mt-1 text-center drop-shadow">Welcome!!!</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm p-4">
+            {/* Login/Signup Toggle Buttons */}
+            <div className="absolute top-6 right-6 bg-[#5F290E] rounded-full flex">
+                <button
+                    className={`px-10 py-3 md:px-12 md:py-4 rounded-full font-extrabold text-lg md:text-xl lg:text-2xl transition-all duration-200 focus:outline-none flex-1
+                        ${isLogin ? 'bg-[#E26F42] text-white z-[100]' : 'bg-transparent text-white'}
+                    `}
+                    style={isLogin ? {} : { borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    onClick={() => setIsLogin(true)}
+                >
+                    access
+                </button>
+                <button
+                    className={`px-6 py-3 md:px-12 md:py-4 rounded-full font-extrabold text-lg md:text-xl lg:text-2xl transition-all duration-200 focus:outline-none flex-1
+                        ${!isLogin ? 'bg-[#E26F42] text-white z-[100]' : 'bg-transparent text-white'}
+                    `}
+                    style={!isLogin ? {} : { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                    onClick={() => setIsLogin(false)}
+                >
+                    join
+                </button>
             </div>
+            <div className="w-full max-w-2xl mx-auto flex rounded-2xl overflow-hidden shadow-2xl relative">
+                {/* Left Side Image */}
+                <div className="hidden md:flex w-1/2 bg-orange-100 items-center justify-center relative">
+                    <img
+                        src="\Img\LandingPage\character\noli-form.gif"
+                        alt="Login Illustration"
+                        className="w-full h-full object-cover"
+                    />
+                    
+                    {/* Centered Text Overlay */}
+                    <div className="absolute inset-0 flex py-40 p-6 text-center">
+                        {/* Smooth glowing background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-orange-500/20 to-orange-700/30 
+                                        blur-3xl animate-pulse opacity-70 -z-10"></div>
+
+                        <h2 className="text-[#FA7816] text-xl md:text-2Sxl font-extrabold drop-shadow-md leading-snug max-w-2xl">
+                            {isLogin ? (
+                                "Hello! Ready to continue your adventure?"
+                            ) : (
+                                "Get ready to learn, play, and win—because in RizHub, education becomes an adventure!"
+                            )}
+                        </h2>
+                    </div>
+                </div>
+                {/* Right Side Form */}
+                <div className="bg-[#FA7816] w-full md:w-1/2 p-4 md:p-4 relative flex flex-col items-center justify-center">
+                    {/* Close Button */}
+                    <button
+                        className="absolute top-2 right-3 md:top-3 md:right-4 text-white text-xl hover:text-[#5A3416] font-bold"
+                        onClick={handleClose}
+                        aria-label="Close"
+                    >✕</button>
+                    <div className="w-full flex flex-col items-center">
+                        {isLogin && (
+                            <img src="/Img/LandingPage/Login/quill.png" alt="Quill Icon" className="w-10 h-10 md:w-14 md:h-14 mb-1" />
+                        )}
+                        <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-4 mt-1 text-center drop-shadow">Welcome!!!</h2>
+                    </div>
                     {isLogin ? (
                         <form onSubmit={handleLogin} className="w-full flex flex-col items-center">
                             {/* Email */}
@@ -980,13 +992,15 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal}: Lo
                                 </label>
                             </div>
                             {/* Password */}
-                            <div className="w-full mb-3 relative">
+                            <div className="w-full mb-1 relative">
                                 <input
                                     id="reg_password"
                                     type={showPassword ? "text" : "password"}
                                     name="password"
                                     value={regData.password}
                                     onChange={e => setRegData('password', e.target.value)}
+                                    onFocus={() => setIsPasswordFocused(true)}
+                                    onBlur={() => setIsPasswordFocused(false)}
                                     placeholder="password"
                                     className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm md:text-base border-2 border-white focus:border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                     required
@@ -1010,7 +1024,32 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal}: Lo
                                 >
                                     password:
                                 </label>
-                            </div>
+                                
+{/* Password Requirements - SIMPLER VERSION */}
+{(isPasswordFocused || regData.password) && (
+    <div className="mt-2 p-3 bg-white rounded-lg shadow-md">
+        <p className="text-[#5A3416] text-sm font-semibold mb-2">Password must contain:</p>
+        <ul className="text-xs space-y-1">
+            <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600' : 'text-red-600'}`}>
+                {passwordChecks.hasUppercase ? '✓' : '✗'} At least one uppercase letter (A-Z)
+            </li>
+            <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-green-600' : 'text-red-600'}`}>
+                {passwordChecks.hasLowercase ? '✓' : '✗'} At least one lowercase letter (a-z)
+            </li>
+            <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600' : 'text-red-600'}`}>
+                {passwordChecks.hasNumber ? '✓' : '✗'} At least one number (0-9)
+            </li>
+            <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-green-600' : 'text-red-600'}`}>
+                {passwordChecks.hasSpecialChar ? '✓' : '✗'} At least one special character
+            </li>
+            <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-green-600' : 'text-red-600'}`}>
+                {passwordChecks.hasMinLength ? '✓' : '✗'} At least 8 characters long
+            </li>
+        </ul>
+    </div>
+)}
+</div>
+                            
                             {/* Confirm Password */}
                             <div className="w-full mb-3 relative">
                                 <input

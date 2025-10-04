@@ -365,26 +365,27 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         setSoundVolume(sound);
         saveVolumeSettings(music, sound);
     };
+    
 
     const instructions = [
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `The story begins here... \n\nAng kwento ay nagsisimula dito...`,
+            content: `IIkaw ay inaatasang sagutan ang mga nakapaloob na tanong....`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `Something happens... \n\nMay nangyayari...`,
+            content: `AAng iyong bayani ay hindi mo na maililigtas kapag ikaw ay maubusan ng oras....`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `The system warns you... \n\nAng sistema ay nagbababala...`,
+            content: `IIkaw ay mayroon lamang animnapung segundo para sagutan ang limang katanungan....`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `Get ready for the challenge! \n\nMaghanda sa hamon!`,
+            content: `TTandaan, ako'y laging nakamasid - saiyo nakasalalay ang kaligtasan ng karaker.`,
             buttonText: "Start Challenge",
         },
     ];
@@ -713,16 +714,16 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                          )}
                                     </p> 
                                 
-                               <div className="relative flex items-center justify-center w-32 h-32 my-3">
+                               <div className="relative flex items-center  justify-center w-32 h-32 my-3">
                                     {(showModal === "finished") && (
                                         <>
                                         <img
                                             src="/Img/Challenge/GuessWord/fireworks.png"
                                             alt="Fireworks"
-                                            className="absolute inset-0 w-full h-full animate-pulse"
+                                            className="absolute inset-0 mt-8 w-full h-full animate-pulse"
                                         />
                                         <div 
-                                            className="absolute z-10 w-24 h-24 m-auto inset-0 flex items-center justify-center"
+                                            className="absolute z-10 w-24 mt-1 h-24 m-auto inset-0 flex items-center justify-center"
                                             onMouseEnter={() => score >= 5 && setShowGiftTooltip(true)}
                                             onMouseLeave={() => setShowGiftTooltip(false)}
                                         >
