@@ -453,7 +453,7 @@
     <button
       disabled={currentPage <= 1}
       onClick={handlePreviousPage}
-      className={`absolute -left-[-180px] top-[12%] z-[60] ${
+      className={`absolute -left-[-180px] top-[12%] z-[60] w-auto h-auto ${
         currentPage <= 1
           ? "opacity-50 cursor-not-allowed"
           : "hover:scale-110 transition-transform"
@@ -462,40 +462,25 @@
       <img
         src="/Img/Challenge/ALeft.png"
         alt="Previous"
-        className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain pointer-events-auto"
+        className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
       />
     </button>
 
     {/* Banner Image */}
-<img
-  src="/Img/Dashboard/t-bg1.png"
-  alt="Banner background"
-  className="relative z-40 w-full mt-10 max-w-[1000px] h-auto object-contain pointer-events-auto"
-  style={{
-    animation: "gentleHeartbeat 5s ease-in-out infinite"
-  }}
-/>
-
-<style>
-  {`
-    /* Smooth, subtle heartbeat animation */
-    @keyframes gentleHeartbeat {
-      0%   { transform: scale(1); }
-      20%  { transform: scale(1.03); }
-      40%  { transform: scale(1); }
-      60%  { transform: scale(1.04); }
-      80%  { transform: scale(1); }
-      100% { transform: scale(1); }
-    }
-  `}
-</style>
-
+    <img
+      src="/Img/Dashboard/t-bg1.png"
+      alt="Banner background"
+      className="relative z-40 w-full mt-10 max-w-[1000px] h-auto object-contain"
+      style={{
+        animation: "gentleHeartbeat 5s ease-in-out infinite"
+      }}
+    />
 
     {/* Right Arrow - Very Close to Banner */}
     <button
       disabled={currentPage >= totalPages}
       onClick={handleNextPage}
-      className={`absolute -right-[-185px] top-[12%] z-[60] ${
+      className={`absolute -right-[-185px] top-[12%] z-[60] w-auto h-auto ${
         currentPage >= totalPages
           ? "opacity-50 cursor-not-allowed"
           : "hover:scale-110 transition-transform"
@@ -504,7 +489,7 @@
       <img
         src="/Img/Challenge/ARight.png"
         alt="Next"
-        className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain pointer-events-auto"
+        className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
       />
     </button>
   </div>
@@ -641,22 +626,22 @@
                     </div>
 
 {/* Buildings with Kabanata Nodes and Stars */}
-<div className="w-full flex flex-row justify-center ml-2 items-end mt-[-100px] relative z-0">
+<div className="w-full flex flex-row justify-center ml-2 items-end mt-[-100px] relative z-30 pointer-events-auto">
     {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
         <div 
             key={`building-${k.id}`}
-            className="flex w-full relative"
+            className="flex w-full relative pointer-events-auto"
         >
             <img 
                 src="/Img/Challenge/building(1).png" 
                 alt="Building" 
-                className="w-full max-w-[300px] h-auto object-contain absolute"
+                className="w-full max-w-[300px] h-auto object-contain absolute pointer-events-none"
                 style={{ top: buildingOffsets[index] || "0px" }}
             />
             
 {/* Kabanata Node - Positioned at top center of building */}
 <div
-  className="absolute flex flex-col items-center floating-group"
+  className="absolute flex flex-col items-center floating-group pointer-events-auto z-40" 
   style={{
     top: `calc(${buildingOffsets[index] || "0px"} - 125px)`,
     left: "50%",
@@ -664,21 +649,29 @@
   }}
 >
   {/* Text that floats together with the image */}
-  <p className="font-[Risque] text-[20px] text-black mb-3">
+  <p className="font-[Risque] text-[20px] text-black mb-3 pointer-events-auto ">
     {k.kabanata.toLowerCase()}
   </p>
 
   <div className="relative">
-    <div
-      className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
-      onClick={() => k.unlocked && openVideoModal(k.id)}
-    >
-      {k.unlocked ? (
-        <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
-      ) : (
-        <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
-      )}
-    </div>
+<div
+  className="max-w-24 h-24 rounded-full flex items-center justify-center z-50 cursor-pointer"
+  onClick={() => {
+    console.log("Play button clicked for kabanata:", k.id);
+    console.log("Unlocked status:", k.unlocked);
+    if (k.unlocked) {
+      openVideoModal(k.id);
+    } else {
+      console.log("Kabanata is locked, cannot play");
+    }
+  }}
+>
+  {k.unlocked ? (
+    <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
+  ) : (
+    <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
+  )}
+</div>
   </div>
 
 <style>{`
