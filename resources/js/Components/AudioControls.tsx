@@ -188,7 +188,7 @@ const AudioControls: React.FC<AudioControlsProps> = ({
         
         {/* Volume slider - expands on hover */}
         <div className={`transition-all duration-300 overflow-hidden flex items-center ${
-          hoveredControl === "sound" ? "max-w-24 opacity-100 bg-white/80 rounded-full shadow-lg p-2" : "w-0 opacity-0"
+          hoveredControl === "sound" ? "max-w-24 opacity-0  rounded-full p-2" : "w-0 opacity-0"
         }`}>
           <input
             type="range"

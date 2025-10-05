@@ -119,15 +119,15 @@
             { top: "55%", left: "85%" },
         ];
 
-        // const buildingOffsets = [
-        //     "-70px",  
-        //     "-150px",
-        //     "-100px",
-        //     "-160px",
-        //     "-100px",
-        //     "-160px",
-        //     "-100px",
-        // ];
+        const buildingOffsets = [
+            "-70px",  
+            "-150px",
+            "-100px",
+            "-160px",
+            "-100px",
+            "-160px",
+            "-100px",
+        ];
 
         const getPositions = () => {
             if (itemsPerPage === 7) return desktopPositions;
@@ -422,61 +422,97 @@
             return filteredKabanatas.data.reduce((sum, kabanata) => sum + (kabanata.progress || 0), 0);
         };
 
-        return (
-            <StudentLayout 
-                pauseMusic={isModalOpen}
-                musicVolume={currentMusic}
-                soundVolume={currentSound}
-                onVolumeChange={handleAudioSettingsChange}
-            >
-                <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('/Img/Challenge/bg4.jpg')" }}>
-                    {/* Header */}
-                    <div className="flex items-center justify-between px-8 py-4"> 
-                        <div className="relative z-20 flex items-center">
-                            <img src="/Img/LandingPage/Title.png" alt="RizHub Logo" className="h-[70px] w-auto" />
-                        </div>
-                        <AudioControls 
-                            initialMusic={music}
-                            initialSound={sound}
-                            onSettingsChange={handleAudioSettingsChange}
-                        />
-                    </div>
-                    <div className="absolute top-[18%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-[900px] px-2">
-                        <div className="flex justify-center items-center gap-2 md:gap-6 w-full">
-                            {/* Navigation arrows */}
-                            <button 
-                                disabled={currentPage <= 1} 
-                                onClick={handlePreviousPage}
-                                className={`z-50 flex-shrink-0 ${currentPage <= 1 ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition"}`}
-                            >
-                                <img 
-                                    src="/Img/Challenge/ALeft.png" 
-                                    alt="Previous" 
-                                    className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
-                                />
-                            </button>
+    return (
+        <StudentLayout 
+            pauseMusic={isModalOpen}
+            musicVolume={currentMusic}
+            soundVolume={currentSound}
+            onVolumeChange={handleAudioSettingsChange}
+        >
+            <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('/Img/Challenge/bg7.png')" }}>
+                {/* Header */}
+                <div className="flex items-center justify-end px-8 py-4">
+                    {/* <div className="relative z-20 flex items-center">
+                            // REMOVED: <img src="/Img/LandingPage/Title.png" alt="RizHub Logo" className="h-[70px] w-auto" />
+                        </div> 
+                    */}
+                    
+                    {/* AudioControls is now justified to the right side of the remaining space */}
+                    <AudioControls 
+                        initialMusic={music}
+                        initialSound={sound}
+                        onSettingsChange={handleAudioSettingsChange}
+                    />
+                </div>
+                
+{/* Banner Image Container Adjustment */}
+<div className="absolute top-[30%] mt-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0">
+  <div className="relative flex justify-center items-center w-full">
+    
+    {/* Left Arrow - Very Close to Banner */}
+    <button
+      disabled={currentPage <= 1}
+      onClick={handlePreviousPage}
+      className={`absolute -left-[-180px] top-[12%] z-[60] ${
+        currentPage <= 1
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:scale-110 transition-transform"
+      }`}
+    >
+      <img
+        src="/Img/Challenge/ALeft.png"
+        alt="Previous"
+        className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain pointer-events-auto"
+      />
+    </button>
 
-                            <div className="relative flex-1 flex justify-center items-center">
-                                <img 
-                                    src="/Img/Challenge/banner-bg.png" 
-                                    alt="Banner background" 
-                                    className="w-full max-w-[600px] h-auto object-contain"
-                                />
-                            </div>
+    {/* Banner Image */}
+<img
+  src="/Img/Dashboard/t-bg1.png"
+  alt="Banner background"
+  className="relative z-40 w-full mt-10 max-w-[1000px] h-auto object-contain pointer-events-auto"
+  style={{
+    animation: "gentleHeartbeat 5s ease-in-out infinite"
+  }}
+/>
 
-                            <button 
-                                disabled={currentPage >= totalPages} 
-                                onClick={handleNextPage}
-                                className={`z-50 flex-shrink-0 ${currentPage >= totalPages ? "opacity-50 cursor-not-allowed" : "hover:scale-105 transition"}`}
-                            >
-                                <img 
-                                    src="/Img/Challenge/ARight.png" 
-                                    alt="Next" 
-                                    className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
-                                />
-                            </button>
-                        </div>
-                    </div>
+<style>
+  {`
+    /* Smooth, subtle heartbeat animation */
+    @keyframes gentleHeartbeat {
+      0%   { transform: scale(1); }
+      20%  { transform: scale(1.03); }
+      40%  { transform: scale(1); }
+      60%  { transform: scale(1.04); }
+      80%  { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+  `}
+</style>
+
+
+    {/* Right Arrow - Very Close to Banner */}
+    <button
+      disabled={currentPage >= totalPages}
+      onClick={handleNextPage}
+      className={`absolute -right-[-185px] top-[12%] z-[60] ${
+        currentPage >= totalPages
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:scale-110 transition-transform"
+      }`}
+    >
+      <img
+        src="/Img/Challenge/ARight.png"
+        alt="Next"
+        className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain pointer-events-auto"
+      />
+    </button>
+  </div>
+</div>
+
+
+
+
                     {/* Progress indicator
                     <div className="absolute top-28 right-8 bg-white/80 rounded-lg p-3 z-10">
                         <div className="text-center">
@@ -491,54 +527,23 @@
                     </div> */}
 
                     {/* Kabanata Map */}
-                    <div className="relative w-full h-[600px] flex justify-center items-center">
-                        <svg className="absolute w-full h-full pointer-events-none">
-                            {filteredKabanatas.data.slice(0, itemsPerPage - 1).map((k, i) => {
-                                const pos = positions[i];
-                                const nextPos = positions[i + 1];
-                                
-                                // Only draw if both positions exist
-                                if (pos && nextPos) {
-                                const x1 = parseFloat(pos.left);
-                                const y1 = parseFloat(pos.top);
-                                const x2 = parseFloat(nextPos.left);
-                                const y2 = parseFloat(nextPos.top);
-
-                                return [0.25, 0.44, 0.65].map((fraction, j) => {
-                                    const cx = x1 + (x2 - x1) * fraction;
-                                    const cy = y1 + (y2 - y1) * fraction;
-
-                                    return (
-                                    <circle
-                                        key={`${i}-${j}`}
-                                        cx={`${cx}%`}
-                                        cy={`${cy}%`}
-                                        r="11"
-                                        fill="black"
-                                    />
-                                    );
-                                });
-                                }
-                                
-                                return null;
-                            })}
-                        </svg>
+                    <div className="relative w-full h-[600px] flex justify-center ml-4 items-center z-20">
                         {/* Kabanata Nodes */}
-                        {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
+                        {/* {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
                             <div
                             key={k.id}
-                            className="absolute flex flex-col items-center"
+                            className="absolute mt-12 flex flex-col items-center"
                             style={{
                                 top: positions[index].top,
                                 left: positions[index].left,
-                                transform: "translate(-50%, -50%)",
+                                transform: "translate(-55%, -50%)",
                             }}
                             >
                                 <p className="font-[Risque] text-[20px] text-black">{k.kabanata.toLowerCase()}</p>
 
                                 <div className="relative">
                                     <div
-                                    className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
+                                    className="max-w-24 h-24 mt-5 rounded-full flex items-center justify-center cursor-pointer"
                                     onClick={() => k.unlocked && openVideoModal(k.id)}
                                     >
                                     {k.unlocked ? (
@@ -549,29 +554,9 @@
                                     </div>
                                 </div>
 
-                                {k.unlocked && (
-                                    <div className="mt-2 flex flex-col items-center">
-                                        <div className="flex space-x-1">
-                                            {[...Array(3)].map((_, i) => (
-                                            <img 
-                                                key={i} 
-                                                src="/Img/Challenge/star.png" 
-                                                alt="star" 
-                                                className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
-                                            />
-                                            ))}
-                                        </div>
-                                        <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
-                                            <div
-                                            className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
-                                            style={{ width: `${(k.progress / 10) * 100}%` }}
-                                            ></div>
-                                        </div>
-                                        <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
-                                    </div>
-                                )}
+                            
                             </div>
-                        ))}
+                        ))} */}
 
                         {filteredKabanatas.data.some(k => k.id === 64) && (
                             <div
@@ -655,22 +640,92 @@
                         )}
                     </div>
 
-                    {/* <div className="w-full flex flex-row justify-center items-end mt-[-100px] relative z-0">
-                        {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
-                            <div 
-                                key={`building-${k.id}`}
-                                className="flex w-full relative"
-                            >
-                                <img 
-                                    src="/Img/Challenge/building2.png" 
-                                    alt="Building" 
-                                    className="w-full max-w-[300px] h-auto object-contain absolute"
-                                    style={{ top: buildingOffsets[index] || "0px" }}
-                                />
-                            </div>
-                        ))}
-                    </div> */}
+{/* Buildings with Kabanata Nodes and Stars */}
+<div className="w-full flex flex-row justify-center ml-2 items-end mt-[-100px] relative z-0">
+    {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
+        <div 
+            key={`building-${k.id}`}
+            className="flex w-full relative"
+        >
+            <img 
+                src="/Img/Challenge/building(1).png" 
+                alt="Building" 
+                className="w-full max-w-[300px] h-auto object-contain absolute"
+                style={{ top: buildingOffsets[index] || "0px" }}
+            />
+            
+{/* Kabanata Node - Positioned at top center of building */}
+<div
+  className="absolute flex flex-col items-center floating-group"
+  style={{
+    top: `calc(${buildingOffsets[index] || "0px"} - 125px)`,
+    left: "50%",
+    transform: "translateX(-50%)",
+  }}
+>
+  {/* Text that floats together with the image */}
+  <p className="font-[Risque] text-[20px] text-black mb-3">
+    {k.kabanata.toLowerCase()}
+  </p>
 
+  <div className="relative">
+    <div
+      className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
+      onClick={() => k.unlocked && openVideoModal(k.id)}
+    >
+      {k.unlocked ? (
+        <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
+      ) : (
+        <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
+      )}
+    </div>
+  </div>
+
+<style>{`
+  @keyframes smoothFloatGroup {
+    0% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -12px); }
+    100% { transform: translate(-50%, 0); }
+  }
+  .floating-group {
+    animation: smoothFloatGroup 5s ease-in-out infinite;
+    will-change: transform;
+  }
+`}</style>
+</div>
+            
+            {/* Stars and Progress - Positioned below kabanata node */}
+            {k.unlocked && (
+                <div 
+                    className="absolute flex flex-col items-center"
+                    style={{ 
+                        top: `calc(${buildingOffsets[index] || "0px"} + 45px)`,
+                        left: "50%",
+                        transform: "translateX(-50%)"
+                    }}
+                >
+                    <div className="flex space-x-1">
+                        {[...Array(3)].map((_, i) => (
+                            <img 
+                                key={i} 
+                                src="/Img/Challenge/star.png" 
+                                alt="star" 
+                                className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
+                            />
+                        ))}
+                    </div>
+                    <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
+                        <div
+                            className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
+                            style={{ width: `${(k.progress / 10) * 100}%` }}
+                        ></div>
+                    </div>
+                    <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
+                </div>
+            )}
+        </div>
+    ))}
+</div>
                     {isModalOpen && (
                         <VideoModal
                             videoSrc={currentVideo}

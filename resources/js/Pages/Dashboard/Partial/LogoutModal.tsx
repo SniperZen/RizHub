@@ -14,10 +14,12 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
       title="Logout"
       size="sm"
     >
-      <div className="text-[#3D2410]">
-        <p className="mb-6">Are you sure you want to logout?</p>
+      <div className="text-[#3D2410] max-h-[80vh] overflow-hidden flex flex-col">
+        <div className="flex-1 overflow-y-auto">
+          <p className="mb-6">Are you sure you want to logout?</p>
+        </div>
         
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end gap-4 ">
           <button
             type="button"
             onClick={onClose}

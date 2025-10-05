@@ -563,17 +563,22 @@ export default function Dashboard({
                                     >
                                         <img src="/Img/Dashboard/profile.png" alt="Profile" className="w-20" />
                                     </Button>
-                                    <Button className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
-                                    onClick={() => {
-                                        setShowSettings(false);
-                                        setShowLogoutModal(true);
-                                    }}
-                                    soundHover="/sounds/button-hover.mp3"
-                                    soundClick="/Music/Sound.mp3"
-                                    soundVolume={volume}
-                                    >
-                                        <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
-                                    </Button>
+                                    <Button 
+    soundHover="/sounds/button-hover.mp3"
+    soundClick="/Music/Sound.mp3"
+    soundVolume={volume}
+    className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
+    onClick={() => setShowLogoutModal(true)}
+>
+    <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
+</Button>
+
+{/* Logout Modal */}
+<LogoutModal
+    isOpen={showLogoutModal}
+    onClose={() => setShowLogoutModal(false)}
+    onConfirm={() => router.post(route('logout'))}
+/>
                                 </div>
                             </div>
                         </div>
@@ -599,7 +604,7 @@ export default function Dashboard({
                                     soundHover="/sounds/button-hover.mp3"
                                     soundClick="/Music/Sound.mp3"
                                     soundVolume={volume}
-                                    className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                    className="absolute top-19 right-12 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
                                     onClick={() => setShowAccount(false)}
                                     aria-label="Close"
                                 >
