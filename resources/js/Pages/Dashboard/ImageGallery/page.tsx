@@ -177,7 +177,7 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
     <StudentLayout>
 
       <img
-        src="/Img/Dashboard/b-im2.png"
+        src="/Img/Dashboard/b-im5.png"
         alt="Noli Me Tangere BG"
         className="absolute inset-0 w-full h-full object-cover z-20  pointer-events-none"
         style={{

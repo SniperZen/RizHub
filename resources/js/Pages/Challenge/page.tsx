@@ -543,87 +543,92 @@
                             </div>
                         ))} */}
 
-                        {filteredKabanatas.data.some(k => k.id === 64) && (
-                            <div
-                                className="absolute flex flex-col items-center z-10 left-[400px] top-[150px]"
-                            >
-                                <div className="relative max-w-[500px] h-auto rounded-full flex items-center justify-center">
-                                    <img src="/Img/Challenge/locked-door.png" alt="Locked Door" className="w-full h-auto" />
-                                    
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        {(filteredKabanatas.data.find(k => k.id === 64)?.progress || 0) > 0 ? (
-                                            <div className="flex items-center justify-center">
-                                                <div className="absolute w-[280px] h-[280px] rounded-full overflow-hidden">
-                                                    <div className="absolute inset-0 
-                                                                    bg-[conic-gradient(from_0deg,transparent_0deg,rgba(255,255,255,0.9)_20deg,transparent_40deg)]
-                                                                    animate-spin-slower blur-xl opacity-70">
-                                                    </div>
-                                                </div>
-
-                                                    {/* Background Glow */}
-                                                <div className="absolute w-[250px] h-[250px] rounded-full 
-                                                    bg-[radial-gradient(circle,rgba(255,200,100,0.6),rgba(255,106,0,0.25),transparent)]
-                                                    blur-2xl animate-pulse">
-                                                </div>
-
-                                                    {/* Scroll */}
-                                                <div className="flex flex-col items-center justify-center">
-                                                    <img 
-                                                        src="/Img/Challenge/scroll.png"
-                                                        alt="Scroll"
-                                                        className="absolute top-[150px] w-[120px] h-auto z-10"
-                                                    />
-                                                    <img src="/Img/Challenge/lightBG.png" alt="" 
-                                                        className="absolute top-[100px] w-[250px] h-auto z-90 animate-pulse opacity-80"
-                                                    />
-                                                        {/* Claim Button */}
-                                                    <div className="absolute bottom-[100px] flex items-center justify-center z-20">
-                                                        <button
-                                                            className="w-[150px] h-[50px] py-2 rounded-[25px] bg-gradient-to-b from-[#FF6A00] to-[#D5703A] shadow-[2px_4px_0_#B97B4B] border-2 border-[#E6B07B] text-white text-lg font-black relative transition hover:scale-105"
-                                                            onClick={() => setShowCertificateModal(true)}
-                                                        >
-                                                            Claim
-                                                            <span className="absolute top-1 right-4 w-3 h-3 bg-white/80 rounded-full"></span>
-                                                            <span className="absolute top-3 right-8 w-1.5 h-1.5 bg-white/60 rounded-full"></span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="w-12 h-12 flex items-center justify-center">
-                                                <div className="absolute bg-[rgba(52,27,7,0.5)] w-[220px] h-[240px] z-2 top-[60px]">
-
-                                                </div>
-                                                <svg className="z-0" width="82" height="95" viewBox="0 0 82 95" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="white"/>
-                                                </svg>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+{filteredKabanatas.data.some(k => k.id === 64) && (
+    <div
+        className="absolute flex flex-col items-center z-10 left-[530px] top-[130px]"
+    >
+        <div className="relative max-w-[400px] h-auto rounded-full flex items-center justify-center">
+            {/* Conditionally render locked or unlocked door */}
+            {completedCount === 64 ? (
+                <img src="/Img/Challenge/locked-door2.png" alt="Unlocked Door" className="w-full h-auto" />
+            ) : (
+                <img src="/Img/Challenge/unlocked-door.png" alt="Locked Door" className="w-full h-auto" />
+            )}
+            
+            <div className="absolute inset-0 flex items-center justify-center">
+                {(filteredKabanatas.data.find(k => k.id === 64)?.progress || 0) > 0 ? (
+                    <div className="flex items-center justify-center">
+                        <div className="absolute w-[280px] h-[280px] rounded-full overflow-hidden">
+                            <div className="absolute inset-0 
+                                            bg-[conic-gradient(from_0deg,transparent_0deg,rgba(253, 212, 149, 0.76)_20deg,transparent_40deg)]
+                                            animate-spin-slower blur-xl opacity-70">
                             </div>
-                        )}
+                        </div>
 
-                        {/* Certificate node at the end if all kabanatas are completed */}
-                        {completedCount === 64 && (
-                            <div
-                                className="absolute flex flex-col items-center"
-                                style={{
-                                    top: positions[itemsPerPage - 1].top,
-                                    left: positions[itemsPerPage - 1].left,
-                                    transform: "translate(-50%, -50%)",
-                                }}
-                            >
-                                <p className="font-[Risque] text-[20px] text-black">certificate</p>
-                                <div 
-                                    className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
+                        {/* Background Glow */}
+                        <div className="absolute w-[250px] h-[250px] rounded-full 
+                            bg-[radial-gradient(circle,rgba(255,200,100,0.6),rgba(255,106,0,0.25),transparent)]
+                            blur-2xl animate-pulse">
+                        </div>
+
+                        {/* Scroll */}
+                        {/* <div className="flex flex-col items-center justify-center">
+                            <img 
+                                src="/Img/Challenge/scroll.png"
+                                alt="Scroll"
+                                className="absolute top-[150px] w-[120px] h-auto z-10"
+                            /> */}
+                            <img src="/Img/Challenge/lightBG2.png" alt="" 
+                                className="absolute top-[90px] w-[280px] h-auto z-90 animate-pulse opacity-80"
+                            />
+                                {/* Claim Button */}
+                            <div className="absolute bottom-[100px] flex items-center justify-center z-20">
+                                <button
+                                    className="w-[150px] h-[50px] py-2 rounded-[25px] bg-gradient-to-b from-[#FF6A00] to-[#D5703A] shadow-[2px_4px_0_#B97B4B] border-2 border-[#E6B07B] text-white text-lg font-black relative transition hover:scale-105"
                                     onClick={() => setShowCertificateModal(true)}
                                 >
-                                    <img src="/Img/Challenge/Certificate.png" alt="Certificate" className="w-full h-auto" />
-                                </div>
+                                    Claim
+                                    <span className="absolute top-1 right-4 w-3 h-3 bg-white/80 rounded-full"></span>
+                                    <span className="absolute top-3 right-8 w-1.5 h-1.5 bg-white/60 rounded-full"></span>
+                                </button>
                             </div>
-                        )}
+                        </div>
+
+                ) : (
+                    <div className="w-12 h-12 flex items-center justify-center">
+                        <div className="absolute  w-[220px] h-[240px] z-2 top-[60px]">
+
+                        </div>
+                            <svg className="z-0" width="82" height="95" viewBox="0 0 82 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="rgba(253, 212, 149, 0.76)"/>
+                            </svg>
                     </div>
+                )}
+            </div>
+        </div>
+    </div>
+)}
+
+{/* Certificate node at the end if all kabanatas are completed */}
+{completedCount === 64 && (
+    <div
+        className="absolute flex flex-col items-center"
+        style={{
+            top: positions[itemsPerPage - 1].top,
+            left: positions[itemsPerPage - 1].left,
+            transform: "translate(-50%, -50%)",
+        }}
+    >
+        <p className="font-[Risque] text-[20px] text-black">certificate</p>
+        <div 
+            className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
+            onClick={() => setShowCertificateModal(true)}
+        >
+            <img src="/Img/Challenge/Certificate.png" alt="Certificate" className="w-full h-auto" />
+        </div>
+    </div>
+)}
+</div>
 
 {/* Buildings with Kabanata Nodes and Stars */}
 <div className="w-full flex flex-row justify-center ml-2 items-end mt-[-100px] relative z-30 pointer-events-auto">
@@ -648,10 +653,12 @@
     transform: "translateX(-50%)",
   }}
 >
-  {/* Text that floats together with the image */}
-  <p className="font-[Risque] text-[20px] text-black mb-3 pointer-events-auto ">
-    {k.kabanata.toLowerCase()}
-  </p>
+<p className="font-[Risque] text-[20px] text-orange-400 mb-3 pointer-events-auto 
+              drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]
+              hover:drop-shadow-[0_0_15px_rgba(251,191,36,1)]
+              transition-all duration-300">
+  {k.kabanata.toLowerCase()}
+</p>
 
   <div className="relative">
 <div
