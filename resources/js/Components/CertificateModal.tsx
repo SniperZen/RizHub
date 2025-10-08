@@ -125,24 +125,24 @@ pagsubok at hamon ng karunungan, nakumpleto ang ${percentage}% ng lahat ng kaban
         <div
           ref={certificateRef}
           className="relative w-full aspect-[16/10] bg-no-repeat bg-center bg-contain flex flex-col items-center justify-center"
-          style={{ backgroundImage: "url('/Img/Challenge/certificate.png')" }}
+          style={{ backgroundImage: "url('/Img/Challenge/certificate2.png')" }}
         >
           {/* Title */}
-          <div className="absolute top-[22%] w-full text-center">
+          <div className="absolute top-[25%] ml-[12%] w-full text-center">
             <h1 className="text-5xl md:text-6xl font-lavish text-black">
               Katibayan ng Pagtatapos
             </h1>
           </div>
 
           {/* Student Name */}
-          <div className="absolute top-[38%] w-full text-center">
+          <div className="absolute top-[43%] ml-[15%] w-full text-center">
             <h2 className="text-2xl font-bold italic text-black">
               {studentName.toUpperCase()}
             </h2>
           </div>
 
           {/* Certificate Body Text */}
-           <div className="absolute top-[50%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
+           <div className="absolute top-[55%] ml-[15%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
                 <p>
                     ay matagumpay na nakatapos sa aralin sa pamamagitan ng pagpapamalas ng malalim na
                     paglalakbay sa mga kabanata ng <span className="italic">"Noli Me Tangere"</span> sa
@@ -172,28 +172,27 @@ pagsubok at hamon ng karunungan, nakumpleto ang ${percentage}% ng lahat ng kaban
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-center gap-4 mt-6">
-          <button
-            onClick={handleDownloadPDF}
-            className="px-6 py-3 bg-[#8b5a2b] text-white font-semibold rounded-lg hover:bg-[#6d4521] transition"
-          >
-            I-download ang PDF
-          </button>
-          <button
-            onClick={onClose}
-            className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition"
-          >
-            Isara
-          </button>
-        </div>
+<div className="flex justify-center ml-20 -mt-10">
+  <button onClick={handleDownloadPDF} className="p-2 hover:opacity-90 transition">
+    <img 
+      src="/Img/Challenge/pdf.png" 
+      alt="I-download ang PDF" 
+      width="180" 
+      height="40" 
+      className="min-w-[120px]"
+    />
+  </button>
 
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-2xl text-[#8b5a2b] hover:text-[#6d4521]"
-        >
-          ×
-        </button>
+  <button onClick={onClose} className="p-2 hover:opacity-90 transition">
+    <img 
+      src="/Img/Challenge/closepdf.png" 
+      alt="Isara" 
+      width="180" 
+      height="40" 
+      className="min-w-[120px]"
+    />
+  </button>
+</div>
       </div>
     </div>
   );

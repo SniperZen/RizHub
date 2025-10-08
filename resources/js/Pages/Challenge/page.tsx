@@ -578,20 +578,13 @@
                                 alt="Scroll"
                                 className="absolute top-[150px] w-[120px] h-auto z-10"
                             /> */}
-                            <img src="/Img/Challenge/lightBG2.png" alt="" 
-                                className="absolute top-[90px] w-[280px] h-auto z-90 animate-pulse opacity-80"
+                            <img 
+                                src="/Img/Challenge/lightBG2.png" 
+                                alt="Treasure Box" 
+                                className="absolute top-[110px] w-[300px] h-auto z-50 animate-pulse opacity-80 cursor-pointer transition hover:scale-105 pointer-events-auto"
+                                onClick={() => setShowCertificateModal(true)}
                             />
-                                {/* Claim Button */}
-                            <div className="absolute bottom-[100px] flex items-center justify-center z-20">
-                                <button
-                                    className="w-[150px] h-[50px] py-2 rounded-[25px] bg-gradient-to-b from-[#FF6A00] to-[#D5703A] shadow-[2px_4px_0_#B97B4B] border-2 border-[#E6B07B] text-white text-lg font-black relative transition hover:scale-105"
-                                    onClick={() => setShowCertificateModal(true)}
-                                >
-                                    Claim
-                                    <span className="absolute top-1 right-4 w-3 h-3 bg-white/80 rounded-full"></span>
-                                    <span className="absolute top-3 right-8 w-1.5 h-1.5 bg-white/60 rounded-full"></span>
-                                </button>
-                            </div>
+
                         </div>
 
                 ) : (
@@ -600,7 +593,7 @@
 
                         </div>
                             <svg className="z-0" width="82" height="95" viewBox="0 0 82 95" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="rgba(253, 212, 149, 0.76)"/>
+                                <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="white"/>
                             </svg>
                     </div>
                 )}
@@ -624,7 +617,7 @@
             className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
             onClick={() => setShowCertificateModal(true)}
         >
-            <img src="/Img/Challenge/Certificate.png" alt="Certificate" className="w-full h-auto" />
+            <img src="/Img/Challenge/Certificate2.png" alt="Certificate" className="w-full h-auto" />
         </div>
     </div>
 )}
@@ -632,100 +625,178 @@
 
 {/* Buildings with Kabanata Nodes and Stars */}
 <div className="w-full flex flex-row justify-center ml-2 items-end mt-[-100px] relative z-30 pointer-events-auto">
-    {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
-        <div 
-            key={`building-${k.id}`}
-            className="flex w-full relative pointer-events-auto"
-        >
-            <img 
-                src="/Img/Challenge/building(1).png" 
-                alt="Building" 
-                className="w-full max-w-[300px] h-auto object-contain absolute pointer-events-none"
-                style={{ top: buildingOffsets[index] || "0px" }}
-            />
-            
-{/* Kabanata Node - Positioned at top center of building */}
-<div
-  className="absolute flex flex-col items-center floating-group pointer-events-auto z-40" 
-  style={{
-    top: `calc(${buildingOffsets[index] || "0px"} - 125px)`,
-    left: "50%",
-    transform: "translateX(-50%)",
-  }}
->
-<p className="font-[Risque] text-[20px] text-orange-400 mb-3 pointer-events-auto 
-              drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]
-              hover:drop-shadow-[0_0_15px_rgba(251,191,36,1)]
-              transition-all duration-300">
-  {k.kabanata.toLowerCase()}
-</p>
+  <style>
+    {`
+      @keyframes floatSmoothTogether {
+        0%, 100% { transform: translate(-50%, 0); }
+        50% { transform: translate(-50%, -12px); }
+      }
 
-  <div className="relative">
-<div
-  className="max-w-24 h-24 rounded-full flex items-center justify-center z-50 cursor-pointer"
-  onClick={() => {
-    console.log("Play button clicked for kabanata:", k.id);
-    console.log("Unlocked status:", k.unlocked);
-    if (k.unlocked) {
-      openVideoModal(k.id);
-    } else {
-      console.log("Kabanata is locked, cannot play");
-    }
-  }}
->
-  {k.unlocked ? (
-    <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
-  ) : (
-    <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
-  )}
-</div>
-  </div>
+      .floating-group {
+        animation: floatSmoothTogether 3.5s ease-in-out infinite;
+      }
+    `}
+  </style>
 
-<style>{`
-  @keyframes smoothFloatGroup {
-    0% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -12px); }
-    100% { transform: translate(-50%, 0); }
-  }
-  .floating-group {
-    animation: smoothFloatGroup 5s ease-in-out infinite;
-    will-change: transform;
-  }
-`}</style>
-</div>
-            
-            {/* Stars and Progress - Positioned below kabanata node */}
-            {k.unlocked && (
-                <div 
-                    className="absolute flex flex-col items-center"
-                    style={{ 
-                        top: `calc(${buildingOffsets[index] || "0px"} + 45px)`,
-                        left: "50%",
-                        transform: "translateX(-50%)"
-                    }}
-                >
-                    <div className="flex space-x-1">
-                        {[...Array(3)].map((_, i) => (
-                            <img 
-                                key={i} 
-                                src="/Img/Challenge/star.png" 
-                                alt="star" 
-                                className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
-                            />
-                        ))}
-                    </div>
-                    <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
-                        <div
-                            className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
-                            style={{ width: `${(k.progress / 10) * 100}%` }}
-                        ></div>
-                    </div>
-                    <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
-                </div>
-            )}
+  {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
+    <div 
+      key={`building-${k.id}`}
+      className="flex w-full relative pointer-events-auto"
+    >
+      {/* Kabanata 64 Special Building */}
+      {k.id === 64 ? (
+        <div className="relative w-full flex justify-start pl-10">
+          <img 
+            src="/Img/Challenge/building(1).png" 
+            alt="Building" 
+            className="absolute pointer-events-none object-contain"
+            style={{ 
+              top: buildingOffsets[itemsPerPage - 1] || "0px",
+              left: "0",
+              width: "250px",
+              height: "auto",
+            }}
+          />
+
+          {/* Kabanata 64 Node (Unified Float Group) */}
+          <div
+            className="absolute flex flex-col items-center pointer-events-auto z-40 floating-group"
+            style={{
+              top: `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)`,
+              left: "125px",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <p className="font-[Risque] text-[20px] text-orange-400 mb-3 pointer-events-auto
+                        drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]
+                        hover:drop-shadow-[0_0_15px_rgba(251,191,36,1)]
+                        transition-all duration-300 text-center">
+              {k.kabanata.toLowerCase()}
+            </p>
+
+            <div className="relative">
+              <div
+                className="max-w-20 h-20 rounded-full flex items-center justify-center z-50 cursor-pointer"
+                onClick={() => {
+                  if (k.unlocked) openVideoModal(k.id);
+                }}
+              >
+                {k.unlocked ? (
+                  <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
+                ) : (
+                  <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Stars + Progress */}
+          {k.unlocked && (
+            <div 
+              className="absolute flex flex-col items-center"
+              style={{ 
+                top: `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 45px)`,
+                left: "125px",
+                transform: "translateX(-50%)"
+              }}
+            >
+              <div className="flex space-x-1">
+                {[...Array(3)].map((_, i) => (
+                  <img 
+                    key={i} 
+                    src="/Img/Challenge/star.png" 
+                    alt="star" 
+                    className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
+                  />
+                ))}
+              </div>
+              <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
+                <div
+                  className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
+                  style={{ width: `${(k.progress / 10) * 100}%` }}
+                ></div>
+              </div>
+              <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
+            </div>
+          )}
         </div>
-    ))}
+      ) : (
+        /* Regular Kabanatas */
+        <>
+          <img 
+            src="/Img/Challenge/building(1).png" 
+            alt="Building" 
+            className="w-full max-w-[250px] h-auto object-contain absolute pointer-events-none"
+            style={{ top: buildingOffsets[index] || "0px" }}
+          />
+
+          {/* Regular Kabanata Node (Unified Float Group) */}
+          <div
+            className="absolute flex flex-col items-center pointer-events-auto z-40 floating-group" 
+            style={{
+              top: `calc(${buildingOffsets[index] || "0px"} - 125px)`,
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <p className="font-[Risque] text-[20px] text-orange-400 mb-3 pointer-events-auto
+                        drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]
+                        hover:drop-shadow-[0_0_15px_rgba(251,191,36,1)]
+                        transition-all duration-300">
+              {k.kabanata.toLowerCase()}
+            </p>
+
+            <div className="relative">
+              <div
+                className="max-w-20 h-20 rounded-full flex items-center justify-center z-50 cursor-pointer"
+                onClick={() => {
+                  if (k.unlocked) openVideoModal(k.id);
+                }}
+              >
+                {k.unlocked ? (
+                  <img src="/Img/Challenge/Play.png" alt="Play" className="w-full h-auto" />
+                ) : (
+                  <img src="/Img/Challenge/Locked.png" alt="Locked" className="w-full h-auto" />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Stars and Progress */}
+          {k.unlocked && (
+            <div 
+              className="absolute flex flex-col items-center"
+              style={{ 
+                top: `calc(${buildingOffsets[index] || "0px"} + 45px)`,
+                left: "50%",
+                transform: "translateX(-50%)"
+              }}
+            >
+              <div className="flex space-x-1">
+                {[...Array(3)].map((_, i) => (
+                  <img 
+                    key={i} 
+                    src="/Img/Challenge/star.png" 
+                    alt="star" 
+                    className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
+                  />
+                ))}
+              </div>
+              <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
+                <div
+                  className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
+                  style={{ width: `${(k.progress / 10) * 100}%` }}
+                ></div>
+              </div>
+              <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  ))}
 </div>
+
                     {isModalOpen && (
                         <VideoModal
                             videoSrc={currentVideo}
