@@ -4,10 +4,11 @@ import { router } from '@inertiajs/react';
 interface ShareModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onBack?: () => void; // Add this prop
     initialEmail?: string;
 }
 
-const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, initialEmail = '' }) => {
+const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initialEmail = '' }) => {
     const [email, setEmail] = useState(initialEmail);
     const [isCopied, setIsCopied] = useState(false);
     const [isSending, setIsSending] = useState(false);
@@ -61,10 +62,11 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, initialEmail =
             >
                 <div className="flex flex-col items-center w-full px-[80px]">
                     <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Share</span>
+                    
+                    {/* Back Button instead of Close */}
                     <button
                         className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
-                        onClick={onClose}
-                        aria-label="Close"
+                        onClick={onBack || onClose} // Use onBack if provided, otherwise fallback to onClose
                     >
                         <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
                     </button>

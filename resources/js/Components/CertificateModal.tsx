@@ -5,45 +5,19 @@ interface CertificateModalProps {
   onClose: () => void;
   studentName?: string;
   totalProgress?: number;
-  totalKabanata?: number;  
+  totalKabanata?: number;
 }
 
-const CertificateModal: React.FC<CertificateModalProps> = ({ 
-  isOpen, 
-  onClose, 
+const CertificateModal: React.FC<CertificateModalProps> = ({
+  isOpen,
+  onClose,
   studentName = "Juan Dela Cruz",
   totalProgress,
   totalKabanata,
 }) => {
   const certificateRef = useRef<HTMLDivElement>(null);
 
-//   const handleDownloadPDF = async () => {
-//     if (!certificateRef.current) return;
-
-//     try {
-//       const html2canvas = (await import("html2canvas")).default;
-//       const jsPDF = (await import("jspdf")).default;
-
-//       const canvas = await html2canvas(certificateRef.current, {
-//         scale: 2,
-//         useCORS: true,
-//         logging: false,
-//       });
-
-//       const imgData = canvas.toDataURL("image/png");
-//       const pdf = new jsPDF("landscape", "mm", "a4");
-//       const imgWidth = 297;
-//       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-//       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-//       pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
-//     } catch (error) {
-//       console.error("Error generating PDF:", error);
-//       alert("May error sa pag-generate ng PDF. Pakisubukan muli.");
-//     }
-//   };
-
-    const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async () => {
     try {
       const jsPDF = (await import("jspdf")).default;
       const pdf = new jsPDF("landscape", "mm", "a4");
@@ -51,72 +25,108 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      // Background
-      pdf.setFillColor(245, 232, 200);
+      // Set background color
+      pdf.setFillColor(249, 239, 205);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-      // Borders
-      pdf.setDrawColor(139, 90, 43);
-      pdf.setLineWidth(3);
-      pdf.rect(10, 10, pageWidth - 20, pageHeight - 20);
-      pdf.setDrawColor(193, 154, 107);
-      pdf.setLineWidth(1);
-      pdf.rect(20, 20, pageWidth - 40, pageHeight - 40);
+      // Load the border image
+      const loadImage = (src: string): Promise<HTMLImageElement> => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.src = src;
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+        });
+      };
 
-      // Title
-      pdf.setFont("times", "bold");
-      pdf.setTextColor(92, 62, 30);
-      pdf.setFontSize(36);
-      pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
+      try {
+        const img = await loadImage("/Img/Challenge/pdfcer.png");
+        
+        // Add the border image
+        pdf.addImage(img, "PNG", 0, 0, pageWidth, pageHeight);
 
-      // Student Name
-      pdf.setFont("times", "italic");
-      pdf.setTextColor(0, 0, 0);
-      pdf.setFontSize(28);
-      pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
+        // OPTION 1: Use "helvetica" which is closer to modern sans-serif fonts like lavish
+        // Title - using helvetica bold for a cleaner, more modern look
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(92, 62, 30);
+        pdf.setFontSize(36);
+        pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
 
-      // Body
-      pdf.setFont("times", "normal");
-      pdf.setFontSize(14);
-      pdf.setTextColor(60, 40, 20);
-      const certificateText = `ay matagumpay na nakatapos sa aralin sa pamamagitan ng pagpapamalas
-ng malalim na paglalakbay sa mga kabanata ng "Noli Me Tangere" sa
-pamamagitan ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat
-pagsubok at hamon ng karunungan, nakumpleto ang ${percentage}% ng lahat ng kabanata.`;
+        // Student Name - using helvetica bolditalic
+        pdf.setFont("helvetica", "bolditalic");
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(28);
+        pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
 
-      pdf.text(certificateText, pageWidth / 2, 130, { align: "center", maxWidth: 250 });
+        // Progress percentage
+        const percentage =
+          totalProgress !== undefined &&
+          totalKabanata !== undefined &&
+          totalKabanata > 0
+            ? Math.min(100, Math.round((totalProgress / totalKabanata) * 100))
+            : 0;
 
-      // Date
-      pdf.setFont("times", "italic");
-      pdf.setFontSize(12);
-      pdf.text(
-        new Date().toLocaleDateString("fil-PH", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
-        pageWidth / 2,
-        pageHeight - 40,
-        { align: "center" }
-      );
+        // Body text - using helvetica normal
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(14);
+        pdf.setTextColor(60, 40, 20);
+        
+        const certificateText = [
+          `ay matagumpay na nakatapos sa aralin sa pamamagitan ng pagpapamalas`,
+          `ng malalim na paglalakbay sa mga kabanata ng "Noli Me Tangere" sa`,
+          `pamamagitan ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat`,
+          `pagsubok at hamon ng karunungan, nakumpleto ang ${percentage}% ng lahat ng kabanata.`
+        ];
 
-      // Signature
-    //   pdf.setLineWidth(0.5);
-    //   pdf.line(pageWidth / 2 - 40, pageHeight - 60, pageWidth / 2 + 40, pageHeight - 60);
-    //   pdf.text("Lagda ng Guro", pageWidth / 2, pageHeight - 55, { align: "center" });
+        certificateText.forEach((line, index) => {
+          pdf.text(line, pageWidth / 2, 130 + (index * 7), {
+            align: "center",
+            maxWidth: 250,
+          });
+        });
 
-      pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
+        // Date - using helvetica italic
+        pdf.setFont("helvetica", "italic");
+        pdf.setFontSize(12);
+        pdf.text(
+          new Date().toLocaleDateString("fil-PH", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          pageWidth / 2,
+          pageHeight - 40,
+          { align: "center" }
+        );
+
+        // Save the PDF
+        pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
+        
+      } catch (imageError) {
+        console.error("Error loading image:", imageError);
+        // Fallback: Create PDF without the border image
+        pdf.setFont("helvetica", "bold");
+        pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
+        pdf.setFont("helvetica", "bolditalic");
+        pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
+        pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
+      }
+
     } catch (error) {
-      console.error("Error generating vintage PDF:", error);
+      console.error("Error generating PDF:", error);
       alert("May error sa pag-generate ng PDF. Pakisubukan muli.");
     }
   };
 
   if (!isOpen) return null;
 
-  const percentage = totalProgress !== undefined && totalKabanata !== undefined && totalKabanata > 0
-    ? Math.min(100, Math.round((totalProgress / totalKabanata) * 100))
-    : 0;
+  const percentage =
+    totalProgress !== undefined &&
+    totalKabanata !== undefined &&
+    totalKabanata > 0
+      ? Math.min(100, Math.round((totalProgress / totalKabanata) * 100))
+      : 0;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
@@ -142,57 +152,54 @@ pagsubok at hamon ng karunungan, nakumpleto ang ${percentage}% ng lahat ng kaban
           </div>
 
           {/* Certificate Body Text */}
-           <div className="absolute top-[55%] ml-[15%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
-                <p>
-                    ay matagumpay na nakatapos sa aralin sa pamamagitan ng pagpapamalas ng malalim na
-                    paglalakbay sa mga kabanata ng <span className="italic">"Noli Me Tangere"</span> sa
-                    pamamagitan ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat pagsubok at hamon
-                    ng karunungan, nakumpleto ang <span className="font-bold">{percentage}%</span> ng lahat ng kabanata.
-                </p>
-                
-                {percentage > 0 && (
-                    <p className="mt-4 font-semibold">
-                    {new Date().toLocaleDateString("fil-PH", { 
-                        year: "numeric", 
-                        month: "long", 
-                        day: "numeric" 
-                    })}
-                    </p>
-                )}
-            </div>
+          <div className="absolute top-[55%] ml-[15%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
+            <p>
+              ay matagumpay na nakatapos sa aralin sa pamamagitan ng
+              pagpapamalas ng malalim na paglalakbay sa mga kabanata ng{" "}
+              <span className="italic">"Noli Me Tangere"</span> sa pamamagitan
+              ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat pagsubok at
+              hamon ng karunungan, nakumpleto ang{" "}
+              <span className="font-bold">{percentage}%</span> ng lahat ng
+              kabanata.
+            </p>
 
-          {/* Date */}
-          {/* <div className="absolute bottom-[15%] w-full text-center text-sm text-black">
-            {new Date().toLocaleDateString("fil-PH", { 
-              year: "numeric", 
-              month: "long", 
-              day: "numeric" 
-            })}
-          </div> */}
+            {percentage > 0 && (
+              <p className="mt-4 font-semibold">
+                {new Date().toLocaleDateString("fil-PH", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Action Buttons */}
-<div className="flex justify-center ml-20 -mt-10">
-  <button onClick={handleDownloadPDF} className="p-2 hover:opacity-90 transition">
-    <img 
-      src="/Img/Challenge/pdf.png" 
-      alt="I-download ang PDF" 
-      width="180" 
-      height="40" 
-      className="min-w-[120px]"
-    />
-  </button>
+        <div className="flex justify-center ml-20 -mt-10">
+          <button
+            onClick={handleDownloadPDF}
+            className="p-2 hover:opacity-90 transition"
+          >
+            <img
+              src="/Img/Challenge/pdf.png"
+              alt="I-download ang PDF"
+              width="180"
+              height="40"
+              className="min-w-[120px]"
+            />
+          </button>
 
-  <button onClick={onClose} className="p-2 hover:opacity-90 transition">
-    <img 
-      src="/Img/Challenge/closepdf.png" 
-      alt="Isara" 
-      width="180" 
-      height="40" 
-      className="min-w-[120px]"
-    />
-  </button>
-</div>
+          <button onClick={onClose} className="p-2 hover:opacity-90 transition">
+            <img
+              src="/Img/Challenge/closepdf.png"
+              alt="Isara"
+              width="180"
+              height="40"
+              className="min-w-[120px]"
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

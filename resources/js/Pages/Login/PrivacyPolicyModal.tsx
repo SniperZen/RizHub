@@ -43,7 +43,7 @@ const PrivacyPolicyModal: React.FC<ModalProps> = ({ open, onClose }) => {
                 We may collect the following types of information:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
-                <li>Username</li>
+                <li>Name</li>
                 <li>Email address</li>
               </ul>
             </div>

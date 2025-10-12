@@ -117,12 +117,12 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
           <p className="text-white text-sm mb-4">
             Score 5 points in Kabanata {image.kabanata_id}'s Guessword game to unlock
           </p>
-          <button 
+          {/* <button 
             onClick={() => playGuesswordGame(image.kabanata_id)}
             className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 font-bold"
           >
             Play Guessword Game
-          </button>
+          </button> */}
         </div>
         <h4 className="text-lg font-bold mb-2">
           {image.category}
@@ -176,8 +176,8 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
   return (
     <StudentLayout>
 
-      <img
-        src="/Img/Dashboard/b-im5.png"
+      {/* <img
+        src="/Img/Dashboard/b-im3.png"
         alt="Noli Me Tangere BG"
         className="absolute inset-0 w-full h-full object-cover z-20  pointer-events-none"
         style={{
@@ -193,7 +193,7 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
             100% { transform: translateY(0px); }
           }
         `}
-      </style>
+      </style> */}
 
       <div
         className="relative min-h-screen bg-cover bg-center flex flex-col items-center"

@@ -444,7 +444,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 title={instructions[instructionIndex].title}
                 content={instructions[instructionIndex].content}
                 buttonText={instructions[instructionIndex].buttonText}
-                bgImage="/Img/Challenge/GuessChar/BG.png"
+                bgImage="/Img/Challenge/GuessChar/BG1.png"
             />
         ) : (
             <>

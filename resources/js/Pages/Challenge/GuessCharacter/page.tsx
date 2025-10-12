@@ -83,7 +83,7 @@ export default function Page({
     <StudentLayout>
       <div
         className="relative w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG.png')" }}
+        style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG1.png')" }}
       >
         {/* Instruction Modal */}
         <InstructionModal

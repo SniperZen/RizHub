@@ -446,7 +446,7 @@
                 </div>
                 
 {/* Banner Image Container Adjustment */}
-<div className="absolute top-[30%] mt-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0">
+<div className="absolute top-[35%] md-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0">
   <div className="relative flex justify-center items-center w-full">
     
     {/* Left Arrow - Very Close to Banner */}
@@ -470,7 +470,7 @@
     <img
       src="/Img/Dashboard/t-bg1.png"
       alt="Banner background"
-      className="relative z-40 w-full mt-10 max-w-[1000px] h-auto object-contain"
+      className="relative z-[10] w-full mt-10 max-w-[1000px] h-auto object-contain"
       style={{
         animation: "gentleHeartbeat 5s ease-in-out infinite"
       }}
