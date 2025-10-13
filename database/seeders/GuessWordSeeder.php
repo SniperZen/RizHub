@@ -11,7 +11,7 @@ class GuessWordSeeder extends Seeder
     {
         $kabanatas = [
             1 => [
-                ['question' => 'TAO (11 titik): Siya ang nagging kura paroko ng San Diego sa loob ng dalawampung taon.', 'answer' => 'PADRE DAMASO'],
+                ['question' => 'TAO (11 titik): Siya ang naging kura paroko ng San Diego sa loob ng dalawampung taon.', 'answer' => 'PADRE DAMASO'],
                 ['question' => 'TITULO/POSISYON (7 titik): Siya ang kinikilalang kinatawan ng hari sa Pilipinas.', 'answer' => 'HENERAL'],
                 ['question' => 'TAO (11 titik): Siya ang paring nag awat sa pagtatalo ng tenyente at ni Padre Damaso.', 'answer' => 'PADRE SIBYLA'],
                 ['question' => 'LUGAR (7 titik): Saang pook nakatirik ang bahay ni Kapitan Tiago.', 'answer' => 'BINUNDOK'],
