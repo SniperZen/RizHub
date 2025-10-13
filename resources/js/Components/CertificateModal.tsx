@@ -4,7 +4,8 @@ interface CertificateModalProps {
   isOpen: boolean;
   onClose: () => void;
   studentName?: string;
-  totalProgress?: number;
+  totalStarsPercentage?: number;
+  percentageDisplayType?: "rounded" | "decimal";
   totalKabanata?: number;
 }
 
@@ -12,10 +13,20 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
   isOpen,
   onClose,
   studentName = "Juan Dela Cruz",
-  totalProgress,
-  totalKabanata,
+  totalStarsPercentage = 0,
+  percentageDisplayType = "rounded",
+  totalKabanata = 64,
 }) => {
   const certificateRef = useRef<HTMLDivElement>(null);
+
+  // Format percentage based on display type
+  const formatPercentage = (percentage: number) => {
+    if (percentageDisplayType === "decimal") {
+      return percentage.toFixed(2) + "%";
+    } else {
+      return Math.round(percentage) + "%";
+    }
+  };
 
   const handleDownloadPDF = async () => {
     try {
@@ -59,24 +70,20 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
         pdf.setFontSize(28);
         pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
 
-        // Progress percentage
-        const percentage =
-          totalProgress !== undefined &&
-          totalKabanata !== undefined &&
-          totalKabanata > 0
-            ? Math.min(100, Math.round((totalProgress / totalKabanata) * 100))
-            : 0;
-
         // Body text - using helvetica normal
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(14);
         pdf.setTextColor(60, 40, 20);
         
+        const displayPercentage = percentageDisplayType === "decimal" 
+          ? totalStarsPercentage.toFixed(2) + "%"
+          : Math.round(totalStarsPercentage) + "%";
+
         const certificateText = [
           `ay matagumpay na nakatapos sa aralin sa pamamagitan ng pagpapamalas`,
           `ng malalim na paglalakbay sa mga kabanata ng "Noli Me Tangere" sa`,
           `pamamagitan ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat`,
-          `pagsubok at hamon ng karunungan, nakumpleto ang ${percentage}% ng lahat ng kabanata.`
+          `pagsubok at hamon ng karunungan, nakamit ang ${displayPercentage} ng mga bituin sa lahat ng kabanata.`
         ];
 
         certificateText.forEach((line, index) => {
@@ -121,13 +128,6 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
 
   if (!isOpen) return null;
 
-  const percentage =
-    totalProgress !== undefined &&
-    totalKabanata !== undefined &&
-    totalKabanata > 0
-      ? Math.min(100, Math.round((totalProgress / totalKabanata) * 100))
-      : 0;
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
       <div className="relative w-full max-w-5xl">
@@ -158,12 +158,12 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
               pagpapamalas ng malalim na paglalakbay sa mga kabanata ng{" "}
               <span className="italic">"Noli Me Tangere"</span> sa pamamagitan
               ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat pagsubok at
-              hamon ng karunungan, nakumpleto ang{" "}
-              <span className="font-bold">{percentage}%</span> ng lahat ng
+              hamon ng karunungan, nakamit ang{" "}
+              <span className="font-bold">{formatPercentage(totalStarsPercentage)}</span> ng mga bituin sa lahat ng
               kabanata.
             </p>
 
-            {percentage > 0 && (
+            {totalStarsPercentage > 0 && (
               <p className="mt-4 font-semibold">
                 {new Date().toLocaleDateString("fil-PH", {
                   year: "numeric",
