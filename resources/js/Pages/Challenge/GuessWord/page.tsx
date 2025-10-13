@@ -370,22 +370,22 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     const instructions = [
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `IIkaw ay inaatasang sagutan ang mga nakapaloob na tanong....`,
+            content: `Ikaw ay inaatasang sagutan ang mga nakapaloob na tanong....`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `AAng iyong bayani ay hindi mo na maililigtas kapag ikaw ay maubusan ng oras....`,
+            content: `Ang iyong bayani ay hindi mo na maililigtas kapag ikaw ay maubusan ng oras....`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `IIkaw ay mayroon lamang animnapung segundo para sagutan ang limang katanungan....`,
+            content: `Ikaw ay mayroon lamang animnapung segundo para sagutan ang limang katanungan....`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `TTandaan, ako'y laging nakamasid - saiyo nakasalalay ang kaligtasan ng karaker.`,
+            content: `Tandaan, ako'y laging nakamasid - saiyo nakasalalay ang kaligtasan ng karaker.`,
             buttonText: "Start Challenge",
         },
     ];
@@ -507,26 +507,26 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                         )}
                     </div>
                 </div>
-                <div
-                    className="min-h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center"
-                    style={{
-                    backgroundImage: `url('/Img/LandingPage/character/${character.filename}1.png')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    }}
-                >
-                    <div className="flex flex-row justify-between">
-                        <div className="flex flex-row">
-                            <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
+                    <div
+                        className="h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center overflow-hidden"
+                        style={{
+                            backgroundImage: `url('/Img/LandingPage/character/${character.filename}1.png')`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                        }}
+                    >
+                    <div className="flex flex-row justify-between overflow-hidden">
+                        <div className="flex flex-row overflow-hidden">
+                            <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl overflow-hidden">
                                 KABANATA {kabanata_number}:
                             </div>
-                            <div className="text-white font-bold px-2 py-2 text-2xl">
+                            <div className="text-white font-bold px-2 py-2 text-2xl overflow-hidden">
                                 {kabanata_title}
                             </div>
                         </div>
                         <button
                             onClick={togglePause}
-                            className="absolute top-4 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors"
+                            className="absolute top-6 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
                             title="Pause Game"
                             >
                             <svg 
@@ -539,7 +539,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             </svg>
                         </button>
                     </div>
-                    <div className="flex flex-col items-center justify-start p-6">
+                    <div className="flex flex-col items-center justify-start p-6 overflow-hidden">
                         <div className="relative w-[550px] h-[250px] flex items-center justify-center">
                             <img
                                 src="/Img/Challenge/GuessWord/modalBG.png"
@@ -555,23 +555,29 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 </p>
                             </div>
                         </div>
-                        <div className="flex items-center justify-center gap-[5px] mt-8 w-full max-w-xl">
+                        <div className="flex items-center justify-center gap-[2px] mt-8 w-full max-w-6xl">
                             <div
-                            className={`flex-1 text-5xl tracking-widest font-mono text-center font-black 
-                            ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
+                                className={`flex-1 text-5xl mx-1 font-mono text-center font-black 
+                                ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
                             >
-                                {currentQ.answer.split("").map((char, i) => {
-                                    if (char === " ") return "\u00A0";
-                                    if (shouldAutoFill(char)) {
-                                        return char;
-                                    } else {
-                                        return currentGuess[i] ? currentGuess[i] : "_";
-                                    }
-                                }).join(" ")}
+                                <div className="inline-flex flex-block justify-center gap-x-2 gap-y-0">
+                                    {currentQ.answer.split("").map((char, i) => {
+                                        if (char === " ") return <span key={i} className="inline-block w-2 mx-2"></span>;
+                                        if (shouldAutoFill(char)) {
+                                            return <span key={i} className="inline-block w-2 text-center mx-2">{char}</span>;
+                                        } else {
+                                            return currentGuess[i] ? (
+                                                <span key={i} className="inline-block w-2 text-center mx-2">{currentGuess[i]}</span>
+                                            ) : (
+                                                <span key={i} className="inline-block w-2 text-center text-white mx-2 text-4xl">_</span>
+                                            );
+                                        }
+                                    })}
+                                </div>
                             </div>
                             <div className="flex flex-row gap-3">
                                 <button
-                                    className="h-12 w-24 flex items-center justify-center 
+                                    className="h-12 w-12 flex items-center justify-center 
                                             rounded-[12px] text-white font-bold text-lg
                                             bg-gradient-to-b from-[#FF6A00] to-[#D5703A]
                                             shadow-[4px_6px_0_#B97B4B]
