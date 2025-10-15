@@ -40,7 +40,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
       pdf.setFillColor(249, 239, 205);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-      // Load the border image
+      // Load images
       const loadImage = (src: string): Promise<HTMLImageElement> => {
         return new Promise((resolve, reject) => {
           const img = new Image();
@@ -52,17 +52,27 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
       };
 
       try {
-        const img = await loadImage("/Img/Challenge/pdfcer.png");
+        const borderImg = await loadImage("/Img/Challenge/pdfcer.png");
+        const titleImg = await loadImage("/Img/Challenge/fontimg.png");
         
         // Add the border image
-        pdf.addImage(img, "PNG", 0, 0, pageWidth, pageHeight);
+        pdf.addImage(borderImg, "PNG", 0, 0, pageWidth, pageHeight);
 
-        // OPTION 1: Use "helvetica" which is closer to modern sans-serif fonts like lavish
-        // Title - using helvetica bold for a cleaner, more modern look
-        pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(92, 62, 30);
-        pdf.setFontSize(36);
-        pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
+        // Calculate title image dimensions and position
+        const titleImgWidth = pageWidth * 0.6; // 80% of page width (bigger)
+        const titleImgHeight = (titleImg.height / titleImg.width) * titleImgWidth;
+        const titleX = (pageWidth - titleImgWidth) / 2;
+        const titleY = 40; // Adjusted position
+
+        // Add the title as image
+        pdf.addImage(
+          titleImg, 
+          "PNG", 
+          titleX, 
+          titleY, 
+          titleImgWidth, 
+          titleImgHeight
+        );
 
         // Student Name - using helvetica bolditalic
         pdf.setFont("helvetica", "bolditalic");
@@ -111,10 +121,13 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
         pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
         
       } catch (imageError) {
-        console.error("Error loading image:", imageError);
-        // Fallback: Create PDF without the border image
+        console.error("Error loading images:", imageError);
+        // Fallback: Create PDF with text title if images fail to load
         pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(92, 62, 30);
+        pdf.setFontSize(36);
         pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
+        
         pdf.setFont("helvetica", "bolditalic");
         pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
         pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
@@ -128,7 +141,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
       <div className="relative w-full max-w-5xl">
         {/* Certificate Design */}
@@ -156,7 +169,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
             <p>
               ay matagumpay na nakatapos sa aralin sa pamamagitan ng
               pagpapamalas ng malalim na paglalakbay sa mga kabanata ng{" "}
-              <span className="italic">"Noli Me Tangere"</span> sa pamamagitan
+              <span className="italic font-bold">"Noli Me Tangere"</span> sa pamamagitan
               ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat pagsubok at
               hamon ng karunungan, nakamit ang{" "}
               <span className="font-bold">{formatPercentage(totalStarsPercentage)}</span> ng mga bituin sa lahat ng

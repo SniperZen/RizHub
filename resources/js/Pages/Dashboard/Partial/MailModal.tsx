@@ -157,7 +157,7 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                 }}
             >
                 <div className="flex flex-col items-center w-full px-[80px]">
-                    <span className="absolute text-white text-4xl font-black tracking-wide top-5">
+                    <span className="absolute text-white text-4xl font-black tracking-wide top-3">
                         Notifications {unreadCount > 0 && `(${unreadCount} unread)`}
                     </span>
                     

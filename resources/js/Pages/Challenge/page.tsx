@@ -74,7 +74,7 @@ const KabanataPage: React.FC<PageProps> = ({
     const [showCertificateModal, setShowCertificateModal] = useState(false);
     const [completedCount, setCompletedCount] = useState(completedKabanatasCount);
     const [isLoading, setIsLoading] = useState(false);
-    const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("decimal");
+    const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("rounded");
 
     // Filter kabanatas -based on development needs
     // const filteredKabanatas = {
@@ -133,30 +133,43 @@ const KabanataPage: React.FC<PageProps> = ({
           setShowCertificateModal(true);
       };
 
-        // Version 1: Testing with 79% (certificate should be LOCKED)
+        // default - remove this on production
         const filteredKabanatas = {
-            ...kabanatas,
-            data: kabanatas.data
-                .filter(k => k.id <= 64)
-                .map((k, index) => {
-                    // Create scenario where user has exactly 79%
-                    // 79% of 64 kabanatas * 3 stars = ~151 stars out of 192 possible
-                    let stars = 0;
-                    if (index < 50) {
-                        stars = 2; // 50 kabanatas with 3 stars = 150 stars
-                    } else if (index === 50) {
-                        stars = 1; // 1 more star to make 151 stars (78.6% ≈ 79%)
-                    }
-                    // Remaining kabanatas get 0 stars
-                    
-                    return {
-                        ...k,
-                        progress: stars === 3 ? 100 : stars === 2 ? 66 : stars === 1 ? 33 : 0,
-                        stars: stars,
-                        unlocked: true
-                    };
-                })
+        ...kabanatas,
+        data: kabanatas.data
+            .filter(k => k.id <= 64)
+            .map(k => ({
+            ...k,
+            progress: 10,
+            stars: 2,
+            unlocked: true
+            }))
         };
+
+        // // Version 1: Testing with 79% (certificate should be LOCKED)
+        // const filteredKabanatas = {
+        //     ...kabanatas,
+        //     data: kabanatas.data
+        //         .filter(k => k.id <= 64)
+        //         .map((k, index) => {
+        //             // Create scenario where user has exactly 79%
+        //             // 79% of 64 kabanatas * 3 stars = ~151 stars out of 192 possible
+        //             let stars = 0;
+        //             if (index < 50) {
+        //                 stars = 2; // 50 kabanatas with 3 stars = 150 stars
+        //             } else if (index === 50) {
+        //                 stars = 1; // 1 more star to make 151 stars (78.6% ≈ 79%)
+        //             }
+        //             // Remaining kabanatas get 0 stars
+                    
+        //             return {
+        //                 ...k,
+        //                 progress: stars === 3 ? 100 : stars === 2 ? 66 : stars === 1 ? 33 : 0,
+        //                 stars: stars,
+        //                 unlocked: true
+        //             };
+        //         })
+        // };
 
     // Positions for different screen sizes
     const desktopPositions = [

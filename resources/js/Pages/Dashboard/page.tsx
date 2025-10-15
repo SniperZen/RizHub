@@ -564,21 +564,21 @@ export default function Dashboard({
                                         <img src="/Img/Dashboard/profile.png" alt="Profile" className="w-20" />
                                     </Button>
                                     <Button 
-    soundHover="/sounds/button-hover.mp3"
-    soundClick="/Music/Sound.mp3"
-    soundVolume={volume}
-    className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
-    onClick={() => setShowLogoutModal(true)}
->
-    <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
-</Button>
+                                        soundHover="/sounds/button-hover.mp3"
+                                        soundClick="/Music/Sound.mp3"
+                                        soundVolume={volume}
+                                        className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
+                                        onClick={() => setShowLogoutModal(true)}
+                                    >
+                                        <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
+                                    </Button>
 
-{/* Logout Modal */}
-<LogoutModal
-    isOpen={showLogoutModal}
-    onClose={() => setShowLogoutModal(false)}
-    onConfirm={() => router.post(route('logout'))}
-/>
+                                    {/* Logout Modal */}
+                                    <LogoutModal
+                                        isOpen={showLogoutModal}
+                                        onClose={() => setShowLogoutModal(false)}
+                                        onConfirm={() => router.post(route('logout'))}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -597,7 +597,7 @@ export default function Dashboard({
                             }}
                         >
                             <div className="flex flex-col items-center w-full">
-                              <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Account</span>
+                              <span className="absolute text-white text-4xl font-black tracking-wide top-12s">Account</span>
                                 
                                 {/* Close Button */}
                                 <Button
@@ -724,7 +724,7 @@ export default function Dashboard({
                                                     backgroundRepeat: 'no-repeat',
                                                 }}
                                             >
-                                                <h1 className="text-center">{data.name}</h1>
+                                                <h1 className="text-center text-[20px]">{data.name}</h1>
                                             </div>
 
                                             <div className="flex flex-col items-end">

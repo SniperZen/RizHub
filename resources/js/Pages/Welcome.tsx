@@ -851,7 +851,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                               ? "-top-4 left-4 md:left-5 text-base text-white z-10"
                               : "top-1/2 -translate-y-1/2 text-4xl md:text-xl"
                             }
-                            peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10
+                            peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10 font-semibold
                           `}
                         >
                           Email:
@@ -878,7 +878,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                               ? "-top-4 left-4 md:left-5 text-base text-white z-10"
                               : "top-1/2 -translate-y-1/2 text-2xl md:text-xl"
                             }
-                            peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10
+                            peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10 font-semibold
                           `}
                         >
                           Password:
@@ -911,7 +911,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 )}
                             </button>
                         )}
-                        <a href={route('password.request')} className="absolute right-0 bottom-[-22px] text-[#5A3416] text-base underline hover:text-[#FF9B50] -mb-3 block text-right">Forgot Password</a>
+                        <a href={route('password.request')} className="absolute right-0 bottom-[-22px] text-[#000000] text-base underline hover:text-[#5A3416] -mb-3 block text-right">Forgot Password</a>
                     </div>
                     <button
                         type="submit"
@@ -921,10 +921,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                         Login
                     </button>
                     <div className="w-full text-center mt-2">
-                        <span className="text-[#5A3416] text-6xxl">New to Rizhub? </span>
+                        <span className="text-[#000000] text-6xxl">New to Rizhub? </span>
                         <button
                             type="button"
-                            className="text-[#5A3416] underline font-semibold hover:text-[#FF9B50] text-6xxl"
+                            className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-6xxl"
                             onClick={() => setIsLogin(false)}
                         >Register</button>
                     </div>
@@ -950,10 +950,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 className={`
                                     absolute left-4 md:left-6 text-white text-base md:text-base pointer-events-none transition-all duration-200
                                     ${regData.name
-                                        ? "-top-2 left-4 md:left-5 text-base text-white"
+                                        ? "-top-2 left-4 md:left-5 text-base text-[#5A3416]"
                                         : "top-1/2 -translate-y-1/2"
                                     }
-                                    peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white
+                                    peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold
                                 `}
                                 style={{
                                     background: '#FA7816',
@@ -983,10 +983,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 className={`
                                     absolute left-4 md:left-6 text-white text-base md:text-base pointer-events-none transition-all duration-200
                                     ${regData.email
-                                        ? "-top-2 left-4 md:left-5 text-base text-white"
+                                        ? "-top-2 left-4 md:left-5 text-base text-[#5A3416]"
                                         : "top-1/2 -translate-y-1/2"
                                     }
-                                    peer-focus:-top-[4px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10
+                                    peer-focus:-top-[4px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold z-10
                                 `}
                                 style={{
                                     background: '#FA7816',
@@ -1023,10 +1023,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                   className={`
                                     absolute left-4 md:left-6 text-white text-sm md:text-base pointer-events-none transition-all duration-200
                                     ${regData.password
-                                      ? "-top-2 left-4 md:left-5 text-xs text-white"
+                                      ? "-top-2 left-4 md:left-5 text-xs text-[#5A3416]"
                                       : "top-1/2 -translate-y-1/2"
                                     }
-                                    peer-focus:top-[4px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white
+                                    peer-focus:top-[4px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold
                                   `}
                                 style={{
                                     background: '#FA7816',
@@ -1064,10 +1064,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 className={`
                                   absolute left-4 md:left-6 text-white text-sm md:text-base pointer-events-none transition-all duration-200
                                   ${regData.password_confirmation
-                                    ? "-top-2 left-4 md:left-5 text-xs text-white"
+                                    ? "-top-2 left-4 md:left-5 text-xs text-[#5A3416]"
                                     : "top-1/2 -translate-y-1/2"
                                   }
-                                  peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white
+                                  peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold
                                 `}
                                 style={{
                                     background: '#FA7816',
@@ -1106,7 +1106,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
 
                           <label
                             htmlFor="terms"
-                            className="flex items-center justify-center text-[#5A3416] text-10xxl md:text-10xxl mt-6 select-none"
+                            className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
                           >
                             <span>
                               I agree to the{' '}
@@ -1138,10 +1138,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                             Signup
                         </button>
                         <div className="w-full text-center mt-2">
-                            <span className="text-[#5A3416] text-4xxl">Already have an account? </span>
+                            <span className="text-[000000] text-4xxl">Already have an account? </span>
                             <button
                                 type="button"
-                                className="text-[#5A3416] underline font-semibold hover:text-[#FF9B50] text-sm"
+                                className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
                                 onClick={() => setIsLogin(true)}
                             >Log in</button>
                         </div>

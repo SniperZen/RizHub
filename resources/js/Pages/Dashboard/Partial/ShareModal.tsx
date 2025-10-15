@@ -61,7 +61,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initia
                 }}
             >
                 <div className="flex flex-col items-center w-full px-[80px]">
-                    <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Share</span>
+                    <span className="absolute text-white text-4xl font-black tracking-wide top-4">Share</span>
                     
                     {/* Back Button instead of Close */}
                     <button

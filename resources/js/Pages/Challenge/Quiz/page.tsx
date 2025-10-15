@@ -39,38 +39,38 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     const instructions = [
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `MMagaling! Ikaw ay nagtagumpay sa unang pagsubok.`,
+            content: `Magaling! Ikaw ay nagtagumpay sa unang pagsubok.`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `NNgayon, tingnan natin kung malalagpasan mo ang huling pagsubok...`,
+            content: `Ngayon, tingnan natin kung malalagpasan mo ang huling pagsubok...`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `SSa pagkakataon na ito, kailangan mong makakuha ng perpektong marka para mabuksan mo ang susunod na hamon.`,
+            content: `Sa pagkakataon na ito, kailangan mong makakuha ng perpektong marka sa 10 tanong para mabuksan mo ang susunod na hamon.`,
             buttonText: "Next",
         },
         {
             title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
-            content: `HHanda ka na ba? May tatlong beses na pagkakataon ka lamang para makuha ang perpektong sagot.`,
+            content: `Handa ka na ba? May tatlong beses na pagkakataon ka lamang para makuha ang perpektong sagot sa 10 tanong.`,
             buttonText: "Start Quiz",
         }
     ];
 
-    // Select 5 random quizzes from the list
+    // Select 10 random quizzes from the list
     useEffect(() => {
         if (quizzes.length > 0) {
             const shuffled = [...quizzes].sort(() => 0.5 - Math.random());
-            const selected = shuffled.slice(0, Math.min(5, shuffled.length));
+            const selected = shuffled.slice(0, Math.min(10, shuffled.length));
             setSelectedQuizzes(selected);
         }
     }, [quizzes]);
 
-    // Handle unlock animation when score reaches 5
+    // Handle unlock animation when score reaches 10 (perfect score)
     useEffect(() => {
-        if (score === 5 && !isUnlocked) {
+        if (score === 10 && !isUnlocked) {
             setIsAnimating(true);
             setTimeout(() => {
                 setIsUnlocked(true);
@@ -179,7 +179,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
     const restartQuiz = () => {
         const shuffled = [...quizzes].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, Math.min(5, shuffled.length));
+        const selected = shuffled.slice(0, Math.min(10, shuffled.length));
         setSelectedQuizzes(selected);
         setCurrentQuizIndex(0);
         setSelectedAnswer(null);
@@ -381,7 +381,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                     </p>
                                 ) : (
                                     <p className="text-red-500 text-lg mb-3">
-                                        You need a perfect score (5/5) to proceed.
+                                        You need a perfect score (10/10) to proceed.
                                     </p>
                                 )}
                             </>
@@ -473,7 +473,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                     {showLockTooltip && (
                                         <div className="absolute top-full mt-2 bg-white text-black p-3 rounded-lg shadow-lg z-30 w-64">
                                             <p className="text-sm font-semibold">
-                                                Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
+                                                Kailangan ng perpektong score (10/10) upang mabuksan ang regalo!
                                             </p>
                                         </div>
                                     )}
@@ -576,7 +576,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     {/* Question */}
                     <div className="absolute top-[95px] p-6 rounded-lg mb-6 w-full max-w-2xl">
                         <div className='width-full text-center'>
-                            <p className="text-xl font-black text-white mb-4">Question {currentQuizIndex + 1}: {currentQuiz.question}</p>
+                            <p className="text-xl font-black text-white mb-4 mt-2 ml-5 mr-5">{currentQuiz.question}</p>
                         </div>
                     </div>
 

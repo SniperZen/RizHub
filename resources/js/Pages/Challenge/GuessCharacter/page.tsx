@@ -26,7 +26,7 @@ export default function Page({
   const [isSpinning, setIsSpinning] = useState(false); // Start as false
   const [showModal, setShowModal] = useState(true); // Show modal initially
 
-  const modalContent = `RRandom na pipili ang system ng karakter na ililigtas mo. Siya ay nasa loob ng isang kulungan — tapusin ang hamon para mailigtas, pero kapag nabigo, hindi mo maililigtas ang karakter.`;
+  const modalContent = `Random na pipili ang system ng karakter na ililigtas mo. Siya ay nasa loob ng isang kulungan — tapusin ang hamon para mailigtas, pero kapag nabigo, hindi mo maililigtas ang karakter.`;
   const startSpinning = () => {
     setShowModal(false);
     setIsSpinning(true);
@@ -124,6 +124,13 @@ export default function Page({
                       alt="modal background"
                       className="absolute w-[1000px] h-auto"
                     />
+
+                      {/* Title header positioned at the top of the background */}
+                      <div className="absolute bottom-[296px] left-0 right-6 py-4 z-10">
+                        <h1 className="text-white text-3xl font-bold text-center">
+                          Mangyaring iligtas...
+                        </h1>
+                      </div>
                     <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
                       {[...getVisibleCharacters()]
                         .sort(() => Math.random() - 0.5)
@@ -152,6 +159,12 @@ export default function Page({
                       alt="modal"
                       className="w-[550px]"
                     />
+                      {/* Title header positioned at the top of the background */}
+                      <div className="absolute bottom-[266px] left-0 right-6 py-4 z-10">
+                        <h1 className="text-white text-3xl font-bold text-center">
+                          Ang isang ito!
+                        </h1>
+                      </div>
                     <div className="flex flex-col items-center justify-center -mt-[300px]">
                       <img
                         src={`/Img/LandingPage/character/${characters[currentIndex].filename}.png`}
