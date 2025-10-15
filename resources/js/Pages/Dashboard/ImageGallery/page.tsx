@@ -522,7 +522,7 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
           `}
         </style>
 
-        {/* Updated Back Button with Image and Sound */}
+        {/* Updated Back Button with Image and Sound
         <div className="absolute left-5 top-5 transform z-50">
           <button
             onClick={handleBackToDashboard}
@@ -540,7 +540,7 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
               className="w-14 h-14 object-contain"
             />
           </button>
-        </div>
+        </div> */}
 
         {/* Fixed Book Container - No scrolling */}
         <div className="relative flex w-11/12 max-w-6xl h-[87.5vh] min-h-[550px] max-h-[740px] overflow-hidden z-10">
