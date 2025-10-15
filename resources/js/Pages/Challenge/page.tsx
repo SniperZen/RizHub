@@ -74,7 +74,7 @@ const KabanataPage: React.FC<PageProps> = ({
     const [showCertificateModal, setShowCertificateModal] = useState(false);
     const [completedCount, setCompletedCount] = useState(completedKabanatasCount);
     const [isLoading, setIsLoading] = useState(false);
-    const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("rounded");
+    const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("decimal");
 
     // Filter kabanatas -based on development needs
     // const filteredKabanatas = {
@@ -115,61 +115,18 @@ const KabanataPage: React.FC<PageProps> = ({
         }
     };
 
-      // Check if certificate is unlocked (80% or higher required)
-      const isCertificateUnlocked = () => {
-          const percentage = getTotalStarsPercentage();
-          return percentage >= 70;
-      };
-
-      // When user tries to open certificate
-      const handleOpenCertificate = () => {
-          if (!isCertificateUnlocked()) {
-              // Show message that certificate is locked
-              alert("Certificate locked! You need 80% or higher to unlock your certificate.");
-              return;
-          }
-          
-          // Open certificate modal
-          setShowCertificateModal(true);
-      };
-
-        // default - remove this on production
-        const filteredKabanatas = {
-        ...kabanatas,
-        data: kabanatas.data
-            .filter(k => k.id <= 64)
-            .map(k => ({
-            ...k,
-            progress: 10,
-            stars: 2,
-            unlocked: true
-            }))
-        };
-
-        // // Version 1: Testing with 79% (certificate should be LOCKED)
-        // const filteredKabanatas = {
-        //     ...kabanatas,
-        //     data: kabanatas.data
-        //         .filter(k => k.id <= 64)
-        //         .map((k, index) => {
-        //             // Create scenario where user has exactly 79%
-        //             // 79% of 64 kabanatas * 3 stars = ~151 stars out of 192 possible
-        //             let stars = 0;
-        //             if (index < 50) {
-        //                 stars = 2; // 50 kabanatas with 3 stars = 150 stars
-        //             } else if (index === 50) {
-        //                 stars = 1; // 1 more star to make 151 stars (78.6% ≈ 79%)
-        //             }
-        //             // Remaining kabanatas get 0 stars
-                    
-        //             return {
-        //                 ...k,
-        //                 progress: stars === 3 ? 100 : stars === 2 ? 66 : stars === 1 ? 33 : 0,
-        //                 stars: stars,
-        //                 unlocked: true
-        //             };
-        //         })
-        // };
+    // testing purposes only - remove this on production
+    const filteredKabanatas = {
+    ...kabanatas,
+    data: kabanatas.data
+        .filter(k => k.id <= 64)
+        .map(k => ({
+        ...k,
+        progress: 10,
+        stars: 3,
+        unlocked: true
+        }))
+    };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -533,14 +490,14 @@ const KabanataPage: React.FC<PageProps> = ({
                 </div>
                 
                 {/* Banner Image Container Adjustment */}
-                <div className="absolute top-[35%] md-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0">
+                <div className="absolute top-[35%] md-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0 z-100">
                     <div className="relative flex justify-center items-center w-full">
                         
                         {/* Left Arrow - Very Close to Banner */}
                         <button
                             disabled={currentPage <= 1}
                             onClick={handlePreviousPage}
-                            className={`absolute -left-[-180px] top-[12%] z-[60] w-auto h-auto ${
+                            className={`absolute -left-[-180px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage <= 1
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -549,7 +506,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             <img
                                 src="/Img/Challenge/ALeft.png"
                                 alt="Previous"
-                                className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
                             />
                         </button>
 
@@ -557,7 +514,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <img
                             src="/Img/Dashboard/t-bg1.png"
                             alt="Banner background"
-                            className="relative z-[10] w-full mt-10 max-w-[1000px] h-auto object-contain"
+                            className="relative z-[20] w-full mt-10 max-w-[1000px] h-auto object-contain"
                             style={{
                                 animation: "gentleHeartbeat 5s ease-in-out infinite"
                             }}
@@ -567,7 +524,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage >= totalPages}
                             onClick={handleNextPage}
-                            className={`absolute -right-[-185px] top-[12%] z-[60] w-auto h-auto ${
+                            className={`absolute -right-[-185px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage >= totalPages
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -576,7 +533,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             <img
                                 src="/Img/Challenge/ARight.png"
                                 alt="Next"
-                                className="h-10 w-10 sm:h-12 sm:w-12 mt-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
                             />
                         </button>
                     </div>
@@ -601,74 +558,56 @@ const KabanataPage: React.FC<PageProps> = ({
                 </div> */}
 
                 {/* Kabanata Map */}
-                <div className="relative w-full h-[600px] flex justify-center ml-4 items-center z-20">
-                    {/* Kabanata Nodes */}
-                    {/* ... existing kabanata nodes code ... */}
-{filteredKabanatas.data.some(k => k.id === 64) && (
-    <div
-        className="absolute flex flex-col items-center z-10 left-[530px] top-[130px]"
-    >
-        <div className="relative max-w-[400px] h-auto rounded-full flex items-center justify-center">
-            {/* Conditionally render locked or unlocked door */}
-            {completedCount === 64 ? (
-                <img src="/Img/Challenge/locked-door2.png" alt="Unlocked Door" className="w-full h-auto" />
-            ) : (
-                <img src="/Img/Challenge/unlocked-door.png" alt="Locked Door" className="w-full h-auto" />
-            )}
-            
-            <div className="absolute inset-0 flex items-center justify-center">
-                {/* Show lock SVG when percentage is 79% or below */}
-                {!isCertificateUnlocked() ? (
-                    <div className="relative group">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <div className="absolute w-[220px] h-[240px] z-2 top-[60px]">
-                            </div>
-                            <svg 
-                                className="z-0" 
-                                width="82" 
-                                height="95" 
-                                viewBox="0 0 82 95" 
-                                fill="none" 
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="white"/>
-                            </svg>
-                        </div>
-                        
-                        {/* Hover Tooltip */}
-                        <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text p-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50">
-                            Tapusin lahat ng kabanata at kumuha ng 80% para ma-unlock!
-                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-orange-800 rotate-45"></div>
-                        </div>
-                    </div>
-                ) : (
-                    /* Show treasure box when percentage is 80% or above */
-                    <div className="flex items-center justify-center">
-                        <div className="absolute w-[280px] h-[280px] rounded-full overflow-hidden">
-                            <div className="absolute inset-0 
-                                            bg-[conic-gradient(from_0deg,transparent_0deg,rgba(253, 212, 149, 0.76)_20deg,transparent_40deg)]
-                                            animate-spin-slower blur-xl opacity-70">
-                            </div>
-                        </div>
+                <div className="w-full h-[600px] flex justify-center ml-4 items-center z-0">
 
-                        {/* Background Glow */}
-                        <div className="absolute w-[250px] h-[250px] rounded-full 
-                            bg-[radial-gradient(circle,rgba(255,200,100,0.6),rgba(255,106,0,0.25),transparent)]
-                            blur-2xl animate-pulse">
-                        </div>
+                    {filteredKabanatas.data.some(k => k.id === 64) && (
+                        <div
+                            className="absolute flex flex-col items-center z-10 left-[530px] top-[130px]"
+                        >
+                            <div className="relative max-w-[400px] h-auto rounded-full flex items-center justify-center">
+                                {/* Conditionally render locked or unlocked door */}
+                                {completedCount === 64 ? (
+                                    <img src="/Img/Challenge/locked-door2.png" alt="Unlocked Door" className="w-full h-auto" />
+                                ) : (
+                                    <img src="/Img/Challenge/unlocked-door.png" alt="Locked Door" className="w-full h-auto" />
+                                )}
+                                
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    {(filteredKabanatas.data.find(k => k.id === 64)?.progress || 0) > 0 ? (
+                                        <div className="flex items-center justify-center">
+                                            <div className="absolute w-[280px] h-[280px] rounded-full overflow-hidden">
+                                                <div className="absolute inset-0 
+                                                                bg-[conic-gradient(from_0deg,transparent_0deg,rgba(253, 212, 149, 0.76)_20deg,transparent_40deg)]
+                                                                animate-spin-slower blur-xl opacity-70">
+                                                </div>
+                                            </div>
 
-                        <img 
-                            src="/Img/Challenge/lightBG2.png" 
-                            alt="Treasure Box" 
-                            className="absolute top-[110px] w-[300px] h-auto z-50 animate-pulse opacity-80 cursor-pointer transition hover:scale-105 pointer-events-auto"
-                            onClick={handleOpenCertificate}
-                        />
-                    </div>
-                )}
-            </div>
-        </div>
-    </div>
-)}
+                                            {/* Background Glow */}
+                                            <div className="absolute w-[250px] h-[250px] rounded-full 
+                                                bg-[radial-gradient(circle,rgba(255,200,100,0.6),rgba(255,106,0,0.25),transparent)]
+                                                blur-2xl animate-pulse">
+                                            </div>
+
+                                            <img 
+                                                src="/Img/Challenge/lightBG2.png" 
+                                                alt="Treasure Box" 
+                                                className="absolute top-[110px] w-[300px] h-auto z-50 animate-pulse opacity-80 cursor-pointer transition hover:scale-105 pointer-events-auto"
+                                                onClick={() => setShowCertificateModal(true)}
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="w-12 h-12 flex items-center justify-center">
+                                            <div className="absolute  w-[220px] h-[240px] z-2 top-[60px]">
+                                            </div>
+                                            <svg className="z-0" width="82" height="95" viewBox="0 0 82 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="white"/>
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Certificate node at the end if all kabanatas are completed */}
                     {completedCount === 64 && (
@@ -683,7 +622,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             <p className="font-[Risque] text-[20px] text-black">certificate</p>
                             <div 
                                 className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
-                                onClick={handleOpenCertificate} // Changed from setShowCertificateModal(true)
+                                onClick={() => setShowCertificateModal(true)}
                             >
                                 <img src="/Img/Challenge/Certificate2.png" alt="Certificate" className="w-full h-auto" />
                             </div>
