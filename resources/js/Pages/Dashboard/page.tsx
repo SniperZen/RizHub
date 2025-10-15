@@ -338,19 +338,24 @@ export default function Dashboard({
         </Button>
     </div>
 
-    {/* Bottom Icons */}
-    <div className="absolute bottom-8 flex gap-8 md:gap-20 justify-center items-center z-40 w-full px-4">
-        <Button
-            type="button"
-            className="transition hover:scale-110 focus:outline-none"
-            aria-label="Star Folder"
-            soundHover="/sounds/button-hover.mp3"
-            soundClick="/Music/Sound.mp3"
-            soundVolume={volume}
-            onClick={() => router.get(route('image.gallery'))}
-        >
-            <img src="/Img/Dashboard/star-folder.png" alt="Star Folder" className="w-16 md:w-20" />
-        </Button>
+{/* Bottom Icons */}
+<div className="absolute bottom-8 flex gap-8 md:gap-20 justify-center items-center z-40 w-full px-4">
+    <Button
+        type="button"
+        className="transition hover:scale-110 focus:outline-none relative"
+        aria-label="Star Folder"
+        soundHover="/sounds/button-hover.mp3"
+        soundClick="/Music/Sound.mp3"
+        soundVolume={volume}
+        onClick={() => router.get(route('image.gallery'))}
+    >
+        <img src="/Img/Dashboard/star-folder.png" alt="Star Folder" className="w-16 md:w-20" />
+        {unreadCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 md:w-6 md-h-6 flex items-center justify-center text-xs font-bold">
+                {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+        )}
+    </Button>
         <Button
             soundHover="/sounds/button-hover.mp3"
             soundClick="/Music/Sound.mp3"
