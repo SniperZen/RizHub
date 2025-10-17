@@ -70,8 +70,11 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::post('/user/update-settings', [StudentController::class, 'updateSettings'])->name('student.updateSettings');
     Route::post('/api/user/save-settings', [StudentController::class, 'saveSettings']);
     Route::get('/api/user/settings', [StudentController::class, 'getSettings']);
+    
 
 });
+
+Route::get('/book/{kabanata?}', [StudentController::class, 'book'])->name('book.read');
 
         Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
         Route::get('/help', [StudentController::class, 'help'])->name('help');

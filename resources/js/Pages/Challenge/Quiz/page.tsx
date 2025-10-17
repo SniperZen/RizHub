@@ -171,7 +171,25 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         }
     };
 
+    const handleWrongAnswer = () => {
+        // Automatically move to next question when answer is wrong
+        if (lives <= 0) {
+            setCompleted(true);
+            return;
+        }
+        
+        if (currentQuizIndex < selectedQuizzes.length - 1) {
+            setCurrentQuizIndex(currentQuizIndex + 1);
+            setSelectedAnswer(null);
+            setIsCorrect(null);
+            setShowResult(false);
+        } else {
+            setCompleted(true);
+        }
+    };
+
     const tryAgain = () => {
+        // This function is kept for consistency but won't be used for wrong answers
         setSelectedAnswer(null);
         setIsCorrect(null);
         setShowResult(false);
@@ -277,13 +295,13 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 {/* Wooden Frame Modal */}
                 <div className="relative w-[600px] bg-transparent">
                     <img
-                        src="/Img/Challenge/GuessWord/wooden_frame.png"
+                        src="/Img/Challenge/GuessWord/wooden_frame1.png"
                         alt="Wooden Frame"
                         className="w-full h-[500px]"
                     />
 
                     {/* Modal Content */}
-                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[0px]">
+                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[-3px]">
                         <h2 className=" fixed
                             font-mono
                             mr-5
@@ -292,13 +310,14 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                             font-black 
                             text-orange-800
                             z-10
-                            mb-12"
+                            mb-12
+                            -mt-10"
                         >
-                            {isPerfectScore ? "PERFECT SCORE!" : "QUIZ COMPLETED!"}
+                            {isPerfectScore ? "PERFECT SCORE!" : "QUIZ COMPLETED"}
                         </h2>
                         
                         <p className="fixed text-lg text-orange-800 mb-3 mt-20">
-                            Magaling! Ikaw ay nakakuha ng markang "{score}/{selectedQuizzes.length}" sa huling hamon.
+                            Ikaw ay nakakuha ng markang "{score}/{selectedQuizzes.length}" sa huling hamon.
                         </p>
 
                         {isPerfectScore ? (
@@ -308,8 +327,8 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                         ) : (
                             <>
                                 {lives <= 0 ? (
-                                    <p className="text-red-500 text-lg mb-3">
-                                        You ran out of lives!s
+                                    <p className="text-red-500 text-lg mb-3 mt-8">
+                                        You ran out of lives!
                                     </p>
                                 ) : (
                                     <p className="text-red-500 text-lg mb-3">
@@ -372,10 +391,10 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         <div className="min-h-screen flex flex-col items-center justify-start bg-amber-50 p-6 bg-cover bg-center" 
              style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
             <div className="absolute top-4 left-4 flex items-center">
-                <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
-                    KABANATA {kabanata_number}:
+                <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl">
+                    Kabanata {kabanata_number}:
                 </div>
-                <div className="text-white font-bold px-2 py-2 text-2xl">
+                <div className="text-white font-bold font-mono px-2 py-2 text-2xl">
                     {kabanata_title}
                 </div>
             </div>
@@ -476,21 +495,26 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                         />
 
                         {/* Modal Content */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[140px]">
-                            <h2 className="font-erica 
-                                text-[48px] leading-[72px] 
-                                font-black 
-                                text-[#F6D65A] 
-                                stroke-text"
-                            >
+                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[-95px]">
+                        <h2 className=" fixed
+                            font-mono
+                            mr-5
+                            ml-5
+                            text-[58px] leading-[72px] 
+                            font-black 
+                            text-orange-800
+                            z-10
+                            mb-12
+                            -mt-10"
+                        >
                                 {isCorrect ? "CORRECT!" : "INCORRECT!"}
                             </h2>
                             
                             {isCorrect ? (
-                                <p className="text-white text-lg mb-3">Tama ang sagot!</p>
+                                 <p className="fixed text-lg text-orange-800 mb-3 mt-20">Tama ang sagot! Ipagpatuloy ang iyong hamon.</p>
                             ) : (
-                                <p className="text-red-500 text-lg mb-3">
-                                    Mali ang sagot!
+                                 <p className="fixed text-lg text-orange-800 mb-3 mt-20">
+                                    Mali ang sagot! Nawalan ka ng isang puso.
                                     {/* Mali! Ang tamang sagot ay: {
                                         currentQuiz.correct_answer === 'A' ? currentQuiz.choice_a :
                                         currentQuiz.correct_answer === 'B' ? currentQuiz.choice_b :
@@ -499,7 +523,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                 </p>
                             )}
 
-                            <div className="flex gap-4 mt-[200px]">
+                            <div className="fixed flex gap-4 mt-[360px]">
                                 <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
                                     <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
                                 </button>
@@ -511,14 +535,12 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                         <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
                                     </button>
                                 ) : (
-                                    <>
-                                        <button
-                                            onClick={tryAgain}
-                                            className="rounded-full p-3 relative"
-                                        >
-                                            <img src="/Img/Challenge/GuessWord/restart.png" alt="Try Again" className="w-[60px] h-[60px]" />
-                                        </button>
-                                    </>
+                                    <button
+                                        onClick={handleWrongAnswer}
+                                        className="rounded-full p-3 relative"
+                                    >
+                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next Question" className="w-[60px] h-[60px]" />
+                                    </button>
                                 )}
                             </div>
                         </div>

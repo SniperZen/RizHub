@@ -291,7 +291,8 @@ export default function Welcome({ auth }: PageProps) {
                     background: `
                       url('/Img/LandingPage/noli-bg.png') left top / cover no-repeat,
                       url('/Img/LandingPage/Header-BG2.png') left top / cover no-repeat,
-                      url('/Img/LandingPage/lp-books.png') left top / cover no-repeat,
+                      url('/Img/LandingPage/icon-lp3.png') left top / cover no-repeat,
+                      url('/Img/LandingPage/lp-books1.png') left top / cover no-repeat,
                       url('/Img/LandingPage/Header_BG.png') left top / cover no-repeat
                     `
                   }}
@@ -331,24 +332,24 @@ export default function Welcome({ auth }: PageProps) {
                         variants={itemVariants}
                         transition={{ delay: 0.3 }}
                       >
-                            <p className="text-left font-['Inter'] font-medium text-lg md:text-xl lg:text-2xl leading-8 lg:leading-10 text-[#282725]"
+                            <p className="text-left font-['mono'] font-medium text-lg md:text-xl lg:text-2xl leading-8 lg:leading-10 text-[#282725]"
                               style={{ 
                                   textShadow: '0px 4px 4px rgba(0,0,0,0.25)'
                               }}
                           >
-                              Igniting Minds with Rizal's Legacy! Your ultimate game-based hub 
-                              for mastering Noli Me Tangere, crafted to inspire and engage 
-                              young learners.
+                             Level up sa legacy ni Rizal!
+                             Tuklasin ang saya at aral ng Noli Me Tangere 
+                             sa isang epic learning adventure!
                           </p>
                         </motion.div>
-                      <motion.div 
-                        className="mt-8 md:absolute md:left-10 lg:left-[350px] md:top-[280px] lg:top-[365px] flex items-center md:mt-10 mb-0 md:ml-2"
+                        <motion.div 
+                        className="mt-8 md:absolute md:left-10 lg:left-[350px] md:top-[220px] lg:top-[280px] flex items-center md:mt-8 mb-0 md:ml-2"
                         variants={itemVariants}
                         transition={{ delay: 0.4 }}
-                      >
+                        >
                         <motion.button
-                        className="w-[220px] md:w-[260px] lg:w-[250px] h-[60px] md:h-[70px] lg:h-[80px] 
-                                    bg-orange-500 hover:bg-orange-600 text-white fontfamily: 
+                        className="w-[220px] md:w-[260px] lg:w-[250px] h-[50px] md:h-[70px] lg:h-[80px] 
+                                    bg-orange-500 hover:bg-orange-600 text-white 
                                     text-xl md:text-2xl lg:text-3xl font-extrabold 
                                     rounded-[50px] border-4 md:border-[6px] lg:border-[8px] border-[#C97B3A] 
                                     flex items-center justify-center"
@@ -358,14 +359,14 @@ export default function Welcome({ auth }: PageProps) {
                         }}
                         onClick={() => setShowLoginModal(true)}
                         whileHover={{ 
-                          scale: 1.05,
-                          boxShadow: '6px 8px 0px #9B4A1B, 0px 4px 8px rgba(0,0,0,0.3)'
+                            scale: 1.05,
+                            boxShadow: '6px 8px 0px #9B4A1B, 0px 4px 8px rgba(0,0,0,0.3)'
                         }}
                         whileTap={{ scale: 0.98 }}
                         >
                         START
                         </motion.button>
-                      </motion.div>
+                        </motion.div>
                   </div>
                   <motion.div 
                     className="hidden md:block flex-1 relative h-full"
@@ -397,10 +398,10 @@ export default function Welcome({ auth }: PageProps) {
                             textShadow: '-2px 3px 0px #282725'
                             }}
                         >
-                            Learn and ignite your knowledge <br /> of Noli Me Tangere
+                          Aral pero make it more fun <br /> sa Noli Me Tangere!
                         </h2>
                         <p className="text-[#282725] text-center md:text-right font-['Inter'] text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px]">
-                            Grow your understanding of Noli Me Tangere <br /> and be recognized with exciting achievements
+                            Lumago, matuto, at magtagumpay habang <br /> nagkaka-achievements sa bawat hakbang.
                         </p>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                           <Link
@@ -420,9 +421,9 @@ export default function Welcome({ auth }: PageProps) {
                 </AnimatedSection>
 
                 {/* About Section */}
-                <AnimatedSection className="px-4 md:px-6 py-8 md:py-12 bg-white text-center border-b-[1px] border-[#282725]">
+                <AnimatedSection className="px-4 md:px-3 py-8 md:py-5 bg-white text-center border-b-[1px] border-[#282725]">
                     <div className='flex flex-col md:flex-row items-center justify-around'>
-                        <AnimatedItem className='h-auto flex gap-3 flex-col order-2 md:order-1 mb-6 md:mb-0' delay={0.1}>
+                        <AnimatedItem className='h-auto flex gap-3 flex-col order-2 md:order-1 mb-6 md:mb-10' delay={0.1}>
                             <h2 
                                 className="font-['Inter'] not-italic font-extrabold text-3xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-left"
                                 style={{
@@ -433,14 +434,17 @@ export default function Welcome({ auth }: PageProps) {
                                 About RizHub
                             </h2>   
                             <p className="text-[#282725] text-center md:text-left font-['Inter'] font-medium text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px] w-full md:w-[400px] lg:w-[500px]">
-                                RizHub is a web-based, game-integrated learning platform designed to enhance students' understanding of Noli Me Tangere. Whether you're new to the novel or seeking a deeper grasp of its themes and characters, RizHub offers interactive learning tool, engaging quizzes, and immersive gameplay. Join RizHub and experience a new way of learning Rizal's masterpiece!
+                                Ang RizHub ay isang web-based learning game na ginawa para mas mapadali at mas maging enjoy ang pag-intindi ng mga estudyante sa Noli Me Tangere.
+Kung first time mo pa lang o gusto mong mas maintindihan ang mga tema at karakter, nandito ang RizHub para tulungan ka!
+Mayroon itong interactive video animation, fun assessment, at exciting gameplay.
+Sumali sa RizHub at maranasan ang bagong paraan ng pag-aaral sa obra ni Rizal.
                             </p>
                         </AnimatedItem>
                          <AnimatedItem className="order-1 md:order-2" delay={0.2}>
                             <motion.img 
                               src="/Img/LandingPage/design1.png" 
                               alt=""  
-                              className='h-[250px] md:h-[350px] lg:h-[400px] transition-transform duration-300 hover:scale-105'
+                              className='h-[250px] md:h-[350px] lg:h-[350px] transition-transform duration-300 hover:scale-105'
                               whileHover={{ rotate: 2 }}
                             />
                         </AnimatedItem>
@@ -638,7 +642,7 @@ export default function Welcome({ auth }: PageProps) {
                              className="h-[150px] md:h-[200px] lg:h-[230px] transition-transform duration-300 hover:scale-105"
                              whileHover={{ y: -5 }}
                            />
-                           <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.3] text-center">Lessons inspired by the world of Noli Me Tangere</h2>
+                           <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.3] text-center">Mga leksyong inspired sa kwento ng Noli Me Tangere</h2>
                         </AnimatedItem>
                         <AnimatedItem className="order-3" delay={0.4}>
                             <motion.img 
@@ -651,38 +655,105 @@ export default function Welcome({ auth }: PageProps) {
                     </div>
                 </AnimatedSection>
 
-                {/* Footer */}
-                <AnimatedSection className="py-6 text-center px-4" delay={0.1}>
-                    <AnimatedItem className="flex justify-center mt-4" delay={0.2}>
-                        <motion.img 
-                          src="/Img/LandingPage/fchar.png" 
-                          alt="Footer Characters" 
-                          className="h-auto w-full max-w-4xl transition-transform duration-300 hover:scale-105"
-                          whileHover={{ y: -5 }}
+            {/* Footer */}
+            <AnimatedSection className="py-6 text-center px-4" delay={0.1}>
+                <AnimatedItem className="flex justify-center ml-20 mt-4" delay={0.2}>
+                    <motion.img 
+                        src="/Img/LandingPage/fchar.png" 
+                        alt="Footer Characters" 
+                        className="h-auto w-full max-w-4xl transition-transform duration-300 hover:scale-105"
+                        whileHover={{ y: -5 }}
+                    />
+                </AnimatedItem>
+                
+                {/* Contact Us Heading
+                <AnimatedItem className="mt-6 mb-4" delay={0.25}>
+                    <motion.h3 
+                        className="text-[#282725] font-['Inter'] font-semibold text-lg md:text-xl lg:text-2xl"
+                        whileHover={{ scale: 1.05 }}
+                    >
+                        Contact Us:
+                    </motion.h3>
+                </AnimatedItem> */}
+                
+                {/* Social Media Links */}
+                <AnimatedItem className="flex justify-center space-x-6 mt-2" delay={0.3}>
+                    {/* Phone */}
+                    <motion.a 
+                        href="tel:+639064029579"
+                        className="text-[#282725] hover:text-[#34A853] transition-colors duration-300"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.3-1.1-.5-2.3-.5-3.5 0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
+                        </svg>
+                    </motion.a>
+
+                    {/* Email */}
+                    <motion.a 
+                        href="mailto:kdesinfo@cebookshop.com"
+                        className="text-[#282725] hover:text-[#EA4335] transition-colors duration-300"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                    </motion.a>
+
+                    {/* Instagram */}
+                    <motion.a 
+                        href="https://www.instagram.com/kdesdigital?utm_source=ig_web_button_share_sheet&igsh=MWl4Nm9nYWV3c3NkOA=="
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#282725] hover:text-[#E4405F] transition-colors duration-300"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </motion.a>
+
+                    {/* YouTube */}
+                    <motion.a 
+                        href="http://www.youtube.com/@CEFilipinoKlasiks"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#282725] hover:text-[#FF0000] transition-colors duration-300"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                        </svg>
+                    </motion.a>
+                </AnimatedItem>
+
+                {/* Copyright */}
+                <AnimatedItem className="mt-4 text-[#282725] font-['Inter'] font-medium text-base md:text-lg lg:text-[22px]" delay={0.4}>
+                    © 2025 RizHub. All rights reserved.
+                </AnimatedItem>
+            </AnimatedSection>
+                        </div>
+                        <LoginModal 
+                            open={showLoginModal} 
+                            onClose={() => setShowLoginModal(false)}
+                            setShowTermsModal={setShowTermsModal} 
+                            setShowPrivacyModal={setShowPrivacyModal} 
                         />
-                    </AnimatedItem>
-                    <AnimatedItem className="mt-2 text-[#282725] font-['Inter'] font-medium text-base md:text-lg lg:text-[22px]" delay={0.3}>
-                      © 2025 RizHub. All rights reserved.
-                    </AnimatedItem>
-                </AnimatedSection>
-            </div>
-            <LoginModal 
-                open={showLoginModal} 
-                onClose={() => setShowLoginModal(false)}
-                setShowTermsModal={setShowTermsModal} 
-                setShowPrivacyModal={setShowPrivacyModal} 
-             />
-             <TermsOfServiceModal 
-                open={showTermsModal} 
-                onClose={() => setShowTermsModal(false)} 
-            />
-            <PrivacyPolicyModal 
-                open={showPrivacyModal} 
-                onClose={() => setShowPrivacyModal(false)} 
-            />
-        </>
-    );
-}
+                        <TermsOfServiceModal 
+                            open={showTermsModal} 
+                            onClose={() => setShowTermsModal(false)} 
+                        />
+                        <PrivacyPolicyModal 
+                            open={showPrivacyModal} 
+                            onClose={() => setShowPrivacyModal(false)} 
+                        />
+                    </>
+                );
+            }
 
 type LoginModalProps = {
     open: boolean;
@@ -696,9 +767,8 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-
-    // Add these state declarations INSIDE the LoginModal component
     const [showMatchMessage, setShowMatchMessage] = useState(false);
+    const [registrationError, setRegistrationError] = useState<string | null>(null);
 
     // Login form state
     const { data: loginData, setData: setLoginData, post: loginPost, processing: loginProcessing, errors: loginErrors, reset: loginReset } = useForm({
@@ -715,7 +785,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
         terms: false,
     });
 
-        // Move the useEffect inside the component
+    // Move the useEffect inside the component
     useEffect(() => {
         if (regData.password_confirmation) {
             setShowMatchMessage(true);
@@ -737,6 +807,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
         loginReset('password');
         regReset('password');
         setIsPasswordFocused(false);
+        setRegistrationError(null);
         onClose();
     };
 
@@ -746,439 +817,495 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
             onSuccess: () => {
                 loginReset();
                 handleClose();
+            },
+            onError: (errors) => {
+                console.log('Login errors:', errors);
             }
         });
     };
 
-    const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        regPost(route('register'), {
-            onSuccess: () => {
-                regReset();
-                handleClose();
+          const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          setRegistrationError(null);
+        
+      // Client-side validation
+        if (!regData.terms) {
+            setRegistrationError('Please agree to the Terms of Service and Privacy Policy');
+            return;
+        }
+
+        if (regData.password !== regData.password_confirmation) {
+            setRegistrationError('Passwords do not match');
+            return;
+        }
+
+        // Check password requirements
+        if (!passwordChecks.hasUppercase || 
+            !passwordChecks.hasLowercase || 
+            !passwordChecks.hasNumber || 
+            !passwordChecks.hasSpecialChar || 
+            !passwordChecks.hasMinLength) {
+            setRegistrationError('Password does not meet all requirements');
+            return;
+        }
+
+    regPost(route('register'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log('Registration successful');
+            regReset();
+            handleClose();
+            
+            // Redirect to VerifyEmail page
+            window.location.href = route('verification.notice');
+        },
+        onError: (errors) => {
+            console.log('Registration errors:', errors);
+            if (errors.email) {
+                setRegistrationError(errors.email);
+            } else if (errors.password) {
+                setRegistrationError(errors.password);
+            } else if (errors.name) {
+                setRegistrationError(errors.name);
+            } else {
+                setRegistrationError('Registration failed. Please try again.');
             }
-        });
-    };
+        },
+        onFinish: () => {
+            console.log('Registration request finished');
+        }
+    });
+};
+
+    // Reset errors when switching between login/register
+    useEffect(() => {
+        setRegistrationError(null);
+    }, [isLogin]);
 
     if (!open) return null;
 
     return (
-<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm p-4">
-    {/* Login/Signup Toggle Buttons */}
-    <div className="absolute top-6 right-6 bg-[#5F290E] rounded-full flex">
-        <button
-            className={`px-10 py-3 md:px-12 md:py-4 rounded-full font-extrabold text-lg md:text-xl lg:text-2xl transition-all duration-200 focus:outline-none flex-1
-                ${isLogin ? 'bg-[#E26F42] text-white z-[100]' : 'bg-transparent text-white'}
-            `}
-            style={isLogin ? {} : { borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-        >
-            Access
-        </button>
-        <button
-            className={`px-6 py-3 md:px-12 md:py-4 rounded-full font-extrabold text-lg md:text-xl lg:text-2xl transition-all duration-200 focus:outline-none flex-1
-                ${!isLogin ? 'bg-[#E26F42] text-white z-[100]' : 'bg-transparent text-white'}
-            `}
-            style={!isLogin ? {} : { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        >
-            Join
-        </button>
-    </div>
-    
-    {/* MAIN MODAL CONTAINER */}
-    <div className="w-full max-w-3xl mx-auto flex rounded-2xl z-70 overflow-hidden shadow-2xl relative">
-        {/* Left Side Image */}
-        <div className="hidden md:flex w-1/2 bg-orange-100 items-center justify-center relative">
-            <img
-                src="\Img\LandingPage\character\noli-form.gif"
-                alt="Login Illustration"
-                className="w-full h-full object-cover"
-            />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm p-4">
+            {/* MAIN MODAL CONTAINER */}
+            <div className="w-full max-w-3xl mx-auto flex rounded-2xl z-70 overflow-hidden shadow-2xl relative">
+                {/* Left Side Image */}
+                <div className="hidden md:flex w-1/2 bg-orange-100 items-center justify-center relative">
+                    <img
+                        src="\Img\LandingPage\character\noli-form.gif"
+                        alt="Login Illustration"
+                        className="w-full h-full object-cover"
+                    />
+                    
+                    {/* Centered Text Overlay */}
+                    <div className="absolute inset-0 flex py-40 mt-10 block p-6 text-center">
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-orange-500/20 to-orange-700/30 
+                                        blur-3xl animate-pulse opacity-70 -z-10"></div>
+
+                        <h2 className="text-[#FA7816] text-xl md:text-xl font-extrabold drop-shadow-md leading-snug max-w-4xl">
+                            {isLogin ? (
+                                "Hello! Ready to continue your adventure?"
+                            ) : (
+                                "Get ready to learn, play, and win—because in RizHub, education becomes an adventure!"
+                            )}
+                        </h2>
+                    </div>
+                </div>
             
-            {/* Centered Text Overlay */}
-            <div className="absolute inset-0 flex py-40 mt-10 block p-6 text-center">
-                {/* Smooth glowing background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-orange-500/20 to-orange-700/30 
-                                blur-3xl animate-pulse opacity-70 -z-10"></div>
-
-                <h2 className="text-[#FA7816] text-xl md:text-xl font-extrabold drop-shadow-md leading-snug max-w-4xl">
-                    {isLogin ? (
-                        "Hello! Ready to continue your adventure?"
-                    ) : (
-                        "Get ready to learn, play, and win—because in RizHub, education becomes an adventure!"
-                    )}
-                </h2>
-            </div>
-        </div>
-    
-    {/* Right Side Form */}
-    <div className="bg-[#FA7816] w-full md:w-1/2 p-4 md:p-4 relative flex flex-col items-center justify-center">
-        {/* Close Button */}
-        <button
-            className="absolute top-2 right-3 md:top-3 md:right-4 text-white text-xl hover:text-[#5A3416] font-bold"
-            onClick={handleClose}
-            aria-label="Close"
-        >✕</button>
-        
-        <div className="w-full flex flex-col items-center">
-            {isLogin && (
-                <img src="/Img/LandingPage/Login/quill.png" alt="Quill Icon" className="w-19 h-19 md:w-20 -mt-6 md:h-20 mb-1" />
-            )}
-            <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-5 mt-6 text-center drop-shadow">Welcome!!!</h2>
-        </div>
-
-        {/* FORMS CONTAINER */}
-        <div className="w-full flex flex-col items-center relative">
-            {isLogin ? (
-                <form onSubmit={handleLogin} className="w-full flex flex-col items-center">
-                    {/* Email */}
-                    <div className="w-full mb-4 relative">
-                        <input
-                            id="login_email"
-                            type="email"
-                            name="email"
-                            autoComplete="off"
-                            value={loginData.email}
-                            onChange={e => setLoginData('email', e.target.value)}
-                            className="peer w-full rounded-full px-6 md:px-7 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white focus:border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
-                            placeholder="email"
-                            required
-                        />
-                        <label
-                          htmlFor="login_email"
-                          className={`
-                            absolute left-4 md:left-6 text-white text-4xl md:text-base pointer-events-none transition-all duration-200 bg-[#FA7816] px-2 rounded-lg
-                            ${loginData.email
-                              ? "-top-4 left-4 md:left-5 text-base text-white z-10"
-                              : "top-1/2 -translate-y-1/2 text-4xl md:text-xl"
-                            }
-                            peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10 font-semibold
-                          `}
-                        >
-                          Email:
-                        </label>
-                    </div>
-                    {/* Password */}
-                    <div className="w-full mb-3 relative">
-                        <input
-                            id="login_password"
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            value={loginData.password}
-                            onChange={e => setLoginData('password', e.target.value)}
-                            className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-xl md:text-base border-2 border-white focus:border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
-                            placeholder="password"
-                            required
-                            style={{ border: '2px solid #fff' }}
-                        />
-                        <label
-                          htmlFor="login_password"
-                          className={`
-                            absolute left-4 md:left-6 text-white text-4xl md:text-base pointer-events-none transition-all duration-200 bg-[#FA7816] px-2 rounded-lg
-                            ${loginData.password
-                              ? "-top-4 left-4 md:left-5 text-base text-white z-10"
-                              : "top-1/2 -translate-y-1/2 text-2xl md:text-xl"
-                            }
-                            peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white z-10 font-semibold
-                          `}
-                        >
-                          Password:
-                        </label>
-
-                        {loginData.password && (
-                            <button
-                                type="button"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A3416] text-sm md:text-lg"
-                                onClick={() => setShowPassword(!showPassword)}
-                                tabIndex={-1}
-                            >
-                                {showPassword ? (
-                                    <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-[14px] w-[14px] md:h-[16px] md:w-[16px]">
-                                        <g clipPath="url(#clip0_502_2)">
-                                        <path d="M10.6657 4.31697C10.252 3.63943 9.73003 3.03421 9.12067 2.52535L10.404 1.24201C10.4875 1.15557 10.5337 1.0398 10.5326 0.919622C10.5316 0.799448 10.4834 0.684492 10.3984 0.599514C10.3134 0.514535 10.1985 0.466333 10.0783 0.465288C9.95814 0.464244 9.84237 0.510441 9.75592 0.593931L8.3603 1.99139C7.49514 1.47752 6.50607 1.20969 5.49984 1.21681C2.66230 1.21681 1.04530 3.15922 0.333965 4.31697C0.114207 4.67241 -0.00219727 5.08204 -0.00219727 5.49993C-0.00219727 5.91782 0.114207 6.32745 0.333965 6.68289C0.747729 7.36043 1.26965 7.96565 1.87901 8.47451L0.595674 9.75785C0.551898 9.80013 0.516981 9.8507 0.492961 9.90662C0.468940 9.96254 0.456296 10.0227 0.455767 10.0835C0.455238 10.1444 0.466835 10.2047 0.489880 10.2611C0.512926 10.3174 0.546959 10.3686 0.589993 10.4116C0.633027 10.4546 0.684201 10.4887 0.740528 10.5117C0.796856 10.5348 0.857209 10.5464 0.918066 10.5458C0.978923 10.5453 1.03907 10.5327 1.09498 10.5086C1.15090 10.4846 1.20148 10.4497 1.24376 10.4059L2.64259 9.0071C3.50667 9.52089 4.49456 9.78918 5.49984 9.78306C8.33738 9.78306 9.95438 7.84064 10.6657 6.68289C10.8855 6.32745 11.0019 5.91782 11.0019 5.49993C11.0019 5.08204 10.8855 4.67241 10.6657 4.31697V4.31697ZM1.11497 6.20301C0.984403 5.99174 0.915247 5.74829 0.915247 5.49993C0.915247 5.25157 0.984403 5.00812 1.11497 4.79685C1.72638 3.8041 3.10826 2.13347 5.49984 2.13347C6.26080 2.12921 7.01107 2.31261 7.68426 2.66743L6.76163 3.59006C6.32160 3.29792 5.79405 3.16701 5.26849 3.21956C4.74293 3.27211 4.25174 3.50487 3.87826 3.87835C3.50478 4.25183 3.27202 4.74302 3.21947 5.26858C3.16692 5.79414 3.29782 6.32169 3.58997 6.76172L2.53122 7.82047C1.96980 7.36659 1.49072 6.81945 1.11497 6.20301V6.20301ZM6.87484 5.49993C6.87484 5.86460 6.72998 6.21434 6.47211 6.47220C6.21425 6.73007 5.86451 6.87493 5.49984 6.87493C5.29566 6.87414 5.09431 6.82713 4.91088 6.73743L6.73734 4.91097C6.82704 5.09440 6.87405 5.29575 6.87484 5.49993V5.49993ZM4.12484 5.49993C4.12484 5.13526 4.26971 4.78552 4.52757 4.52766C4.78543 4.26980 5.13517 4.12493 5.49984 4.12493C5.70402 4.12572 5.90537 4.17273 6.08880 4.26243L4.26234 6.08889C4.17264 5.90546 4.12563 5.70411 4.12484 5.49993ZM9.88472 6.20301C9.27330 7.19576 7.89142 8.86639 5.49984 8.86639C4.73888 8.87065 3.98861 8.68726 3.31542 8.33243L4.23805 7.40981C4.67808 7.70195 5.20563 7.83285 5.73119 7.78030C6.25675 7.72775 6.74794 7.49499 7.12142 7.12151C7.49490 6.74803 7.72766 6.25684 7.78021 5.73128C7.83276 5.20572 7.70186 4.67817 7.40972 4.23814L8.46847 3.17939C9.02988 3.63327 9.50896 4.18041 9.88472 4.79685C10.0153 5.00812 10.0844 5.25157 10.0844 5.49993C10.0844 5.74829 10.0153 5.99174 9.88472 6.20301V6.20301Z" fill="#5A3416"/>
-                                        </g>
-                                        <defs>
-                                        </defs>
-                                    </svg>
-                                ) : (
-                                    <svg className="h-[14px] w-[14px] md:h-[16px] md:w-[16px]" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        
-                                        <defs>
-                                        <clipPath id="clip0_504_12">
-                                        <rect width="11" height="11" fill="white"/>
-                                        </clipPath>
-                                        </defs>
-                                    </svg>
-                                )}
-                            </button>
-                        )}
-                        <a href={route('password.request')} className="absolute right-0 bottom-[-22px] text-[#000000] text-base underline hover:text-[#5A3416] -mb-3 block text-right">Forgot Password</a>
-                    </div>
+                {/* Right Side Form */}
+                <div className="bg-[#FA7816] w-full md:w-1/2 p-4 md:p-4 relative flex flex-col items-center justify-center">
+                    {/* Close Button */}
                     <button
-                        type="submit"
-                        className="w-full mt-8 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410]"
-                        disabled={loginProcessing}
-                    >
-                        Login
-                    </button>
-                    <div className="w-full text-center mt-2">
-                        <span className="text-[#000000] text-6xxl">New to Rizhub? </span>
-                        <button
-                            type="button"
-                            className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-6xxl"
-                            onClick={() => setIsLogin(false)}
-                        >Register</button>
+                        className="absolute top-2 right-3 md:top-3 md:right-4 text-white text-xl hover:text-[#5A3416] font-bold"
+                        onClick={handleClose}
+                        aria-label="Close"
+                    >✕</button>
+                    
+                    <div className="w-full flex flex-col items-center">
+                        {isLogin && (
+                            <img src="/Img/LandingPage/Login/quill.png" alt="Quill Icon" className="w-19 h-19 md:w-20 -mt-6 md:h-20 mb-1" />
+                        )}
+                        <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-5 mt-6 text-center drop-shadow">Welcome!!!</h2>
                     </div>
-                </form>
-            ) : (
-                    <form onSubmit={handleRegister} className="w-full flex flex-col items-center">
-                        {/* Name */}
-                        <div className="w-full mb-5 relative">
-                            <input
-                                id="reg_name"
-                                type="text"
-                                name="name"
-                                className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
-                                value={regData.name}
-                                onChange={e => setRegData('name', e.target.value)}
-                                onFocus={() => setIsPasswordFocused(false)}
-                                placeholder="name"
-                                required
-                                style={{ border: '2px solid #fff' }}
-                            />
-                            <label
-                                htmlFor="reg_name"
-                                className={`
-                                    absolute left-4 md:left-6 text-white text-base md:text-base pointer-events-none transition-all duration-200
-                                    ${regData.name
-                                        ? "-top-2 left-4 md:left-5 text-base text-[#5A3416]"
-                                        : "top-1/2 -translate-y-1/2"
-                                    }
-                                    peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold
-                                `}
-                                style={{
-                                    background: '#FA7816',
-                                    padding: '0 10px',
-                                    borderRadius: '15px',
-                                }}
-                            >
-                                Name:
-                            </label>
+
+                    {/* Error Message Display */}
+                    {registrationError && (
+                        <div className="w-full max-w-md mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                            {registrationError}
                         </div>
-                        {/* Email */}
-                        <div className="w-full mb-3 relative">
-                            <input
-                                id="reg_email"
-                                type="email"
-                                name="email"
-                                className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
-                                value={regData.email}
-                                onChange={e => setRegData('email', e.target.value)}
-                              onFocus={() => setIsPasswordFocused(false)}
-                                placeholder="email"
-                                required
-                                style={{ border: '2px solid #fff' }}
-                            />
-                            <label
-                                htmlFor="reg_email"
-                                className={`
-                                    absolute left-4 md:left-6 text-white text-base md:text-base pointer-events-none transition-all duration-200
-                                    ${regData.email
-                                        ? "-top-2 left-4 md:left-5 text-base text-[#5A3416]"
-                                        : "top-1/2 -translate-y-1/2"
-                                    }
-                                    peer-focus:-top-[4px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold z-10
-                                `}
-                                style={{
-                                    background: '#FA7816',
-                                    padding: '0 6px',
-                                    borderRadius: '4px',
-                                }}
-                            >
-                                Email:
-                            </label>
-                        </div>                      
-                            {/* Password */}
-                            <div className="w-full mb-3 relative">
-                              <div className="relative py-2 md:py-2.5">
-                                <input
-                                  id="reg_password"
-                                  type={showPassword ? "text" : "password"}
-                                  name="password"
-                                  value={regData.password}
-                                  onChange={(e) => setRegData('password', e.target.value)}
-                                  onFocus={() => setIsPasswordFocused(true)}
-                                  placeholder="password"
-                                  className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold z-50
-                                    ${
-                                      regData.password_confirmation
-                                        ? regData.password === regData.password_confirmation
-                                          ? "border-orange-500 bg-orange-100"
-                                          : "border-red-500 bg-red-100"
-                                        : "border-orange bg-[#FA7816]"
-                                    } text-[#5A3416] placeholder-transparent`}
-                                  required
-                                />
-                                <label
-                                  htmlFor="reg_password"
-                                  className={`
-                                    absolute left-4 md:left-6 text-white text-sm md:text-base pointer-events-none transition-all duration-200
-                                    ${regData.password
-                                      ? "-top-2 left-4 md:left-5 text-xs text-[#5A3416]"
-                                      : "top-1/2 -translate-y-1/2"
-                                    }
-                                    peer-focus:top-[4px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold
-                                  `}
-                                style={{
-                                    background: '#FA7816',
-                                    padding: '0 10px',
-                                    borderRadius: '15px',
-                                }}
-                                >
-                                  Password:
-                                </label>
-                              </div>
-                            </div>
+                    )}
 
-                            {/* Confirm Password */}
-                            <div className="w-full relative">
-                              <input
-                                id="reg_password_confirmation"
-                                type={showPassword ? "text" : "password"}
-                                name="password_confirmation"
-                                value={regData.password_confirmation}
-                                onChange={(e) => setRegData('password_confirmation', e.target.value)}
-                                onFocus={() => setIsPasswordFocused(false)}
-                                placeholder="confirm password"
-                                required
-                                className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold 
-                                  ${
-                                    regData.password_confirmation
-                                      ? regData.password === regData.password_confirmation
-                                        ? "border-orange-500 bg-orange-100"
-                                        : "border-red-500 bg-red-100"
-                                      : "border-white bg-[#FA7816]"
-                                  } text-[#5A3416] placeholder-transparent`}
-                              />
-                              <label
-                                htmlFor="reg_password_confirmation"
-                                className={`
-                                  absolute left-4 md:left-6 text-white text-sm md:text-base pointer-events-none transition-all duration-200
-                                  ${regData.password_confirmation
-                                    ? "-top-2 left-4 md:left-5 text-xs text-[#5A3416]"
-                                    : "top-1/2 -translate-y-1/2"
-                                  }
-                                  peer-focus:-top-[4.5px] peer-focus:left-4 md:peer-focus:left-5 peer-focus:text-base peer-focus:text-white font-semibold
-                                `}
-                                style={{
-                                    background: '#FA7816',
-                                    padding: '0 10px',
-                                    borderRadius: '15px',
-                                }}
-                                  >
-                                    Confirm Password:
-                                  </label>
-
-                                  {/* Matching Indicator Message */}
-                                  {showMatchMessage && (
-                                    <p
-                                      className={`text-xs mt-1 font-semibold ${
-                                        regData.password === regData.password_confirmation
-                                          ? "text-orange-600"
-                                          : "text-red-600"
-                                      }`}
+                    {/* FORMS CONTAINER */}
+                    <div className="w-full flex flex-col items-center relative">
+                        {isLogin ? (
+                            <form onSubmit={handleLogin} className="w-full max-w-md">
+                                {/* Email */}
+                                <div className="w-full mb-5 relative">
+                                    <input
+                                        id="login_email"
+                                        type="email"
+                                        name="email"
+                                        autoComplete="off"
+                                        value={loginData.email}
+                                        onChange={e => setLoginData('email', e.target.value)}
+                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        placeholder="email"
+                                        required
+                                        style={{ border: '2px solid #fff' }}
+                                    />
+                                    <label
+                                        htmlFor="login_email"
+                                        className={`
+                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                            ${loginData.email 
+                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                            }
+                                        `}
+                                        style={{
+                                            transform: loginData.email ? 'none' : 'translateY(-50%)'
+                                        }}
                                     >
-                                      {regData.password === regData.password_confirmation
-                                        ? "Passwords match!"
-                                        : "Passwords do not match!"}
-                                    </p>
-                                  )}
+                                        Email:
+                                    </label>
                                 </div>
-                        <div className="w-full mb-2 flex items-center justify-center">
-                          <input
-                            id="terms"
-                            type="checkbox"
-                            checked={regData.terms ?? false}
-                            onChange={e => setRegData('terms', e.target.checked)}
-                            onFocus={() => setIsPasswordFocused(false)} // Close password requirements
-                            required
-                            className="mr-2 accent-[#5A3416]"
-                          />
 
-                          <label
-                            htmlFor="terms"
-                            className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
-                          >
-                            <span>
-                              I agree to the{' '}
-                              <button
-                                type="button"
-                                className="underline font-semibold hover:text-[#FF9B50]"
-                                onClick={() => setShowTermsModal(true)}
-                              >
-                                Terms of Service
-                              </button>{' '}
-                              and{' '}
-                              <button
-                                type="button"
-                                className="underline font-semibold hover:text-[#FF9B50]"
-                                onClick={() => setShowPrivacyModal(true)}
-                              >
-                                Privacy Policy
-                              </button>
-                              .
-                            </span>
-                            <span className="text-red-700 ml-1">*</span>
-                          </label>
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full mt-4 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410]"
-                            disabled={regProcessing}
-                        >
-                            Signup
-                        </button>
-                        <div className="w-full text-center mt-2">
-                            <span className="text-[000000] text-4xxl">Already have an account? </span>
-                            <button
-                                type="button"
-                                className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
-                                onClick={() => setIsLogin(true)}
-                            >Log in</button>
-                        </div>
-                    </form>
-                )}
+                                {/* Password */}
+                                <div className="w-full mb-5 relative">
+                                    <input
+                                        id="login_password"
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        value={loginData.password}
+                                        onChange={e => setLoginData('password', e.target.value)}
+                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        placeholder="password"
+                                        required
+                                        style={{ border: '2px solid #fff' }}
+                                    />
+                                    <label
+                                        htmlFor="login_password"
+                                        className={`
+                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                            ${loginData.password 
+                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                            }
+                                        `}
+                                        style={{
+                                            transform: loginData.password ? 'none' : 'translateY(-50%)'
+                                        }}
+                                    >
+                                        Password:
+                                    </label>
+
+                                    {loginData.password && (
+                                        <button
+                                            type="button"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5A3416] text-sm md:text-lg"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            tabIndex={-1}
+                                        >
+                                            {showPassword ? (
+                                                <svg viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-[14px] w-[14px] md:h-[16px] md:w-[16px]">
+                                                    <g clipPath="url(#clip0_502_2)">
+                                                        <path d="M10.6657 4.31697C10.252 3.63943 9.73003 3.03421 9.12067 2.52535L10.404 1.24201C10.4875 1.15557 10.5337 1.0398 10.5326 0.919622C10.5316 0.799448 10.4834 0.684492 10.3984 0.599514C10.3134 0.514535 10.1985 0.466333 10.0783 0.465288C9.95814 0.464244 9.84237 0.510441 9.75592 0.593931L8.3603 1.99139C7.49514 1.47752 6.50607 1.20969 5.49984 1.21681C2.66230 1.21681 1.04530 3.15922 0.333965 4.31697C0.114207 4.67241 -0.00219727 5.08204 -0.00219727 5.49993C-0.00219727 5.91782 0.114207 6.32745 0.333965 6.68289C0.747729 7.36043 1.26965 7.96565 1.87901 8.47451L0.595674 9.75785C0.551898 9.80013 0.516981 9.8507 0.492961 9.90662C0.468940 9.96254 0.456296 10.0227 0.455767 10.0835C0.455238 10.1444 0.466835 10.2047 0.489880 10.2611C0.512926 10.3174 0.546959 10.3686 0.589993 10.4116C0.633027 10.4546 0.684201 10.4887 0.740528 10.5117C0.796856 10.5348 0.857209 10.5464 0.918066 10.5458C0.978923 10.5453 1.03907 10.5327 1.09498 10.5086C1.15090 10.4846 1.20148 10.4497 1.24376 10.4059L2.64259 9.0071C3.50667 9.52089 4.49456 9.78918 5.49984 9.78306C8.33738 9.78306 9.95438 7.84064 10.6657 6.68289C10.8855 6.32745 11.0019 5.91782 11.0019 5.49993C11.0019 5.08204 10.8855 4.67241 10.6657 4.31697V4.31697ZM1.11497 6.20301C0.984403 5.99174 0.915247 5.74829 0.915247 5.49993C0.915247 5.25157 0.984403 5.00812 1.11497 4.79685C1.72638 3.8041 3.10826 2.13347 5.49984 2.13347C6.26080 2.12921 7.01107 2.31261 7.68426 2.66743L6.76163 3.59006C6.32160 3.29792 5.79405 3.16701 5.26849 3.21956C4.74293 3.27211 4.25174 3.50487 3.87826 3.87835C3.50478 4.25183 3.27202 4.74302 3.21947 5.26858C3.16692 5.79414 3.29782 6.32169 3.58997 6.76172L2.53122 7.82047C1.96980 7.36659 1.49072 6.81945 1.11497 6.20301V6.20301ZM6.87484 5.49993C6.87484 5.86460 6.72998 6.21434 6.47211 6.47220C6.21425 6.73007 5.86451 6.87493 5.49984 6.87493C5.29566 6.87414 5.09431 6.82713 4.91088 6.73743L6.73734 4.91097C6.82704 5.09440 6.87405 5.29575 6.87484 5.49993V5.49993ZM4.12484 5.49993C4.12484 5.13526 4.26971 4.78552 4.52757 4.52766C4.78543 4.26980 5.13517 4.12493 5.49984 4.12493C5.70402 4.12572 5.90537 4.17273 6.08880 4.26243L4.26234 6.08889C4.17264 5.90546 4.12563 5.70411 4.12484 5.49993ZM9.88472 6.20301C9.27330 7.19576 7.89142 8.86639 5.49984 8.86639C4.73888 8.87065 3.98861 8.68726 3.31542 8.33243L4.23805 7.40981C4.67808 7.70195 5.20563 7.83285 5.73119 7.78030C6.25675 7.72775 6.74794 7.49499 7.12142 7.12151C7.49490 6.74803 7.72766 6.25684 7.78021 5.73128C7.83276 5.20572 7.70186 4.67817 7.40972 4.23814L8.46847 3.17939C9.02988 3.63327 9.50896 4.18041 9.88472 4.79685C10.0153 5.00812 10.0844 5.25157 10.0844 5.49993C10.0844 5.74829 10.0153 5.99174 9.88472 6.20301V6.20301Z" fill="#5A3416"/>
+                                                    </g>
+                                                    <defs>
+                                                    </defs>
+                                                </svg>
+                                            ) : (
+                                                <svg className="h-[14px] w-[14px] md:h-[16px] md:w-[16px]" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <defs>
+                                                        <clipPath id="clip0_504_12">
+                                                            <rect width="11" height="11" fill="white"/>
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            )}
+                                        </button>
+                                    )}
+                                    <a href={route('password.request')} className="absolute right-0 bottom-[-22px] text-[#000000] text-base underline hover:text-[#5A3416] -mb-3 block text-right">Forgot Password</a>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full mt-8 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={loginProcessing}
+                                >
+                                    {loginProcessing ? (
+                                        <div className="flex items-center justify-center">
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                            Logging in...
+                                        </div>
+                                    ) : (
+                                        'Login'
+                                    )}
+                                </button>
+
+                                <div className="w-full text-center mt-2">
+                                    <span className="text-[#000000] text-6xxl">New to Rizhub? </span>
+                                    <button
+                                        type="button"
+                                        className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-6xxl"
+                                        onClick={() => setIsLogin(false)}
+                                    >
+                                        Register
+                                    </button>
+                                </div>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleRegister} className="w-full flex flex-col items-center">
+                                {/* Name */}
+                                <div className="w-full mb-5 relative">
+                                    <input
+                                        id="reg_name"
+                                        type="text"
+                                        name="name"
+                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        value={regData.name}
+                                        onChange={e => setRegData('name', e.target.value)}
+                                        onFocus={() => setIsPasswordFocused(false)}
+                                        placeholder="name"
+                                        required
+                                        style={{ border: '2px solid #fff' }}
+                                    />
+                                    <label
+                                        htmlFor="reg_name"
+                                        className={`
+                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                            ${regData.name 
+                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                            }
+                                        `}
+                                        style={{
+                                            transform: regData.name ? 'none' : 'translateY(-50%)'
+                                        }}
+                                    >
+                                        Name:
+                                    </label>
+                                </div>
+                                
+                                {/* Email */}
+                                <div className="w-full mb-5 relative">
+                                    <input
+                                        id="reg_email"
+                                        type="email"
+                                        name="email"
+                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        value={regData.email}
+                                        onChange={e => setRegData('email', e.target.value)}
+                                        onFocus={() => setIsPasswordFocused(false)}
+                                        placeholder="email"
+                                        required
+                                        style={{ border: '2px solid #fff' }}
+                                    />
+                                    <label
+                                        htmlFor="reg_email"
+                                        className={`
+                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                            ${regData.email 
+                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                            }
+                                        `}
+                                        style={{
+                                            transform: regData.email ? 'none' : 'translateY(-50%)'
+                                        }}
+                                    >
+                                        Email:
+                                    </label>
+                                </div>                     
+                                
+                                {/* Password */}
+                                <div className="w-full mb-5 relative">
+                                    <div className="relative">
+                                        <input
+                                            id="reg_password"
+                                            type={showPassword ? "text" : "password"}
+                                            name="password"
+                                            value={regData.password}
+                                            onChange={(e) => setRegData('password', e.target.value)}
+                                            onFocus={() => setIsPasswordFocused(true)}
+                                            placeholder="password"
+                                            required
+                                            className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold 
+                                                ${
+                                                    regData.password_confirmation
+                                                    ? regData.password === regData.password_confirmation
+                                                        ? "border-orange-500 bg-orange-100"
+                                                        : "border-red-500 bg-red-100"
+                                                    : "border-white bg-[#FA7816]"
+                                                } text-[#5A3416] placeholder-transparent`}
+                                        />
+                                        <label
+                                            htmlFor="reg_password"
+                                            className={`
+                                                absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                                ${regData.password 
+                                                    ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                    : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                                }
+                                            `}
+                                            style={{
+                                                transform: regData.password ? 'none' : 'translateY(-50%)'
+                                            }}
+                                        >
+                                            Password:
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                {/* Confirm Password */}
+                                <div className="w-full relative">
+                                    <input
+                                        id="reg_password_confirmation"
+                                        type={showPassword ? "text" : "password"}
+                                        name="password_confirmation"
+                                        value={regData.password_confirmation}
+                                        onChange={(e) => setRegData('password_confirmation', e.target.value)}
+                                        onFocus={() => setIsPasswordFocused(false)}
+                                        placeholder="confirm password"
+                                        required
+                                        className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold 
+                                            ${
+                                                regData.password_confirmation
+                                                ? regData.password === regData.password_confirmation
+                                                    ? "border-orange-500 bg-orange-100"
+                                                    : "border-red-500 bg-red-100"
+                                                : "border-white  bg-[#FA7816]"
+                                            } text-[#5A3416] placeholder-transparent`}
+                                    />
+                                    <label
+                                        htmlFor="reg_password_confirmation"
+                                        className={`
+                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                            ${regData.password_confirmation 
+                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                            }
+                                        `}
+                                        style={{
+                                            transform: regData.password_confirmation ? 'none' : 'translateY(-50%)'
+                                        }}
+                                    >
+                                        Confirm Password:
+                                    </label>
+                                    
+                                    {/* Matching Indicator Message */}
+                                    {showMatchMessage && (
+                                        <p
+                                            className={`text-xs mt-1 text-base font-semibold ${
+                                                regData.password === regData.password_confirmation
+                                                ? "text-white"
+                                                : "text-black"
+                                            }`}
+                                        >
+                                            {regData.password === regData.password_confirmation
+                                                ? "Passwords match!"
+                                                : "Passwords do not match!"}
+                                        </p>
+                                    )}
+                                </div>
+                                
+                                <div className="w-full mb-2 flex items-center justify-center">
+                                    <input
+                                        id="terms"
+                                        type="checkbox"
+                                        checked={regData.terms ?? false}
+                                        onChange={e => setRegData('terms', e.target.checked)}
+                                        onFocus={() => setIsPasswordFocused(false)}
+                                        required
+                                        className="mr-2 accent-[#5A3416]"
+                                    />
+                                    <label
+                                        htmlFor="terms"
+                                        className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
+                                    >
+                                        <span>
+                                            I agree to the{' '}
+                                            <button
+                                                type="button"
+                                                className="underline font-semibold hover:text-[#FF9B50]"
+                                                onClick={() => setShowTermsModal(true)}
+                                            >
+                                                Terms of Service
+                                            </button>{' '}
+                                            and{' '}
+                                            <button
+                                                type="button"
+                                                className="underline font-semibold hover:text-[#FF9B50]"
+                                                onClick={() => setShowPrivacyModal(true)}
+                                            >
+                                                Privacy Policy
+                                            </button>
+                                            .
+                                        </span>
+                                        <span className="text-red-700 ml-1">*</span>
+                                    </label>
+                                </div>
+                                
+                                <button
+                                    type="submit"
+                                    className="w-full mt-4 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={regProcessing}
+                                >
+                                    {regProcessing ? (
+                                        <div className="flex items-center justify-center">
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                            Creating Account...
+                                        </div>
+                                    ) : (
+                                        'Signup'
+                                    )}
+                                </button>
+                                
+                                <div className="w-full text-center mt-2">
+                                    <span className="text-[000000] text-4xxl">Already have an account? </span>
+                                    <button
+                                        type="button"
+                                        className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
+                                        onClick={() => setIsLogin(true)}
+                                    >
+                                        Log in
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
+                </div>
             </div>
+            
+            {/* PASSWORD REQUIREMENTS - POSITIONED AS OVERLAY OUTSIDE THE MAIN MODAL */}
+            {isPasswordFocused && !isLogin && (
+                <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-64 z-80">
+                    <div className="relative p-4 bg-white rounded-xl shadow-2xl border-2 border-white">
+                        <p className="text-[#5A3416] text-3xxl font-bold mb-3">Password must contain:</p>
+                        <ul className="text-2xxl space-y-2">
+                            <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                <span className="mr-2 font-bold">{passwordChecks.hasUppercase ? '✓' : '✗'}</span>
+                                At least one uppercase letter (A-Z)
+                            </li>
+                            <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                <span className="mr-2 font-bold">{passwordChecks.hasLowercase ? '✓' : '✗'}</span>
+                                At least one lowercase letter (a-z)
+                            </li>
+                            <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                <span className="mr-2 font-bold">{passwordChecks.hasNumber ? '✓' : '✗'}</span>
+                                At least one number (0-9)
+                            </li>
+                            <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                <span className="mr-2 font-bold">{passwordChecks.hasSpecialChar ? '✓' : '✗'}</span>
+                                At least one special character
+                            </li>
+                            <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                <span className="mr-2 font-bold">{passwordChecks.hasMinLength ? '✓' : '✗'}</span>
+                                At least 8 characters long
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )}
         </div>
-    </div>
-     {/* PASSWORD REQUIREMENTS - POSITIONED AS OVERLAY OUTSIDE THE MAIN MODAL */}
-    {isPasswordFocused && !isLogin && (
-        <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-64 z-80">
-            <div className="relative p-4 bg-white rounded-xl shadow-2xl border-2 border-white">
-                <p className="text-[#5A3416] text-3xxl font-bold mb-3">Password must contain:</p>
-                <ul className="text-2xxl space-y-2">
-                    <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                        <span className="mr-2 font-bold">{passwordChecks.hasUppercase ? '✓' : '✗'}</span>
-                        At least one uppercase letter (A-Z)
-                    </li>
-                    <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                        <span className="mr-2 font-bold">{passwordChecks.hasLowercase ? '✓' : '✗'}</span>
-                        At least one lowercase letter (a-z)
-                    </li>
-                    <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                        <span className="mr-2 font-bold">{passwordChecks.hasNumber ? '✓' : '✗'}</span>
-                        At least one number (0-9)
-                    </li>
-                    <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                        <span className="mr-2 font-bold">{passwordChecks.hasSpecialChar ? '✓' : '✗'}</span>
-                        At least one special character
-                    </li>
-                    <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                        <span className="mr-2 font-bold">{passwordChecks.hasMinLength ? '✓' : '✗'}</span>
-                        At least 8 characters long
-                    </li>
-                </ul>
-            </div>
-        </div>
-    )}
-</div>
-    )}
+    );
+}

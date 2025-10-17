@@ -82,10 +82,10 @@ const InstructionModal: React.FC<ModalProps> = ({
         />
 
         <div className="absolute top-4 left-4 flex items-center">
-          <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
+          <div className="bg-orange-600 font-mono text-white font-bold px-4 py-2 text-2xl">
             {title.split(":")[0]}:
           </div>
-          <div className="text-white font-bold px-2 py-2 text-2xl">
+          <div className="text-white font-mono font-bold px-2 py-2 text-2xl">
             {title.split(":")[1]}
           </div>
         </div>

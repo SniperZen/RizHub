@@ -543,7 +543,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             </svg>
                         </button>
                     </div>
-                    <div className="flex flex-col items-center justify-start p-6 overflow-hidden">
+                    <div className="flex flex-col ml-10 items-center justify-start p-6 overflow-hidden">
                         <div className="relative w-[550px] h-[250px] flex items-center justify-center">
                             <img
                                 src="/Img/Challenge/GuessWord/modalBG.png"
@@ -625,14 +625,14 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         alt="Wooden Frame"
                                         className="w-full h-auto"
                                     />
-                                    <div className="absolute top-[-15px] ml-4 left-1/2 -translate-x-1/2 flex">
+                                    <div className="absolute top-[-30px] ml-4 left-1/2 -translate-x-1/2 flex">
                                     {(showModal === "finished") && (
                                         <>
                                             {[...Array(3)].map((_, i) => (
                                                 <div
                                                     key={i}
                                                     className={`flex items-center justify-center
-                                                        ${i === 1 ? "w-[180px] h-[180px]" : "w-32 h-32"}
+                                                        ${i === 1 ? "w-[170px] h-[170px]" : "w-32 h-32"}
                                                         ${i === 0 || i === 2 ? "translate-y-[50px]" : ""}
                                                     `}
                                                 >
@@ -654,12 +654,12 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         </>
                                     )}
                                     </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[110px]">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[10px]">
                                 <h2 className="
                                     font-mono
-                                    mr-5
-                                    ml-5
-                                    text-[58px] leading-[72px] 
+                                    mr-2
+                                    ml-2
+                                    text-[55px] leading-[72px] 
                                     font-bold 
                                     text-orange-800
                                     text-shadow
@@ -676,7 +676,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 {showModal === "wrong" && (
                                 <p className="text-red-500 mr-5 ml-5 font-mono text-lg mb-3">Mali! Subukan muli.</p>
                                 )}
-                                    <p className="text-red-500 mr-5 ml-5 font-mono text-xl  font-semibold">
+                                    <p className="text-red-800 mr-5 ml-5 font-mono text-base font-semibold">
                                         {(showModal === "timesup" || showModal === "finished") && (
                                             <>
                                                 {stars === 0 && (
@@ -688,101 +688,85 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                          )}
                                     </p> 
                                 
-                               <div className="relative flex items-center justify-center w-32 h-32 z-10">
-                                    {(showModal === "finished") && (
+                                <div className="relative flex items-center justify-center w-32 h-32 z-10">
+                                    {showModal === "finished" && (
                                         <>
-                                        <img
-                                            src="/Img/Challenge/GuessWord/fireworks.png"
-                                            alt="Fireworks"
-                                            className=" w-full h-full animate-pulse"
-                                        />
-                                        <div 
-                                            className="absolute z-10 top-4 w-24 h-24 m-auto inset-0 flex items-center justify-center z-5"
-                                            onMouseEnter={() => score >= 5 && setShowGiftTooltip(true)}
-                                            onMouseLeave={() => setShowGiftTooltip(false)}
-                                        >
+                                            {/* Background Glow + Fireworks Animation */}
                                             <img
-                                                src="/Img/Challenge/GuessWord/gift.png"
-                                                alt="Reward Gift"
-                                                className="w-full h-full"
+                                                src="/Img/Challenge/GuessWord/fireworks.png"
+                                                alt="Fireworks"
+                                                className="absolute inset-0 w-full h-full object-cover opacity-70 animate-pulse"
                                             />
-                                        </div>
-                                        {score < 5 ? (
-                                            <>
-                                                <div className="absolute inset-0 bg-black bg-opacity-60 rounded-lg z-20 flex items-center justify-center">
-                                                    <svg
-                                                        width="64"
-                                                        height="64"
-                                                        viewBox="0 0 64 64"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="w-16 h-16"
-                                                        onMouseEnter={() => setShowLockTooltip(true)}
-                                                        onMouseLeave={() => setShowLockTooltip(false)}
-                                                        >
-                                                        <defs>
-                                                            <pattern id="woodTexture" patternUnits="userSpaceOnUse" width="100" height="20" patternTransform="rotate(30)">
-                                                                <rect width="100" height="20" fill="#8B4513" />
-                                                                <path d="M0,10 Q20,5 40,10 T80,10 T120,10 T160,10" stroke="#A0522D" strokeWidth="2" fill="none" />
-                                                                <path d="M0,15 Q20,10 40,15 T80,15 T120,15 T160,15" stroke="#A0522D" strokeWidth="1" fill="none" />
-                                                            </pattern>
-                                                            <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                                <stop offset="0%" stopColor="#d4d4d4" />
-                                                                <stop offset="50%" stopColor="#f8f8f8" />
-                                                                <stop offset="100%" stopColor="#d4d4d4" />
-                                                            </linearGradient>
-                                                            <filter id="dropshadow" height="130%">
-                                                                <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-                                                                <feOffset dx="2" dy="2" result="offsetblur" />
-                                                                <feComponentTransfer>
-                                                                    <feFuncA type="linear" slope="0.5" />
-                                                                </feComponentTransfer>
-                                                                <feMerge> 
-                                                                    <feMergeNode />
-                                                                    <feMergeNode in="SourceGraphic" />
-                                                                </feMerge>
-                                                            </filter>
-                                                        </defs>
-                                                        <rect x="12" y="20" width="40" height="30" rx="5" fill="url(#woodTexture)" filter="url(#dropshadow)" />
-                                                        <path
-                                                            d="M20,20 C20,10 44,10 44,20"
-                                                            stroke="url(#metalGradient)"
-                                                            strokeWidth="12"
-                                                            fill="none"
-                                                            strokeLinecap="round"
-                                                        />
-                                                        <circle cx="32" cy="35" r="5" fill="#333" />
-                                                        <rect x="30" y="35" width="4" height="12" rx="1" fill="#333" />
-                                                        <path d="M17,25 Q27,23 32,35 Q37,23 47,25" stroke="rgba(255,255,255,0.3)" strokeWidth="2" fill="none" />
-                                                    </svg>
-                                                </div>
-                                                {showLockTooltip && (
-                                                    <div className="absolute bg-white text-black p-3 rounded-lg shadow-lg z-30 w-64">
-                                                        <p className="text-sm font-semibold">
-                                                            Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <>
-                                                {isAnimating && (
-                                                    <div className="absolute inset-0 flex items-center justify-center z-30">
-                                                        <circle cx="50%" cy="50%" r="15" stroke="#FFD700" strokeWidth="2" fill="none" strokeDasharray="5,2">
-                                                            <animate attributeName="r" from="8" to="20" dur="2s" fill="freeze" />
-                                                            <animate attributeName="opacity" from="1" to="0" dur="2s" fill="freeze" />
-                                                        </circle>
-                                                        <circle cx="50%" cy="50%" r="10" stroke="#FFD700" strokeWidth="2" fill="none">
-                                                            <animate attributeName="r" from="5" to="15" dur="2s" fill="freeze" />
-                                                            <animate attributeName="opacity" from="1" to="0" dur="2s" fill="freeze" />
-                                                        </circle>
-                                                    </div>
-                                                )}
-                                            </>
-                                        )}
+
+                                            {/* Gift Box (Visible when unlocked) */}
+                                            <div
+                                                className="absolute inset-0 flex items-center justify-center"
+                                                onMouseEnter={() => score >= 5 && setShowGiftTooltip(true)}
+                                                onMouseLeave={() => setShowGiftTooltip(false)}
+                                            >
+                                                <img
+                                                    src="/Img/Challenge/GuessWord/gift.png"
+                                                    alt="Reward Gift"
+                                                    className={`w-24 h-24 transition-all duration-500 ${
+                                                        score >= 5 ? "scale-110 hover:scale-125 drop-shadow-xl" : "opacity-50"
+                                                    }`}
+                                                />
+                                            </div>
+
+                                {/* Locked Overlay */}
+                                {score < 5 ? (
+                                <>
+                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md rounded-2xl z-20 flex flex-col items-center justify-center transition-all duration-500">
+                                    <div className="relative flex items-center justify-center">
+
+                                        {/* Soft Glowing Background Pulse */}
+                                        <div className="absolute w-20 h-20 rounded-full animate-[pulseGlow_3s_ease-in-out_infinite]"></div>
+
+                                        {/* Lock Icon */}
+                                        <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="w-16 h-16 text-white drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-110"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        onMouseEnter={() => setShowLockTooltip(true)}
+                                        onMouseLeave={() => setShowLockTooltip(false)}
+                                        >
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                        <circle cx="12" cy="16" r="1" />
+                                        </svg>
+
+                                    </div>
+
+                                    {/* Locked Text */}
+                                    <p className="text-xs mt-3 text-white font-semibold opacity-90 tracking-wide animate-fadeIn">
+                                        Locked
+                                    </p>
+                                    </div>
+
+                                    {/* Tooltip */}
+                                    {showLockTooltip && (
+                                    <div className="absolute bottom-[-60px] bg-white/90 text-black p-3 rounded-lg z-30 w-64 text-center animate-fadeIn">
+                                        <p className="text-sm font-semibold">
+                                        Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
+                                        </p>
+                                    </div>
+                                    )}
+                                </>
+                                ) : null}
+
+                                                <>
+                                                    {/* No animation for unlocked state - gift is visible without additional animations */}
+                                                </>
+
                                         </>
                                     )}
                                 </div>
-                                
+                            
                                     {showGiftTooltip && isUnlocked && (
                                         <div 
                                             className="absolute top-50 bg-white text-black p-3 rounded-xl shadow-xl z-50 w-84"
@@ -795,7 +779,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         </div>
                                     )}
                                 
-                                <div className="flex gap-8 bottom-[25px] mt-[50px]">
+                                <div className="fixed flex gap-8 bottom-[110px] mt-[40px]">
                                 {/* {showModal === "correct" && (
                                     <>
                                         <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>

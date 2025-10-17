@@ -54,139 +54,136 @@ const GalleryModal: React.FC<GalleryModalProps> = ({
   const unlockedCount = unlockedImages.length;
   const completionPercentage = Math.round((unlockedCount / totalImages) * 100);
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
-      <div className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden">
-        <img
-          src="/Img/Challenge/vidModal.png"
-          alt="Gallery Modal"
-          className="w-full h-auto"
-        />
-        
-        <div className="absolute inset-0 flex flex-col justify-start items-center text-center px-10 pt-28 pb-10 overflow-y-auto">
-          {/* Header */}
-          <div className="mb-6">
-            <h2 className="font-black-han-sans font-black text-4xl text-[#95512C] mb-2">
-              Image Collection
-            </h2>
-            <p className="text-xl text-[#B26D42] font-semibold">
-              {unlockedCount} of {totalImages} Unlocked ({completionPercentage}%)
-            </p>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="w-full max-w-md mb-8">
-            <div className="w-full h-6 bg-gray-300 rounded-full overflow-hidden shadow-inner">
-              <div 
-                className="h-full bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full transition-all duration-500"
-                style={{ width: `${completionPercentage}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Image Grid */}
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full max-h-96 overflow-y-auto p-4">
-            {Array.from({ length: totalImages }, (_, index) => {
-              const kabanataNumber = index + 1;
-              const image = unlockedImages.find(img => img.kabanata_id === kabanataNumber);
-              const isUnlocked = !!image;
-              
-              return (
-                <div 
-                  key={kabanataNumber}
-                  className={`flex flex-col items-center p-3 rounded-lg transition-all duration-300 ${
-                    isUnlocked 
-                      ? 'bg-gradient-to-b from-orange-100 to-yellow-100 border-2 border-orange-300 shadow-lg hover:shadow-xl' 
-                      : 'bg-gray-200 border-2 border-gray-300 opacity-60'
-                  }`}
-                >
-                  {/* Kabanata Number */}
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
-                    isUnlocked 
-                      ? 'bg-gradient-to-b from-orange-400 to-yellow-400 text-white' 
-                      : 'bg-gray-400 text-gray-600'
-                  }`}>
-                    <span className="font-bold text-sm">{kabanataNumber}</span>
-                  </div>
-                  
-                  {/* Image or Lock Icon */}
-                  <div className="w-20 h-20 flex items-center justify-center mb-2">
-                    {isUnlocked ? (
-                      <img 
-                        src={image.image_url.startsWith('http') ? image.image_url : `/${image.image_url}`}
-                        alt={image.title}
-                        className="w-full h-full object-cover rounded-lg border-2 border-orange-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-300 rounded-lg flex items-center justify-center border-2 border-gray-400">
-                        <svg 
-                          className="w-8 h-8 text-gray-500" 
-                          fill="currentColor" 
-                          viewBox="0 0 20 20"
-                        >
-                          <path 
-                            fillRule="evenodd" 
-                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" 
-                            clipRule="evenodd" 
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Title */}
-                  <div className="text-center">
-                    <p className={`text-xs font-semibold mb-1 ${
-                      isUnlocked ? 'text-gray-800' : 'text-gray-500'
-                    }`}>
-                      Kabanata {kabanataNumber}
-                    </p>
-                    {isUnlocked && (
-                      <p className="text-xs text-gray-600 truncate max-w-[80px]">
-                        {image.title}
-                      </p>
-                    )}
-                  </div>
-                  
-                  {/* Status Badge */}
-                  <div className={`mt-2 px-2 py-1 rounded-full text-xs font-bold ${
-                    isUnlocked 
-                      ? 'bg-green-100 text-green-800 border border-green-300' 
-                      : 'bg-gray-100 text-gray-600 border border-gray-300'
-                  }`}>
-                    {isUnlocked ? 'UNLOCKED' : 'LOCKED'}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Stats Summary */}
-          <div className="mt-6 grid grid-cols-2 gap-4 w-full max-w-md">
-            <div className="bg-orange-100 border border-orange-300 rounded-lg p-3">
-              <p className="text-2xl font-bold text-orange-600">{unlockedCount}</p>
-              <p className="text-sm text-orange-800">Unlocked</p>
-            </div>
-            <div className="bg-gray-100 border border-gray-300 rounded-lg p-3">
-              <p className="text-2xl font-bold text-gray-600">{totalImages - unlockedCount}</p>
-              <p className="text-sm text-gray-800">Locked</p>
-            </div>
-          </div>
-
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="mt-6 w-auto h-[50px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-xl font-extrabold relative transition hover:scale-105"
-          >
-            Close Gallery
-            <span className="absolute top-2 w-3 h-3 bg-white/80 rounded-full"></span>
-            <span className="absolute top-6 right-6 w-2 h-2 bg-white/60 rounded-full"></span>
-          </button>
+return (
+  <div 
+    className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4"
+    onClick={onClose} // Close modal when background is clicked
+  >
+    <div 
+      className="relative w-full -top-3 max-w-6xl max-h-[90vh] overflow-hidden"
+      onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+    >
+      <img
+        src="\Img\Challenge\modalgal.png" 
+        alt="Gallery Modal"
+        className="w-full h-auto"
+      />
+      
+      <div className="absolute inset-0 flex flex-col justify-start items-center text-center px-10 pt-28 pb-10 overflow-y-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h2 className="font-black-han-sans mb-3 font-black text-5xl text-white -mt-8">
+            Image Collection
+          </h2>
+          <p className="text-xl mb-2 text-[#E1A37F] font-semibold">
+            {unlockedCount} of {totalImages} Unlocked ({completionPercentage}%)
+          </p>
         </div>
-      </div>
-    </div>
-  );
-};
+
+        {/* Progress Bar */}
+        <div className="w-full max-w-md mt-5 mb-3">
+          <div className="w-full h-6 bg-gray-300 rounded-full overflow-hidden shadow-inner">
+            <div 
+              className="h-full bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full transition-all duration-500"
+              style={{ width: `${completionPercentage}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Image Grid */}
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full max-h-96 overflow-y-auto p-4">
+          {Array.from({ length: totalImages }, (_, index) => {
+            const kabanataNumber = index + 1;
+            const image = unlockedImages.find(img => img.kabanata_id === kabanataNumber);
+            const isUnlocked = !!image;
+            
+            return (
+              <div 
+                key={kabanataNumber}
+                className={`flex flex-col items-center p-3 rounded-lg transition-all duration-300 ${
+                  isUnlocked 
+                    ? 'bg-gradient-to-b from-orange-100 to-yellow-100 border-2 border-orange-300 shadow-lg hover:shadow-xl' 
+                    : 'bg-gray-200 border-2 border-gray-300 opacity-60'
+                }`}
+              >
+                {/* Kabanata Number */}
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
+                  isUnlocked 
+                    ? 'bg-gradient-to-b from-orange-400 to-yellow-400 text-white' 
+                    : 'bg-gray-400 text-gray-600'
+                }`}>
+                  <span className="font-bold text-sm">{kabanataNumber}</span>
+                </div>
+                
+                {/* Image or Lock Icon */}
+                <div className="w-20 h-20 flex items-center justify-center mb-2">
+                  {isUnlocked ? (
+                    <img 
+                      src={image.image_url.startsWith('http') ? image.image_url : `/${image.image_url}`}
+                      alt={image.title}
+                      className="w-full h-full object-cover rounded-lg border-2 border-orange-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-300 rounded-lg flex items-center justify-center border-2 border-gray-400">
+                      <svg 
+                        className="w-8 h-8 text-gray-500" 
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path 
+                          fillRule="evenodd" 
+                          d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" 
+                          clipRule="evenodd" 
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Title */}
+                <div className="text-center">
+                  <p className={`text-xs font-semibold mb-1 ${
+                    isUnlocked ? 'text-gray-800' : 'text-gray-500'
+                  }`}>
+                    Kabanata {kabanataNumber}
+                  </p>
+                  {isUnlocked && (
+                    <p className="text-xs text-gray-600 truncate max-w-[80px]">
+                      {image.title}
+                    </p>
+                  )}
+                </div>
+                
+                {/* Status Badge */}
+                <div className={`mt-2 px-2 py-1 rounded-full text-xs font-bold ${
+                  isUnlocked 
+                    ? 'bg-green-100 text-green-800 border border-green-300' 
+                    : 'bg-gray-100 text-gray-600 border border-gray-300'
+                }`}>
+                  {isUnlocked ? 'UNLOCKED' : 'LOCKED'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Stats Summary */}
+        <div className="mt-2 grid mb-8 grid-cols-2 gap-3 w-full max-w-xs">
+          <div className="bg-orange-100 border border-orange-300 rounded-md p-2">
+            <p className="text-lg font-bold text-orange-600">{unlockedCount}</p>
+            <p className="text-xs text-orange-800">Unlocked</p>
+          </div>
+          <div className="bg-gray-100 border border-gray-300 rounded-md p-2">
+            <p className="text-lg font-bold text-gray-600">{totalImages - unlockedCount}</p>
+            <p className="text-xs text-gray-800">Locked</p>
+          </div>
+        </div>
+                {/* Close Button Removed */}
+              </div>
+            </div>
+          </div>
+        )};
+
 
 const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, sound }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
