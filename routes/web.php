@@ -1,6 +1,4 @@
 <?php
-
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
