@@ -39,6 +39,15 @@ class StudentController extends Controller
         ]);
     }
 
+    public function book($kabanata = null)
+{
+    // Your book reading logic here
+    return Inertia::render('Dashboard/Book/Page', [
+        'kabanata' => $kabanata,
+        // other data...
+    ]);
+}
+
         public function help()
         {
             $user = Auth::user();

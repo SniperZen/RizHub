@@ -1,115 +1,109 @@
-import React, { useEffect, useState } from "react";
-import { router } from "@inertiajs/react";
-import InstructionModal from "../../../Components/InstructionModal";
-import StudentLayout from "../../../Layouts/StudentLayout";
+        import React, { useEffect, useState } from "react";
+        import { router } from "@inertiajs/react";
+        import InstructionModal from "../../../Components/InstructionModal";
+        import StudentLayout from "../../../Layouts/StudentLayout";
 
-interface GuessCharacter {
-  id: number;
-  c_name: string;
-  filename: string;
-}
+        interface GuessCharacter {
+          id: number;
+          c_name: string;
+          filename: string;
+        }
 
-interface Props {
-  characters: GuessCharacter[];
-  kabanata_id: number;
-  kabanata_number: number;
-  kabanata_title: string;
-}
+        interface Props {
+          characters: GuessCharacter[];
+          kabanata_id: number;
+          kabanata_number: number;
+          kabanata_title: string;
+        }
 
-export default function Page({ 
-  characters, 
-  kabanata_id, 
-  kabanata_number, 
-  kabanata_title 
-}: Props) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSpinning, setIsSpinning] = useState(false); // Start as false
-  const [showModal, setShowModal] = useState(true); // Show modal initially
+        export default function Page({ 
+          characters, 
+          kabanata_id, 
+          kabanata_number, 
+          kabanata_title 
+        }: Props) {
+          const [currentIndex, setCurrentIndex] = useState(0);
+          const [isSpinning, setIsSpinning] = useState(false); // Start as false
+          const [showModal, setShowModal] = useState(true); // Show modal initially
 
-  const modalContent = `Random na pipili ang system ng karakter na ililigtas mo. Siya ay nasa loob ng isang kulungan — tapusin ang hamon para mailigtas, pero kapag nabigo, hindi mo maililigtas ang karakter.`;
-  const startSpinning = () => {
-    setShowModal(false);
-    setIsSpinning(true);
-    
-    // Start the spinning animation after modal is closed
-    if (characters.length === 0) return;
+          const modalContent = `Random na pipili ang system ng karakter na ililigtas mo. Siya ay nasa loob ng isang kulungan — tapusin ang hamon para mailigtas, pero kapag nabigo, hindi mo maililigtas ang karakter.`;
+          const startSpinning = () => {
+            setShowModal(false);
+            setIsSpinning(true);
+            
+            // Start the spinning animation after modal is closed
+            if (characters.length === 0) return;
 
-    let speed = 120;
-    let spins = 0;
-    let current = 0;
+            let speed = 120;
+            let spins = 0;
+            let current = 0;
 
-    const targetIndex = Math.floor(Math.random() * characters.length);
-    const totalSpinsBeforeStop = characters.length * 3 + targetIndex;
+            const targetIndex = Math.floor(Math.random() * characters.length);
+            const totalSpinsBeforeStop = characters.length * 3 + targetIndex;
 
-    const spin = () => {
-      current = (current + 1) % characters.length;
-      setCurrentIndex(current);
-      spins++;
+            const spin = () => {
+              current = (current + 1) % characters.length;
+              setCurrentIndex(current);
+              spins++;
 
-      if (spins >= totalSpinsBeforeStop) {
-        setIsSpinning(false);
+              if (spins >= totalSpinsBeforeStop) {
+                setIsSpinning(false);
 
-        // ⏳ After 3 seconds, redirect
-        setTimeout(() => {
-          const finalCharacterId = characters[current].id;
-          router.visit(`/challenge/guessword/${finalCharacterId}/${kabanata_id}`);
-        }, 3000);
+                // ⏳ After 3 seconds, redirect
+                setTimeout(() => {
+                  const finalCharacterId = characters[current].id;
+                  router.visit(`/challenge/guessword/${finalCharacterId}/${kabanata_id}`);
+                }, 3000);
 
-        return;
-      }
+                return;
+              }
 
-      if (spins > characters.length * 2) speed += 30;
+              if (spins > characters.length * 2) speed += 30;
 
-      setTimeout(spin, speed);
-    };
+              setTimeout(spin, speed);
+            };
 
-    spin();
-  };
+            spin();
+          };
 
-  const visibleCount = 5;
-  const half = Math.floor(visibleCount / 2);
+          const visibleCount = 5;
+          const half = Math.floor(visibleCount / 2);
 
-  const getVisibleCharacters = () => {
-    const result: GuessCharacter[] = [];
-    const total = characters.length;
-    for (let i = -half; i <= half; i++) {
-      const idx = (currentIndex + i + total) % total;
-      result.push(characters[idx]);
-    }
-    return result;
-  };
+          const getVisibleCharacters = () => {
+            const result: GuessCharacter[] = [];
+            const total = characters.length;
+            for (let i = -half; i <= half; i++) {
+              const idx = (currentIndex + i + total) % total;
+              result.push(characters[idx]);
+            }
+            return result;
+          };
 
-  return (
-    <StudentLayout>
-      <div
-        className="relative w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG1.png')" }}
-      >
-        {/* Instruction Modal */}
-        <InstructionModal
-          isOpen={showModal}
-          onClose={startSpinning}
-          title={`KABANATA ${kabanata_number}: ${kabanata_title}`}
-          content={modalContent}
-          buttonText="Start Choosing Character"
-        />
+          return (
+            <StudentLayout>
+              <div
+                className="relative w-full h-screen bg-cover bg-center"
+                style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG1.png')" }}
+              >
+                {/* Instruction Modal */}
+                <InstructionModal
+                  isOpen={showModal}
+                  onClose={startSpinning}
+                  title={`KABANATA ${kabanata_number}: ${kabanata_title}`}
+                  content={modalContent}
+                  buttonText="Start Choosing Character"
+                />
 
         {/* Title */}
         <div className="absolute top-4 left-4 flex items-center">
-          <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
-            KABANATA {kabanata_number}:
+          <div className="bg-orange-600 text-white font-bold font-mono px-4 py-2 text-2xl">
+            Kabanata {kabanata_number}:
           </div>
-          <div className="text-white font-bold px-2 py-2 text-2xl">
+          <div className="text-white font-bold font-mono px-2 py-2 text-2xl">
             {kabanata_title}
           </div>
         </div>
 
-        {/* Icons */}
-        <div className="absolute top-4 right-4 flex gap-4">
-          <img src="/Img/UI/music_icon.png" alt="music" className="w-12 h-12" />
-          <img src="/Img/UI/sound_icon.png" alt="sound" className="w-12 h-12" />
-          <img src="/Img/UI/settings_icon.png" alt="settings" className="w-12 h-12" />
-        </div>
 
         {/* Main Content - Only show when not in modal and characters exist */}
         {!showModal && characters.length > 0 && (
