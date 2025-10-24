@@ -81,14 +81,14 @@ const InstructionModal: React.FC<ModalProps> = ({
           className="absolute bottom-0 right-8 w-[380px] md:w-[440px] z-10"
         />
 
-        <div className="absolute top-4 left-4 flex items-center">
-          <div className="bg-orange-600 font-mono text-white font-bold px-4 py-2 text-2xl">
-            {title.split(":")[0]}:
-          </div>
-          <div className="text-white font-mono font-bold px-2 py-2 text-2xl">
-            {title.split(":")[1]}
-          </div>
-        </div>
+    <div className="absolute top-4 left-4 flex items-center">
+      <div className="bg-orange-600 font-mono text-white font-bold px-4 py-2 text-2xl">
+        {title.split(":")[0].charAt(0).toUpperCase() + title.split(":")[0].slice(1).toLowerCase()}:
+      </div>
+      <div className="text-white font-mono font-bold px-2 py-2 text-2xl">
+        {title.split(":")[1]}
+      </div>
+    </div>
 
         {/* Clickable text area */}
         <div 

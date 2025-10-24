@@ -183,7 +183,7 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                             <div className="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-orange-500/20 to-orange-700/30 
                                 blur-3xl animate-pulse opacity-70 -z-10"></div>
                             <h2 className="text-[#FA7816] text-lg md:text-2xl font-extrabold drop-shadow-md leading-snug max-w-xs">
-                                Set your new password and get back to your adventure!
+                                Mag-reset ng bagong password upang mabalik ang iyong account!
                             </h2>
                         </div>
                     </div>
@@ -200,10 +200,10 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                                     />
                                 </div>
                                 <h2 className="text-3xl font-extrabold text-white mb-2">
-                                    Create New Password
+                                    Bagong Password
                                 </h2>
                                 <p className="text-white">
-                                    Enter your new password below to regain access to your account.
+                                    I-enter ang bagong Password sa ibaba at i-access ang iyong account.
                                 </p>
                             </div>
 
@@ -296,7 +296,7 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                                     focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-75 
                                     transition-colors duration-200"
                                 >
-                                    {processing ? "Resetting..." : "Reset Password"}
+                                    {processing ? "Resetting..." : "I-reset ang Password"}
                                 </button>
 
                                 <div className="text-center">
@@ -304,7 +304,7 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                                         href={route("welcome")}
                                         className="text-sm text-gray-200 hover:text-gray-100 transition-colors duration-200"
                                     >
-                                        Back to Login
+                                        Bumalik sa Login
                                     </Link>
                                 </div>
                             </form>

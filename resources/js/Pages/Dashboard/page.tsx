@@ -28,6 +28,20 @@ interface DashboardProps {
     notifications: AppNotification[];
 }
 
+// Custom hook for image loading
+const useImageLoader = (src: string) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => setIsLoaded(true);
+        img.onerror = () => setIsLoaded(true); // Still show content even if image fails
+    }, [src]);
+
+    return isLoaded;
+};
+
 export default function Dashboard({ 
     music: initialMusic, 
     sound: initialSound, 
@@ -69,6 +83,9 @@ export default function Dashboard({
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
+    // Use the custom hook for modal background images
+    const isSettingsBgLoaded = useImageLoader('/Img/Dashboard/modalBG.png');
+    const isAccountBgLoaded = useImageLoader('/Img/Dashboard/modalBG.png');
 
     const { data, setData, errors,patch,  put, reset, processing, recentlySuccessful } = useForm({
         current_password: '',
@@ -409,13 +426,23 @@ export default function Dashboard({
                         <div 
                             className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-12 pb-16 pt-5 flex flex-col items-center min-w-[700px] h-auto"
                             style={{ 
-                                backgroundImage: "url('/Img/Dashboard/modalBG.png')",
+                                backgroundImage: isSettingsBgLoaded ? "url('/Img/Dashboard/modalBG.png')" : "none",
                                 backgroundSize: "contain",
                                 backgroundPosition: "center",
                                 backgroundRepeat: "no-repeat"
                             }}
                         >
-                            <div className="flex flex-col items-center w-full px-[80px]">
+                            {/* Loading Overlay - Only show when image is not loaded */}
+                            {!isSettingsBgLoaded && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] z-20">
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
+                                        <p className="text-[#9A4112] font-bold">Loading...</p>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            <div className={`flex flex-col items-center w-full px-[80px] ${!isSettingsBgLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
                                 
                                 <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Settings</span>
                                 <Button
@@ -595,13 +622,23 @@ export default function Dashboard({
                         <div 
                             className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-12 py-10 flex flex-col items-center min-w-[700px]"
                             style={{ 
-                                backgroundImage: "url('/Img/Dashboard/modalBG.png')",
+                                backgroundImage: isAccountBgLoaded ? "url('/Img/Dashboard/modalBG.png')" : "none",
                                 backgroundSize: "contain",
                                 backgroundPosition: "center",
                                 backgroundRepeat: "no-repeat"
                             }}
                         >
-                            <div className="flex flex-col items-center w-full">
+                            {/* Loading Overlay - Only show when image is not loaded */}
+                            {!isAccountBgLoaded && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] z-20">
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
+                                        <p className="text-[#9A4112] font-bold">Loading...</p>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            <div className={`flex flex-col items-center w-full ${!isAccountBgLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
                               <span className="absolute text-white text-4xl font-black tracking-wide top-12s">Account</span>
                                 
                                 {/* Close Button */}

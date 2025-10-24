@@ -93,7 +93,7 @@ export default function Login() {
                                         blur-3xl animate-pulse opacity-70 -z-10"></div>
 
                         <h2 className="text-[#FA7816] text-lg md:text-2xl font-extrabold drop-shadow-md leading-snug max-w-xs mt-10">
-                            Welcome back! We're excited to see you again.
+                            Maligayang Pagbabalik! Maghanda sa paglalakbay.
                         </h2>
                     </div>
                 </div>
@@ -115,7 +115,7 @@ export default function Login() {
                                 Welcome Back
                             </h2>
                             <p className="text-white">
-                                Sign in to your account to continue
+                                I-enter ang iyong account sa ibaba.
                             </p>
                         </div>
 
@@ -166,7 +166,7 @@ export default function Login() {
                                     disabled={processing}
                                     className="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-75 transition-colors duration-200"
                                 >
-                                    {processing ? "Signing in..." : "Login"}
+                                    {processing ? "Signing in..." : "Mag-Login"}
                                 </button>
                             </div>
                         </form>
@@ -176,7 +176,7 @@ export default function Login() {
                                 href={route("welcome")}
                                 className="text-sm text-gray-200 hover:text-gray-100 transition-colors duration-200"
                             >
-                                Back to Home
+                                Bumalik
                             </Link>
                         </div>
                     </div>

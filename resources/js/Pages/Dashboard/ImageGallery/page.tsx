@@ -261,68 +261,65 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
     }, 100);
   };
 
-  // Function to handle locked content
-  const renderLockedContent = (image: PageData) => {
-    return (
-      <div className="bg-[#fff8dc] border-4 border-[#6b4226] rounded p-4 text-center shadow-inner relative">
-        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center flex-col z-10 p-4 rounded">
-          <div className="text-6xl mb-4">🔒</div>
-          <p className="text-white font-bold text-lg mb-2">This content is locked</p>
-          <p className="text-white text-sm mb-4">
-            Score 5 points in Kabanata {image.kabanata_id}'s Guessword game to unlock
-          </p>
-          {/* <button 
-            onClick={() => playGuesswordGame(image.kabanata_id)}
-            className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 font-bold"
-          >
-            Play Guessword Game
-          </button> */}
-        </div>
-        <h4 className="text-lg font-bold mb-2">
+ // Function to handle locked content
+const renderLockedContent = (image: PageData) => {
+  return (
+    <div className="bg-[#fff8dc] border-4 border-[#6b4226] rounded p-4 text-center shadow-inner relative w-full max-w-[400px] min-h-[330px] flex flex-col">
+      <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center flex-col z-10 p-4 rounded">
+        <div className="text-6xl mb-4">🔒</div>
+        <p className="text-white font-bold text-lg mb-2">This content is locked</p>
+        <p className="text-white text-sm mb-4 text-center">
+          Score 5 points in Kabanata {image.kabanata_id}'s Guessword game to unlock
+        </p>
+        {/* <button 
+          onClick={() => playGuesswordGame(image.kabanata_id)}
+          className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 font-bold"
+        >
+          Play Guessword Game
+        </button> */}
+      </div>
+      <h4 className="text-lg font-bold mb-2">
+        {image.category}
+      </h4>
+      <div className="mx-auto mb-2 w-full h-40 bg-gray-300 flex items-center justify-center flex-shrink-0">
+        <span className="text-gray-500">Locked Image</span>
+      </div>
+      <h5 className="font-bold italic">
+        {image.title}
+      </h5>
+      <p className="text-sm text-gray-700 mt-2">
+        Content locked. Complete the guessword game to view.
+      </p>
+    </div>
+  );
+};
+
+// Function to render unlocked content
+const renderUnlockedContent = (image: PageData, index: number) => {
+  return (
+    <div className="bg-[#fff8dc] border-4 border-[#6b4226] rounded p-4 text-center shadow-inner w-full max-w-[400px] min-h-[330px] flex flex-col">
+      <div className="flex justify-between items-center mb-2">
+        <h4 className="text-lg font-bold">
           {image.category}
         </h4>
-        <div className="mx-auto mb-4 w-full h-40 bg-gray-300 flex items-center justify-center">
-          <span className="text-gray-500">Locked Image</span>
-        </div>
-        <h5 className="font-bold italic">
-          {image.title}
-        </h5>
-        <p className="text-sm text-gray-700 mt-2">
-          Content locked. Complete the guessword game to view.
-        </p>
-        <div className="mt-4 text-sm font-bold">
-          {(images.findIndex(img => img.id === image.id) + 1).toString().padStart(2, "0")}
+        <div className="bg-[#6b4226] text-white text-xs px-2 py-1 rounded-full">
+          Unlocked
         </div>
       </div>
-    );
-  };
-
-  // Function to render unlocked content
-  const renderUnlockedContent = (image: PageData, index: number) => {
-    return (
-      <div className="bg-[#fff8dc] border-4 border-[#6b4226] rounded p-4 text-center shadow-inner">
-        <div className="flex justify-between items-center mb-2">
-          <h4 className="text-lg font-bold">
-            {image.category}
-          </h4>
-          <div className="bg-[#6b4226] text-white text-xs px-2 py-1 rounded-full">
-            Unlocked
-          </div>
-        </div>
-        <img
-          src={getImageUrl(image.image_url)}
-          alt={image.title}
-          className="mx-auto mb-4 w-full h-40 object-cover"
-        />
-        <h5 className="font-bold italic">
-          {image.title_description}
-        </h5>
-        <p className="text-sm text-gray-700 mt-2">
-          {image.description}
-        </p>
-      </div>
-    );
-  };
+      <img
+        src={getImageUrl(image.image_url)}
+        alt={image.title}
+        className="mx-auto mb- w-full h-40 object-cover flex-shrink-0"
+      />
+      <h5 className="font-bold italic">
+        {image.title_description}
+      </h5>
+      <p className="text-black text-sm mt-2 overflow-y-auto break-words max-h-[80px]">
+        {image.description}
+      </p>
+    </div>
+  );
+};
 
   // Count unlocked images
   const unlockedCount = images.filter(img => img.unlocked).length;
@@ -540,7 +537,7 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
         </div> */}
 
         {/* Fixed Book Container - No scrolling */}
-        <div className="relative flex w-11/12 max-w-6xl h-[87.5vh] min-h-[550px] max-h-[740px] overflow-hidden z-10">
+        <div className="relative flex w-11/12 max-w-6xl h-[87.5vh] min-h-[560px] -top-18 max-h-[750px] overflow-hidden z-10">
           {/* Background image with heartbeat effect */}
           <img 
             src="/Img/Dashboard/book-bg1.png"
@@ -558,69 +555,68 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
               animation: "contentHeartbeat 5s ease-in-out infinite"
             }}
           >
-            {/* Left Page Content */}
-            <div className="w-1/2 p-6 flex flex-col">
-              {images[currentIndex] && (
-                <div className="flex flex-col items-center ml-20 mt-3">
-                  {/* Chapter bar with left navigation button */}
-                  <div className="flex items-center justify-center w-4/5 max-w-sm mb-2 mt-4 z-40 relative">
-                    <button
-                      onClick={prevPage}
-                      disabled={currentIndex === 0}
-                      className={`px-4 py-2 rounded-l-lg font-bold text-lg flex-shrink-0 mr-2 z-50 relative ${
-                        currentIndex === 0
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-[#6b4226] hover:bg-orange-600 text-white"
-                      }`}
-                    >
-                      ←
-                    </button>
-                    <div className="bg-[#6b4226] text-white text-center py-2 font-semibold flex-1 z-40 relative">
-                      <span className="text-base">
-                        KABANATA {images[currentIndex].kabanata_id}:{" "}
-                        {images[currentIndex].title.toUpperCase()}
-                      </span>
-                    </div>
-                    <div className="w-12 bg-[#6b4226] rounded-r-lg flex-shrink-0 z-40 relative"></div>
-                  </div>
-
-                  {/* Page content - Centered and Larger */}
-                  <div className="w-4/5 max-w-lg flex flex-col justify-start items-center text-center scale-90 z-30 relative">
-                    {!images[currentIndex].unlocked 
-                      ? renderLockedContent(images[currentIndex])
-                      : renderUnlockedContent(images[currentIndex], currentIndex)
-                    }
-                  </div>
+          {/* Left Page Content */}
+        <div className="w-1/2 p-6 flex flex-col">
+          {images[currentIndex] && (
+            <div className="flex flex-col items-center ml-20 mt-3">
+              {/* Chapter bar with left navigation button */}
+              <div className="flex items-center justify-center w-4/5 max-w-sm mb-2 mt-4 z-40 relative">
+                <button
+                  onClick={prevPage}
+                  disabled={currentIndex === 0}
+                  className={`px-4 py-2 rounded-l-lg font-bold text-lg flex-shrink-0 mr-2 z-50 relative ${
+                    currentIndex === 0
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-[#6b4226] hover:bg-orange-600 text-white"
+                  }`}
+                >
+                  ←
+                </button>
+                <div className="bg-[#6b4226] text-white text-center py-2 font-semibold flex-1 z-40 relative min-w-[280px] max-w-[280px] min-h-[60px] flex items-center justify-center">
+                  <span className="text-base px-2 break-words whitespace-normal">
+                    KABANATA {images[currentIndex].kabanata_id}:{" "}
+                    {images[currentIndex].title.toUpperCase()}
+                  </span>
                 </div>
-              )}
+                <div className="w-12 bg-[#6b4226] rounded-r-lg flex-shrink-0 z-40 relative"></div>
+              </div>
+
+              {/* Page content - Centered and Larger */}
+              <div className="w-4/5 max-w-lg flex flex-col justify-start items-center text-center scale-90 z-30 relative">
+                {!images[currentIndex].unlocked 
+                  ? renderLockedContent(images[currentIndex])
+                  : renderUnlockedContent(images[currentIndex], currentIndex)
+                }
+              </div>
             </div>
+          )}
+        </div>
 
-            {/* Right Page Content */}
-            <div className="w-1/2 p-6 flex flex-col">
-              {images[currentIndex + 1] && (
-                <div className="flex flex-col items-center mr-20 mt-3">
-                  {/* Chapter bar with right navigation button */}
-                  <div className="flex items-center justify-center w-4/5 max-w-sm mb-2 mt-4 z-40 relative">
-                    <div className="w-12 bg-[#6b4226] rounded-l-lg flex-shrink-0 z-40 relative"></div>
-                    <div className="bg-[#6b4226] text-white text-center py-2 font-semibold flex-1 z-40 relative">
-                      <span className="text-base">
-                        KABANATA {images[currentIndex + 1].kabanata_id}:{" "}
-                        {images[currentIndex + 1].title.toUpperCase()}
-                      </span>
-                    </div>
-                    <button
-                      onClick={nextPage}
-                      disabled={currentIndex >= images.length - 2}
-                      className={`px-4 py-2 rounded-r-lg font-bold text-lg flex-shrink-0 ml-2 z-50 relative ${
-                        currentIndex >= images.length - 2
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-[#6b4226] hover:bg-orange-600 text-white"
-                      }`}
-                    >
-                      →
-                    </button>
-                  </div>
-
+        {/* Right Page Content */}
+        <div className="w-1/2 p-6 flex flex-col">
+          {images[currentIndex + 1] && (
+            <div className="flex flex-col items-center mr-20 mt-3">
+              {/* Chapter bar with right navigation button */}
+              <div className="flex items-center justify-center w-4/5 max-w-sm mb-2 mt-4 z-40 relative">
+                <div className="w-12 bg-[#6b4226] rounded-l-lg flex-shrink-0 z-40 relative"></div>
+                <div className="bg-[#6b4226] text-white text-center py-2 font-semibold flex-1 z-40 relative min-w-[280px] max-w-[280px] min-h-[60px] flex items-center justify-center">
+                  <span className="text-base px-2 break-words whitespace-normal">
+                    KABANATA {images[currentIndex + 1].kabanata_id}:{" "}
+                    {images[currentIndex + 1].title.toUpperCase()}
+                  </span>
+                </div>
+                <button
+                  onClick={nextPage}
+                  disabled={currentIndex >= images.length - 2}
+                  className={`px-4 py-2 rounded-r-lg font-bold text-lg flex-shrink-0 ml-2 z-50 relative ${
+                    currentIndex >= images.length - 2
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-[#6b4226] hover:bg-orange-600 text-white"
+                  }`}
+                >
+                  →
+                </button>
+              </div>
                   {/* Page content - Centered and Larger */}
                   <div className="w-4/5 max-w-lg flex flex-col justify-start items-center text-center scale-90 z-30 relative">
                     {!images[currentIndex + 1].unlocked 

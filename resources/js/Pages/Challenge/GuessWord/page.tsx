@@ -621,7 +621,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                                 <div className="relative w-[600px] bg-transparent">
                                     <img
-                                        src="/Img/Challenge/GuessWord/wooden_frame.png"
+                                        src="/Img/Challenge/GuessWord/wooden_frame1.png"
                                         alt="Wooden Frame"
                                         className="w-full h-auto"
                                     />
@@ -863,7 +863,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                         `}</style>
                     </div>
                 </div>
-                <PauseModal
+                {/* <PauseModal
                     isOpen={isPaused}
                     onResume={togglePause}
                     onRestart={handleRestart}
@@ -879,7 +879,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     saveVolumeSettings(musicVolume, volume);
                     }}
                     onVolumeSettingsChange={handleVolumeSettingsChange}
-                />
+                /> */}
             </>
         )}
         </StudentLayout>

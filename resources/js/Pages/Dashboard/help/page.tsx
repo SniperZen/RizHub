@@ -22,7 +22,9 @@ const TypingText = ({ soundVolume = 30 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const soundCooldownRef = useRef(false);
   
-  const fullText = `Watch the video animation carefully before proceeding to the challenge, <br />The questions from the challenge will consist of five number of items.<br /><br />Get a perfect score to unlock the next chapter and earn special award, <br />Complete all chapters to receive an unforgettable reward from the system.<br /><br />Good luck and enjoy the learning journey!`;
+  const fullText = `Pagmasdan nang maigi ang palabas na animasyon bago magpatuloy sa hamon, ang mga tanong sa hamon ay binubuo ng lima hanggang sampung bilang lamang.<br />
+Makamtan ang sukdulang marka upang mabuksan ang susunod na kabanata at magawaran ng natatanging parangal, tuntunin ang lahat ng kabanata upang tanggapin ang gantimpalang di malilimutan mula sa sistema.<br />
+Nawa’y maging makabuluhan ang iyong paglalakbay sa pagkatuto!`;
 
   // Typing sound effect
   const typingSound = "/Music/typewriter.mp3";  

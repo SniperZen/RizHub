@@ -286,7 +286,7 @@ export default function Welcome({ auth }: PageProps) {
                   initial="hidden"
                   animate="visible"
                   variants={sectionVariants}
-                  className="relative flex flex-col md:flex-row items-center justify-between min-h-screen bg-orange-50 overflow-hidden px-4 md:px-0 pt-0 pb-0"
+                  className="relative  sm:h-[100vh], lg:h-[90px] transition-transform flex flex-col md:flex-row items-center justify-between min-h-screen bg-orange-50 overflow-hidden px-4 md:px-0 pt-0 pb-0"
                   style={{
                     background: `
                       url('/Img/LandingPage/noli-bg.png') left top / cover no-repeat,
@@ -337,13 +337,13 @@ export default function Welcome({ auth }: PageProps) {
                                   textShadow: '0px 4px 4px rgba(0,0,0,0.25)'
                               }}
                           >
-                             Level up sa legacy ni Rizal!
-                             Tuklasin ang saya at aral ng Noli Me Tangere 
-                             sa isang epic learning adventure!
+                             Magsimula sa paglalakbay ng diwa ni Rizal!
+                             Damhin ang saya at aral ng Noli Me Tangere
+                             sa isang kakaibang paglalakbay ng pagkatuto!
                           </p>
                         </motion.div>
                         <motion.div 
-                        className="mt-8 md:absolute md:left-10 lg:left-[350px] md:top-[220px] lg:top-[280px] flex items-center md:mt-8 mb-0 md:ml-2"
+                        className=" fixed mt-8 md:absolute md:left-10 lg:left-[350px] md:top-[220px] lg:top-[300px] flex items-center md:mt-8 mb-0 md:ml-2"
                         variants={itemVariants}
                         transition={{ delay: 0.4 }}
                         >
@@ -398,10 +398,10 @@ export default function Welcome({ auth }: PageProps) {
                             textShadow: '-2px 3px 0px #282725'
                             }}
                         >
-                          Aral pero make it more fun <br /> sa Noli Me Tangere!
+                          Aral na may aliw, sa Noli Me Tangere <br/> humusay at gumiliw!
                         </h2>
                         <p className="text-[#282725] text-center md:text-right font-['Inter'] text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px]">
-                            Lumago, matuto, at magtagumpay habang <br /> nagkaka-achievements sa bawat hakbang.
+                           Lumago, matuto, at magtagumpay habang tinatahak <br/> ang landas ng karunungan at dangal.
                         </p>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                           <Link
@@ -425,19 +425,19 @@ export default function Welcome({ auth }: PageProps) {
                     <div className='flex flex-col md:flex-row items-center justify-around'>
                         <AnimatedItem className='h-auto flex gap-3 flex-col order-2 md:order-1 mb-6 md:mb-10' delay={0.1}>
                             <h2 
-                                className="font-['Inter'] not-italic font-extrabold text-3xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-left"
+                                className="font-['Inter'] not-italic font-extrabold text-6xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-left"
                                 style={{
                                     color: '#FF9500',
                                     textShadow: '-2px 3px 0px #282725'
                                 }}
                             >
-                                About RizHub
+                                Tungkol sa RizHub
                             </h2>   
                             <p className="text-[#282725] text-center md:text-left font-['Inter'] font-medium text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px] w-full md:w-[400px] lg:w-[500px]">
-                                Ang RizHub ay isang web-based learning game na ginawa para mas mapadali at mas maging enjoy ang pag-intindi ng mga estudyante sa Noli Me Tangere.
-Kung first time mo pa lang o gusto mong mas maintindihan ang mga tema at karakter, nandito ang RizHub para tulungan ka!
-Mayroon itong interactive video animation, fun assessment, at exciting gameplay.
-Sumali sa RizHub at maranasan ang bagong paraan ng pag-aaral sa obra ni Rizal.
+Ang RizHub ay isang makabagong kasangkapan sa pag-aaral, na inihandog upang higit na mapalalim at mapagaan ang pag-unawa ng mga mag-aaral sa dakilang akda ni Rizal na Noli Me Tangere.
+Kung ikaw ay unang tutuntong sa daigdig ng nobelang ito, o nais mong higit pang makilala ang mga kaisipang nakapaloob dito — narito ang RizHub upang maging gabay mo.
+Taglay nito ang mga masiglang animasyon, kawili-wiling pagsusulit, at nakaaaliw na laruan ng isipan.
+Tuklasin ang RizHub at damhin ang isang bagong paraan ng pag-aaral — isang paglalakbay sa diwa, damdamin, at talino ng ating bayani.
                             </p>
                         </AnimatedItem>
                          <AnimatedItem className="order-1 md:order-2" delay={0.2}>
@@ -461,7 +461,7 @@ Sumali sa RizHub at maranasan ang bagong paraan ng pag-aaral sa obra ni Rizal.
                             textShadow: '-2px 3px 0px #282725'
                         }}
                       >
-                          Noli Me Tangere Main Characters
+                          Pangunahing Tauhan sa Noli Me Tangere
                       </h2>
                     </AnimatedItem>
 
@@ -642,7 +642,7 @@ Sumali sa RizHub at maranasan ang bagong paraan ng pag-aaral sa obra ni Rizal.
                              className="h-[150px] md:h-[200px] lg:h-[230px] transition-transform duration-300 hover:scale-105"
                              whileHover={{ y: -5 }}
                            />
-                           <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.3] text-center">Mga leksyong inspired sa kwento ng Noli Me Tangere</h2>
+                           <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.3] text-center">Mga aral hango sa kwento ng Noli Me Tangere</h2>
                         </AnimatedItem>
                         <AnimatedItem className="order-3" delay={0.4}>
                             <motion.img 
@@ -680,7 +680,7 @@ Sumali sa RizHub at maranasan ang bagong paraan ng pag-aaral sa obra ni Rizal.
                 <AnimatedItem className="flex justify-center space-x-6 mt-2" delay={0.3}>
                     {/* Phone */}
                     <motion.a 
-                        href="tel:+639064029579"
+                        href="tel:+639088110896"
                         className="text-[#282725] hover:text-[#34A853] transition-colors duration-300"
                         whileHover={{ scale: 1.1, y: -2 }}
                         whileTap={{ scale: 0.95 }}
@@ -762,13 +762,14 @@ type LoginModalProps = {
     setShowPrivacyModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-
 function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: LoginModalProps) {
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [showMatchMessage, setShowMatchMessage] = useState(false);
     const [registrationError, setRegistrationError] = useState<string | null>(null);
+    const [loginError, setLoginError] = useState<string | null>(null);
+    const [loginSuccess, setLoginSuccess] = useState<string | null>(null);
 
     // Login form state
     const { data: loginData, setData: setLoginData, post: loginPost, processing: loginProcessing, errors: loginErrors, reset: loginReset } = useForm({
@@ -794,6 +795,34 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
         }
     }, [regData.password, regData.password_confirmation]);
 
+    // Auto-hide error messages after 5 seconds
+    useEffect(() => {
+        if (loginError) {
+            const timer = setTimeout(() => {
+                setLoginError(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [loginError]);
+
+    useEffect(() => {
+        if (registrationError) {
+            const timer = setTimeout(() => {
+                setRegistrationError(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [registrationError]);
+
+    useEffect(() => {
+        if (loginSuccess) {
+            const timer = setTimeout(() => {
+                setLoginSuccess(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [loginSuccess]);
+
     // Password validation checks
     const passwordChecks = {
         hasUppercase: /[A-Z]/.test(regData.password),
@@ -808,27 +837,46 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
         regReset('password');
         setIsPasswordFocused(false);
         setRegistrationError(null);
+        setLoginError(null);
+        setLoginSuccess(null);
         onClose();
     };
 
     const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoginError(null);
+        setLoginSuccess(null);
+        
         loginPost(route('login'), {
             onSuccess: () => {
+                setLoginSuccess('Login successful! Redirecting...');
                 loginReset();
-                handleClose();
+                setTimeout(() => {
+                    handleClose();
+                }, 1000);
             },
             onError: (errors) => {
                 console.log('Login errors:', errors);
+                
+                // Handle different types of login errors
+                if (errors.email || errors.password) {
+                    setLoginError('Invalid email or password. Please try again.');
+                } else if (errors.message?.includes('throttle')) {
+                    setLoginError('Too many login attempts. Please try again later.');
+                } else if (errors.message) {
+                    setLoginError(errors.message);
+                } else {
+                    setLoginError('An unexpected error occurred. Please try again.');
+                }
             }
         });
     };
 
-          const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          setRegistrationError(null);
-        
-      // Client-side validation
+    const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setRegistrationError(null);
+      
+        // Client-side validation
         if (!regData.terms) {
             setRegistrationError('Please agree to the Terms of Service and Privacy Policy');
             return;
@@ -849,43 +897,110 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
             return;
         }
 
-    regPost(route('register'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            console.log('Registration successful');
-            regReset();
-            handleClose();
-            
-            // Redirect to VerifyEmail page
-            window.location.href = route('verification.notice');
-        },
-        onError: (errors) => {
-            console.log('Registration errors:', errors);
-            if (errors.email) {
-                setRegistrationError(errors.email);
-            } else if (errors.password) {
-                setRegistrationError(errors.password);
-            } else if (errors.name) {
-                setRegistrationError(errors.name);
-            } else {
-                setRegistrationError('Registration failed. Please try again.');
+        regPost(route('register'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                console.log('Registration successful');
+                regReset();
+                handleClose();
+                
+                // Redirect to VerifyEmail page
+                window.location.href = route('verification.notice');
+            },
+            onError: (errors) => {
+                console.log('Registration errors:', errors);
+                if (errors.email) {
+                    setRegistrationError(errors.email);
+                } else if (errors.password) {
+                    setRegistrationError(errors.password);
+                } else if (errors.name) {
+                    setRegistrationError(errors.name);
+                } else {
+                    setRegistrationError('Registration failed. Please try again.');
+                }
+            },
+            onFinish: () => {
+                console.log('Registration request finished');
             }
-        },
-        onFinish: () => {
-            console.log('Registration request finished');
-        }
-    });
-};
+        });
+    };
 
     // Reset errors when switching between login/register
     useEffect(() => {
         setRegistrationError(null);
+        setLoginError(null);
+        setLoginSuccess(null);
     }, [isLogin]);
+
+    // Clear errors when user starts typing in login form
+    const handleLoginDataChange = (field: 'email' | 'password', value: string) => {
+        setLoginData(field, value);
+        if (loginError) {
+            setLoginError(null);
+        }
+        if (loginSuccess) {
+            setLoginSuccess(null);
+        }
+    };
 
     if (!open) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm p-4">
+            {/* Toast Notifications - Top Right Corner */}
+            <div className="absolute top-4 right-4 z-90 space-y-2 max-w-sm">
+                {/* Login Error Toast */}
+                {loginError && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 100 }}
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg"
+                    >
+                        <div className="flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">{loginError}</span>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Registration Error Toast */}
+                {registrationError && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 100 }}
+                        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg"
+                    >
+                        <div className="flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">{registrationError}</span>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Login Success Toast */}
+                {loginSuccess && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 100 }}
+                        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg"
+                    >
+                        <div className="flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">{loginSuccess}</span>
+                        </div>
+                    </motion.div>
+                )}
+            </div>
+
             {/* MAIN MODAL CONTAINER */}
             <div className="w-full max-w-3xl mx-auto flex rounded-2xl z-70 overflow-hidden shadow-2xl relative">
                 {/* Left Side Image */}
@@ -903,9 +1018,9 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
 
                         <h2 className="text-[#FA7816] text-xl md:text-xl font-extrabold drop-shadow-md leading-snug max-w-4xl">
                             {isLogin ? (
-                                "Hello! Ready to continue your adventure?"
+                                "Magandang araw! Handa ka na bang ipagpatuloy ang iyong paglalakbay?"
                             ) : (
-                                "Get ready to learn, play, and win—because in RizHub, education becomes an adventure!"
+                                "Humanda! Sa RizHub, ang pag-aaral ay isang kakaibang paglalakbay!"
                             )}
                         </h2>
                     </div>
@@ -927,13 +1042,6 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                         <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-5 mt-6 text-center drop-shadow">Welcome!!!</h2>
                     </div>
 
-                    {/* Error Message Display */}
-                    {registrationError && (
-                        <div className="w-full max-w-md mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                            {registrationError}
-                        </div>
-                    )}
-
                     {/* FORMS CONTAINER */}
                     <div className="w-full flex flex-col items-center relative">
                         {isLogin ? (
@@ -946,11 +1054,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         name="email"
                                         autoComplete="off"
                                         value={loginData.email}
-                                        onChange={e => setLoginData('email', e.target.value)}
+                                        onChange={e => handleLoginDataChange('email', e.target.value)}
                                         className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                         placeholder="email"
                                         required
-                                        style={{ border: '2px solid #fff' }}
                                     />
                                     <label
                                         htmlFor="login_email"
@@ -976,11 +1083,10 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={loginData.password}
-                                        onChange={e => setLoginData('password', e.target.value)}
+                                        onChange={e => handleLoginDataChange('password', e.target.value)}
                                         className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                         placeholder="password"
                                         required
-                                        style={{ border: '2px solid #fff' }}
                                     />
                                     <label
                                         htmlFor="login_password"
@@ -1043,13 +1149,13 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 </button>
 
                                 <div className="w-full text-center mt-2">
-                                    <span className="text-[#000000] text-6xxl">New to Rizhub? </span>
+                                    <span className="text-[#000000] text-6xxl">Bago lamang dito?</span>
                                     <button
                                         type="button"
                                         className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-6xxl"
                                         onClick={() => setIsLogin(false)}
                                     >
-                                        Register
+                                        Mag-rehistro
                                     </button>
                                 </div>
                             </form>
@@ -1223,24 +1329,25 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
                                     >
                                         <span>
-                                            I agree to the{' '}
-                                            <button
-                                                type="button"
-                                                className="underline font-semibold hover:text-[#FF9B50]"
-                                                onClick={() => setShowTermsModal(true)}
-                                            >
-                                                Terms of Service
-                                            </button>{' '}
-                                            and{' '}
-                                            <button
-                                                type="button"
-                                                className="underline font-semibold hover:text-[#FF9B50]"
-                                                onClick={() => setShowPrivacyModal(true)}
-                                            >
-                                                Privacy Policy
-                                            </button>
-                                            .
-                                        </span>
+                                        Sumasang-ayon ako sa{' '}
+                                        <button
+                                            type="button"
+                                            className="underline font-semibold hover:text-[#FF9B50]"
+                                            onClick={() => setShowTermsModal(true)}
+                                        >
+                                            Alituntunin
+                                        </button>{' '}
+                                        at{' '}
+                                        <button
+                                            type="button"
+                                            className="underline font-semibold hover:text-[#FF9B50]"
+                                            onClick={() => setShowPrivacyModal(true)}
+                                        >
+                                            Patakaran ng Paglilihim
+                                        </button>
+                                        .
+                                    </span>
+
                                         <span className="text-red-700 ml-1">*</span>
                                     </label>
                                 </div>
@@ -1261,13 +1368,13 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 </button>
                                 
                                 <div className="w-full text-center mt-2">
-                                    <span className="text-[000000] text-4xxl">Already have an account? </span>
+                                    <span className="text-[000000] text-4xxl">Dati ka na bang miyembro rito?</span>
                                     <button
                                         type="button"
                                         className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
                                         onClick={() => setIsLogin(true)}
                                     >
-                                        Log in
+                                        Mag-Login
                                     </button>
                                 </div>
                             </form>

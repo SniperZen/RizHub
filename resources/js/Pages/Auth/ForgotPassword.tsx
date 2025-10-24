@@ -90,7 +90,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                         blur-3xl animate-pulse opacity-70 -z-10"></div>
 
                         <h2 className="text-[#FA7816] text-lg md:text-2xl font-extrabold drop-shadow-md leading-snug max-w-xs mt-10">
-                            Don't worry! We'll help you get back into your account in no time.
+                            Huwag kang mag-alala! Tutulungan ka naming makabalik sa iyong talaan kaagad.
                         </h2>
                     </div>
                 </div>
@@ -109,10 +109,10 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             </div>
 
                             <h2 className="text-3xl font-extrabold text-white mb-2">
-                                Reset Your Password
+                                I-reset ng Password
                             </h2>
                             <p className="text-white">
-                                Enter your email address and we'll send you instructions to reset your password.
+                                I-enter ang iyong email address upang mabalik ang iyong account.
                             </p>
                         </div>
 
@@ -139,7 +139,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 disabled={processing}
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-75 transition-colors duration-200"
                             >
-                                {processing ? "Sending..." : "Send Reset Link"}
+                                {processing ? "Sending..." : "Ipadala ang link"}
                             </button>
 
                             <div className="text-center">
@@ -147,7 +147,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                     href={route("welcome")}
                                     className="text-sm text-gray-200 hover:text-gray-100 transition-colors duration-200"
                                 >
-                                    Back to Home
+                                    Bumalik
                                 </Link>
                             </div>
                         </form>

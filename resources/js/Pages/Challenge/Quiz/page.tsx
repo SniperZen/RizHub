@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { router } from '@inertiajs/react';
 import InstructionModal from '../../../Components/InstructionModal';
 
@@ -35,29 +35,37 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     const [isUnlocked, setIsUnlocked] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
 
-    // Instruction modals content
+    // Audio refs
+    const correctSoundRef = useRef<HTMLAudioElement>(null);
+    const wrongSoundRef = useRef<HTMLAudioElement>(null);
+
+    // Instruction modals content - with safety checks
     const instructions = [
         {
-            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            title: `KABANATA ${kabanata_number || ''}: ${kabanata_title || ''}`,
             content: `Magaling! Ikaw ay nagtagumpay sa unang pagsubok.`,
             buttonText: "Next",
         },
         {
-            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            title: `KABANATA ${kabanata_number || ''}: ${kabanata_title || ''}`,
             content: `Ngayon, tingnan natin kung malalagpasan mo ang huling pagsubok...`,
             buttonText: "Next",
         },
         {
-            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            title: `KABANATA ${kabanata_number || ''}: ${kabanata_title || ''}`,
             content: `Sa pagkakataon na ito, kailangan mong makakuha ng perpektong marka sa 10 tanong para mabuksan mo ang susunod na hamon.`,
             buttonText: "Next",
         },
         {
-            title: `KABANATA ${kabanata_number}: ${kabanata_title}`,
+            title: `KABANATA ${kabanata_number || ''}: ${kabanata_title || ''}`,
             content: `Handa ka na ba? May tatlong beses na pagkakataon ka lamang para makuha ang perpektong sagot sa 10 tanong.`,
             buttonText: "Start Quiz",
         }
-    ];
+    ].filter(instruction => 
+        instruction.title && 
+        instruction.content && 
+        instruction.buttonText
+    );
 
     // Select 10 random quizzes from the list
     useEffect(() => {
@@ -100,7 +108,18 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         }, 100);
     };
 
-    const checkAnswer = (answer: string) => {
+    const playSound = async (soundRef: React.RefObject<HTMLAudioElement>) => {
+        if (soundRef.current) {
+            try {
+                soundRef.current.currentTime = 0;
+                await soundRef.current.play();
+            } catch (error) {
+                console.log('Audio play failed:', error);
+            }
+        }
+    };
+
+    const checkAnswer = async (answer: string) => {
         if (currentQuiz) {
             const correct =
                 (answer === 'A' && currentQuiz.correct_answer === 'A') ||
@@ -109,6 +128,13 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
             
             setIsCorrect(correct);
             setShowResult(true);
+
+            // Play sound based on correctness without waiting for it to finish
+            if (correct) {
+                playSound(correctSoundRef);
+            } else {
+                playSound(wrongSoundRef);
+            }
 
             const newScore = correct ? score + 1 : score;
             setScore(newScore);
@@ -267,6 +293,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
     // Show instruction modals if not all have been shown yet
     if (instructionIndex < instructions.length) {
+        const currentInstruction = instructions[instructionIndex];
         return (
             <InstructionModal
                 isOpen={true}
@@ -277,9 +304,9 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                         setInstructionIndex(instructions.length);
                     }
                 }}
-                title={instructions[instructionIndex].title}
-                content={instructions[instructionIndex].content}
-                buttonText={instructions[instructionIndex].buttonText}
+                title={currentInstruction?.title || ''}
+                content={currentInstruction?.content || ''}
+                buttonText={currentInstruction?.buttonText || 'Continue'}
                 bgImage="/Img/Challenge/Quiz/BG.png"
             />
         );
@@ -291,6 +318,18 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-amber-50 p-6 bg-cover bg-center" 
                  style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
+                
+                {/* Audio elements */}
+                <audio 
+                    ref={correctSoundRef} 
+                    src="/Music/plankton-correct.mp3" 
+                    preload="auto"
+                />
+                <audio 
+                    ref={wrongSoundRef} 
+                    src="/Music/ksiwhatthehellmusic1.mp3" 
+                    preload="auto"
+                />
                 
                 {/* Wooden Frame Modal */}
                 <div className="relative w-[600px] bg-transparent">
@@ -390,6 +429,19 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     return (
         <div className="min-h-screen flex flex-col items-center justify-start bg-amber-50 p-6 bg-cover bg-center" 
              style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
+            
+            {/* Audio elements */}
+            <audio 
+                ref={correctSoundRef} 
+                src="/Music/plankton-correct.mp3" 
+                preload="auto"
+            />
+            <audio 
+                ref={wrongSoundRef} 
+                src="/Music/ksiwhatthehellmusic1.mp3" 
+                preload="auto"
+            />
+            
             <div className="absolute top-4 left-4 flex items-center">
                 <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl">
                     Kabanata {kabanata_number}:
@@ -515,11 +567,6 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                             ) : (
                                  <p className="fixed text-lg text-orange-800 mb-3 mt-20">
                                     Mali ang sagot! Nawalan ka ng isang puso.
-                                    {/* Mali! Ang tamang sagot ay: {
-                                        currentQuiz.correct_answer === 'A' ? currentQuiz.choice_a :
-                                        currentQuiz.correct_answer === 'B' ? currentQuiz.choice_b :
-                                        currentQuiz.choice_c
-                                    } */}
                                 </p>
                             )}
 
