@@ -275,98 +275,114 @@ export default function Welcome({ auth }: PageProps) {
         </div>
       );
     }
+    
 
     return (
         <>
             <Head title="Welcome" />
             
             <div className={`min-h-screen font-sans ${showLoginModal ? 'blur-sm pointer-events-none select-none' : ''}`}>
-                {/* Hero Section - Always visible without scroll trigger */}
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={sectionVariants}
-                  className="relative  sm:h-[100vh], lg:h-[90px] transition-transform flex flex-col md:flex-row items-center justify-between min-h-screen bg-orange-50 overflow-hidden px-4 md:px-0 pt-0 pb-0"
-                  style={{
-                    background: `
-                      url('/Img/LandingPage/noli-bg.png') left top / cover no-repeat,
-                      url('/Img/LandingPage/Header-BG2.png') left top / cover no-repeat,
-                      url('/Img/LandingPage/icon-lp3.png') left top / cover no-repeat,
-                      url('/Img/LandingPage/lp-books1.png') left top / cover no-repeat,
-                      url('/Img/LandingPage/Header_BG.png') left top / cover no-repeat
-                    `
-                  }}
+            {/* Hero Section - Always visible without scroll trigger */}
+                    <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={sectionVariants}
+                    className="
+                        relative sm:h-[100vh] lg:h-[90px]
+                        transition-transform flex flex-col md:flex-row
+                        items-center justify-between min-h-screen
+                        bg-orange-50 overflow-hidden px-4 md:px-0 pt-0 pb-0
+
+                        /* Background for below 1024px (no noli-bg.png) */
+                        bg-[url('/Img/LandingPage/Header-BG2.png'),url('/Img/LandingPage/icon-lp3.png'),url('/Img/LandingPage/lp-books1.png'),url('/Img/LandingPage/Header_BG.png')]
+                        bg-left-top bg-cover bg-no-repeat
+
+                        /* Background for 1024px and above (adds noli-bg.png) */
+                        xl:bg-[url('/Img/LandingPage/noli-bg.png'),url('/Img/LandingPage/Header-BG2.png'),url('/Img/LandingPage/icon-lp3.png'),url('/Img/LandingPage/lp-books1.png'),url('/Img/LandingPage/Header_BG.png')]
+                    "
+                    >
+                {/* The ImageSlider component */}
+                <motion.div 
+                className="absolute w-full h-full flex justify-center items-center"
+                variants={itemVariants}
+                transition={{ delay: 0.2 }}
                 >
-                  {/* The ImageSlider component */}
-                  <motion.div 
-                    className="absolute w-full h-full flex justify-center items-center"
-                    variants={itemVariants}
-                    transition={{ delay: 0.2 }}
-                  >
-                   <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden" style={{ 
-                      width: '100%', 
-                      maxWidth: '1900px',
-                      height: '570px',
-                      left: '400px',
-                      bottom: '50px',
-                      maxHeight: '70vh'
-                    }}>
-                      <ImageSlider />
-                    </div>
-                  </motion.div>
+                {/* Hidden below lg, visible only on lg (1024px+) */}
+                <div
+                    className="hidden xl:block relative h-48 md:h-56 lg:h-64 overflow-hidden"
+                    style={{ 
+                    width: '100%', 
+                    maxWidth: '1900px',
+                    height: '570px',
+                    left: '400px',
+                    bottom: '70px',
+                    maxHeight: '70vh'
+                    }}
+                >
+                    <ImageSlider />
+                </div>
+                </motion.div>
                   
                   <div className="z-10 w-full md:flex-1 flex flex-col items-center md:items-start justify-center max-w-lg mx-auto md:mx-0 md:pl-10">
-                      <motion.div 
-                        className="mt-10 md:mt-0 md:absolute md:left-10 md:top-10"
+                    <motion.div 
+                        className="mt-5 md:mt-5 absolute left-5 top-5 md:left-10 md:top-5 lg:top-5 xl:top-5"
                         variants={itemVariants}
                         transition={{ delay: 0.1 }}
-                      >
-                          <img 
-                              src="/Img/LandingPage/Title.png" 
-                              alt="RizHub Logo" 
-                              className="h-[50px] md:h-[70px] lg:h-[100px] transition-transform duration-300 hover:scale-105" 
-                          />
-                      </motion.div>
+                    >
+                        <img 
+                            src="/Img/LandingPage/Title.png" 
+                            alt="RizHub Logo" 
+                            className="h-[80px] md:h-[70px] lg:h-[100px] transition-transform duration-300 hover:scale-105" 
+                        />
+                    </motion.div>
                       <motion.div 
-                        className="absolute left-[4%] top-[140px] lg:top-[180px] max-w-md text-center"
+                        className="absolute left-[4%] top-[150px] md:top-[140px] lg:top-[170px] xl:top-[170px] max-w-md text-center"
                         variants={itemVariants}
                         transition={{ delay: 0.3 }}
                       >
-                            <p className="text-left font-['mono'] font-medium text-lg md:text-xl lg:text-2xl leading-8 lg:leading-10 text-[#282725]"
+                            <p className="text-left font-['mono'] font-medium text-2xl md:text-2xl lg:text-2xl xl:text-2xl leading-8 lg:leading-10 text-[#282725]"
                               style={{ 
                                   textShadow: '0px 4px 4px rgba(0,0,0,0.25)'
                               }}
                           >
-                             Magsimula sa paglalakbay ng diwa ni Rizal!
-                             Damhin ang saya at aral ng Noli Me Tangere
+                             Magsimula sa paglalakbay ng diwa ni Rizal!<br/>
+                             Damhin ang saya at aral ng Noli Me Tangere<br/>
                              sa isang kakaibang paglalakbay ng pagkatuto!
                           </p>
                         </motion.div>
-                        <motion.div 
-                        className=" fixed mt-8 md:absolute md:left-10 lg:left-[350px] md:top-[220px] lg:top-[300px] flex items-center md:mt-8 mb-0 md:ml-2"
+                        <motion.div
+                        className="absolute left-50 top-[370px] sm:left-[350px] sm:top-[370px] lg:top-[270px] xl:top-[280px] flex items-center mt-8 md:mt-8 mb-0 md:ml-2 z-50"
                         variants={itemVariants}
                         transition={{ delay: 0.4 }}
                         >
                         <motion.button
-                        className="w-[220px] md:w-[260px] lg:w-[250px] h-[50px] md:h-[70px] lg:h-[80px] 
-                                    bg-orange-500 hover:bg-orange-600 text-white 
-                                    text-xl md:text-2xl lg:text-3xl font-extrabold 
-                                    rounded-[50px] border-4 md:border-[6px] lg:border-[8px] border-[#C97B3A] 
-                                    flex items-center justify-center"
+                        className="
+                            absolute
+                            w-[160px] md:w-[180px] lg:w-[250px] lg:top-[10px] lg:left-[-20px]
+                            h-[45px] bottom-[60px] md:h-[50px] lg:h-[60px] lg:w-[210px]
+                            bg-orange-500 hover:bg-orange-600 text-white
+                            text-lg md:text-xl lg:text-3xl font-extrabold
+                            rounded-[50px] border-4 md:border-[6px] lg:border-[5px] border-[#C97B3A]
+                            flex items-center justify-center
+                            md:left-[-5px] md:bottom-[50px] xl:bottom-[30px]
+                            z-50
+                        "
                         style={{
-                            boxShadow: '4px 6px 0px #9B4A1B, 0px 2px 4px rgba(0,0,0,0.25)',
-                            filter: 'drop-shadow(0px 2px 2px rgba(0,0,0,0.25))'
+                            boxShadow: '4px 6px 0px #402d22ff, 0px 2px 4px rgba(0,0,0,0.25)',
+                            filter: 'drop-shadow(0px 2px 2px rgba(0,0,0,0.25))',
                         }}
                         onClick={() => setShowLoginModal(true)}
-                        whileHover={{ 
+                        whileHover={{
                             scale: 1.05,
-                            boxShadow: '6px 8px 0px #9B4A1B, 0px 4px 8px rgba(0,0,0,0.3)'
+                            boxShadow: '6px 8px 0px #9B4A1B, 0px 4px 8px rgba(0,0,0,0.3)',
                         }}
                         whileTap={{ scale: 0.98 }}
                         >
                         START
                         </motion.button>
+
                         </motion.div>
+
                   </div>
                   <motion.div 
                     className="hidden md:block flex-1 relative h-full"
@@ -378,7 +394,7 @@ export default function Welcome({ auth }: PageProps) {
                 </motion.div>
 
                 {/* Learn Section */}
-                <AnimatedSection className="bg-[#F4F2EC] py-8 md:py-12 text-center px-4 border-t-[1px] border-b-[1px] border-[#282725]">
+                <AnimatedSection className="bg-white py-8 md:py-12 text-center px-4 border-t-[1px] border-b-[1px] border-[#282725]">
                     <div className="flex flex-col md:flex-row justify-around items-center">
                         
                         {/* Image hidden on mobile, shown on md+ */}
@@ -421,9 +437,9 @@ export default function Welcome({ auth }: PageProps) {
                 </AnimatedSection>
 
                 {/* About Section */}
-                <AnimatedSection className="px-4 md:px-3 py-8 md:py-5 bg-white text-center border-b-[1px] border-[#282725]">
-                    <div className='flex flex-col md:flex-row items-center justify-around'>
-                        <AnimatedItem className='h-auto flex gap-3 flex-col order-2 md:order-1 mb-6 md:mb-10' delay={0.1}>
+                <AnimatedSection className="px-4 md:px-3 py-8 md:py-5 bg-[#F4F2EC] text-center border-b-[1px] border-[#282725]">
+                    <div className='flex flex-col md:flex-row items-center justify-around mt-3'>
+                        <AnimatedItem className='h-auto flex gap-3 flex-col order-2 md:order-1 mb-6 md:mb-6' delay={0.1}>
                             <h2 
                                 className="font-['Inter'] not-italic font-extrabold text-6xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-left"
                                 style={{
@@ -433,20 +449,24 @@ export default function Welcome({ auth }: PageProps) {
                             >
                                 Tungkol sa RizHub
                             </h2>   
-                            <p className="text-[#282725] text-center md:text-left font-['Inter'] font-medium text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px] w-full md:w-[400px] lg:w-[500px]">
-Ang RizHub ay isang makabagong kasangkapan sa pag-aaral, na inihandog upang higit na mapalalim at mapagaan ang pag-unawa ng mga mag-aaral sa dakilang akda ni Rizal na Noli Me Tangere.
-Kung ikaw ay unang tutuntong sa daigdig ng nobelang ito, o nais mong higit pang makilala ang mga kaisipang nakapaloob dito — narito ang RizHub upang maging gabay mo.
-Taglay nito ang mga masiglang animasyon, kawili-wiling pagsusulit, at nakaaaliw na laruan ng isipan.
-Tuklasin ang RizHub at damhin ang isang bagong paraan ng pag-aaral — isang paglalakbay sa diwa, damdamin, at talino ng ating bayani.
+                            <p className="text-[#282725] text-justify font-['Inter'] font-medium text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px] w-full md:w-[400px] lg:w-[500px]">
+                            Ang RizHub ay isang makabagong kasangkapan sa pag-aaral, na inihandog upang higit na
+                            mapalalim at mapagaan ang pag-unawa ng mga mag-aaral sa dakilang akda ni Rizal na
+                            Noli Me Tangere. Kung ikaw ay unang tutuntong sa daigdig ng nobelang ito, o nais
+                            mong higit pang makilala ang mga kaisipang nakapaloob dito — narito ang RizHub
+                            upang maging gabay mo. Taglay nito ang mga masiglang animasyon, kawili-wiling
+                            pagsusulit, at nakaaaliw na laruan ng isipan. Tuklasin ang RizHub at damhin ang isang
+                            bagong paraan ng pag-aaral — isang paglalakbay sa diwa, damdamin, at talino ng ating
+                            bayani.
                             </p>
                         </AnimatedItem>
-                         <AnimatedItem className="order-1 md:order-2" delay={0.2}>
-                            <motion.img 
-                              src="/Img/LandingPage/design1.png" 
-                              alt=""  
-                              className='h-[250px] md:h-[350px] lg:h-[350px] transition-transform duration-300 hover:scale-105'
-                              whileHover={{ rotate: 2 }}
-                            />
+                        <AnimatedItem className="order-1 md:order-2" delay={0.2}>
+                        <motion.img 
+                            src="/Img/LandingPage/design1.png" 
+                            alt="RizHub Illustration"  
+                            className="h-[200px] md:h-[320px] lg:h-[370px] transition-transform duration-300 hover:scale-90 drop-shadow-[0_10px_15px_rgba(0,0,0,0.25)]"
+                            whileHover={{ rotate: 2 }}
+                        />
                         </AnimatedItem>
                    </div>
                 </AnimatedSection>
@@ -622,6 +642,7 @@ Tuklasin ang RizHub at damhin ang isang bagong paraan ng pag-aaral — isang pag
                         </motion.button>
                     </AnimatedItem>
                 </AnimatedSection>
+                
                   <AnimatedSection className='py-5 px-4' delay={0.1}>
                     <div 
                       style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}} 
@@ -635,7 +656,7 @@ Tuklasin ang RizHub at damhin ang isang bagong paraan ng pag-aaral — isang pag
                           whileHover={{ rotate: -2 }}
                         />
                       </AnimatedItem>
-                        <AnimatedItem className='flex flex-col items-center justify-center gap-4 order-1 md:order-2 mb-6 md:mb-0' delay={0.3}>
+                        <AnimatedItem className='flex flex-col items-center justify-center -ml-10 gap-4 order-1 md:order-2 mb-6 md:mb-0' delay={0.3}>
                            <motion.img 
                              src="/Img/LandingPage/jose.png" 
                              alt="" 
@@ -657,25 +678,29 @@ Tuklasin ang RizHub at damhin ang isang bagong paraan ng pag-aaral — isang pag
 
             {/* Footer */}
             <AnimatedSection className="py-6 text-center px-4" delay={0.1}>
-                <AnimatedItem className="flex justify-center ml-20 mt-4" delay={0.2}>
+                <AnimatedItem className="flex justify-center mt-4" delay={0.2}>
                     <motion.img 
                         src="/Img/LandingPage/fchar.png" 
                         alt="Footer Characters" 
-                        className="h-auto w-full max-w-4xl transition-transform duration-300 hover:scale-105"
+                        className="h-auto w-full max-w-7xl transition-transform duration-300 hover:scale-105"
                         whileHover={{ y: -5 }}
                     />
                 </AnimatedItem>
-                
-                {/* Contact Us Heading
-                <AnimatedItem className="mt-6 mb-4" delay={0.25}>
+
+                {/* Tribute to José Rizal */}
+                <AnimatedItem className="mt-3" delay={0.25}>
                     <motion.h3 
-                        className="text-[#282725] font-['Inter'] font-semibold text-lg md:text-xl lg:text-2xl"
-                        whileHover={{ scale: 1.05 }}
+                    className="text-[#4A3728] font-['Merriweather'] font-bold text-xl md:text-2xl lg:text-3xl"
+                    whileHover={{ scale: 1.05 }}
                     >
-                        Contact Us:
+                    In Honor of Dr. José P. Rizal
                     </motion.h3>
-                </AnimatedItem> */}
-                
+                    <p className="text-[#3d3b3a] mt-2 text-sm md:text-base lg:text-lg font-['Inter'] italic max-w-2xl mx-auto text-center leading-relaxed">
+                    “Noli Me Tangere” — ang dakilang akdang nagmulat sa kamalayan ng sambayanang Pilipino.
+                    Ang RizHub ay handog bilang pagpupugay sa kanyang katalinuhan, kabayanihan, at walang-hanggang inspirasyon sa edukasyon at bayan.
+                    </p>
+                </AnimatedItem>
+
                 {/* Social Media Links */}
                 <AnimatedItem className="flex justify-center space-x-6 mt-2" delay={0.3}>
                     {/* Phone */}
@@ -731,11 +756,24 @@ Tuklasin ang RizHub at damhin ang isang bagong paraan ng pag-aaral — isang pag
                     </motion.a>
                 </AnimatedItem>
 
-                {/* Copyright */}
-                <AnimatedItem className="mt-4 text-[#282725] font-['Inter'] font-medium text-base md:text-lg lg:text-[22px]" delay={0.4}>
-                    © 2025 RizHub. All rights reserved.
-                </AnimatedItem>
-            </AnimatedSection>
+                        {/* Divider Line */}
+                        <div className="w-full h-px bg-[#d1c7b5]/60 mt-8 mb-4"></div>
+
+                        {/* Copyright */} 
+                        <AnimatedItem delay={0.4}>
+                        <p className="text-[#5b4a3b] font-['Inter'] font-medium text-sm md:text-base">
+                            © 2025 RizHub. All Rights Reserved. | Developed with pride by the Occidental Mindoro State College | Inspired by 
+                            <a
+                            href="http://www.youtube.com/@CEFilipinoKlasiks"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#d63636] hover:underline font-semibold ml-1"
+                            >
+                            @CEFilipinoKlasiks – Animated Filipino Classics
+                            </a>.
+                        </p>
+                        </AnimatedItem>
+                        </AnimatedSection>
                         </div>
                         <LoginModal 
                             open={showLoginModal} 
@@ -1037,7 +1075,11 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                     
                     <div className="w-full flex flex-col items-center">
                         {isLogin && (
-                            <img src="/Img/LandingPage/Login/quill.png" alt="Quill Icon" className="w-19 h-19 md:w-20 -mt-6 md:h-20 mb-1" />
+                            <img
+                            src="/Img/LandingPage/Login/quill.png"
+                            alt="Quill Icon"
+                            className="w-15 h-15 md:w-16 md:h-16 mt-6 mb-1"
+                            />
                         )}
                         <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-5 mt-6 text-center drop-shadow">Welcome!!!</h2>
                     </div>
@@ -1149,13 +1191,13 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 </button>
 
                                 <div className="w-full text-center mt-2">
-                                    <span className="text-[#000000] text-6xxl">Bago lamang dito?</span>
+                                    <span className="text-[#000000] text-6xxl">New to RizHub?</span>
                                     <button
                                         type="button"
                                         className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-6xxl"
                                         onClick={() => setIsLogin(false)}
                                     >
-                                        Mag-rehistro
+                                        Register
                                     </button>
                                 </div>
                             </form>
@@ -1329,21 +1371,21 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
                                     >
                                         <span>
-                                        Sumasang-ayon ako sa{' '}
+                                        By registering, you agree to our{' '}
                                         <button
                                             type="button"
                                             className="underline font-semibold hover:text-[#FF9B50]"
                                             onClick={() => setShowTermsModal(true)}
                                         >
-                                            Alituntunin
+                                            Terms of Service
                                         </button>{' '}
-                                        at{' '}
+                                        and{' '}
                                         <button
                                             type="button"
                                             className="underline font-semibold hover:text-[#FF9B50]"
                                             onClick={() => setShowPrivacyModal(true)}
                                         >
-                                            Patakaran ng Paglilihim
+                                           Privacy Policy.
                                         </button>
                                         .
                                     </span>
@@ -1368,13 +1410,13 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 </button>
                                 
                                 <div className="w-full text-center mt-2">
-                                    <span className="text-[000000] text-4xxl">Dati ka na bang miyembro rito?</span>
+                                    <span className="text-[000000] text-4xxl">Already have an account?</span>
                                     <button
                                         type="button"
                                         className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
                                         onClick={() => setIsLogin(true)}
                                     >
-                                        Mag-Login
+                                        Log in
                                     </button>
                                 </div>
                             </form>

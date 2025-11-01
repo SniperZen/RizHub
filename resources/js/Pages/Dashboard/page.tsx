@@ -308,13 +308,18 @@ export default function Dashboard({
     </style>
 
     <img
-        src="/Img/Dashboard/t-bg2.png"
-        alt="Noli Me Tangere BG"
-        className="absolute inset-0 top-3 w-full h-full object-cover z-10"
-        style={{
-            animation: 'floating 4s ease-in-out infinite'
-        }}
+    src="/Img/Dashboard/t-bg2.png"
+    alt="Noli Me Tangere BG"
+    className="
+        hidden xl:block
+        absolute inset-0 top-3 w-full h-full
+        object-cover z-10
+    "
+    style={{
+        animation: 'floating 4s ease-in-out infinite'
+    }}
     />
+
 
     <style>
     {`
@@ -424,7 +429,18 @@ export default function Dashboard({
                 {showSettings && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
                         <div 
-                            className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-12 pb-16 pt-5 flex flex-col items-center min-w-[700px] h-auto"
+                            className="
+                                relative 
+                                bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] 
+                                rounded-[40px] 
+                                px-6 sm:px-8 md:px-12 
+                                pb-10 sm:pb-14 md:pb-16 
+                                pt-5 
+                                flex flex-col items-center 
+                                h-auto
+                                w-[90vw] sm:w-[600px] md:min-w-[700px]
+                                max-w-[95vw]
+                            "
                             style={{ 
                                 backgroundImage: isSettingsBgLoaded ? "url('/Img/Dashboard/modalBG.png')" : "none",
                                 backgroundSize: "contain",
@@ -444,12 +460,12 @@ export default function Dashboard({
                             
                             <div className={`flex flex-col items-center w-full px-[80px] ${!isSettingsBgLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
                                 
-                                <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Settings</span>
+                                <span className="absolute text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-wide bottom-[307px] sm:bottom-[343px] md:bottom-[365px] lg:bottom-[365px]">Settings</span>
                                 <Button
                                     soundHover="/sounds/button-hover.mp3"
                                     soundClick="/Music/Sound.mp3"
                                     soundVolume={volume}
-                                    className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                    className="absolute top-10 right-9 rounded-full w-[40px] lg:w-[60px]  h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
                                     onClick={() => setShowSettings(false)}
                                     aria-label="Close"
                                 >

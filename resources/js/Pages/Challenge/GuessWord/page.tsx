@@ -543,7 +543,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             </svg>
                         </button>
                     </div>
-                    <div className="flex flex-col ml-10 items-center justify-start p-6 overflow-hidden">
+                    <div className="flex flex-col ml-14 items-center justify-start p-6 overflow-hidden">
                         <div className="relative w-[550px] h-[250px] flex items-center justify-center">
                             <img
                                 src="/Img/Challenge/GuessWord/modalBG.png"
@@ -779,7 +779,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         </div>
                                     )}
                                 
-                                <div className="fixed flex gap-8 bottom-[110px] mt-[40px]">
+                                <div className="fixed flex gap-8 bottom-[145px] sm:bottom-[135px] md:bottom-[125px] lg:bottom-[125px]">
                                 {/* {showModal === "correct" && (
                                     <>
                                         <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>

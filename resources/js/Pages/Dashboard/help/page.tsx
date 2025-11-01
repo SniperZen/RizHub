@@ -225,28 +225,29 @@ export default function HelpPage() {
                 <img 
                   src={illustrationImage} 
                   alt="Help Illustration" 
-                  className="object-contain w-[110vw] h-[110vh] ml-20 z-20 scale-110"
+                  className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[50px] xl:top-[0px]"
                 />
               </div>
 
-            {/* Centered instructional text with typing effect */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-10">
-              <p className="text-white text-[22px] font-semibold leading-relaxed drop-shadow-lg max-w-3xl space-y-2">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-20 md:px-20 lg:px-20 xl:px-20 sm:mr-5 md:mr-10 lg:mr-20">
+              <p className="text-white text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[50px] space-y-5">
                 <TypingText soundVolume={userSound} />
               </p>
             </div>
+{/* Header stays centered with smooth floating animation */}
+<div 
+  className="absolute left-1/2 bottom-[300px] sm:bottom-[348px] md:bottom-[380px] 
+             transform -translate-x-1/2 z-30 h-60 scale-150 
+             md:w-[650px] xl:w-[650px]"
+  style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
+>
+  <img 
+    src={headerImage} 
+    alt="Help Header" 
+    className="h-20 w-auto mx-auto"
+  />
+</div>
 
-            {/* Header stays centered with smooth floating animation */}
-            <div 
-              className="absolute top-16 left-1/2 transform -translate-x-1/2 z-30 h-60 scale-150"
-              style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
-            >
-              <img 
-                src={headerImage} 
-                alt="Help Header" 
-                className="h-55 w-auto"
-              />
-            </div>
 
             <style>
               {`
@@ -262,14 +263,14 @@ export default function HelpPage() {
           </div>
         </div>
         
-        {/* Person anchored to bottom-left of illustration */}
-        <div className="absolute bottom-0 right-12 z-30 scale-110">
-          <img 
-            src={personImage} 
-            alt="Person" 
-            className="max-w-[90vw] max-h-[90vh] h-auto w-auto"
-          />
-        </div>
+{/* Person anchored to bottom-left of illustration */}
+<div className="hidden xl:block absolute bottom-0 right-12 z-30 scale-110">
+  <img 
+    src={personImage} 
+    alt="Person" 
+    className="max-w-[90vw] max-h-[90vh] h-auto w-auto"
+  />
+</div>
       </div>
     </>
   );
