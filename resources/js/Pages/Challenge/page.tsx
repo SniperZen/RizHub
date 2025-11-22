@@ -79,10 +79,10 @@ const KabanataPage: React.FC<PageProps> = ({
     const [vibratingLockedId, setVibratingLockedId] = useState<number | null>(null);
 
     // Filter kabanatas -based on development needs
-    const filteredKabanatas = {
-        ...kabanatas,
-        data: kabanatas.data.filter(k => k.id <= 64)
-    };
+    // const filteredKabanatas = {
+    //     ...kabanatas,
+    //     data: kabanatas.data.filter(k => k.id <= 64)
+    // };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -118,17 +118,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // // testing purposes only - remove this on production
-    // const filteredKabanatas = {
-    // ...kabanatas,
-    // data: kabanatas.data
-    //     .filter(k => k.id <= 64)
-    //     .map(k => ({
-    //     ...k,
-    //     progress: 10,
-    //     stars: 3,
-    //     unlocked: true
-    //     }))
-    // };
+    const filteredKabanatas = {
+    ...kabanatas,
+    data: kabanatas.data
+        .filter(k => k.id <= 64)
+        .map(k => ({
+        ...k,
+        progress: 10,
+        stars: 3,
+        unlocked: true
+        }))
+    };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -588,7 +588,7 @@ const KabanataPage: React.FC<PageProps> = ({
 
                     {filteredKabanatas.data.some(k => k.id === 64) && (
                         <div
-                            className="absolute flex flex-col items-center z-10 left-[530px] sm:left-[230px] md:left-[240px] lg:left-[560px] top-[205px] lg:top-[220px]"
+                            className="absolute flex flex-col items-center z-10 left-[530px] sm:left-[230px] md:left-[240px] lg:left-[560px] top-[205px] lg:top-[210px]"
                         >
                             <div className="relative max-w-[370px] h-auto rounded-full flex items-center justify-center">
                                 {/* Conditionally render locked or unlocked door */}

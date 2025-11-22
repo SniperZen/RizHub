@@ -241,9 +241,9 @@ export default function HelpPage() {
               
               {/* Header stays centered with smooth floating animation */}
               <div 
-                className="absolute left-1/2 bottom-[390px] sm:bottom-[470px] md:bottom-[400px] lg:bottom-[400px] lg:pr-[60px]
+                className="absolute left-1/2 bottom-[370px] sm:bottom-[420px] md:bottom-[370px] lg:bottom-[400px] lg:pr-[60px]
                           transform -translate-x-1/2 z-30 h-60 scale-150 w-[500px]
-                          md:w-[750px] lg:w-[650px] xl:w-[650px]"
+                          md:w-[950px] lg:w-[650px] xl:w-[650px]"
                 style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
               >
                 <img 

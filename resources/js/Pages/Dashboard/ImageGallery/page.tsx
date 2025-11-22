@@ -450,26 +450,18 @@ const renderUnlockedContent = (image: PageData, index: number) => {
 
           {/* Right side - Audio Controls and Back Button */}
           <div className="flex items-center space-x-2 md:space-x-4">
-            {/* Back to Dashboard Button - Bigger on mobile, hidden on desktop */}
-            <button
-              onClick={handleBackToDashboard}
-              className="flex md:hidden items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-4 py-3 md:px-4 md:py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm md:text-sm"
-            >
-              <svg 
-                className="w-4 h-4 md:w-4 md:h-4" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
-                />
-              </svg>
-              <span className="font-bold">Back</span>
-            </button>
+          {/* Back to Dashboard Button - Using image like HelpPage, hidden on desktop */}
+          <button
+            onClick={handleBackToDashboard}
+            onMouseEnter={() => playSound("/sounds/button-hover.mp3", volume)}
+            className="flex md:hidden bg-transparent transition hover:scale-105 flex items-center justify-center"
+          >
+            <img 
+              src="/Img/Dashboard/back.png" 
+              alt="Back to Dashboard" 
+              className="w-12 h-12 object-contain"
+            />
+          </button>
 
             {/* Audio Controls - Hidden on mobile, visible on desktop */}
             <div className="hidden md:block md:mr-4">
