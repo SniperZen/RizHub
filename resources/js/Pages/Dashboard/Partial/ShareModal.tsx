@@ -4,7 +4,7 @@ import { router } from '@inertiajs/react';
 interface ShareModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onBack?: () => void; // Add this prop
+    onBack?: () => void;
     initialEmail?: string;
 }
 
@@ -14,6 +14,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initia
     const [isSending, setIsSending] = useState(false);
     const [sendSuccess, setSendSuccess] = useState(false);
     const [sendError, setSendError] = useState('');
+    const [isBgLoaded, setIsBgLoaded] = useState(false);
 
     const shareLink = `${window.location.origin}`;
 
@@ -50,76 +51,97 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initia
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-            <div 
-                className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-12 pb-16 pt-5 flex flex-col items-center min-w-[700px] h-auto"
-                style={{ 
-                    backgroundImage: "url('/Img/Dashboard/modalBG.png')",
-                    backgroundSize: "contain",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat"
-                }}
-            >
-                <div className="flex flex-col items-center w-full px-[80px]">
-                    <span className="absolute text-white text-4xl font-black tracking-wide top-4">Share</span>
-                    
-                    {/* Back Button instead of Close */}
-                    <button
-                        className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
-                        onClick={onBack || onClose} // Use onBack if provided, otherwise fallback to onClose
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+            <div className="relative flex flex-col items-center w-full max-w-[900px]">
+                {/* Background Image - Responsive */}
+                <img
+                    src="/Img/Dashboard/modalBG.png"
+                    alt="Modal Background"
+                    className="w-full h-auto max-h-[80vh] rounded-[40px] min-h-[500px]"
+                    onLoad={() => setIsBgLoaded(true)}
+                    onError={() => setIsBgLoaded(true)}
+                />
+                
+                {/* Loading Overlay - Only show when image is not loaded */}
+                {!isBgLoaded && (
+                    <div 
+                        className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] z-20 w-full h-full"
                     >
-                        <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
-                    </button>
-                    
-                    <div className="mt-20 mb-8 w-full max-w-md">
-                        {/* Email Invitation Section */}
-                        <div className="mb-[35px] relative">
-                            <h3 className="text-[#3D2410] text-2xl font-bold mb-4">Invite via Email</h3>
-                            <div className="flex gap-2">
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => {
-                                        setEmail(e.target.value);
-                                        setSendError('');
-                                        setSendSuccess(false);
-                                    }}
-                                    placeholder="Enter email address"
-                                    className="flex-1 px-4 py-2 bg-white/80 border-2 border-[#000] text-[#3D2410] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB84C]"
-                                />
-                                <button
-                                    onClick={handleSendInvite}
-                                    disabled={isSending}
-                                    className="px-4 py-2 bg-[#9A4112] text-white font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 disabled:opacity-70"
-                                >
-                                    {isSending ? 'Sending...' : 'Send'}
-                                </button>
-                            </div>
-                            {sendError && (
-                                <p className="absolute text-red-500 text-sm mt-[5px]">{sendError}</p>
-                            )}
-                            {sendSuccess && (
-                                <p className="absolute text-green-600 text-sm mt-2">Invitation sent successfully!</p>
-                            )}
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
+                            <p className="text-[#9A4112] font-bold">Loading...</p>
                         </div>
-                        
-                        {/* Share Link Section */}
-                        <div>
-                            <h3 className="text-[#3D2410] text-2xl font-bold mb-4">Or share this link</h3>
-                            <div className="flex gap-2">
-                                <div className="flex-1 px-4 py-2 bg-white/80 border-2 border-[#000] text-[#3D2410] rounded-lg overflow-hidden whitespace-nowrap overflow-ellipsis">
-                                    {shareLink}
+                    </div>
+                )}
+                
+                {/* Content Container - Only show when image is loaded */}
+                {isBgLoaded && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
+                        <div className="flex flex-col items-center w-full px-4 sm:px-8 md:px-12">
+                            <span className="absolute text-white text-4xl sm:text-4xl md:text-3xl lg:text-4xl font-black tracking-wide top-3 sm:top-4 md:top-5 text-center">
+                                Share
+                            </span>
+                            
+                            {/* Close Button */}
+                            <button
+                                className="absolute top-10 sm:top-10 md:top-10 lg:top-10 right-4 sm:right-6 md:right-8 rounded-full w-12 h-12 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-[60px] lg:h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                onClick={onBack || onClose}
+                            >
+                                <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
+                            </button>
+                            
+                            {/* Main Content */}
+                            <div className="mt-12 sm:mt-10 md:mt-12 lg:mt-4 w-full max-w-2xl">
+                                {/* Email Invitation Section */}
+                                <div className="mb-6 sm:mb-8 md:mb-[35px]">
+                                    <h3 className="text-[#3D2410] text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Invite via Email</h3>
+                                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => {
+                                                setEmail(e.target.value);
+                                                setSendError('');
+                                                setSendSuccess(false);
+                                            }}
+                                            placeholder="Enter email address"
+                                            className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB84C] text-base sm:text-lg w-full"
+                                        />
+                                        <button
+                                            onClick={handleSendInvite}
+                                            disabled={isSending}
+                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-[#9A4112] text-white font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 disabled:opacity-70 whitespace-nowrap text-sm sm:text-base"
+                                        >
+                                            {isSending ? 'Sending...' : 'Send'}
+                                        </button>
+                                    </div>
+                                    {sendError && (
+                                        <p className="text-red-500 text-sm mt-2">{sendError}</p>
+                                    )}
+                                    {sendSuccess && (
+                                        <p className="text-green-600 text-sm mt-2">Invitation sent successfully!</p>
+                                    )}
                                 </div>
-                                <button
-                                    onClick={copyToClipboard}
-                                    className="px-4 py-2 bg-[#9A4112] text-white font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
-                                >
-                                    {isCopied ? 'Copied!' : 'Copy'}
-                                </button>
+                                
+                                {/* Share Link Section */}
+                                <div>
+                                    <h3 className="text-[#3D2410] text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Or share this link</h3>
+                                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                        <div className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] rounded-lg overflow-hidden text-sm sm:text-base break-all">
+                                            {shareLink}
+                                        </div>
+                                        <button
+                                            onClick={copyToClipboard}
+                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-[#9A4112] text-white font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 whitespace-nowrap text-sm sm:text-base"
+                                        >
+                                            {isCopied ? 'Copied!' : 'Copy'}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

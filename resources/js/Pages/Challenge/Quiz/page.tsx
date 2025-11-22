@@ -24,7 +24,6 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-    const [showResult, setShowResult] = useState(false);
     const [score, setScore] = useState(0);
     const [completed, setCompleted] = useState(false);
     const [lives, setLives] = useState(3);
@@ -127,7 +126,6 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 (answer === 'C' && currentQuiz.correct_answer === 'C');
             
             setIsCorrect(correct);
-            setShowResult(true);
 
             // Play sound based on correctness without waiting for it to finish
             if (correct) {
@@ -177,48 +175,19 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                         setCompleted(true);
                     }
                 });
+            } else {
+                // Automatically move to next question after a short delay
+                setTimeout(() => {
+                    if (currentQuizIndex < selectedQuizzes.length - 1) {
+                        setCurrentQuizIndex(currentQuizIndex + 1);
+                        setSelectedAnswer(null);
+                        setIsCorrect(null);
+                    } else {
+                        setCompleted(true);
+                    }
+                }, 1000); // 1 second delay to show feedback
             }
         }
-    };
-
-    const nextQuestion = () => {
-        if (lives <= 0) {
-            setCompleted(true);
-            return;
-        }
-        
-        if (currentQuizIndex < selectedQuizzes.length - 1) {
-            setCurrentQuizIndex(currentQuizIndex + 1);
-            setSelectedAnswer(null);
-            setIsCorrect(null);
-            setShowResult(false);
-        } else {
-            setCompleted(true);
-        }
-    };
-
-    const handleWrongAnswer = () => {
-        // Automatically move to next question when answer is wrong
-        if (lives <= 0) {
-            setCompleted(true);
-            return;
-        }
-        
-        if (currentQuizIndex < selectedQuizzes.length - 1) {
-            setCurrentQuizIndex(currentQuizIndex + 1);
-            setSelectedAnswer(null);
-            setIsCorrect(null);
-            setShowResult(false);
-        } else {
-            setCompleted(true);
-        }
-    };
-
-    const tryAgain = () => {
-        // This function is kept for consistency but won't be used for wrong answers
-        setSelectedAnswer(null);
-        setIsCorrect(null);
-        setShowResult(false);
     };
 
     const restartQuiz = () => {
@@ -228,7 +197,6 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         setCurrentQuizIndex(0);
         setSelectedAnswer(null);
         setIsCorrect(null);
-        setShowResult(false);
         setScore(0);
         setCompleted(false);
         setLives(3);
@@ -494,7 +462,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                 {selectedAnswer === 'C' && currentQuiz.choice_c}
                             </p>
                         ) : (
-                            <p className="text-gray-500">DROP HERE THE ANSWER</p>
+                            <p className="text-gray-500">DRAG HERE THE ANSWER</p>
                         )}
                     </div>
 
@@ -534,66 +502,6 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     </div>
                 </div>
             </div>
-
-            {/* Result Modal */}
-            {showResult && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="relative w-[600px] bg-transparent">
-                        {/* Wooden Frame Background */}
-                        <img
-                            src="/Img/Challenge/GuessWord/wooden_frame.png"
-                            alt="Wooden Frame"
-                            className="w-full h-auto"
-                        />
-
-                        {/* Modal Content */}
-                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[-95px]">
-                        <h2 className=" fixed
-                            font-mono
-                            mr-5
-                            ml-5
-                            text-[58px] leading-[72px] 
-                            font-black 
-                            text-orange-800
-                            z-10
-                            mb-12
-                            -mt-10"
-                        >
-                                {isCorrect ? "CORRECT!" : "INCORRECT!"}
-                            </h2>
-                            
-                            {isCorrect ? (
-                                 <p className="fixed text-lg text-orange-800 mb-3 mt-20">Tama ang sagot! Ipagpatuloy ang iyong hamon.</p>
-                            ) : (
-                                 <p className="fixed text-lg text-orange-800 mb-3 mt-20">
-                                    Mali ang sagot! Nawalan ka ng isang puso.
-                                </p>
-                            )}
-
-                            <div className="fixed flex gap-4 mt-[360px]">
-                                <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
-                                    <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
-                                </button>
-                                {isCorrect ? (
-                                    <button
-                                        onClick={nextQuestion}
-                                        className="rounded-full p-3 relative"
-                                    >
-                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleWrongAnswer}
-                                        className="rounded-full p-3 relative"
-                                    >
-                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next Question" className="w-[60px] h-[60px]" />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             <style>{`
                 .stroke-text {

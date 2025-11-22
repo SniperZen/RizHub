@@ -28,20 +28,6 @@ interface DashboardProps {
     notifications: AppNotification[];
 }
 
-// Custom hook for image loading
-const useImageLoader = (src: string) => {
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    useEffect(() => {
-        const img = new Image();
-        img.src = src;
-        img.onload = () => setIsLoaded(true);
-        img.onerror = () => setIsLoaded(true); // Still show content even if image fails
-    }, [src]);
-
-    return isLoaded;
-};
-
 export default function Dashboard({ 
     music: initialMusic, 
     sound: initialSound, 
@@ -49,6 +35,27 @@ export default function Dashboard({
     unreadNotifications: initialUnreadNotifications,
     notifications: initialNotifications
 }: DashboardProps) {
+    const { auth } = usePage<PageProps>().props;
+    
+    // Redirect to login if user is not authenticated
+    useEffect(() => {
+        if (!auth.user) {
+            router.get(route('login'));
+            return;
+        }
+    }, [auth.user]);
+
+    // Show loading state while checking authentication
+    if (!auth.user) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B]">
+                <div className="flex flex-col items-center">
+                    <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <p className="text-[#9A4112] font-bold text-lg">Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     const [showSettings, setShowSettings] = useState(false);
     const [showAccount, setShowAccount] = useState(false);
@@ -67,6 +74,8 @@ export default function Dashboard({
     const [unreadCount, setUnreadCount] = useState(initialUnreadNotifications);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isSettingsBgLoaded, setIsSettingsBgLoaded] = useState(false);
+    const [isAccountBgLoaded, setIsAccountBgLoaded] = useState(false);
 
     const [formData, setFormData] = useState({
         currentPassword: '',
@@ -82,10 +91,6 @@ export default function Dashboard({
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
-
-    // Use the custom hook for modal background images
-    const isSettingsBgLoaded = useImageLoader('/Img/Dashboard/modalBG.png');
-    const isAccountBgLoaded = useImageLoader('/Img/Dashboard/modalBG.png');
 
     const { data, setData, errors,patch,  put, reset, processing, recentlySuccessful } = useForm({
         current_password: '',
@@ -267,7 +272,6 @@ export default function Dashboard({
         });
     };
 
-
    return (
     <StudentLayout
         musicVolume={music}
@@ -277,7 +281,6 @@ export default function Dashboard({
 
 
 <div className="min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden">
-
     {/* Background image full screen */}
     <img
         src="/Img/Dashboard/BG1.png"
@@ -425,259 +428,277 @@ export default function Dashboard({
         </Button>
     </div>
 
-                {/* Settings Modal */}
-                {showSettings && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                        <div 
-                            className="
-                                relative 
-                                bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] 
-                                rounded-[40px] 
-                                px-6 sm:px-8 md:px-12 
-                                pb-10 sm:pb-14 md:pb-16 
-                                pt-5 
-                                flex flex-col items-center 
-                                h-auto
-                                w-[90vw] sm:w-[600px] md:min-w-[700px]
-                                max-w-[95vw]
-                            "
-                            style={{ 
-                                backgroundImage: isSettingsBgLoaded ? "url('/Img/Dashboard/modalBG.png')" : "none",
-                                backgroundSize: "contain",
-                                backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat"
+            {/* Settings Modal - Updated with MailModal styling */}
+            {showSettings && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                    <div className="relative flex flex-col items-center">
+                        <img
+                            src="/Img/Dashboard/modalBG.png"
+                            alt="Modal Background"
+                            style={{
+                                width: '900px',
+                                height: '500px'
                             }}
-                        >
-                            {/* Loading Overlay - Only show when image is not loaded */}
-                            {!isSettingsBgLoaded && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] z-20">
-                                    <div className="flex flex-col items-center">
-                                        <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
-                                        <p className="text-[#9A4112] font-bold">Loading...</p>
-                                    </div>
-                                </div>
-                            )}
-                            
-                            <div className={`flex flex-col items-center w-full px-[80px] ${!isSettingsBgLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
-                                
-                                <span className="absolute text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-wide bottom-[307px] sm:bottom-[343px] md:bottom-[365px] lg:bottom-[365px]">Settings</span>
-                                <Button
-                                    soundHover="/sounds/button-hover.mp3"
-                                    soundClick="/Music/Sound.mp3"
-                                    soundVolume={volume}
-                                    className="absolute top-10 right-9 rounded-full w-[40px] lg:w-[60px]  h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
-                                    onClick={() => setShowSettings(false)}
-                                    aria-label="Close"
-                                >
-                                   <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
-                                </Button>
-                                {/* Sliders */}
-                                <div className="flex flex-col gap-8 mt-20 mb-5 w-full items-center w-[450px]">
-                                    {/* Volume Slider */}
-                                    <div className="flex items-center gap-6 w-full">
-                                        <div className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg" onClick={toggleVolume}>
-                                            <img src="/Img/Dashboard/volume.png" alt="Volume" className="w-full h-auto" />
-                                        </div>
-                                        <div className="flex-1 flex items-center">
-                                            <div
-                                                ref={volumeRef}
-                                                className="w-full h-6 bg-[#B97B4B] rounded-full relative flex items-center cursor-pointer"
-                                                onMouseDown={e => {
-                                                    const move = (ev: any) => handleSliderDrag(ev, setVolume, volumeRef);
-                                                    const up = () => {
-                                                        window.removeEventListener("mousemove", move);
-                                                        window.removeEventListener("mouseup", up);
-                                                        handleSliderChangeEnd();
-                                                    };
-                                                    window.addEventListener("mousemove", move);
-                                                    window.addEventListener("mouseup", up);
-                                                    handleSliderDrag(e, setVolume, volumeRef);
-                                                }}
-                                                onTouchStart={e => {
-                                                    const move = (ev: any) => handleSliderDrag(ev, setVolume, volumeRef);
-                                                    const end = () => {
-                                                        window.removeEventListener("touchmove", move);
-                                                        window.removeEventListener("touchend", end);
-                                                        handleSliderChangeEnd();
-                                                    };
-                                                    window.addEventListener("touchmove", move);
-                                                    window.addEventListener("touchend", end);
-                                                    handleSliderDrag(e, setVolume, volumeRef);
-                                                }}
-                                            >
-                                                <div
-                                                    className="absolute left-0 top-0 h-6 bg-gradient-to-r from-[#FFDE8A] to-[#FFB84C] rounded-full border-10 border-[#9A4112]"
-                                                    style={{ width: `${volume}%` }}
-                                                ></div>
-                                                <div
-                                                    className="absolute top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
-                                                    style={{ left: `calc(${volume}% - 20px)` }}
-                                                >
-                                                    <div
-                                                        className="w-10 h-10 rounded-full"
-                                                        style={{
-                                                            backgroundImage: 'url("/Img/Dashboard/wood-btn.png")',
-                                                            backgroundSize: 'cover',
-                                                            backgroundPosition: 'center',
-                                                            border: 'none',
-                                                        }}
-                                                    >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Music Slider */}
-                                    <div className="flex items-center gap-6 w-full">
-                                        <div className="rounded-full w-16 h-16 flex items-center justify-center shadow-lg" onClick={toggleMusic}>
-                                            <img src="/Img/Dashboard/music.png" alt="Music" className="w-full h-[63px]" />
-                                        </div>
-                                        <div className="flex-1 flex items-center">
-                                            <div
-                                                ref={musicRef}
-                                                className="w-full h-6 bg-[#B97B4B] rounded-full relative flex items-center cursor-pointer"
-                                                onMouseDown={e => {
-                                                    const move = (ev: any) => handleSliderDrag(ev, setMusic, musicRef);
-                                                    const up = () => {
-                                                        window.removeEventListener("mousemove", move);
-                                                        window.removeEventListener("mouseup", up);
-                                                        handleSliderChangeEnd();
-                                                    };
-                                                    window.addEventListener("mousemove", move);
-                                                    window.addEventListener("mouseup", up);
-                                                    handleSliderDrag(e, setMusic, musicRef);
-                                                }}
-                                                onTouchStart={e => {
-                                                    const move = (ev: any) => handleSliderDrag(ev, setMusic, musicRef);
-                                                    const end = () => {
-                                                        window.removeEventListener("touchmove", move);
-                                                        window.removeEventListener("touchend", end);
-                                                        handleSliderChangeEnd();
-                                                    };
-                                                    window.addEventListener("touchmove", move);
-                                                    window.addEventListener("touchend", end);
-                                                    handleSliderDrag(e, setMusic, musicRef);
-                                                }}
-                                            >
-                                                <div
-                                                    className="absolute left-0 top-0 h-6 bg-gradient-to-r from-[#FFDE8A] to-[#FFB84C] rounded-full"
-                                                    style={{ width: `${music}%` }}
-                                                ></div>
-                                                <div
-                                                    className="absolute top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
-                                                    style={{ left: `calc(   ${music}% - 20px)` }}
-                                                >
-                                                    <div
-                                                        className="w-10 h-10 rounded-full"
-                                                        style={{
-                                                            backgroundImage: 'url("/Img/Dashboard/wood-btn.png")',
-                                                            backgroundSize: 'cover',
-                                                            backgroundPosition: 'center',
-                                                            border: 'none',
-                                                        }}
-                                                    >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Action Buttons */}
-                                <div className="flex gap-10">
-                                    <Button className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
-                                    onClick={() => {
-                                            setShowSettings(false);
-                                            setShowShare(true);
-                                        }}
-                                        aria-label="Share"
-                                        soundHover="/sounds/button-hover.mp3"
-                                        soundClick="/Music/Sound.mp3"
-                                        soundVolume={volume}
-                                    >
-                                        <img src="/Img/Dashboard/share.png" alt="Share" className="w-full h-full object-contain" />
-                                    </Button>
-                                    <Button 
-                                        soundHover="/sounds/button-hover.mp3"
-                                        soundClick="/Music/Sound.mp3"
-                                        soundVolume={volume}
-                                        type="button"
-                                        className="transition hover:scale-110 focus:outline-none"
-                                        aria-label="Profile"
-                                        onClick={() => {
-                                            setShowAccount(true);
-                                            setShowSettings(false);
-                                        }}
-
-                                    >
-                                        <img src="/Img/Dashboard/profile.png" alt="Profile" className="w-20" />
-                                    </Button>
-                                    <Button 
-                                        soundHover="/sounds/button-hover.mp3"
-                                        soundClick="/Music/Sound.mp3"
-                                        soundVolume={volume}
-                                        className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
-                                        onClick={() => setShowLogoutModal(true)}
-                                    >
-                                        <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
-                                    </Button>
-
-                                    {/* Logout Modal */}
-                                    <LogoutModal
-                                        isOpen={showLogoutModal}
-                                        onClose={() => setShowLogoutModal(false)}
-                                        onConfirm={() => router.post(route('logout'))}
-                                    />
+                            className="rounded-[40px]"
+                            onLoad={() => setIsSettingsBgLoaded(true)}
+                            onError={() => setIsSettingsBgLoaded(true)}
+                        />
+                        
+                        {!isSettingsBgLoaded && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-transparent rounded-[40px] z-20">
+                                <div className="flex flex-col items-center">
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-3 sm:mb-4"></div>
+                                    <p className="text-[#9A4112] font-bold text-sm sm:text-base">Loading...</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                )}
-                </div>
-                {showAccount && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                        <div 
-                            className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-12 py-10 flex flex-col items-center min-w-[700px]"
-                            style={{ 
-                                backgroundImage: isAccountBgLoaded ? "url('/Img/Dashboard/modalBG.png')" : "none",
-                                backgroundSize: "contain",
-                                backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat"
-                            }}
-                        >
-                            {/* Loading Overlay - Only show when image is not loaded */}
-                            {!isAccountBgLoaded && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] z-20">
-                                    <div className="flex flex-col items-center">
-                                        <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
-                                        <p className="text-[#9A4112] font-bold">Loading...</p>
-                                    </div>
+                        )}                   
+                        {/* Content Container - Only show when image is loaded */}
+                        {isSettingsBgLoaded && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <div className="flex flex-col items-center w-full px-[80px]">
+                                    <span className="absolute text-white text-4xl font-black tracking-wide top-3">
+                                        Settings
+                                    </span>
+                                    
+                                    <Button
+                                        soundHover="/sounds/button-hover.mp3"
+                                        soundClick="/Music/Sound.mp3"
+                                        soundVolume={volume}
+                                        className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                        onClick={() => {
+                                            setShowSettings(false);
+                                            setIsSettingsBgLoaded(false);
+                                        }}
+                                        aria-label="Close"
+                                    >
+                                        <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
+                                    </Button>
                                 </div>
-                            )}
-                            
-                            <div className={`flex flex-col items-center w-full ${!isAccountBgLoaded ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
-                              <span className="absolute text-white text-4xl font-black tracking-wide top-12s">Account</span>
-                                
-                                {/* Close Button */}
-                                <Button
-                                    soundHover="/sounds/button-hover.mp3"
-                                    soundClick="/Music/Sound.mp3"
-                                    soundVolume={volume}
-                                    className="absolute top-19 right-12 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
-                                    onClick={() => setShowAccount(false)}
-                                    aria-label="Close"
-                                >
-                                    <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
-                                </Button>
 
-                                <div className="w-full max-w-md mt-16 mb-8 flex flex-row items-start justify-center gap-[10px]">
-                                    {/* Nav Button */}
-
-                                    <div className="flex flex-col gap-4 p-5">
+                                {/* Main Content Area - Centered */}
+                                <div className="flex flex-col items-center justify-center w-full h-full px-16 mt-10">
+                                    {/* Sliders Section - Centered */}
+                                    <div className="flex flex-col gap-8 w-full max-w-[600px] mb-12">
+                                        {/* Volume Slider */}
+                                        <div className="flex items-center gap-6 w-full">
+                                            <div className="rounded-full w-16 h-16 flex items-center justify-center" onClick={toggleVolume}>
+                                                <img src="/Img/Dashboard/volume.png" alt="Volume" className="w-full h-auto" />
+                                            </div>
+                                            <div className="flex-1 flex items-center">
+                                                <div
+                                                    ref={volumeRef}
+                                                    className="w-full h-10 bg-[#B97B4B] rounded-full relative flex items-center cursor-pointer"
+                                                    onMouseDown={e => {
+                                                        const move = (ev: any) => handleSliderDrag(ev, setVolume, volumeRef);
+                                                        const up = () => {
+                                                            window.removeEventListener("mousemove", move);
+                                                            window.removeEventListener("mouseup", up);
+                                                            handleSliderChangeEnd();
+                                                        };
+                                                        window.addEventListener("mousemove", move);
+                                                        window.addEventListener("mouseup", up);
+                                                        handleSliderDrag(e, setVolume, volumeRef);
+                                                    }}
+                                                    onTouchStart={e => {
+                                                        const move = (ev: any) => handleSliderDrag(ev, setVolume, volumeRef);
+                                                        const end = () => {
+                                                            window.removeEventListener("touchmove", move);
+                                                            window.removeEventListener("touchend", end);
+                                                            handleSliderChangeEnd();
+                                                        };
+                                                        window.addEventListener("touchmove", move);
+                                                        window.addEventListener("touchend", end);
+                                                        handleSliderDrag(e, setVolume, volumeRef);
+                                                    }}
+                                                >
+                                                    <div
+                                                        className="absolute left-0 top-0 h-10 bg-gradient-to-r from-[#FFDE8A] to-[#FFB84C] rounded-xl border-10 border-[#9A4112]"
+                                                        style={{ width: `${volume}%` }}
+                                                    ></div>
+                                                    <div
+                                                        className="absolute top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center"
+                                                        style={{ left: `calc(${volume}% - 20px)` }}
+                                                    >
+                                                        <div
+                                                            className="w-12 h-12 rounded-full"
+                                                            style={{
+                                                                backgroundImage: 'url("/Img/Dashboard/wood-btn.png")',
+                                                                backgroundSize: 'cover',
+                                                                backgroundPosition: 'center',
+                                                                border: 'none',
+                                                            }}
+                                                        >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Music Slider */}
+                                        <div className="flex items-center gap-6 w-full">
+                                            <div className="rounded-full w-16 h-21 flex items-center justify-center" onClick={toggleMusic}>
+                                                <img src="/Img/Dashboard/music.png" alt="Music" className="w-full h-auto" />
+                                            </div>
+                                            <div className="flex-1 flex items-center">
+                                                <div
+                                                    ref={musicRef}
+                                                    className="w-full h-10 bg-[#B97B4B] rounded-full relative flex items-center cursor-pointer"
+                                                    onMouseDown={e => {
+                                                        const move = (ev: any) => handleSliderDrag(ev, setMusic, musicRef);
+                                                        const up = () => {
+                                                            window.removeEventListener("mousemove", move);
+                                                            window.removeEventListener("mouseup", up);
+                                                            handleSliderChangeEnd();
+                                                        };
+                                                        window.addEventListener("mousemove", move);
+                                                        window.addEventListener("mouseup", up);
+                                                        handleSliderDrag(e, setMusic, musicRef);
+                                                    }}
+                                                    onTouchStart={e => {
+                                                        const move = (ev: any) => handleSliderDrag(ev, setMusic, musicRef);
+                                                        const end = () => {
+                                                            window.removeEventListener("touchmove", move);
+                                                            window.removeEventListener("touchend", end);
+                                                            handleSliderChangeEnd();
+                                                        };
+                                                        window.addEventListener("touchmove", move);
+                                                        window.addEventListener("touchend", end);
+                                                        handleSliderDrag(e, setMusic, musicRef);
+                                                    }}
+                                                >
+                                                    <div
+                                                        className="absolute left-0 top-0 h-10 bg-gradient-to-r from-[#FFDE8A] to-[#FFB84C] rounded-xl"
+                                                        style={{ width: `${music}%` }}
+                                                    ></div>
+                                                    <div
+                                                        className="absolute top-1/2 -translate-y-1/2 w-12 h-12 shadow-inner flex items-center justify-center"
+                                                        style={{ left: `calc(${music}% - 20px)` }}
+                                                    >
+                                                        <div
+                                                            className="w-12 h-12 rounded-full"
+                                                            style={{
+                                                                backgroundImage: 'url("/Img/Dashboard/wood-btn.png")',
+                                                                backgroundSize: 'cover',
+                                                                backgroundPosition: 'center',
+                                                                border: 'none',
+                                                            }}
+                                                        >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Action Buttons - Centered */}
+                                    <div className="flex gap-8 items-center justify-center">
+                                        <Button 
+                                            className="rounded-full w-20 h-20 flex items-center justify-center transition hover:scale-110 overflow-hidden"
+                                            onClick={() => {
+                                                setShowSettings(false);
+                                                setShowShare(true);
+                                                setIsSettingsBgLoaded(false);
+                                            }}
+                                            aria-label="Share"
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
+                                        >
+                                            <img src="/Img/Dashboard/share.png" alt="Share" className="w-full h-full object-contain" />
+                                        </Button>
                                         <Button 
                                             soundHover="/sounds/button-hover.mp3"
                                             soundClick="/Music/Sound.mp3"
                                             soundVolume={volume}
-                                            className={`box-border flex items-center px-[11px] py-[4px] gap-[8px] border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] w-[150px] ${
+                                            type="button"
+                                            className="transition hover:scale-110 focus:outline-none"
+                                            aria-label="Profile"
+                                            onClick={() => {
+                                                setShowAccount(true);
+                                                setShowSettings(false);
+                                                setIsSettingsBgLoaded(false);
+                                            }}
+                                        >
+                                            <img src="/Img/Dashboard/profile.png" alt="Profile" className="w-20" />
+                                        </Button>
+                                        <Button 
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
+                                            className="rounded-full w-20 h-20 flex items-center justify-center transition hover:scale-110 overflow-hidden"
+                                            onClick={() => setShowLogoutModal(true)}
+                                        >
+                                            <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
+                                        </Button>
+
+                                        {/* Logout Modal */}
+                                        <LogoutModal
+                                            isOpen={showLogoutModal}
+                                            onClose={() => setShowLogoutModal(false)}
+                                            onConfirm={() => router.post(route('logout'))}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+            </div>
+            {showAccount && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+                    <div className="relative flex flex-col items-center w-full max-w-[900px]">
+                        {/* Background Image - Responsive */}
+                        <img
+                            src="/Img/Dashboard/modalBG.png"
+                            alt="Modal Background"
+                            className="w-full h-auto max-h-[80vh] rounded-[40px] min-h-[500px]"
+                            onLoad={() => setIsAccountBgLoaded(true)}
+                            onError={() => setIsAccountBgLoaded(true)}
+                        />
+                        
+                        {/* Loading Overlay - Only show when image is not loaded */}
+                        {!isAccountBgLoaded && (
+                            <div 
+                                className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] z-20 w-full h-full"
+                            >
+                                <div className="flex flex-col items-center">
+                                    <div className="w-16 h-16 border-4 border-[#9A4112] border-t-transparent rounded-full animate-spin mb-4"></div>
+                                    <p className="text-[#9A4112] font-bold">Loading...</p>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Content Container - Only show when image is loaded */}
+                        {isAccountBgLoaded && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
+                                <div className="flex flex-col items-center w-full px-4 sm:px-8 md:px-12">
+                                    <span className="absolute text-white text-4xl sm:text-4xl md:text-4xl lg:text-4xl font-black tracking-wide top-3 sm:top-4 md:top-3 text-center">
+                                        Account
+                                    </span>
+                                    
+                                    {/* Close Button */}
+                                    <Button
+                                        soundHover="/sounds/button-hover.mp3"
+                                        soundClick="/Music/Sound.mp3"
+                                        soundVolume={volume}
+                                        className="absolute top-10 sm:top-10 md:top-10 right-4 sm:right-6 md:right-8 rounded-full w-12 h-12 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-[60px] lg:h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                        onClick={() => setShowAccount(false)}
+                                        aria-label="Close"
+                                    >
+                                        <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
+                                    </Button>
+                                </div>
+
+                                {/* Main Content Area */}
+                                <div className="w-full max-w-xl md:max-w-lg lg:max-w-2xl mt-16 sm:mt-14 md:mt-12 mb-6 sm:mb-2 flex flex-col lg:flex-row items-start justify-center gap-6 sm:gap-8 md:gap-[42px] px-16 sm:px-16 md:px-8 lg:px-4">
+                                    {/* Tab Buttons */}
+                                    <div className="flex flex-row lg:flex-col gap-3 sm:gap-4 w-full lg:w-auto">
+                                        <Button 
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
+                                            className={`box-border flex items-center sm:text-center px-3 sm:px-[11px] text-sm sm:text-base py-2 sm:py-[8px] gap-2 sm:gap-[8px] border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] w-full lg:w-[150px] ${
                                                 showGeneral 
                                                     ? 'bg-[#9A4112] text-white' 
                                                     : 'bg-[#F8E193] text-[#282725]'
@@ -690,7 +711,7 @@ export default function Dashboard({
                                             soundHover="/sounds/button-hover.mp3"
                                             soundClick="/Music/Sound.mp3"
                                             soundVolume={volume}
-                                            className={`box-border flex items-center px-[11px] py-[4px] gap-[8px] border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] w-[150px] ${
+                                            className={`box-border flex items-center px-3 sm:px-[11px] text-sm sm:text-base py-2 sm:py-[8px] gap-2 sm:gap-[8px] border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] w-full lg:w-[150px] ${
                                                 !showGeneral 
                                                     ? 'bg-[#9A4112] text-white' 
                                                     : 'bg-[#F8E193] text-[#282725]'
@@ -700,134 +721,60 @@ export default function Dashboard({
                                             Password
                                         </Button>
                                     </div>
-                                    {/* Password Form */}
-                                    {!showGeneral ? (
-                                        <form onSubmit={updatePassword} className="w-full pl-[50px] border-l-[1px] border-[#88643D]">
-                                            <h3 className="text-[#000] text-3xl font-semibold mb-2">Password</h3>
-                                            <div className="flex flex-col items-end">
-                                                <div>
-                                                <div>
-                                                    <div className="mb-4">
-                                                    <label className="block text-[#3D2410] text-[15px] font-extrabold">Previous Password</label>
-                                                    <input
-                                                        type="password"
-                                                        name="current_password"
-                                                        ref={currentPasswordInput}
-                                                        value={data.current_password}
-                                                        onChange={(e) => setData('current_password', e.target.value)}
-                                                        className="w-[300px] px-4 py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-[10px] focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-[35px]"
-                                                        placeholder="Input Previous Password"
-                                                    />
-                                                    {errors.current_password && (
-                                                        <p className="text-red-500 text-xs mt-1">{errors.current_password}</p>
-                                                    )}
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <div className="mb-4">
-                                                    <label className="block text-[#3D2410] text-[15px] font-extrabold">New Password</label>
-                                                    <input
-                                                        type="password"
-                                                        name="password"
-                                                        ref={passwordInput}
-                                                        value={data.password}
-                                                        onChange={(e) => setData('password', e.target.value)}
-                                                        className="w-full px-4 py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-[10px] focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-[35px]"
-                                                        placeholder="Input New Password"
-                                                    />
-                                                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-                                                    </div>
-
-                                                    <div className="mb-4">
-                                                    <label className="block text-[#3D2410] text-[15px] font-extrabold">Confirm Password</label>
-                                                    <input
-                                                        type="password"
-                                                        name="password_confirmation"
-                                                        value={data.password_confirmation}
-                                                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                                                        className="w-full px-4 py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-[10px] focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-[35px]"
-                                                        placeholder="Confirm Password"
-                                                    />
-                                                    {errors.password_confirmation && (
-                                                        <p className="text-red-500 text-xs mt-1">{errors.password_confirmation}</p>
-                                                    )}
-                                                    </div>
-                                                </div>
-                                                </div>
-
-                                                <Button
-                                                soundHover="/sounds/button-hover.mp3"
-                                                soundClick="/Music/Sound.mp3"
-                                                soundVolume={volume}
-                                                type="submit"
-                                                disabled={processing}
-                                                className="w-[100px] h-[30px] flex items-center px-4 py-2 bg-[#9A4112] text-[#000] text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
-                                                >
-                                                Save Changes
-                                                </Button>
-                                            </div>
-                                        </form>
-                                    ) :
-                                    (
-                                        <form onSubmit={submitProfileUpdate} className="w-full pl-[50px] border-l-[1px] border-[#88643D]">
-                                            <h3 className="text-[#000] text-3xl font-semibold mb-2">General</h3>
-
-                                            <div
-                                                className="relative h-20 w-auto flex justify-center items-center text-white font-extrabold"
-                                                style={{
-                                                    backgroundImage: "url('/Img/Dashboard/name.png')",
-                                                    backgroundSize: 'contain',
-                                                    backgroundPosition: 'center',
-                                                    backgroundRepeat: 'no-repeat',
-                                                }}
-                                            >
-                                                <h1 className="text-center text-[20px]">{data.name}</h1>
-                                            </div>
-
-                                            <div className="flex flex-col items-end">
-                                                <div>
-                                                    <div>
-                                                        <div className="mb-4">
-                                                            <label className="block text-[#3D2410] text-[15px] font-extrabold">Username</label>
+                                    
+                                    {/* Forms Section */}
+                                    <div className="w-full lg:flex-1">
+                                        {/* Password Form */}
+                                        {!showGeneral ? (
+                                            <form onSubmit={updatePassword} className="w-full lg:pl-8 lg:border-l-[1px] border-[#88643D]">
+                                                <h3 className="text-[#3D2410] text-xl sm:text-2xl md:text-3xl font-semibold mb-3 sm:mb-4">Password</h3>
+                                                <div className="flex flex-col items-end">
+                                                    <div className="w-full">
+                                                        <div className="mb-3 sm:mb-4">
+                                                            <label className="block text-[#3D2410] text-base sm:text-base font-extrabold">Previous Password</label>
                                                             <input
-                                                                type="text"
-                                                                name="name"
-                                                                value={data.name}
-                                                                onChange={(e) => setData('name', e.target.value)}
-                                                                className="w-[300px] px-4 py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-[10px] focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-[35px]"
-                                                                placeholder="Input Username"
+                                                                type="password"
+                                                                name="current_password"
+                                                                ref={currentPasswordInput}
+                                                                value={data.current_password}
+                                                                onChange={(e) => setData('current_password', e.target.value)}
+                                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-8 sm:h-[35px]"
+                                                                placeholder="Input Previous Password"
                                                             />
-                                                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                                                            {errors.current_password && (
+                                                                <p className="text-red-500 text-xs mt-1">{errors.current_password}</p>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="mb-3 sm:mb-4">
+                                                            <label className="block text-[#3D2410] text-base sm:text-base font-extrabold">New Password</label>
+                                                            <input
+                                                                type="password"
+                                                                name="password"
+                                                                ref={passwordInput}
+                                                                value={data.password}
+                                                                onChange={(e) => setData('password', e.target.value)}
+                                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-8 sm:h-[35px]"
+                                                                placeholder="Input New Password"
+                                                            />
+                                                            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+                                                        </div>
+
+                                                        <div className="mb-3 sm:mb-4">
+                                                            <label className="block text-[#3D2410] text-base sm:text-base font-extrabold">Confirm Password</label>
+                                                            <input
+                                                                type="password"
+                                                                name="password_confirmation"
+                                                                value={data.password_confirmation}
+                                                                onChange={(e) => setData('password_confirmation', e.target.value)}
+                                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-8 sm:h-[35px]"
+                                                                placeholder="Confirm Password"
+                                                            />
+                                                            {errors.password_confirmation && (
+                                                                <p className="text-red-500 text-xs mt-1">{errors.password_confirmation}</p>
+                                                            )}
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <div className="mb-4">
-                                                            <label className="block text-[#3D2410] text-[15px] font-extrabold">Email Address</label>
-                                                            <input
-                                                                type="email"
-                                                                name="email"
-                                                                value={data.email}
-                                                                onChange={(e) => setData('email', e.target.value)}
-                                                                className="w-full px-4 py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-[10px] focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-[35px]"
-                                                                placeholder="Input Email Address"
-                                                            />
-                                                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-row gap-4">
-                                                    <Button
-                                                        soundHover="/sounds/button-hover.mp3"
-                                                        soundClick="/Music/Sound.mp3"
-                                                        soundVolume={volume}
-                                                        type="button"
-                                                        className="w-auto h-[30px] flex items-center px-4 py-2 bg-[#9A4112] text-[#000] text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
-                                                        onClick={() => setShowDeleteModal(true)}
-                                                    >
-                                                        Delete Account
-                                                    </Button>
 
                                                     <Button
                                                         soundHover="/sounds/button-hover.mp3"
@@ -835,28 +782,94 @@ export default function Dashboard({
                                                         soundVolume={volume}
                                                         type="submit"
                                                         disabled={processing}
-                                                        className="w-auto h-[30px] flex items-center px-4 py-2 bg-[#9A4112] text-[#000] text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                                                        className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-[#000] text-xs sm:text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 mt-2"
                                                     >
                                                         Save Changes
                                                     </Button>
                                                 </div>
+                                            </form>
+                                        ) : (
+                                            <form onSubmit={submitProfileUpdate} className="w-full lg:pl-8 lg:border-l-[1px] border-[#88643D]">
+                                                <h3 className="text-[#3D2410] text-xl sm:text-2xl md:text-3xl font-semibold mb-0 sm:mb-0">General</h3>
 
-                                                {recentlySuccessful && (
-                                                    <p className="text-green-600 text-xs mt-2">Changes saved successfully.</p>
-                                                )}
-                                            </div>
-                                        </form>
-                                    )}
-                                    <LogoutModal
-                                        isOpen={showLogoutModal}
-                                        onClose={() => setShowLogoutModal(false)}
-                                        onConfirm={() => router.post(route('logout'))}
-                                    />
+                                                <div
+                                                    className="relative h-16 sm:h-20 w-auto flex justify-center items-center text-white font-extrabold mb-4 sm:mb-6"
+                                                    style={{
+                                                        backgroundImage: "url('/Img/Dashboard/name.png')",
+                                                        backgroundSize: 'contain',
+                                                        backgroundPosition: 'center',
+                                                        backgroundRepeat: 'no-repeat',
+                                                    }}
+                                                >
+                                                    <h1 className="text-center text-lg sm:text-lg md:text-lg">{data.name}</h1>
+                                                </div>
+
+                                                <div className="flex flex-col items-end">
+                                                    <div className="w-full">
+                                                        <div className="mb-3 sm:mb-2">
+                                                            <label className="block text-[#3D2410] text-base sm:text-base md:text-base font-extrabold">Username</label>
+                                                            <input
+                                                                type="text"
+                                                                name="name"
+                                                                value={data.name}
+                                                                onChange={(e) => setData('name', e.target.value)}
+                                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-8 sm:h-[35px]"
+                                                                placeholder="Input Username"
+                                                            />
+                                                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                                                        </div>
+
+                                                        <div className="mb-2 sm:mb-2">
+                                                            <label className="block text-[#3D2410] text-base sm:text-base md:text-base font-extrabold">Email Address</label>
+                                                            <input
+                                                                type="email"
+                                                                name="email"
+                                                                value={data.email}
+                                                                onChange={(e) => setData('email', e.target.value)}
+                                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FFB84C] h-8 sm:h-[35px]"
+                                                                placeholder="Input Email Address"
+                                                            />
+                                                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
+                                                        <Button
+                                                            soundHover="/sounds/button-hover.mp3"
+                                                            soundClick="/Music/Sound.mp3"
+                                                            soundVolume={volume}
+                                                            type="button"
+                                                            className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-[#000] text-xs sm:text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                                                            onClick={() => setShowDeleteModal(true)}
+                                                        >
+                                                            Delete Account
+                                                        </Button>
+
+                                                        <Button
+                                                            soundHover="/sounds/button-hover.mp3"
+                                                            soundClick="/Music/Sound.mp3"
+                                                            soundVolume={volume}
+                                                            type="submit"
+                                                            disabled={processing}
+                                                            className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-[#000] text-xs sm:text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                                                        >
+                                                            Save Changes
+                                                        </Button>
+                                                    </div>
+
+                                                    {recentlySuccessful && (
+                                                        <p className="text-orange-600 text-xs mt-2">Changes saved successfully.</p>
+                                                    )}
+                                                </div>
+                                            </form>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
-                )}
+                </div>
+            )}
                      <ShareModal 
                 isOpen={showShare} 
                 onClose={() => setShowShare(false)} 

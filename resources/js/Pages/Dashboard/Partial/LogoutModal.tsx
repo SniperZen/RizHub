@@ -12,7 +12,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
       <div 
-        className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px]  px-1 pb-6 pt-5 flex flex-col items-center min-w-[500px] h-auto"
+        className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-1 pb-6 pt-5 flex flex-col items-center min-w-[500px] h-auto"
         style={{ 
           backgroundImage: "url('/Img/Dashboard/modalBG.png')",
           backgroundSize: "contain",
@@ -29,7 +29,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
         
         {/* Close Button */}
         <button
-          className="absolute top-4 right-8 rounded-full w-[50px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110 z-50"
+          className="absolute top-4 right-8 rounded-full w-[50px] h-[60px] flex items-center justify-center transition hover:scale-110 z-50"
           onClick={onClose}
         >
           <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />

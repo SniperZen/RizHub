@@ -105,15 +105,6 @@ const PrivacyPolicyModal: React.FC<ModalProps> = ({ open, onClose }) => {
             </div>
           </div>
         </div>
-
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-[#5A3416] text-white rounded hover:bg-[#3d2410] transition-colors"
-          >
-            Close
-          </button>
-        </div>
       </div>
     </div>
   );

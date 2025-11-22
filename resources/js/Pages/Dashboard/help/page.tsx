@@ -24,7 +24,7 @@ const TypingText = ({ soundVolume = 30 }) => {
   
   const fullText = `Pagmasdan nang maigi ang palabas na animasyon bago magpatuloy sa hamon, ang mga tanong sa hamon ay binubuo ng lima hanggang sampung bilang lamang.<br />
 Makamtan ang sukdulang marka upang mabuksan ang susunod na kabanata at magawaran ng natatanging parangal, tuntunin ang lahat ng kabanata upang tanggapin ang gantimpalang di malilimutan mula sa sistema.<br />
-Nawa’y maging makabuluhan ang iyong paglalakbay sa pagkatuto!`;
+Nawa'y maging makabuluhan ang iyong paglalakbay sa pagkatuto!`;
 
   // Typing sound effect
   const typingSound = "/Music/typewriter.mp3";  
@@ -169,7 +169,6 @@ export default function HelpPage() {
 
   // Background images
   const backgroundImage = '/Img/Dashboard/BG2.png';
-  const illustrationImage = '/Img/Dashboard/Illustartion.png';
   const headerImage = '/Img/Dashboard/header-ins.png'; 
   const personImage = '/Img/Dashboard/bg-per.png'; 
 
@@ -217,60 +216,64 @@ export default function HelpPage() {
         </div>
 
         <div className="absolute z-10 min-h-screen">
-          <div className="fix w-full max-w-5xl mb-2 overflow-hidden">
+          <div className="fix w-full max-w-4xl mb-2 overflow-hidden">
             <div className="flex w-full h-screen overflow-hidden relative">
               
-              {/* Illustration wrapper */}
-              <div className="relative inline-block overflow-hidden">
+              {/* Mobile Illustration (425px and below) */}
+              <img 
+                src="/Img/Dashboard/mobileIllustartion.png" 
+                alt="Help Illustration Mobile"
+                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[50px] xl:top-[0px] block md:hidden"
+              />
+              
+              {/* Desktop Illustration */}
+              <img 
+                src="/Img/Dashboard/Illustartion.png" 
+                alt="Help Illustration" 
+                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[50px] xl:top-[0px] hidden md:block"
+              />
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-20 md:px-20 lg:px-20 xl:px-20 sm:mr-5 md:mr-10 lg:mr-20">
+                <p className="text-white text-base sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[50px] space-y-5">
+                  <TypingText soundVolume={userSound} />
+                </p>
+              </div>
+              
+              {/* Header stays centered with smooth floating animation */}
+              <div 
+                className="absolute left-1/2 bottom-[390px] sm:bottom-[470px] md:bottom-[400px] lg:bottom-[400px] lg:pr-[60px]
+                          transform -translate-x-1/2 z-30 h-60 scale-150 w-[500px]
+                          md:w-[750px] lg:w-[650px] xl:w-[650px]"
+                style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
+              >
                 <img 
-                  src={illustrationImage} 
-                  alt="Help Illustration" 
-                  className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[50px] xl:top-[0px]"
+                  src={headerImage} 
+                  alt="Help Header" 
+                  className="h-20 lg:h-[100px] w-auto mx-auto"
                 />
               </div>
-
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-20 md:px-20 lg:px-20 xl:px-20 sm:mr-5 md:mr-10 lg:mr-20">
-              <p className="text-white text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[50px] space-y-5">
-                <TypingText soundVolume={userSound} />
-              </p>
-            </div>
-{/* Header stays centered with smooth floating animation */}
-<div 
-  className="absolute left-1/2 bottom-[300px] sm:bottom-[348px] md:bottom-[380px] 
-             transform -translate-x-1/2 z-30 h-60 scale-150 
-             md:w-[650px] xl:w-[650px]"
-  style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
->
-  <img 
-    src={headerImage} 
-    alt="Help Header" 
-    className="h-20 w-auto mx-auto"
-  />
-</div>
-
-
-            <style>
-              {`
-                @keyframes smoothFloat {
-                  0% { transform: translate(-50%, 0); }
-                  50% { transform: translate(-50%, -15px); }
-                  100% { transform: translate(-50%, 0); }
-                }
-              `}
-            </style>
+              <style>
+                {`
+                  @keyframes smoothFloat {
+                    0% { transform: translate(-50%, 0); }
+                    50% { transform: translate(-50%, -15px); }
+                    100% { transform: translate(-50%, 0); }
+                  }
+                `}
+              </style>
 
             </div>
           </div>
         </div>
         
-{/* Person anchored to bottom-left of illustration */}
-<div className="hidden xl:block absolute bottom-0 right-12 z-30 scale-110">
-  <img 
-    src={personImage} 
-    alt="Person" 
-    className="max-w-[90vw] max-h-[90vh] h-auto w-auto"
-  />
-</div>
+        {/* Person anchored to bottom-left of illustration */}
+        <div className="hidden xl:block absolute bottom-0 right-12 z-30 scale-110">
+          <img 
+            src={personImage} 
+            alt="Person" 
+            className="max-w-[90vw] max-h-[90vh] h-auto w-auto"
+          />
+        </div>
       </div>
     </>
   );

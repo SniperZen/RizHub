@@ -325,25 +325,22 @@ export default function Welcome({ auth }: PageProps) {
                   
                   <div className="z-10 w-full md:flex-1 flex flex-col items-center md:items-start justify-center max-w-lg mx-auto md:mx-0 md:pl-10">
                     <motion.div 
-                        className="mt-5 md:mt-5 absolute left-5 top-5 md:left-10 md:top-5 lg:top-5 xl:top-5"
+                        className="mt-5 md:mt-5 absolute left-5 top-5  md:mb-15 md:left-10 md:top-5 lg:top-5 xl:top-5"
                         variants={itemVariants}
                         transition={{ delay: 0.1 }}
                     >
                         <img 
                             src="/Img/LandingPage/Title.png" 
                             alt="RizHub Logo" 
-                            className="h-[80px] md:h-[70px] lg:h-[100px] transition-transform duration-300 hover:scale-105" 
+                            className="h-[80px] md:h-[90px] lg:h-[100px] transition-transform duration-300 hover:scale-105" 
                         />
                     </motion.div>
                       <motion.div 
-                        className="absolute left-[4%] top-[150px] md:top-[140px] lg:top-[170px] xl:top-[170px] max-w-md text-center"
+                        className="absolute left-[4%] top-[150px] md:top-[160px] lg:top-[170px] xl:top-[170px] max-w-md text-center"
                         variants={itemVariants}
                         transition={{ delay: 0.3 }}
                       >
                             <p className="text-left font-['mono'] font-medium text-2xl md:text-2xl lg:text-2xl xl:text-2xl leading-8 lg:leading-10 text-[#282725]"
-                              style={{ 
-                                  textShadow: '0px 4px 4px rgba(0,0,0,0.25)'
-                              }}
                           >
                              Magsimula sa paglalakbay ng diwa ni Rizal!<br/>
                              Damhin ang saya at aral ng Noli Me Tangere<br/>
@@ -358,15 +355,15 @@ export default function Welcome({ auth }: PageProps) {
                         <motion.button
                         className="
                             absolute
-                            w-[160px] md:w-[180px] lg:w-[250px] lg:top-[10px] lg:left-[-20px]
-                            h-[45px] bottom-[60px] md:h-[50px] lg:h-[60px] lg:w-[210px]
-                            bg-orange-500 hover:bg-orange-600 text-white
-                            text-lg md:text-xl lg:text-3xl font-extrabold
+                            w-[160px] md:w-[180px] lg:w-[220px] lg:top-[10px] lg:left-[-20px]
+                            h-[50px] bottom-[60px] md:h-[60px] lg:h-[70px] lg:w-[210px]
+                            bg-orange-500 hover:bg-orange-600 text-white 
+                            text-2xl sm:text-2xl md:text-2xl lg:text-3xl font-extrabold
                             rounded-[50px] border-4 md:border-[6px] lg:border-[5px] border-[#C97B3A]
                             flex items-center justify-center
                             md:left-[-5px] md:bottom-[50px] xl:bottom-[30px]
                             z-50
-                        "
+"
                         style={{
                             boxShadow: '4px 6px 0px #402d22ff, 0px 2px 4px rgba(0,0,0,0.25)',
                             filter: 'drop-shadow(0px 2px 2px rgba(0,0,0,0.25))',
@@ -393,55 +390,12 @@ export default function Welcome({ auth }: PageProps) {
                   </motion.div>
                 </motion.div>
 
-                {/* Learn Section */}
-                <AnimatedSection className="bg-white py-8 md:py-12 text-center px-4 border-t-[1px] border-b-[1px] border-[#282725]">
-                    <div className="flex flex-col md:flex-row justify-around items-center">
-                        
-                        {/* Image hidden on mobile, shown on md+ */}
-                        <AnimatedItem className="mb-6 md:mb-0 flex md:block hidden md:flex" delay={0.1}>
-                        <img 
-                            src="/Img/LandingPage/square1.png" 
-                            alt="" 
-                            className="h-[200px] md:h-[250px] lg:h-[300px] transition-transform duration-300 hover:scale-105" 
-                        />
-                        </AnimatedItem>
-
-                        <AnimatedItem className="w-full md:w-auto lg:w-[800px] flex flex-col justify-around items-center md:items-end gap-4" delay={0.2}>
-                        <h2 
-                            className="font-['Inter'] not-italic font-extrabold text-3xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-right"
-                            style={{
-                            color: '#FAAB36',
-                            textShadow: '-2px 3px 0px #282725'
-                            }}
-                        >
-                          Aral na may aliw, sa Noli Me Tangere <br/> humusay at gumiliw!
-                        </h2>
-                        <p className="text-[#282725] text-center md:text-right font-['Inter'] text-base md:text-lg lg:text-[22px] leading-6 lg:leading-[28px]">
-                           Lumago, matuto, at magtagumpay habang tinatahak <br/> ang landas ng karunungan at dangal.
-                        </p>
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                          <Link
-                              href={route('login')}
-                              className="mt-4 inline-block px-5 py-2 rounded font-semibold w-[250px] md:w-[280px] lg:w-[300px] text-base md:text-[18px] text-[#282725] border-2 border-[#282725] hover:bg-orange-600"
-                              style={{
-                              background: '#FAAB36',
-                              boxShadow: '-2px 4px 0px #282725',
-                              border: '2px solid #282725',
-                              }}
-                          >
-                              Start Learning »
-                          </Link>
-                        </motion.div>
-                        </AnimatedItem>
-                    </div>
-                </AnimatedSection>
-
                 {/* About Section */}
-                <AnimatedSection className="px-4 md:px-3 py-8 md:py-5 bg-[#F4F2EC] text-center border-b-[1px] border-[#282725]">
+                <AnimatedSection className="px-4 md:px-2 py-2 md:py-2 lg:px-2 lg:py-2 bg-[#F4F2EC] text-center border-b-[1px] border-t-[1px] border-[#282725]">
                     <div className='flex flex-col md:flex-row items-center justify-around mt-3'>
                         <AnimatedItem className='h-auto flex gap-3 flex-col order-2 md:order-1 mb-6 md:mb-6' delay={0.1}>
                             <h2 
-                                className="font-['Inter'] not-italic font-extrabold text-6xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-left"
+                                className="font-['Inter'] not-italic font-extrabold text-4xl md:text-4xl lg:text-[55px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-2 text-center md:text-left"
                                 style={{
                                     color: '#FF9500',
                                     textShadow: '-2px 3px 0px #282725'
@@ -459,12 +413,29 @@ export default function Welcome({ auth }: PageProps) {
                             bagong paraan ng pag-aaral — isang paglalakbay sa diwa, damdamin, at talino ng ating
                             bayani.
                             </p>
+                        <div className="flex justify-center lg:justify-start  md:justify-start">
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <Link
+                              href={route('login')}
+                              className="mt-4 inline-block px-5 py-2 rounded font-semibold w-[250px] md:w-[280px] lg:w-[300px] text-base md:text-[18px] text-[#282725] border-2 border-[#282725] hover:bg-orange-600"
+                              style={{
+                              background: '#FAAB36',
+                              boxShadow: '-2px 4px 0px #282725',
+                              border: '2px solid #282725',
+                              }}
+                          >
+                              Magsimula ng Pag-aaral »
+                          </Link>
+                        </motion.div>
+                        </div>
+                        
                         </AnimatedItem>
+                        
                         <AnimatedItem className="order-1 md:order-2" delay={0.2}>
                         <motion.img 
                             src="/Img/LandingPage/design1.png" 
                             alt="RizHub Illustration"  
-                            className="h-[200px] md:h-[320px] lg:h-[370px] transition-transform duration-300 hover:scale-90 drop-shadow-[0_10px_15px_rgba(0,0,0,0.25)]"
+                            className="h-[200px] md:h-[320px] lg:h-[420px] transition-transform duration-300 hover:scale-90 drop-shadow-[0_10px_15px_rgba(0,0,0,0.25)]"
                             whileHover={{ rotate: 2 }}
                         />
                         </AnimatedItem>
@@ -472,10 +443,10 @@ export default function Welcome({ auth }: PageProps) {
                 </AnimatedSection>
 
                 {/* Characters Section */}
-                <AnimatedSection className="bg-gray-50 py-8 md:py-12 px-4 text-center border-b-[1px] border-[#282725]">
+                <AnimatedSection className="bg-gray-50 py-5 md:py-5 lg:pb-10 px-10 lg:px-10 text-center border-b-[1px] border-[#282725]">
                     <AnimatedItem delay={0.1}>
                       <h2 
-                        className="font-['Inter'] not-italic font-extrabold text-3xl md:text-4xl lg:text-[45px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-6 md:mb-10"
+                        className="font-['Inter'] not-italic font-extrabold text-3xl md:text-4xl lg:text-[55px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-6 md:mb-12"
                         style={{
                             color: '#249EA0',
                             textShadow: '-2px 3px 0px #282725'
@@ -643,11 +614,8 @@ export default function Welcome({ auth }: PageProps) {
                     </AnimatedItem>
                 </AnimatedSection>
                 
-                  <AnimatedSection className='py-5 px-4' delay={0.1}>
-                    <div 
-                      style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}} 
-                      className='flex flex-row justify-between items-center gap-5'
-                    >
+                  <AnimatedSection className='py-5 px-15'  delay={0.1}>
+                    <div className="flex flex-row justify-between items-center pb-5 gap-5 border-b-[1px] border-[#282725] ">
                       <AnimatedItem className="md:order-1" delay={0.2}>
                         <motion.img 
                           src="/Img/LandingPage/square2.png" 
@@ -656,113 +624,59 @@ export default function Welcome({ auth }: PageProps) {
                           whileHover={{ rotate: -2 }}
                         />
                       </AnimatedItem>
-                        <AnimatedItem className='flex flex-col items-center justify-center -ml-10 gap-4 order-1 md:order-2 mb-6 md:mb-0' delay={0.3}>
+                        <AnimatedItem className='flex flex-col items-center justify-center -ml-10 gap-4 order-1 md:order-2' delay={0.3}>
+                           <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] mb-15 w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.5] text-center">In Honor of Dr. José P. Rizal</h2>
                            <motion.img 
                              src="/Img/LandingPage/jose.png" 
                              alt="" 
                              className="h-[150px] md:h-[200px] lg:h-[230px] transition-transform duration-300 hover:scale-105"
                              whileHover={{ y: -5 }}
                            />
-                           <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.3] text-center">Mga aral hango sa kwento ng Noli Me Tangere</h2>
+                            <p className="text-[#3d3b3a] mt-2 text-sm md:text-base lg:text-xl font-['Inter'] italic max-w-2xl mx-auto text-center leading-relaxed">
+                            “Noli Me Tangere” — ang dakilang akdang nagmulat sa kamalayan ng sambayanang Pilipino.
+                            Ang RizHub ay handog bilang pagpupugay sa kanyang katalinuhan, kabayanihan, at walang-hanggang inspirasyon sa edukasyon at bayan.
+                            </p>
                         </AnimatedItem>
                         <AnimatedItem className="order-3" delay={0.4}>
                             <motion.img 
                               src="/Img/LandingPage/square3.png" 
                               alt="" 
-                              className="h-[200px] md:h-[250px] lg:h-[300px] transition-transform duration-300 hover:scale-105"
+                              className="h-[200px] md:h-[250px] lg:h-[400px] transition-transform duration-300 hover:scale-105"
                               whileHover={{ rotate: 2 }}
                             />
                         </AnimatedItem>
                     </div>
                 </AnimatedSection>
+                {/* Footer */}
+                <AnimatedSection className="py-3 bg-white text-center px-3  overflow-hidden" delay={0.1}>
+                    <AnimatedItem className="flex justify-center mt-4" delay={0.2}>
+                        <motion.img 
+                            src="/Img/LandingPage/fchar.png" 
+                            alt="Footer Characters" 
+                            className="h-auto w-full max-w-7xl transition-transform duration-300 hover:scale-105"
+                            whileHover={{ y: -5 }}
+                        />
+                    </AnimatedItem>
 
-            {/* Footer */}
-            <AnimatedSection className="py-6 text-center px-4" delay={0.1}>
-                <AnimatedItem className="flex justify-center mt-4" delay={0.2}>
-                    <motion.img 
-                        src="/Img/LandingPage/fchar.png" 
-                        alt="Footer Characters" 
-                        className="h-auto w-full max-w-7xl transition-transform duration-300 hover:scale-105"
-                        whileHover={{ y: -5 }}
-                    />
-                </AnimatedItem>
+                    {/* Divider Line */}
+                    <div className="w-full h-px bg-[#d1c7b5]/60 mt-8 mb-4"></div>
 
-                {/* Tribute to José Rizal */}
-                <AnimatedItem className="mt-3" delay={0.25}>
-                    <motion.h3 
-                    className="text-[#4A3728] font-['Merriweather'] font-bold text-xl md:text-2xl lg:text-3xl"
-                    whileHover={{ scale: 1.05 }}
-                    >
-                    In Honor of Dr. José P. Rizal
-                    </motion.h3>
-                    <p className="text-[#3d3b3a] mt-2 text-sm md:text-base lg:text-lg font-['Inter'] italic max-w-2xl mx-auto text-center leading-relaxed">
-                    “Noli Me Tangere” — ang dakilang akdang nagmulat sa kamalayan ng sambayanang Pilipino.
-                    Ang RizHub ay handog bilang pagpupugay sa kanyang katalinuhan, kabayanihan, at walang-hanggang inspirasyon sa edukasyon at bayan.
-                    </p>
-                </AnimatedItem>
-
-                {/* Social Media Links */}
-                <AnimatedItem className="flex justify-center space-x-6 mt-2" delay={0.3}>
-                    {/* Phone */}
-                    <motion.a 
-                        href="tel:+639088110896"
-                        className="text-[#282725] hover:text-[#34A853] transition-colors duration-300"
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.3-1.1-.5-2.3-.5-3.5 0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
-                        </svg>
-                    </motion.a>
-
-                    {/* Email */}
-                    <motion.a 
-                        href="mailto:kdesinfo@cebookshop.com"
-                        className="text-[#282725] hover:text-[#EA4335] transition-colors duration-300"
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                    </motion.a>
-
-                    {/* Instagram */}
-                    <motion.a 
-                        href="https://www.instagram.com/kdesdigital?utm_source=ig_web_button_share_sheet&igsh=MWl4Nm9nYWV3c3NkOA=="
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#282725] hover:text-[#E4405F] transition-colors duration-300"
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                        </svg>
-                    </motion.a>
-
-                    {/* YouTube */}
-                    <motion.a 
-                        href="http://www.youtube.com/@CEFilipinoKlasiks"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#282725] hover:text-[#FF0000] transition-colors duration-300"
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-                        </svg>
-                    </motion.a>
-                </AnimatedItem>
-
-                        {/* Divider Line */}
-                        <div className="w-full h-px bg-[#d1c7b5]/60 mt-8 mb-4"></div>
-
-                        {/* Copyright */} 
-                        <AnimatedItem delay={0.4}>
+                    {/* Copyright */} 
+                    <AnimatedItem className='overflow-hidden' delay={0.4}>
+                        <p className="text-[#5b4a3b] font-['Inter'] font-medium text-sm md:text-base overflow-hidden">
+                            © 2025 RizHub. All Rights Reserved.
+                            | Developed with pride by the Occidental Mindoro State College |  Background music by 
+                            <a 
+                                href="https://www.youtube.com/@BensoundMusic" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-[#d63636] hover:underline ml-1"
+                            >
+                                Bensound
+                            </a>.
+                        </p>      
                         <p className="text-[#5b4a3b] font-['Inter'] font-medium text-sm md:text-base">
-                            © 2025 RizHub. All Rights Reserved. | Developed with pride by the Occidental Mindoro State College | Inspired by 
+                            Inspired by
                             <a
                             href="http://www.youtube.com/@CEFilipinoKlasiks"
                             target="_blank"
@@ -772,9 +686,63 @@ export default function Welcome({ auth }: PageProps) {
                             @CEFilipinoKlasiks – Animated Filipino Classics
                             </a>.
                         </p>
-                        </AnimatedItem>
-                        </AnimatedSection>
-                        </div>
+                    </AnimatedItem>
+                                        {/* Social Media Links */}
+                    <AnimatedItem className="flex justify-center space-x-6 mt-2" delay={0.3}>
+                        {/* Phone */}
+                        <motion.a 
+                            href="tel:+639088110896"
+                            className="text-[#282725] hover:text-[#34A853] transition-colors duration-300"
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.3-1.1-.5-2.3-.5-3.5 0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/>
+                            </svg>
+                        </motion.a>
+
+                        {/* Email */}
+                        <motion.a 
+                            href="mailto:kdesinfo@cebookshop.com"
+                            className="text-[#282725] hover:text-[#EA4335] transition-colors duration-300"
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                        </motion.a>
+
+                        {/* Instagram */}
+                        <motion.a 
+                            href="https://www.instagram.com/kdesdigital?utm_source=ig_web_button_share_sheet&igsh=MWl4Nm9nYWV3c3NkOA=="
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#282725] hover:text-[#E4405F] transition-colors duration-300"
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </motion.a>
+
+                        {/* YouTube */}
+                        <motion.a 
+                            href="http://www.youtube.com/@CEFilipinoKlasiks"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#282725] hover:text-[#FF0000] transition-colors duration-300"
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <svg className="w-6 h-6 md:w-7 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                            </svg>
+                        </motion.a>
+                    </AnimatedItem>
+                </AnimatedSection>
+                </div>
                         <LoginModal 
                             open={showLoginModal} 
                             onClose={() => setShowLoginModal(false)}
@@ -1038,9 +1006,25 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                     </motion.div>
                 )}
             </div>
-
             {/* MAIN MODAL CONTAINER */}
             <div className="w-full max-w-3xl mx-auto flex rounded-2xl z-70 overflow-hidden shadow-2xl relative">
+                {(loginProcessing || regProcessing) && (
+                    <div className="absolute inset-0 flex items-center pb-[70px] justify-center z-50 rounded-2xl bg-white">
+                        <div className="text-center relative">
+                            <img 
+                                src="/Img/LandingPage/loading.gif" 
+                                alt="Loading..." 
+                                className="w-[590px] h-[490px] mx-auto rounded-2xl object-cover"
+                                loading="eager"
+                            />
+                            <div className="absolute bottom-[65px] left-0 right-0">
+                                <p className="text-orange-700 font-bold text-xl px-6 py-3 rounded-lg">
+                                    {loginProcessing ? "Logging in..." : "Creating account..."}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {/* Left Side Image */}
                 <div className="hidden md:flex w-1/2 bg-orange-100 items-center justify-center relative">
                     <img
@@ -1068,7 +1052,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                 <div className="bg-[#FA7816] w-full md:w-1/2 p-4 md:p-4 relative flex flex-col items-center justify-center">
                     {/* Close Button */}
                     <button
-                        className="absolute top-2 right-3 md:top-3 md:right-4 text-white text-xl hover:text-[#5A3416] font-bold"
+                        className="absolute top-2 right-3 md:top-3 md:right-4 text-white text-xl hover:text-[#5A3416] font-bold z-10"
                         onClick={handleClose}
                         aria-label="Close"
                     >✕</button>
@@ -1078,7 +1062,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                             <img
                             src="/Img/LandingPage/Login/quill.png"
                             alt="Quill Icon"
-                            className="w-15 h-15 md:w-16 md:h-16 mt-6 mb-1"
+                            className="w-[90px] h-[90px] lg:w-15 lg:h-15 mt-6 mb-1"
                             />
                         )}
                         <h2 className="text-white text-xl md:text-2xl font-extrabold mb-3 md:mb-5 mt-6 text-center drop-shadow">Welcome!!!</h2>
@@ -1097,7 +1081,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         autoComplete="off"
                                         value={loginData.email}
                                         onChange={e => handleLoginDataChange('email', e.target.value)}
-                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                         placeholder="email"
                                         required
                                     />
@@ -1126,7 +1110,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         name="password"
                                         value={loginData.password}
                                         onChange={e => handleLoginDataChange('password', e.target.value)}
-                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                         placeholder="password"
                                         required
                                     />
@@ -1180,14 +1164,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                     className="w-full mt-8 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={loginProcessing}
                                 >
-                                    {loginProcessing ? (
-                                        <div className="flex items-center justify-center">
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                                            Logging in...
-                                        </div>
-                                    ) : (
-                                        'Login'
-                                    )}
+                                    Login
                                 </button>
 
                                 <div className="w-full text-center mt-2">
@@ -1209,7 +1186,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         id="reg_name"
                                         type="text"
                                         name="name"
-                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        className="peer w-full rounded-full px-4 py-2 md:px-5 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                         value={regData.name}
                                         onChange={e => setRegData('name', e.target.value)}
                                         onFocus={() => setIsPasswordFocused(false)}
@@ -1240,7 +1217,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         id="reg_email"
                                         type="email"
                                         name="email"
-                                        className="peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-4xl md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                        className="peer w-full rounded-full px-4 py-2 md:px-5 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
                                         value={regData.email}
                                         onChange={e => setRegData('email', e.target.value)}
                                         onFocus={() => setIsPasswordFocused(false)}
@@ -1399,14 +1376,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                     className="w-full mt-4 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={regProcessing}
                                 >
-                                    {regProcessing ? (
-                                        <div className="flex items-center justify-center">
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                                            Creating Account...
-                                        </div>
-                                    ) : (
-                                        'Signup'
-                                    )}
+                                    Signup
                                 </button>
                                 
                                 <div className="w-full text-center mt-2">

@@ -162,6 +162,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     clearInterval(timerRef.current!);
                     setShowModal("timesup");
                     setGameActive(false);
+                    // Play fail sound when timeout occurs
                     playSound(gameOverSoundRef);
                     return 0;
                 }
@@ -270,7 +271,14 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 if (isGameFinished) {
                     setFinishMessage(finishMessages[newScore] || "GAME FINISHED!");
                     setShowModal("finished");
-                    playSound(finishSoundRef);
+                    
+                    // Play fail sound for 0-2 stars (score 0-2), otherwise play winner sound
+                    const stars = calculateStars(newScore);
+                    if (stars <= 0) { // 0 stars (score 0-2)
+                        playSound(gameOverSoundRef); // fail.mp3
+                    } else {
+                        playSound(finishSoundRef); // winner.mp3
+                    }
                 } else {
                     // ✅ move to next question after delay
                     setTimeout(() => {
@@ -309,7 +317,14 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 if (isGameFinished) {
                     setFinishMessage(finishMessages[score] || "GAME FINISHED!");
                     setShowModal("finished");
-                    playSound(finishSoundRef);
+                    
+                    // Play fail sound for 0-2 stars (score 0-2), otherwise play winner sound
+                    const stars = calculateStars(score);
+                    if (stars <= 0) { // 0 stars (score 0-2)
+                        playSound(gameOverSoundRef); // fail.mp3
+                    } else {
+                        playSound(finishSoundRef); // winner.mp3
+                    }
                 } else {
                     // Move to next question even if wrong
                     setCurrentIndex((prev) => prev + 1);
@@ -481,9 +496,9 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
             />
             <audio 
                 ref={gameOverSoundRef} 
-                src="/Music/over.wav" 
+                src="/Music/fail.mp3" 
             />
-                <div className="absolute top-[140px] right-[483px] flex flex-col items-center gap-[30px]">
+                <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[485px] flex flex-col items-center gap-[30px]">
                     <div className="relative w-20 h-20 mb-4">
                         <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
                             <div
@@ -511,39 +526,49 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                         )}
                     </div>
                 </div>
-                    <div
-                        className="h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center overflow-hidden"
+                <div
+                    className="h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center overflow-hidden"
+                    style={{
+                        backgroundImage: `url('/Img/LandingPage/character/${character.filename}1.png')`,
+                    }}
+                >
+                    {/* Mobile and Tablet Background (hidden on desktop) */}
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center md:block lg:hidden"
                         style={{
-                            backgroundImage: `url('/Img/LandingPage/character/${character.filename}1.png')`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
+                            backgroundImage: `url('/Img/LandingPage/character/${character.filename}-sw.png')`,
                         }}
-                    >
-                    <div className="flex flex-row justify-between overflow-hidden">
-                        <div className="flex flex-row overflow-hidden">
-                            <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl overflow-hidden">
-                                Kabanata {kabanata_number}:
+                    />
+                    
+                    {/* Content */}
+                    <div className="relative z-10 w-full">
+                        {/* Rest of your existing content remains the same */}
+                        <div className="flex flex-row justify-between overflow-hidden">
+                            <div className="flex flex-row overflow-hidden">
+                                <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl overflow-hidden">
+                                    Kabanata {kabanata_number}:
+                                </div>
+                                <div className="text-white font-bold font-mono px-2 py-2 text-2xl overflow-hidden">
+                                    {kabanata_title}
+                                </div>
                             </div>
-                            <div className="text-white font-bold font-mono px-2 py-2 text-2xl overflow-hidden">
-                                {kabanata_title}
-                            </div>
+                            <button
+                                onClick={togglePause}
+                                className="absolute top-6 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
+                                title="Pause Game"
+                            >
+                                <svg 
+                                    className="w-6 h-6 text-white" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
                         </div>
-                        <button
-                            onClick={togglePause}
-                            className="absolute top-6 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
-                            title="Pause Game"
-                            >
-                            <svg 
-                                className="w-6 h-6 text-white" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div className="flex flex-col ml-14 items-center justify-start p-6 overflow-hidden">
+                        </div>
+                    <div className="flex flex-col lg:ml-16 lg:scale-90 items-center justify-start p-6 overflow-hidden">
                         <div className="relative w-[550px] h-[250px] flex items-center justify-center">
                             <img
                                 src="/Img/Challenge/GuessWord/modalBG.png"
@@ -616,16 +641,16 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 </div>
                             ))}
                         </div>
-
+</div>
                       {showModal && (
-                            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
                                 <div className="relative w-[600px] bg-transparent">
                                     <img
                                         src="/Img/Challenge/GuessWord/wooden_frame1.png"
                                         alt="Wooden Frame"
                                         className="w-full h-auto"
                                     />
-                                    <div className="absolute top-[-30px] ml-4 left-1/2 -translate-x-1/2 flex">
+                                    <div className="absolute top-[-30px] ml-3 left-1/2 -translate-x-1/2 flex">
                                     {(showModal === "finished") && (
                                         <>
                                             {[...Array(3)].map((_, i) => (
@@ -654,7 +679,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         </>
                                     )}
                                     </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[10px]">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                                 <h2 className="
                                     font-mono
                                     mr-2
@@ -716,46 +741,32 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 {/* Locked Overlay */}
                                 {score < 5 ? (
                                 <>
-                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md rounded-2xl z-20 flex flex-col items-center justify-center transition-all duration-500">
-                                    <div className="relative flex items-center justify-center">
+                                <div className="absolute inset-0 backdrop-blur-sm rounded-2xl z-20 flex flex-col items-center justify-center transition-all duration-500">
+                                <div className="relative flex items-center justify-center">
+                                    {/* Soft Glowing Background Pulse */}
+                                    <div className="absolute w-20 h-20 rounded-full animate-[pulseGlow_3s_ease-in-out_infinite]"></div>
 
-                                        {/* Soft Glowing Background Pulse */}
-                                        <div className="absolute w-20 h-20 rounded-full animate-[pulseGlow_3s_ease-in-out_infinite]"></div>
+                                <img
+                                src="/Img/Challenge/GuessWord/locked1.png"
+                                alt="Locked Icon"
+                                className="w-[95px] h-[95px] object-contain drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-110"
+                                onMouseEnter={() => setShowLockTooltip(true)}
+                                onMouseLeave={() => setShowLockTooltip(false)}
+                                />
 
-                                        {/* Lock Icon */}
-                                        <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="w-16 h-16 text-white drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-110"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        onMouseEnter={() => setShowLockTooltip(true)}
-                                        onMouseLeave={() => setShowLockTooltip(false)}
-                                        >
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                        <circle cx="12" cy="16" r="1" />
-                                        </svg>
 
-                                    </div>
+                                </div>
 
-                                    {/* Locked Text */}
-                                    <p className="text-xs mt-3 text-white font-semibold opacity-90 tracking-wide animate-fadeIn">
-                                        Locked
+                                </div>
+
+                                {/* Tooltip */}
+                                {showLockTooltip && (
+                                <div className="absolute bottom-[-60px] bg-white/90 text-black p-3 rounded-lg z-30 w-64 text-center animate-fadeIn">
+                                    <p className="text-sm font-semibold">
+                                    Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
                                     </p>
-                                    </div>
-
-                                    {/* Tooltip */}
-                                    {showLockTooltip && (
-                                    <div className="absolute bottom-[-60px] bg-white/90 text-black p-3 rounded-lg z-30 w-64 text-center animate-fadeIn">
-                                        <p className="text-sm font-semibold">
-                                        Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
-                                        </p>
-                                    </div>
-                                    )}
+                                </div>
+                                )}
                                 </>
                                 ) : null}
 
@@ -768,18 +779,33 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 </div>
                             
                                     {showGiftTooltip && isUnlocked && (
-                                        <div 
-                                            className="absolute top-50 bg-white text-black p-3 rounded-xl shadow-xl z-50 w-84"
-                                            style={{ animation: 'none' }}
-                                        >
-                                            <p className="text-base font-semibold z-60 text-center">
-                                                Ang gallery ng larawan para sa Kabanata {kabanata_number}: {kabanata_title} ay na-unlock na!
-                                                Mangyaring tapusin ang susunod na hamon para makita.
-                                            </p>
+                                    <div 
+                                    className="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-orange-600 p-4 rounded-xl shadow-2xl z-50 w-45"
+                                    style={{ animation: 'none' }}
+                                    >
+                                            {/* Collected Image Display */}
+                                            <div className="flex flex-col items-center">
+                                                <img 
+                                                src={`/Img/Dashboard/ImageGallery/K${kabanata_number}.png`}
+                                                alt={`Kabanata ${kabanata_number} Collected Image`}
+                                                className="w-full h-40 object-contain rounded-lg mb-3"
+                                                />
+                                                <div className="text-center">
+                                                    <p className="text-base font-semibold text-white mb-1">
+                                                        Kabanata {kabanata_number}: {kabanata_title}
+                                                    </p>
+                                                    <p className="text-base text-gray-100">
+                                                        Larawan na na-kolekta mo!
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Arrow pointing to gift */}
+                                            <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-l-transparent border-r-transparent border-t-orange-600"></div>
                                         </div>
                                     )}
                                 
-                                <div className="fixed flex gap-8 bottom-[145px] sm:bottom-[135px] md:bottom-[125px] lg:bottom-[125px]">
+                                <div className="fixed flex gap-8 bottom-[120px] sm:bottom-[105px] md:bottom-[105px] lg:bottom-[105px]">
                                 {/* {showModal === "correct" && (
                                     <>
                                         <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
@@ -862,7 +888,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             }
                         `}</style>
                     </div>
-                </div>
+            
                 {/* <PauseModal
                     isOpen={isPaused}
                     onResume={togglePause}

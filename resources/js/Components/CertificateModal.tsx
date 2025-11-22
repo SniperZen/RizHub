@@ -28,7 +28,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
     }
   };
 
-  const handleDownloadPDF = async () => {
+const handleDownloadPDF = async () => {
     try {
       const jsPDF = (await import("jspdf")).default;
       const pdf = new jsPDF("landscape", "mm", "a4");
@@ -74,11 +74,41 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
           titleImgHeight
         );
 
+        // Add "Ang sertipikong ito ay ipinagkakaloob kay" text
+        pdf.setFont("helvetica", "normal");
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(16);
+
+        // moved from 85 → 90
+        pdf.text(
+          "Ang sertipikong ito ay ipinagkakaloob kay",
+          pageWidth / 2,
+          90,
+          { align: "center" }
+        );
+
         // Student Name - using helvetica bolditalic
         pdf.setFont("helvetica", "bolditalic");
         pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(28);
-        pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
+
+        // Get the text width to center the underline properly
+        const studentNameText = studentName.toUpperCase();
+        const textWidth = pdf.getTextWidth(studentNameText);
+
+        // Draw the student name
+        // moved from 105 → 112
+        pdf.text(studentNameText, pageWidth / 2, 112, { align: "center" });
+
+        // Add underline - calculate position based on text width
+        // moved from 108 → 116
+        const underlineY = 116;
+        const underlineX = (pageWidth - textWidth) / 2;
+
+        // Draw the underline
+        pdf.setDrawColor(0, 0, 0);
+        pdf.setLineWidth(0.8);
+        pdf.line(underlineX, underlineY, underlineX + textWidth, underlineY);
 
         // Body text - using helvetica normal
         pdf.setFont("helvetica", "normal");
@@ -90,14 +120,14 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
           : Math.round(totalStarsPercentage) + "%";
 
         const certificateText = [
-          `ay matagumpay na nakatapos sa aralin sa pamamagitan ng pagpapamalas`,
-          `ng malalim na paglalakbay sa mga kabanata ng "Noli Me Tangere" sa`,
-          `pamamagitan ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat`,
-          `pagsubok at hamon ng karunungan, nakamit ang ${displayPercentage} ng mga bituin sa lahat ng kabanata.`
+          `bilang pagkilala sa kanyang matagumpay na pagtatapos sa aralin sa pamamagitan ng pagpapamalas`,
+          `ng malalim na paglalakbay sa mga kabanata ng "Noli Me Tangere" sa pamamagitan ng kaniyang`,
+          `talino, pag-unawa, at pagtitiyaga sa bawat pagsubok at hamon ng karunungan,`,
+          `at nakamit ang ${displayPercentage} ng mga bituin sa lahat ng kabanata.`
         ];
 
         certificateText.forEach((line, index) => {
-          pdf.text(line, pageWidth / 2, 130 + (index * 7), {
+          pdf.text(line, pageWidth / 2, 135 + (index * 7), {
             align: "center",
             maxWidth: 250,
           });
@@ -128,8 +158,25 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
         pdf.setFontSize(36);
         pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
         
+        // Add the new text in fallback too
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(16);
+        pdf.text("Ang sertipikong ito ay ipinagkakaloob kay", pageWidth / 2, 85, { align: "center" });
+        
         pdf.setFont("helvetica", "bolditalic");
-        pdf.text(studentName.toUpperCase(), pageWidth / 2, 100, { align: "center" });
+        
+        // Student name with underline in fallback
+        const studentNameText = studentName.toUpperCase();
+        const textWidth = pdf.getTextWidth(studentNameText);
+        pdf.text(studentNameText, pageWidth / 2, 105, { align: "center" });
+        
+        // Add underline in fallback
+        const underlineY = 108;
+        const underlineX = (pageWidth - textWidth) / 2;
+        pdf.setDrawColor(0, 0, 0);
+        pdf.setLineWidth(0.8);
+        pdf.line(underlineX, underlineY, underlineX + textWidth, underlineY);
+        
         pdf.save(`Katibayan-ng-Pagtatapos-${studentName.replace(/\s+/g, "-")}.pdf`);
       }
 
@@ -165,13 +212,13 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
           </div>
 
           {/* Certificate Body Text */}
-          <div className="absolute top-[55%] ml-[15%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
+          <div className="absolute top-[55%] ml-[12%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
             <p>
-              ay matagumpay na nakatapos sa aralin sa pamamagitan ng
+              bilang pagkilala sa kanyang matagumpay na pagtatapos sa aralin sa pamamagitan
               pagpapamalas ng malalim na paglalakbay sa mga kabanata ng{" "}
               <span className="italic font-bold">"Noli Me Tangere"</span> sa pamamagitan
               ng kaniyang talino, pag-unawa, at pagtitiyaga sa bawat pagsubok at
-              hamon ng karunungan, nakamit ang{" "}
+              hamon ng karunungan, at nakamit ang{" "}
               <span className="font-bold">{formatPercentage(totalStarsPercentage)}</span> ng mga bituin sa lahat ng
               kabanata.
             </p>

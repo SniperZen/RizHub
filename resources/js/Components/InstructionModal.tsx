@@ -20,29 +20,23 @@ const InstructionModal: React.FC<ModalProps> = ({
   const [displayedText, setDisplayedText] = useState("");
   const [isTextComplete, setIsTextComplete] = useState(false);
   const timerRef = useRef<number | null>(null);
-  const safeContentRef = useRef<string>(""); // New: Ref to store safe content
+  const safeContentRef = useRef<string>("");
   const posRef = useRef<number>(0);
 
-  // Safely get title parts to avoid errors
+  // Split title for formatting
   const getTitleParts = () => {
     if (!title) return { part1: "Kabanata", part2: "" };
-    
     const parts = title.split(":");
-    if (parts.length === 1) {
-      return { part1: parts[0], part2: "" };
-    }
     return { part1: parts[0], part2: parts.slice(1).join(":") };
   };
 
   useEffect(() => {
-    // clear any previous timer
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
 
     if (!isOpen) {
-      // reset state when modal closed
       safeContentRef.current = "";
       posRef.current = 0;
       setDisplayedText("");
@@ -50,13 +44,11 @@ const InstructionModal: React.FC<ModalProps> = ({
       return;
     }
 
-    // normalize content to avoid "undefined"
     safeContentRef.current = (content ?? "") as string;
     setDisplayedText("");
     posRef.current = 0;
     setIsTextComplete(false);
 
-    // if empty content, mark complete
     if (!safeContentRef.current.trim()) {
       setDisplayedText(safeContentRef.current);
       setIsTextComplete(true);
@@ -64,12 +56,12 @@ const InstructionModal: React.FC<ModalProps> = ({
     }
 
     const typeNext = () => {
-      const pos = posRef.current;
       const text = safeContentRef.current;
+      const pos = posRef.current;
       if (pos < text.length) {
         setDisplayedText((prev) => prev + text.charAt(pos));
         posRef.current = pos + 1;
-        timerRef.current = window.setTimeout(typeNext, 30);
+        timerRef.current = window.setTimeout(typeNext, 25);
       } else {
         setIsTextComplete(true);
         if (timerRef.current) {
@@ -79,37 +71,29 @@ const InstructionModal: React.FC<ModalProps> = ({
       }
     };
 
-    timerRef.current = window.setTimeout(typeNext, 30);
+    timerRef.current = window.setTimeout(typeNext, 200);
 
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [isOpen, content]);
 
   const handleButtonClick = () => {
     if (!isTextComplete) {
-      // immediately finish typing using safe content
       if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
-      setDisplayedText(safeContentRef.current ?? "");
+      setDisplayedText(safeContentRef.current);
       posRef.current = (safeContentRef.current ?? "").length;
       setIsTextComplete(true);
     } else {
-      // Close the modal
       onClose();
     }
   };
 
-  // Handle click outside to prevent accidental progression
   const handleBackgroundClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      return; // Don't do anything when clicking the background
-    }
+    if (e.target === e.currentTarget) return;
   };
 
   const titleParts = getTitleParts();
@@ -133,7 +117,7 @@ const InstructionModal: React.FC<ModalProps> = ({
       <img
         src="/Img/Challenge/GuessChar/commander.png"
         alt="Commander"
-        className="absolute bottom-0 right-8 w-[380px] md:w-[440px] z-10"
+        className="absolute bottom-0 right-8 w-[380px] md:w-[440px] z-10 hidden xl:block"
       />
 
       {/* Title Section */}
@@ -146,26 +130,52 @@ const InstructionModal: React.FC<ModalProps> = ({
         </div>
       </div>
 
-      {/* Clickable text area - Fixed to prevent text cutting */}
-      <div 
+      {/* Smooth Typing Text */}
+      <div
         onClick={handleButtonClick}
         className="w-full bg-[rgba(52,27,7,0.7)] backdrop-blur-sm absolute bottom-0 p-8 z-9 cursor-pointer hover:bg-[rgba(52,27,7,0.8)] transition-colors"
         style={{ minHeight: "150px" }}
       >
-        <div className="max-w-5xl text-white whitespace-pre-line text-md leading-relaxed break-words">
-          {displayedText}
-          {!isTextComplete && (
-            <span className="ml-1 animate-pulse">|</span>
-          )}
+        <div
+          className="max-w-5xl text-white whitespace-pre-line text-md leading-relaxed break-words"
+          style={{
+            transition: "opacity 0.3s ease-in-out",
+          }}
+        >
+          {displayedText.split("").map((char, i) => (
+            <span
+              key={i}
+              style={{
+                opacity: 0,
+                animation: `fadeIn 0.10s forwards`,
+                animationDelay: `${i * 0.0}s`,
+              }}
+            >
+              {char}
+            </span>
+          ))}
         </div>
-        
-        {/* Progress indicator */}
+
+        {/* Only shows after animation completes */}
         {isTextComplete && (
-          <div className="text-center mt-4 text-yellow-300 font-semibold animate-pulse">
-            Click anywhere to continue...
+          <div
+            className="text-center mt-4 text-orange-300 font-semibold animate-pulse"
+            style={{
+              opacity: isTextComplete ? 1 : 0,
+              transition: "opacity 0.5s ease-in",
+            }}
+          >
+            Pindutin para magpatuloy...
           </div>
         )}
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(3px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
