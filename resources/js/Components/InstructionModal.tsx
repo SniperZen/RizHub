@@ -22,6 +22,22 @@ const InstructionModal: React.FC<ModalProps> = ({
   const timerRef = useRef<number | null>(null);
   const safeContentRef = useRef<string>("");
   const posRef = useRef<number>(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastWordPlayedRef = useRef<number>(0);
+
+  // Initialize audio
+  useEffect(() => {
+    audioRef.current = new Audio("/Music/typingsound.mp3");
+    audioRef.current.volume = 0.2; // Lower volume for smoother experience
+    audioRef.current.playbackRate = 0.9; // Slightly slower for better feel
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   // Split title for formatting
   const getTitleParts = () => {
@@ -41,6 +57,7 @@ const InstructionModal: React.FC<ModalProps> = ({
       posRef.current = 0;
       setDisplayedText("");
       setIsTextComplete(false);
+      lastWordPlayedRef.current = 0;
       return;
     }
 
@@ -48,6 +65,7 @@ const InstructionModal: React.FC<ModalProps> = ({
     setDisplayedText("");
     posRef.current = 0;
     setIsTextComplete(false);
+    lastWordPlayedRef.current = 0;
 
     if (!safeContentRef.current.trim()) {
       setDisplayedText(safeContentRef.current);
@@ -59,8 +77,28 @@ const InstructionModal: React.FC<ModalProps> = ({
       const text = safeContentRef.current;
       const pos = posRef.current;
       if (pos < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(pos));
+        const currentChar = text.charAt(pos);
+        setDisplayedText((prev) => prev + currentChar);
         posRef.current = pos + 1;
+        
+        // Play sound at the start of each word (after spaces or at beginning)
+        if (audioRef.current && (pos === 0 || text.charAt(pos - 1) === ' ')) {
+          // Only play sound for actual words (not after very short gaps)
+          const currentWord = text.substring(pos).split(' ')[0];
+          if (currentWord.length > 2) { // Only play for words longer than 2 characters
+            // Add some randomness to make it feel more natural
+            if (Math.random() > 0.3) { // 70% chance to play sound per word
+              audioRef.current.currentTime = 0;
+              // Slightly randomize volume and playback rate for natural feel
+              audioRef.current.volume = 0.15 + (Math.random() * 0.1);
+              audioRef.current.playbackRate = 0.85 + (Math.random() * 0.3);
+              audioRef.current.play().catch((e) => {
+                console.log("Audio play error:", e);
+              });
+            }
+          }
+        }
+        
         timerRef.current = window.setTimeout(typeNext, 25);
       } else {
         setIsTextComplete(true);
