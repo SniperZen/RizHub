@@ -421,7 +421,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
             {/* Gallery Collection Button - Desktop Only */}
             <button
               onClick={() => setShowGalleryModal(true)}
-              className="hidden md:flex items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="hidden md:flex items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-6 py-3 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
               <svg 
                 className="w-5 h-5" 
@@ -442,7 +442,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
                   d="M9 4v16M4 9h16" 
                 />
               </svg>
-              <span className="font-bold">
+              <span className="font-bold md:text-base">
                 Collection: {unlockedCount}/{images.length}
               </span>
             </button>
@@ -667,14 +667,14 @@ const renderUnlockedContent = (image: PageData, index: number) => {
           <img 
             src="/Img/Dashboard/book-bg1.png"
             alt="Background" 
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 hidden md:block"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 hidden lg:block"
           />
           
-          {/* Mobile background image - NO FADING */}
+          {/* Mobile background image - Now visible in laptop view */}
           <img 
             src="/Img/LandingPage/formobile.png"
             alt="Background Mobile" 
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 block md:hidden overflow-hidden"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover pointer-events-none z-0 block lg:hidden md:max-w-xl overflow-hidden"
           />
 
           {/* Left Arrow - outside left side vertically centered */}
@@ -720,8 +720,8 @@ const renderUnlockedContent = (image: PageData, index: number) => {
               transform: isFading ? 'translateY(-10px)' : 'translateY(0)'
             }}
           >
-            {/* Mobile View - Single Centered Content */}
-            <div className="block md:hidden w-full h-full p-6 flex flex-col items-center justify-center overflow-hidden">
+            {/* Mobile View - Single Centered Content - Now applies to lg and below */}
+            <div className="block lg:hidden w-full h-full p-6 flex flex-col items-center justify-center overflow-hidden">
               {/* For mobile, we need to calculate the correct kabanata index */}
               {images[Math.floor(currentIndex / 2)] && (
                 <div className="flex flex-col items-center w-full max-w-md h-full overflow-y-auto overflow-x-hidden">
@@ -751,8 +751,8 @@ const renderUnlockedContent = (image: PageData, index: number) => {
               )}
             </div>
 
-            {/* Desktop View - Two Column Layout */}
-            <div className="hidden md:flex w-full h-full overflow-hidden">
+            {/* Desktop View - Two Column Layout - Now only for screens larger than lg */}
+            <div className="hidden lg:flex w-full h-full overflow-hidden">
               {/* Left Page Content */}
               <div className="w-1/2 h-full p-6 flex flex-col left-[10px] ml-12 pl-10 overflow-hidden">
                 {images[currentIndex] && (
@@ -818,7 +818,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
           </div>
         </div>
 
-        {/* Mobile Collection Button - Bottom Center */}
+        {/* Mobile Collection Button - Bottom Center - Now applies to lg and below */}
         <button
           onClick={() => setShowGalleryModal(true)}
           className="fixed bottom-12 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 z-50 block md:hidden"
@@ -847,8 +847,8 @@ const renderUnlockedContent = (image: PageData, index: number) => {
           </span>
         </button>
 
-        {/* Horizontal Page Navigation - Chunked Paging - HIDDEN ON MOBILE */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-[#8b5e3c] rounded-lg shadow-lg p-3 flex items-center space-x-2 max-w-[80%] z-50 overflow-hidden hidden md:flex">
+        {/* Horizontal Page Navigation - Chunked Paging - HIDDEN ON MOBILE AND LG */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-[#8b5e3c] rounded-lg shadow-lg p-3 flex items-center space-x-2 max-w-[80%] z-50 overflow-hidden hidden lg:flex">
           {/* Left Navigation Button */}
           <button
             onClick={() => setPageGroup((prev) => Math.max(prev - 1, 0))}
