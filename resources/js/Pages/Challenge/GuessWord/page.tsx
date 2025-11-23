@@ -805,7 +805,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         </div>
                                     )}
                                 
-                                <div className="fixed flex gap-8 bottom-[145px] sm:bottom-[125px] md:bottom-[128px] lg:bottom-[130px]">
+                                <div className="fixed flex gap-8 bottom-[115px] sm:bottom-[105px] md:bottom-[105px] lg:bottom-[110px]">
                                 {/* {showModal === "correct" && (
                                     <>
                                         <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
