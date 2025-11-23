@@ -765,99 +765,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         )}
                                     </div>
 
-<<<<<<< HEAD
-                                            {/* Gift Box (Visible when unlocked) */}
-                                            <div
-                                                className="absolute inset-0 flex items-center justify-center"
-                                                onMouseEnter={() => score >= 5 && setShowGiftTooltip(true)}
-                                                onMouseLeave={() => setShowGiftTooltip(false)}
-                                            >
-                                                <img
-                                                    src="/Img/Challenge/GuessWord/gift.png"
-                                                    alt="Reward Gift"
-                                                    className={`w-24 h-24 transition-all duration-500 ${
-                                                        score >= 5 ? "scale-110 hover:scale-125 drop-shadow-xl" : "opacity-50"
-                                                    }`}
-                                                />
-                                            </div>
-
-                                {/* Locked Overlay */}
-                                {score < 5 ? (
-                                <>
-                                <div className="absolute inset-0 backdrop-blur-sm rounded-2xl z-20 flex flex-col items-center justify-center transition-all duration-500">
-                                <div className="relative flex items-center justify-center">
-                                    {/* Soft Glowing Background Pulse */}
-                                    <div className="absolute w-20 h-20 rounded-full animate-[pulseGlow_3s_ease-in-out_infinite]"></div>
-
-                                <img
-                                src="/Img/Challenge/GuessWord/locked1.png"
-                                alt="Locked Icon"
-                                className="w-[95px] h-[95px] object-contain drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-110"
-                                onMouseEnter={() => setShowLockTooltip(true)}
-                                onMouseLeave={() => setShowLockTooltip(false)}
-                                />
-
-
-                                </div>
-
-                                </div>
-
-                                {/* Tooltip */}
-                                {showLockTooltip && (
-                                <div className="absolute bottom-[-60px] bg-white/90 text-black p-3 rounded-lg z-30 w-64 text-center animate-fadeIn">
-                                    <p className="text-sm font-semibold">
-                                    Kailangan ng perpektong score (5/5) upang mabuksan ang regalo!
-                                    </p>
-                                </div>
-                                )}
-                                </>
-                                ) : null}
-
-                                                <>
-                                                    {/* No animation for unlocked state - gift is visible without additional animations */}
-                                                </>
-
-                                        </>
-                                    )}
-                                </div>
-                            
-                                    {showGiftTooltip && isUnlocked && (
-                                    <div 
-                                    className="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-orange-600 p-4 rounded-xl shadow-2xl z-50 w-45"
-                                    style={{ animation: 'none' }}
-                                    >
-                                            {/* Collected Image Display */}
-                                            <div className="flex flex-col items-center">
-                                                <img 
-                                                src={`/Img/Dashboard/ImageGallery/K${kabanata_number}.png`}
-                                                alt={`Kabanata ${kabanata_number} Collected Image`}
-                                                className="w-full h-40 object-contain rounded-lg mb-3"
-                                                />
-                                                <div className="text-center">
-                                                    <p className="text-base font-semibold text-white mb-1">
-                                                        Kabanata {kabanata_number}: {kabanata_title}
-                                                    </p>
-                                                    <p className="text-base text-gray-100">
-                                                        Larawan na na-kolekta mo!
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            
-                                            {/* Arrow pointing to gift */}
-                                            <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-l-transparent border-r-transparent border-t-orange-600"></div>
-                                        </div>
-                                    )}
-                                
-                                <div className="fixed flex gap-8 bottom-[115px] sm:bottom-[105px] md:bottom-[105px] lg:bottom-[110px]">
-                                {/* {showModal === "correct" && (
-                                    <>
-                                        <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
-                                            <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
-                                        </button>
-                                        <button
-                                            onClick={nextQuestion}
-                                            className="rounded-full p-3 relative"
-=======
                                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                                         <h2 className="
                                             font-mono
@@ -868,7 +775,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                             text-orange-800
                                             text-shadow
                                             z-10"
->>>>>>> edd0aaaacf28b98c4dff4ede70102483cf2282aa
                                         >
                                             {showModal === "correct" && successMessage}
                                             {showModal === "wrong" && "TRY AGAIN"}
