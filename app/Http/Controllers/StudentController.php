@@ -324,21 +324,31 @@ class StudentController extends Controller
 
         $user = Auth::user();
         
-        // Store guessword progress in session
+        // Get existing session data or initialize empty array
         $sessionKey = "guessword_progress_{$user->id}_{$request->kabanata_id}";
         $progressData = session()->get($sessionKey, []);
         
-        $progressData = [
-            'character_id' => $validated['character_id'],
-            'question_id' => $validated['question_id'],
-            'current_index' => $validated['current_index'],
-            'completed' => $validated['completed'] ?? false,
-            'total_score' => $validated['total_score'],
-            'perfect_score' => $validated['perfect_score'] ?? false,
-            'is_correct' => $validated['is_correct'],
-        ];
+        // Use question_id as key to prevent duplicates and overwriting
+        $questionKey = $validated['question_id'];
         
-        session()->put($sessionKey, $progressData);
+        // Only save if this question hasn't been processed yet, or if it's a new attempt
+        if (!isset($progressData[$questionKey]) || $progressData[$questionKey]['current_index'] !== $validated['current_index']) {
+            $progressData[$questionKey] = [
+                'character_id' => $validated['character_id'],
+                'question_id' => $validated['question_id'],
+                'current_index' => $validated['current_index'],
+                'completed' => $validated['completed'] ?? false,
+                'total_score' => $validated['total_score'],
+                'perfect_score' => $validated['perfect_score'] ?? false,
+                'is_correct' => $validated['is_correct'],
+                'processed_at' => now()->timestamp,
+            ];
+            
+            session()->put($sessionKey, $progressData);
+        }
+        
+        // Return empty Inertia response - THIS IS THE KEY FIX
+        return back();
     }
 
 

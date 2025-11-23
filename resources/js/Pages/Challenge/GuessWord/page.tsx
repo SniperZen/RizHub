@@ -41,10 +41,11 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     const [isAnimating, setIsAnimating] = useState(false);
     const [penalty, setPenalty] = useState<null | number>(null);
     const [answerStatus, setAnswerStatus] = useState<"idle" | "correct" | "wrong">("idle");
-    const [hasProcessedCorrect, setHasProcessedCorrect] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [musicVolume, setMusicVolume] = useState(initialMusic);
     const [soundVolume, setSoundVolume] = useState(initialSound);
+    
+    // Audio refs
     const bgMusicRef = useRef<HTMLAudioElement>(null);
     const correctSoundRef = useRef<HTMLAudioElement>(null);
     const wrongSoundRef = useRef<HTMLAudioElement>(null);
@@ -53,25 +54,45 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     const finishSoundRef = useRef<HTMLAudioElement>(null);
     const gameOverSoundRef = useRef<HTMLAudioElement>(null);
     
+    // Critical refs to prevent double execution
+    const isProcessingRef = useRef(false);
+    const lastAutoCheckRef = useRef(0);
+    const hasAnsweredRef = useRef(false);
+    
+    // Add this ref to track initial questions and prevent unwanted changes
+    const initialQuestionsRef = useRef<GuessWordData[]>(questions);
 
     const totalTime = 60;
     const [timeLeft, setTimeLeft] = useState(totalTime);
 
-    const currentQ = questions[currentIndex];
-    const isCorrect = currentGuess.join("") === currentQ.answer;
+    // FIXED: Use initialQuestionsRef to prevent stale references and unwanted changes
+    const currentQ = initialQuestionsRef.current[currentIndex];
     
     const shouldAutoFill = (char: string) => {
         return /[^A-Za-z0-9]/.test(char);
     };
 
+    // Initialize guess for current question - FIXED VERSION
     useEffect(() => {
-        const initialGuess = currentQ.answer.split("").map(char => {
+        // Add bounds checking
+        if (currentIndex >= initialQuestionsRef.current.length) {
+            console.log(`🚫 Current index ${currentIndex} out of bounds`);
+            return;
+        }
+
+        const question = initialQuestionsRef.current[currentIndex];
+        
+        const initialGuess = question.answer.split("").map(char => {
             return shouldAutoFill(char) ? char : "";
         });
         setCurrentGuess(initialGuess);
-        setHasProcessedCorrect(false); // Reset when question changes
-        setAnswerStatus("idle"); // Reset answer status
-    }, [currentQ]);
+        setAnswerStatus("idle");
+        isProcessingRef.current = false;
+        hasAnsweredRef.current = false;
+        
+        console.log(`Initialized question ${currentIndex}: ${question.question}`);
+        console.log(`Question ID: ${question.id}, Total questions: ${initialQuestionsRef.current.length}`);
+    }, [currentIndex]);
 
     const togglePause = () => {
         setIsPaused(!isPaused);
@@ -84,68 +105,98 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         }
     }, [isPaused]);
 
+    // Audio volume management
     useEffect(() => {
         if (bgMusicRef.current) {
-        bgMusicRef.current.volume = musicVolume / 100;
+            bgMusicRef.current.volume = musicVolume / 100;
         }
         
         [correctSoundRef, wrongSoundRef, clickSoundRef, backspaceSoundRef, finishSoundRef, gameOverSoundRef].forEach(ref => {
-        if (ref.current) {
-            ref.current.volume = soundVolume / 100;
-        }
+            if (ref.current) {
+                ref.current.volume = soundVolume / 100;
+            }
         });
     }, [musicVolume, soundVolume]);
 
     useEffect(() => {
         if (instructionIndex >= instructions.length && bgMusicRef.current) {
-        bgMusicRef.current.play().catch(error => {
-            console.log("Autoplay prevented:", error);
-        });
+            bgMusicRef.current.play().catch(error => {
+                console.log("Autoplay prevented:", error);
+            });
         }
     }, [instructionIndex]);
 
     const playSound = (soundRef: React.RefObject<HTMLAudioElement>) => {
         if (soundRef.current && soundVolume > 0) {
-        soundRef.current.currentTime = 0;
-        soundRef.current.play().catch(error => {
-            console.log("Sound play prevented:", error);
-        });
+            soundRef.current.currentTime = 0;
+            soundRef.current.play().catch(error => {
+                console.log("Sound play prevented:", error);
+            });
         }
     };
 
     const saveVolumeSettings = (music: number, sound: number) => {
         router.post(route("student.updateSettings"), {
-        music,
-        sound,
+            music,
+            sound,
         }, {
-        preserveState: true,
-        onSuccess: () => {
-            // Settings saved successfully
-        }
+            preserveState: true,
         });
     };
 
+    // FIXED AUTO-CHECK: More conservative approach
     useEffect(() => {
-        if (hasProcessedCorrect) return;
+        if (isProcessingRef.current || hasAnsweredRef.current || answerStatus !== "idle" || !gameActive) {
+            return;
+        }
+
+        // Add bounds checking
+        if (currentIndex >= initialQuestionsRef.current.length) {
+            return;
+        }
+
+        const currentQ = initialQuestionsRef.current[currentIndex];
+
+        // Don't auto-check if we just reset the guess (all empty except auto-fill chars)
+        const isEmptyGuess = currentGuess.every((char, i) => 
+            shouldAutoFill(currentQ.answer[i]) || char === ""
+        );
+        
+        if (isEmptyGuess) {
+            return;
+        }
 
         const allFilled = currentQ.answer.split("").every((char, i) =>
             shouldAutoFill(char) || (currentGuess[i] && currentGuess[i] !== "")
         );
 
         if (allFilled) {
-            checkAnswer();
-        }
-    }, [currentGuess, hasProcessedCorrect]);
+            const now = Date.now();
+            if (now - lastAutoCheckRef.current < 1500) {
+                return;
+            }
+            lastAutoCheckRef.current = now;
 
-    useEffect(() => {
-        if (score === 5 && !isUnlocked) {
-            setIsAnimating(true);
-            setTimeout(() => {
-                setIsUnlocked(true);
-                setIsAnimating(false);
-            }, 2000);
+            console.log(`Auto-check triggered for question ${currentIndex}`);
+            
+            const timer = setTimeout(() => {
+                if (gameActive && !isProcessingRef.current && !hasAnsweredRef.current && answerStatus === "idle") {
+                    checkAnswer("auto");
+                }
+            }, 1000);
+            
+            return () => clearTimeout(timer);
         }
-    }, [score, isUnlocked]);
+    }, [currentGuess, answerStatus, gameActive, currentIndex]);
+
+    // Timer effect
+    useEffect(() => {
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         if (instructionIndex < instructions.length) return;
@@ -162,7 +213,6 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     clearInterval(timerRef.current!);
                     setShowModal("timesup");
                     setGameActive(false);
-                    // Play fail sound when timeout occurs
                     playSound(gameOverSoundRef);
                     return 0;
                 }
@@ -175,10 +225,11 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 clearInterval(timerRef.current);
             }
         };
-    }, [gameActive, isGameOver, instructionIndex]); 
+    }, [gameActive, isGameOver, instructionIndex]);
 
+    // Keyboard event handler
     useEffect(() => {
-        if (!gameActive) return;
+        if (!gameActive || isProcessingRef.current || hasAnsweredRef.current) return;
 
         const handleKeyDown = (e: KeyboardEvent) => {
             const key = e.key.toUpperCase();
@@ -187,7 +238,10 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 e.preventDefault();
                 removeLetter();
             } else if (key === "ENTER") {
-                checkAnswer();
+                e.preventDefault();
+                if (!isProcessingRef.current && !hasAnsweredRef.current && gameActive) {
+                    checkAnswer("manual");
+                }
             } else if (/^[A-Z]$/.test(key)) {
                 addLetter(key);
             }
@@ -195,7 +249,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [currentGuess, currentQ.answer, isCorrect, gameActive]);
+    }, [currentGuess, currentQ, gameActive, isProcessingRef.current, hasAnsweredRef.current]);
 
     const getFillColor = () => {
         if (timeLeft <= 2) return "red";
@@ -204,8 +258,9 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const addLetter = (letter: string) => {
-        if (!gameActive) return;
+        if (!gameActive || hasAnsweredRef.current) return;
         playSound(clickSoundRef);
+        
         let nextEmptyIndex = -1;
         for (let i = 0; i < currentQ.answer.length; i++) {
             if (!currentGuess[i] && !shouldAutoFill(currentQ.answer[i])) {
@@ -222,7 +277,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const removeLetter = () => {
-        if (!gameActive) return;
+        if (!gameActive || hasAnsweredRef.current) return;
         playSound(backspaceSoundRef);
 
         let lastFilledIndex = -1;
@@ -240,25 +295,59 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         }
     };
 
-    const checkAnswer = () => {
+    // FIXED CHECK ANSWER FUNCTION
+    const checkAnswer = async (source = "manual") => {
+        console.log(`=== CHECK ANSWER CALLED ===`);
+        console.log(`Source: ${source}, Current Index: ${currentIndex}, Processing: ${isProcessingRef.current}, Answered: ${hasAnsweredRef.current}`);
+        
+        // Add bounds checking
+        if (currentIndex >= initialQuestionsRef.current.length) {
+            console.log(`🚫 BLOCKED - Current index out of bounds`);
+            return;
+        }
+
+        const currentQ = initialQuestionsRef.current[currentIndex];
+        console.log(`Current Question: ${currentQ.question}, Question ID: ${currentQ.id}`);
+
+        // Multiple protection layers
+        if (isProcessingRef.current || hasAnsweredRef.current || !gameActive) {
+            console.log(`🚫 BLOCKED - Already processing or answered`);
+            return;
+        }
+
         const allFilled = currentQ.answer.split("").every((char, i) =>
             shouldAutoFill(char) || (currentGuess[i] && currentGuess[i] !== "")
         );
-        if (!allFilled) return;
+        
+        if (!allFilled) {
+            console.log(`🚫 BLOCKED - Not all filled`);
+            return;
+        }
 
-        if (!gameActive || hasProcessedCorrect) return;
+        // Set ALL processing flags IMMEDIATELY
+        isProcessingRef.current = true;
+        hasAnsweredRef.current = true;
+        setGameActive(false);
 
-        if (isCorrect) {
-            setHasProcessedCorrect(true);
-            playSound(correctSoundRef);
-            setAnswerStatus("correct");
-            setGameActive(false);
+        const userAnswer = currentGuess.join("");
+        const isAnswerCorrect = userAnswer === currentQ.answer;
 
-            setScore((prevScore) => {
-                const newScore = prevScore + 1;
-                const isGameFinished = currentIndex + 1 >= questions.length;
+        console.log(`User answer: "${userAnswer}", Correct answer: "${currentQ.answer}", Is correct: ${isAnswerCorrect}`);
 
-                router.post(route("guessword.saveProgress"), {
+        try {
+            if (isAnswerCorrect) {
+                // CORRECT ANSWER - Move to next question
+                console.log(`✅ CORRECT ANSWER - Processing...`);
+                playSound(correctSoundRef);
+                setAnswerStatus("correct");
+
+                const newScore = score + 1;
+                const isGameFinished = currentIndex + 1 >= initialQuestionsRef.current.length;
+
+                console.log(`New score: ${newScore}, Game finished: ${isGameFinished}`);
+
+                // Save progress
+                await router.post(route("guessword.saveProgress"), {
                     character_id: character.id,
                     kabanata_id: kabanataId,
                     question_id: currentQ.id,
@@ -266,72 +355,91 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     completed: isGameFinished,
                     total_score: newScore,
                     is_correct: true,
+                }, {
+                    preserveState: true,
+                    preserveScroll: true,
                 });
 
                 if (isGameFinished) {
+                    // GAME FINISHED
+                    console.log(`🎮 GAME FINISHED - Showing finished modal`);
                     setFinishMessage(finishMessages[newScore] || "GAME FINISHED!");
                     setShowModal("finished");
+                    setScore(newScore);
                     
-                    // Play fail sound for 0-2 stars (score 0-2), otherwise play winner sound
                     const stars = calculateStars(newScore);
-                    if (stars <= 0) { // 0 stars (score 0-2)
-                        playSound(gameOverSoundRef); // fail.mp3
+                    if (stars <= 0) {
+                        playSound(gameOverSoundRef);
                     } else {
-                        playSound(finishSoundRef); // winner.mp3
+                        playSound(finishSoundRef);
                     }
                 } else {
-                    // ✅ move to next question after delay
+                    // MOVE TO NEXT QUESTION after delay
+                    console.log(`➡️ MOVING to next question from ${currentIndex} to ${currentIndex + 1}`);
                     setTimeout(() => {
-                        setCurrentIndex((prev) => prev + 1); 
+                        setCurrentIndex(prev => {
+                            const newIndex = prev + 1;
+                            console.log(`🔀 SETTING new index: ${newIndex}`);
+                            return newIndex;
+                        });
+                        setScore(newScore);
                         setAnswerStatus("idle");
                         setGameActive(true);
-                        setHasProcessedCorrect(false);
-                    }, 1000);
+                        isProcessingRef.current = false;
+                        hasAnsweredRef.current = false;
+                        lastAutoCheckRef.current = 0;
+                        console.log(`🔄 RESET flags for next question`);
+                    }, 1500);
                 }
-
-                return newScore;
-            });
-        } else {
-            setAnswerStatus("wrong");
-            playSound(wrongSoundRef);
-            
-            // Save wrong answer progress
-            router.post(route("guessword.saveProgress"), {
-                character_id: character.id,
-                kabanata_id: kabanataId,
-                question_id: currentQ.id,
-                current_index: currentIndex,
-                completed: false,
-                total_score: score,
-                is_correct: false,
-            });
-
-            setTimeLeft((prev) => Math.max(prev - 5, 0));
-            setPenalty(-5);
-            
-            // FIXED: Move to next question after penalty
-            setTimeout(() => {
-                setPenalty(null);
-                const isGameFinished = currentIndex + 1 >= questions.length;
+            } else {
+                // WRONG ANSWER - Stay on CURRENT question
+                console.log(`❌ WRONG ANSWER - Staying on question ${currentIndex}`);
+                console.log(`Current question ID: ${currentQ.id}, Question: ${currentQ.question}`);
+                setAnswerStatus("wrong");
+                playSound(wrongSoundRef);
                 
-                if (isGameFinished) {
-                    setFinishMessage(finishMessages[score] || "GAME FINISHED!");
-                    setShowModal("finished");
-                    
-                    // Play fail sound for 0-2 stars (score 0-2), otherwise play winner sound
-                    const stars = calculateStars(score);
-                    if (stars <= 0) { // 0 stars (score 0-2)
-                        playSound(gameOverSoundRef); // fail.mp3
-                    } else {
-                        playSound(finishSoundRef); // winner.mp3
-                    }
-                } else {
-                    // Move to next question even if wrong
-                    setCurrentIndex((prev) => prev + 1);
+                // Save progress for wrong attempt
+                await router.post(route("guessword.saveProgress"), {
+                    character_id: character.id,
+                    kabanata_id: kabanataId,
+                    question_id: currentQ.id,
+                    current_index: currentIndex, // Keep same index
+                    completed: false,
+                    total_score: score, // Don't increment score
+                    is_correct: false,
+                }, {
+                    preserveState: true,
+                    preserveScroll: true,
+                });
+
+                // Apply penalty but STAY on same question
+                setTimeLeft((prev) => Math.max(prev - 5, 0));
+                setPenalty(-5);
+                
+                setTimeout(() => {
+                    console.log(`🔄 RESETTING for retry on question ${currentIndex}`);
+                    console.log(`Question after reset should be: ${currentQ.question}`);
+                    setPenalty(null);
                     setAnswerStatus("idle");
                     setGameActive(true);
-                }
-            }, 1000);
+                    isProcessingRef.current = false;
+                    hasAnsweredRef.current = false;
+                    
+                    // Reset current guess for retry on SAME question
+                    const initialGuess = currentQ.answer.split("").map(char => {
+                        return shouldAutoFill(char) ? char : "";
+                    });
+                    setCurrentGuess(initialGuess);
+                    console.log(`♻️ Guess reset for question ${currentIndex}`);
+                }, 1500);
+            }
+        } catch (error) {
+            console.error('Error in checkAnswer:', error);
+            // Reset flags on error - DON'T move to next question
+            isProcessingRef.current = false;
+            hasAnsweredRef.current = false;
+            setGameActive(true);
+            setAnswerStatus("idle");
         }
     };
 
@@ -349,6 +457,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const handleRestart = () => {
+        console.log(`🔄 RESTARTING GAME`);
         setCurrentIndex(0);
         setCurrentGuess([]);
         setShowModal(null);
@@ -356,10 +465,11 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         setTimeLeft(totalTime);
         setGameActive(true);
         setAnswerStatus("idle");
-        setHasProcessedCorrect(false);
         setPenalty(null);
+        isProcessingRef.current = false;
+        hasAnsweredRef.current = false;
+        lastAutoCheckRef.current = 0;
         
-        // Clear any timer
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
@@ -368,31 +478,28 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
             setIsPaused(!isPaused);
         }
         
-        // Reset the guess for the first question
-        const initialGuess = questions[0].answer.split("").map(char => {
+        const initialGuess = initialQuestionsRef.current[0].answer.split("").map(char => {
             return shouldAutoFill(char) ? char : "";
         });
         setCurrentGuess(initialGuess);
     };
 
+    // Gift unlock effect
     useEffect(() => {
-        if (bgMusicRef.current) {
-        bgMusicRef.current.volume = musicVolume / 100;
+        if (score === 5 && !isUnlocked) {
+            setIsAnimating(true);
+            setTimeout(() => {
+                setIsUnlocked(true);
+                setIsAnimating(false);
+            }, 2000);
         }
-        
-        [correctSoundRef, wrongSoundRef, clickSoundRef, backspaceSoundRef, finishSoundRef, gameOverSoundRef].forEach(ref => {
-        if (ref.current) {
-            ref.current.volume = soundVolume / 100;
-        }
-        });
-    }, [musicVolume, soundVolume]);
+    }, [score, isUnlocked]);
 
-    const handleVolumeSettingsChange = (music: number, sound: number) => {
+    const handleVolumeChange = (music: number, sound: number) => {
         setMusicVolume(music);
         setSoundVolume(sound);
         saveVolumeSettings(music, sound);
     };
-    
 
     const instructions = [
         {
@@ -435,214 +542,192 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
     const stars = calculateStars(score);
 
-    const handleVolumeChange = (music: number, sound: number) => {
-        setMusicVolume(music);
-        setSoundVolume(sound);
-        saveVolumeSettings(music, sound);
-    };
-
-
-    // Rest of the JSX remains exactly the same...
     return (
         <StudentLayout
             musicVolume={musicVolume}
             soundVolume={soundVolume}
             onVolumeChange={handleVolumeChange}
         >
-        {instructionIndex < instructions.length ? (
-            <InstructionModal
-                isOpen={true}
-                onClose={() => {
-                    if (instructionIndex < instructions.length - 1) {
-                        setInstructionIndex(instructionIndex + 1);
-                    } else {
-                        setInstructionIndex(instructions.length);
-                        localStorage.setItem("guessWordStarted", "true");
-                    }
-                }}
-                title={instructions[instructionIndex].title}
-                content={instructions[instructionIndex].content}
-                buttonText={instructions[instructionIndex].buttonText}
-                bgImage="/Img/Challenge/GuessChar/BG1.png"
-            />
-        ) : (
-            <>
-            {/* Audio elements */}
-            {/* <audio 
-                ref={bgMusicRef} 
-                id="bg-music" 
-                loop
-                src="/audio/guessword-bg-music.mp3" 
-            /> */}
-            <audio 
-                ref={correctSoundRef} 
-                src="/Music/plankton-correct.mp3" 
-            />
-            <audio 
-                ref={wrongSoundRef} 
-                src="/Music/ksiwhatthehellmusic1.mp3" 
-            />
-            <audio 
-                ref={clickSoundRef} 
-                src="/Music/typingsound.mp3" 
-            />
-            <audio 
-                ref={backspaceSoundRef} 
-                src="/Music/backspace.wav" 
-            />
-            <audio 
-                ref={finishSoundRef} 
-                src="/Music/winner.mp3" 
-            />
-            <audio 
-                ref={gameOverSoundRef} 
-                src="/Music/fail.mp3" 
-            />
-                <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[485px] flex flex-col items-center gap-[30px]">
-                    <div className="relative w-20 h-20 mb-4">
-                        <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
-                            <div
-                                className="absolute bottom-0 w-full origin-bottom transition-transform duration-300 ease-linear will-change-transform"
-                                style={{
-                                    height: `${fillHeight}%`,
-                                    background: getFillColor(),
-                                    backgroundImage: "linear-gradient(to top, rgba(255,255,255,0.3), transparent)",
-                                }}
-                            />
-                            <div
-                                className="absolute top-0 left-0 w-full h-full rounded-full"
-                                style={{
-                                    background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), transparent 60%)",
-                                }}
-                            />
-                        </div>
-                        <span className="absolute inset-0 flex items-center justify-center text-xl font-bold drop-shadow-md">
-                            {Math.ceil(timeLeft)}
-                        </span>
-                        {penalty && (
-                            <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-red-600 font-bold text-lg animate-bounce">
-                                {penalty}s
-                            </span>
-                        )}
-                    </div>
-                </div>
-                <div
-                    className="h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center overflow-hidden"
-                    style={{
-                        backgroundImage: `url('/Img/LandingPage/character/${character.filename}1.png')`,
+            {instructionIndex < instructions.length ? (
+                <InstructionModal
+                    isOpen={true}
+                    onClose={() => {
+                        if (instructionIndex < instructions.length - 1) {
+                            setInstructionIndex(instructionIndex + 1);
+                        } else {
+                            setInstructionIndex(instructions.length);
+                            localStorage.setItem("guessWordStarted", "true");
+                        }
                     }}
-                >
-                    {/* Mobile and Tablet Background (hidden on desktop) */}
-                    <div 
-                        className="absolute inset-0 bg-cover bg-center md:block lg:hidden"
-                        style={{
-                            backgroundImage: `url('/Img/LandingPage/character/${character.filename}-sw.png')`,
-                        }}
-                    />
-                    
-                    {/* Content */}
-                    <div className="relative z-10 w-full">
-                        {/* Rest of your existing content remains the same */}
-                        <div className="flex flex-row justify-between overflow-hidden">
-                            <div className="flex flex-row overflow-hidden">
-                                <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl overflow-hidden">
-                                    Kabanata {kabanata_number}:
-                                </div>
-                                <div className="text-white font-bold font-mono px-2 py-2 text-2xl overflow-hidden">
-                                    {kabanata_title}
-                                </div>
+                    title={instructions[instructionIndex].title}
+                    content={instructions[instructionIndex].content}
+                    buttonText={instructions[instructionIndex].buttonText}
+                    bgImage="/Img/Challenge/GuessChar/BG1.png"
+                />
+            ) : (
+                <>
+                    {/* Audio elements */}
+                    <audio ref={correctSoundRef} src="/Music/plankton-correct.mp3" />
+                    <audio ref={wrongSoundRef} src="/Music/ksiwhatthehellmusic1.mp3" />
+                    <audio ref={clickSoundRef} src="/Music/typingsound.mp3" />
+                    <audio ref={backspaceSoundRef} src="/Music/backspace.wav" />
+                    <audio ref={finishSoundRef} src="/Music/winner.mp3" />
+                    <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
+
+                    {/* Timer Display */}
+                    <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[485px] flex flex-col items-center gap-[30px]">
+                        <div className="relative w-20 h-20 mb-4">
+                            <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
+                                <div
+                                    className="absolute bottom-0 w-full origin-bottom transition-transform duration-300 ease-linear will-change-transform"
+                                    style={{
+                                        height: `${fillHeight}%`,
+                                        background: getFillColor(),
+                                        backgroundImage: "linear-gradient(to top, rgba(255,255,255,0.3), transparent)",
+                                    }}
+                                />
+                                <div
+                                    className="absolute top-0 left-0 w-full h-full rounded-full"
+                                    style={{
+                                        background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7), transparent 60%)",
+                                    }}
+                                />
                             </div>
-                            <button
-                                onClick={togglePause}
-                                className="absolute top-6 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
-                                title="Pause Game"
-                            >
-                                <svg 
-                                    className="w-6 h-6 text-white" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                        </div>
-                    <div className="flex flex-col lg:ml-16 lg:scale-90 items-center justify-start p-6 overflow-hidden">
-                        <div className="relative w-[550px] h-[250px] flex items-center justify-center">
-                            <img
-                                src="/Img/Challenge/GuessWord/modalBG.png"
-                                alt="Wooden Background"
-                                className="absolute inset-0 w-full h-full object-contain z-0"
-                            />
-                            <div className="relative z-10 flex bottom-[10px] flex-col font-mono font-bold items-center text-center px-5">
-                                <span className="text-white text-xl mt-3 font-bold">
-                                    {currentIndex + 1}/{questions.length}
+                            <span className="absolute inset-0 flex items-center justify-center text-xl font-bold drop-shadow-md">
+                                {Math.ceil(timeLeft)}
+                            </span>
+                            {penalty && (
+                                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-red-600 font-bold text-lg animate-bounce">
+                                    {penalty}s
                                 </span>
-                                <p className="text-white italic mt-5 text-base font-bold ml-5 mr-5 leading-relaxed">
-                                    {currentQ.question}
-                                </p>
-                            </div>
+                            )}
                         </div>
-                        <div className="flex items-center font-mono justify-center gap-[2px] mt-8 w-full max-w-6xl">
-                            <div
-                                className={`flex-1 text-5xl mx-1 text-center font-black 
-                                ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
-                            >
-                                <div className="inline-flex flex-block  font-mono justify-center gap-x-2 gap-y-0">
-                                    {currentQ.answer.split("").map((char, i) => {
-                                        if (char === " ") return <span key={i} className="inline-block w-2 mx-2"></span>;
-                                        if (shouldAutoFill(char)) {
-                                            return <span key={i} className="inline-block w-2 text-center mx-2">{char}</span>;
-                                        } else {
-                                            return currentGuess[i] ? (
-                                                <span key={i} className="inline-block w-2 text-center mx-2">{currentGuess[i]}</span>
-                                            ) : (
-                                                <span key={i} className="inline-block w-2  font-mono text-center text-white mx-2 text-4xl">_</span>
-                                            );
-                                        }
-                                    })}
+                    </div>
+
+                    {/* Main Game Content */}
+                    <div
+                        className="h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center overflow-hidden"
+                        style={{
+                            backgroundImage: `url('/Img/LandingPage/character/${character.filename}1.png')`,
+                        }}
+                    >
+                        {/* Mobile and Tablet Background */}
+                        <div 
+                            className="absolute inset-0 bg-cover bg-center md:block lg:hidden"
+                            style={{
+                                backgroundImage: `url('/Img/LandingPage/character/${character.filename}-sw.png')`,
+                            }}
+                        />
+                        
+                        {/* Content */}
+                        <div className="relative z-10 w-full">
+                            <div className="flex flex-row justify-between overflow-hidden">
+                                <div className="flex flex-row overflow-hidden">
+                                    <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl overflow-hidden">
+                                        Kabanata {kabanata_number}:
+                                    </div>
+                                    <div className="text-white font-bold font-mono px-2 py-2 text-2xl overflow-hidden">
+                                        {kabanata_title}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex flex-row gap-3">
                                 <button
-                                    className="h-12 w-12 flex items-center justify-center 
-                                            rounded-[12px] text-white font-bold text-lg
-                                            bg-gradient-to-b from-[#FF6A00] to-[#D5703A]
-                                            shadow-[4px_6px_0_#B97B4B]
-                                            border-2 border-[#E6B07B]
-                                            active:translate-y-1 disabled:opacity-50"
-                                    onClick={removeLetter}
-                                    disabled={!gameActive}
+                                    onClick={togglePause}
+                                    className="absolute top-6 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
+                                    title="Pause Game"
                                 >
-                                    ⌫
+                                    <svg 
+                                        className="w-6 h-6 text-white" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center gap-3 mt-10">
-                            {keyboardLayout.map((row, rowIndex) => (
-                                <div key={rowIndex} className="flex gap-3">
-                                    {row.map((letter, index) => (
-                                        <button
-                                            key={index}
-                                            className="relative text-white rounded-full h-12 w-12 flex items-center justify-center shadow-md active:translate-y-1 disabled:opacity-50"
-                                            onClick={() => addLetter(letter)}
-                                            disabled={!gameActive}
-                                        >
-                                            <img
-                                                src="/Img/Challenge/GuessWord/button.png"
-                                                alt="Wooden Button"
-                                                className="w-full h-auto absolute inset-0 z-0"
-                                            />
-                                            <span className="z-10 font-bold text-lg">{letter}</span>
-                                        </button>
-                                    ))}
+                        <div className="flex flex-col lg:ml-16 lg:scale-90 items-center justify-start p-6 overflow-hidden">
+                            {/* Question Display */}
+                            <div className="relative w-[550px] h-[250px] flex items-center justify-center">
+                                <img
+                                    src="/Img/Challenge/GuessWord/modalBG.png"
+                                    alt="Wooden Background"
+                                    className="absolute inset-0 w-full h-full object-contain z-0"
+                                />
+                                <div className="relative z-10 flex bottom-[10px] flex-col font-mono font-bold items-center text-center px-5">
+                                    <span className="text-white text-xl mt-3 font-bold">
+                                        {currentIndex + 1}/{initialQuestionsRef.current.length}
+                                    </span>
+                                    <p className="text-white italic mt-5 text-base font-bold ml-5 mr-5 leading-relaxed">
+                                        {currentQ.question}
+                                    </p>
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* Answer Input */}
+                            <div className="flex items-center font-mono justify-center gap-[2px] mt-8 w-full max-w-6xl">
+                                <div
+                                    className={`flex-1 text-5xl mx-1 text-center font-black 
+                                    ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
+                                >
+                                    <div className="inline-flex flex-block font-mono justify-center gap-x-2 gap-y-0">
+                                        {currentQ.answer.split("").map((char, i) => {
+                                            if (char === " ") return <span key={i} className="inline-block w-2 mx-2"></span>;
+                                            if (shouldAutoFill(char)) {
+                                                return <span key={i} className="inline-block w-2 text-center mx-2">{char}</span>;
+                                            } else {
+                                                return currentGuess[i] ? (
+                                                    <span key={i} className="inline-block w-2 text-center mx-2">{currentGuess[i]}</span>
+                                                ) : (
+                                                    <span key={i} className="inline-block w-2 font-mono text-center text-white mx-2 text-4xl">_</span>
+                                                );
+                                            }
+                                        })}
+                                    </div>
+                                </div>
+                                <div className="flex flex-row gap-3">
+                                    <button
+                                        className="h-12 w-12 flex items-center justify-center 
+                                                rounded-[12px] text-white font-bold text-lg
+                                                bg-gradient-to-b from-[#FF6A00] to-[#D5703A]
+                                                shadow-[4px_6px_0_#B97B4B]
+                                                border-2 border-[#E6B07B]
+                                                active:translate-y-1 disabled:opacity-50"
+                                        onClick={removeLetter}
+                                        disabled={!gameActive || hasAnsweredRef.current}
+                                    >
+                                        ⌫
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Keyboard */}
+                            <div className="flex flex-col items-center gap-3 mt-10">
+                                {keyboardLayout.map((row, rowIndex) => (
+                                    <div key={rowIndex} className="flex gap-3">
+                                        {row.map((letter, index) => (
+                                            <button
+                                                key={index}
+                                                className="relative text-white rounded-full h-12 w-12 flex items-center justify-center shadow-md active:translate-y-1 disabled:opacity-50"
+                                                onClick={() => addLetter(letter)}
+                                                disabled={!gameActive || hasAnsweredRef.current}
+                                            >
+                                                <img
+                                                    src="/Img/Challenge/GuessWord/button.png"
+                                                    alt="Wooden Button"
+                                                    className="w-full h-auto absolute inset-0 z-0"
+                                                />
+                                                <span className="z-10 font-bold text-lg">{letter}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-</div>
-                      {showModal && (
+
+                        {/* Result Modal */}
+                        {showModal && (
                             <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
                                 <div className="relative w-[600px] bg-transparent">
                                     <img
@@ -651,78 +736,36 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         className="w-full h-auto"
                                     />
                                     <div className="absolute top-[-30px] ml-3 left-1/2 -translate-x-1/2 flex">
-                                    {(showModal === "finished") && (
-                                        <>
-                                            {[...Array(3)].map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={`flex items-center justify-center
-                                                        ${i === 1 ? "w-[170px] h-[170px]" : "w-32 h-32"}
-                                                        ${i === 0 || i === 2 ? "translate-y-[50px]" : ""}
-                                                    `}
-                                                >
-                                                    {i < stars ? (
-                                                        <img
-                                                            src="/Img/Challenge/GuessWord/star-color.png"
-                                                            alt="Colored Star"
-                                                            className="w-full h-full object-contain"
-                                                        />
-                                                    ) : (
-                                                        <img
-                                                            src="/Img/Challenge/GuessWord/star-nocolor.png"
-                                                            alt="Empty Star"
-                                                            className="w-full h-full object-contain"
-                                                        />
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </>
-                                    )}
-                                    </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                                <h2 className="
-                                    font-mono
-                                    mr-2
-                                    ml-2
-                                    text-[55px] leading-[72px] 
-                                    font-bold 
-                                    text-orange-800
-                                    text-shadow
-                                    z-10"
-                                >
-                                    {showModal === "correct" && successMessage}
-                                    {showModal === "wrong" && "TRY AGAIN"}
-                                    {showModal === "timesup" && "TIME'S UP!"}
-                                    {showModal === "finished" && (finishMessages[score] || "GAME FINISHED!")}
-                                </h2>
-                                {showModal === "correct" && (
-                                <p className="text-white mr-5 ml-5 font-mono text-lg mb-3">Tama ang sagot!</p>
-                                )}
-                                {showModal === "wrong" && (
-                                <p className="text-red-500 mr-5 ml-5 font-mono text-lg mb-3">Mali! Subukan muli.</p>
-                                )}
-                                    <p className="text-red-800 mr-5 ml-5 font-mono text-base font-semibold">
-                                        {(showModal === "timesup" || showModal === "finished") && (
+                                        {(showModal === "finished") && (
                                             <>
-                                                {stars === 0 && (
-                                                    <span>
-                                                        Kailangan mong makakuha ng kahit isang bituin upang magpatuloy.
-                                                    </span>
-                                                )}
+                                                {[...Array(3)].map((_, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className={`flex items-center justify-center
+                                                            ${i === 1 ? "w-[170px] h-[170px]" : "w-32 h-32"}
+                                                            ${i === 0 || i === 2 ? "translate-y-[50px]" : ""}
+                                                        `}
+                                                    >
+                                                        {i < stars ? (
+                                                            <img
+                                                                src="/Img/Challenge/GuessWord/star-color.png"
+                                                                alt="Colored Star"
+                                                                className="w-full h-full object-contain"
+                                                            />
+                                                        ) : (
+                                                            <img
+                                                                src="/Img/Challenge/GuessWord/star-nocolor.png"
+                                                                alt="Empty Star"
+                                                                className="w-full h-full object-contain"
+                                                            />
+                                                        )}
+                                                    </div>
+                                                ))}
                                             </>
-                                         )}
-                                    </p> 
-                                
-                                <div className="relative flex items-center justify-center w-32 h-32 z-10">
-                                    {showModal === "finished" && (
-                                        <>
-                                            {/* Background Glow + Fireworks Animation */}
-                                            <img
-                                                src="/Img/Challenge/GuessWord/fireworks.png"
-                                                alt="Fireworks"
-                                                className="absolute inset-0 w-full h-full object-cover opacity-70 animate-pulse"
-                                            />
+                                        )}
+                                    </div>
 
+<<<<<<< HEAD
                                             {/* Gift Box (Visible when unlocked) */}
                                             <div
                                                 className="absolute inset-0 flex items-center justify-center"
@@ -814,68 +857,49 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         <button
                                             onClick={nextQuestion}
                                             className="rounded-full p-3 relative"
+=======
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                                        <h2 className="
+                                            font-mono
+                                            mr-2
+                                            ml-2
+                                            text-[55px] leading-[72px] 
+                                            font-bold 
+                                            text-orange-800
+                                            text-shadow
+                                            z-10"
+>>>>>>> edd0aaaacf28b98c4dff4ede70102483cf2282aa
                                         >
-                                            <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
-                                        </button>
-                                    </>
-                                )}
+                                            {showModal === "correct" && successMessage}
+                                            {showModal === "wrong" && "TRY AGAIN"}
+                                            {showModal === "timesup" && "TIME'S UP!"}
+                                            {showModal === "finished" && (finishMessages[score] || "GAME FINISHED!")}
+                                        </h2>
 
-                                {showModal === "wrong" && (
-                                    <>
-                                    <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
-                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                        setShowModal(null);
-                                        setGameActive(true);
-                                        }}
-                                        className="rounded-full p-3 relative"
-                                    >
-                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
-                                    </button>
-                                    <button
-                                        onClick={nextQuestion}
-                                        className="rounded-full p-3 relative"
-                                    >
-                                        <img src="/Img/Challenge/GuessWord/skip.png" alt="Skip" className="w-[60px] h-[60px]" />
-                                    </button>
-                                    </>
-                                )} */}
-
-                                {(showModal === "timesup" || showModal === "finished") && (
-                                    <>
-                                            <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
-                                                <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
-                                            </button>
-                                            <button className="rounded-full relative z-20"onClick={handleRestart}>
-                                                <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
-                                            </button>
-                                            {stars > 0 && (
-                                                <button className="rounded-full relative z-20"
-                                                onClick={handleProceed}>
-                                                    <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
-                                                </button>
+                                        {/* Action Buttons */}
+                                        <div className="fixed flex gap-8 bottom-[145px] sm:bottom-[125px] md:bottom-[128px] lg:bottom-[130px]">
+                                            {(showModal === "timesup" || showModal === "finished") && (
+                                                <>
+                                                    <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
+                                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
+                                                    </button>
+                                                    <button className="rounded-full relative z-20" onClick={handleRestart}>
+                                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
+                                                    </button>
+                                                    {stars > 0 && (
+                                                        <button className="rounded-full relative z-20" onClick={handleProceed}>
+                                                            <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
+                                                        </button>
+                                                    )}
+                                                </>
                                             )}
-                                    </>
-                                )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            </div>
-                        </div>
                         )}
 
                         <style>{`
-                            .stroke-text {
-                                -webkit-text-stroke: 5px #D35D28;
-                            }
-                            @keyframes floatUp {
-                                0% { opacity: 1; transform: translateY(0) scale(1); }
-                                100% { opacity: 0; transform: translateY(-20px) scale(1.2); }
-                            }
-                            .animate-bounce {
-                                animation: floatUp 1s ease forwards;
-                            }
                             .shake {
                                 animation: shake 0.3s;
                             }
@@ -888,26 +912,8 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             }
                         `}</style>
                     </div>
-            
-                {/* <PauseModal
-                    isOpen={isPaused}
-                    onResume={togglePause}
-                    onRestart={handleRestart}
-                    onHome={() => router.get(route('challenge'))}
-                    initialMusic={musicVolume}
-                    initialSound={soundVolume}
-                    onMusicChange={(volume) => {
-                    setMusicVolume(volume);
-                    saveVolumeSettings(volume, soundVolume);
-                    }}
-                    onSoundChange={(volume) => {
-                    setSoundVolume(volume);
-                    saveVolumeSettings(musicVolume, volume);
-                    }}
-                    onVolumeSettingsChange={handleVolumeSettingsChange}
-                /> */}
-            </>
-        )}
+                </>
+            )}
         </StudentLayout>
     );
 }
