@@ -590,7 +590,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <div
                             className="absolute flex flex-col items-center z-10 left-[530px] sm:left-[230px] md:left-[240px] lg:left-[560px] top-[205px] lg:top-[210px]"
                         >
-                            <div className="relative max-w-[370px] h-auto rounded-full flex items-center justify-center">
+                            <div className="relative max-w-[170px] sm:max-w-[300px] lg:max-w-[370px] md:max-w-[370px] h-auto rounded-full flex items-center justify-center">
                                 {/* Conditionally render locked or unlocked door */}
                                 {completedCount === 64 ? (
                                     <img src="/Img/Challenge/locked-door2.png" alt="Unlocked Door" className="w-full h-auto" />

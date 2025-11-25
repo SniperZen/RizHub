@@ -31,7 +31,7 @@ const PreVideoModal: React.FC<PreVideoModalProps> = ({
           Sa pagpapatuloy mo, awtomatikong magpe-play ang isang video na may kaugnayan sa pagsusulit. Manood nang mabuti at maghanda para sa pagsusulit.
           </p>
 
-          <div className="flex gap-6 mt-24 relative top-[10px] lg:top-[30px]">
+          <div className="flex gap-6 mt-24 relative top-[10px] sm:top-[40px] md:top-[50px] lg:top-[30px]">
             {showSkipOption && (
               <Button
                   className="w-auto h-[50px] lg:h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-xl lg:text-3xl font-extrabold relative transition hover:scale-105"
