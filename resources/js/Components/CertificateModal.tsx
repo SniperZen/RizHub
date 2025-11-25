@@ -36,8 +36,8 @@ const handleDownloadPDF = async () => {
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      // Set background color
-      pdf.setFillColor(249, 239, 205);
+      // Set background color to WHITE
+      pdf.setFillColor(255, 255, 255); // White background
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
       // Load images
@@ -76,7 +76,7 @@ const handleDownloadPDF = async () => {
 
         // Add "Ang sertipikong ito ay ipinagkakaloob kay" text
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(0, 0, 0);
+        pdf.setTextColor(0, 0, 0); // Black text
         pdf.setFontSize(16);
 
         // moved from 85 → 90
@@ -89,7 +89,7 @@ const handleDownloadPDF = async () => {
 
         // Student Name - using helvetica bolditalic
         pdf.setFont("helvetica", "bolditalic");
-        pdf.setTextColor(0, 0, 0);
+        pdf.setTextColor(0, 0, 0); // Black text
         pdf.setFontSize(28);
 
         // Get the text width to center the underline properly
@@ -106,14 +106,14 @@ const handleDownloadPDF = async () => {
         const underlineX = (pageWidth - textWidth) / 2;
 
         // Draw the underline
-        pdf.setDrawColor(0, 0, 0);
+        pdf.setDrawColor(0, 0, 0); // Black underline
         pdf.setLineWidth(0.8);
         pdf.line(underlineX, underlineY, underlineX + textWidth, underlineY);
 
         // Body text - using helvetica normal
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(14);
-        pdf.setTextColor(60, 40, 20);
+        pdf.setTextColor(0, 0, 0); // Black text for better contrast on white background
         
         const displayPercentage = percentageDisplayType === "decimal" 
           ? totalStarsPercentage.toFixed(2) + "%"
@@ -154,7 +154,7 @@ const handleDownloadPDF = async () => {
         console.error("Error loading images:", imageError);
         // Fallback: Create PDF with text title if images fail to load
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(92, 62, 30);
+        pdf.setTextColor(0, 0, 0); // Black text for fallback
         pdf.setFontSize(36);
         pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
         

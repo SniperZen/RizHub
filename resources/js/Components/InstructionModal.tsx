@@ -85,7 +85,7 @@ const InstructionModal: React.FC<ModalProps> = ({
         if (audioRef.current && (pos === 0 || text.charAt(pos - 1) === ' ')) {
           // Only play sound for actual words (not after very short gaps)
           const currentWord = text.substring(pos).split(' ')[0];
-          if (currentWord.length > 2) { // Only play for words longer than 2 characters
+          if (currentWord.length > 1) { // Only play for words longer than 2 characters
             // Add some randomness to make it feel more natural
             if (Math.random() > 0.3) { // 70% chance to play sound per word
               audioRef.current.currentTime = 0;

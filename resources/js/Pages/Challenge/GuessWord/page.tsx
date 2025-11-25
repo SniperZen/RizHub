@@ -575,7 +575,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[485px] flex flex-col items-center gap-[30px]">
+                    <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[488px] flex flex-col items-center gap-[30px]">
                         <div className="relative w-20 h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
                                 <div
@@ -620,7 +620,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                         />
                         
                         {/* Content */}
-                        <div className="relative z-10 w-full">
+                        <div className="relative z-10 md:mb-[95px] lg:mb-[18px] w-full">
                             <div className="flex flex-row justify-between overflow-hidden">
                                 <div className="flex flex-row overflow-hidden">
                                     <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl overflow-hidden">
@@ -646,10 +646,10 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 </button>
                             </div>
                         </div>
-
-                        <div className="flex flex-col lg:ml-16 lg:scale-90 items-center justify-start p-6 overflow-hidden">
+                        <div className="md:mb-[-100px] lg:mb-[-10px] md:left-15">
+                        <div className="flex flex-col lg:ml-16 scale-90 lg:scale-90 md:scale-75 items-center justify-start md:justify-end p-6 overflow-hidden">
                             {/* Question Display */}
-                            <div className="relative w-[550px] h-[250px] flex items-center justify-center">
+                            <div className="relative w-[550px] h-[250px] flex items-center justify-center md:top-10 md:justify-end">
                                 <img
                                     src="/Img/Challenge/GuessWord/modalBG.png"
                                     alt="Wooden Background"
@@ -664,9 +664,8 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                     </p>
                                 </div>
                             </div>
-
                             {/* Answer Input */}
-                            <div className="flex items-center font-mono justify-center gap-[2px] mt-8 w-full max-w-6xl">
+                            <div className="flex items-center font-mono justify-center w-full max-w-6xl">
                                 <div
                                     className={`flex-1 text-5xl mx-1 text-center font-black 
                                     ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
@@ -724,6 +723,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                     </div>
                                 ))}
                             </div>
+                        </div>
                         </div>
 
                         {/* Result Modal */}
