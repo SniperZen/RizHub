@@ -203,61 +203,59 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         setLostHearts([]);
     };
 
-    const proceedToHomePage = () => {
-        const isPerfectScore = score === selectedQuizzes.length;
-        
-        router.post(route('quiz.complete'), {
-            kabanata_id: kabanataId,
-            score: score,
-            total_questions: selectedQuizzes.length,
-            perfect_score: isPerfectScore,
-        }, {
-            onSuccess: (response) => {
-                console.log('Quiz completed successfully', response);
-                if (response.props.perfect_score) {
-                    console.log('Perfect score achieved! Guessword and video progress updated.');
-                }
-                router.visit(route('challenge'));
-            },
-            onError: (errors) => {
-                console.error('Failed to complete quiz:', errors);
+const proceedToHomePage = () => {
+    const isPerfectScore = score === selectedQuizzes.length;
+    
+    router.post(route('quiz.complete'), {
+        kabanata_id: kabanataId,
+        score: score,
+        total_score: selectedQuizzes.length, // Changed from total_questions to total_score
+        perfect_score: isPerfectScore,
+    }, {
+        onSuccess: (response) => {
+            console.log('Quiz completed successfully', response);
+            if (response.props.perfect_score) {
+                console.log('Perfect score achieved! Guessword and video progress updated.');
             }
-        });
-    };
+            router.visit(route('challenge'));
+        },
+        onError: (errors) => {
+            console.error('Failed to complete quiz:', errors);
+        }
+    });
+};
 
-    const proceedToKabanataPage = () => {
-        const isPerfectScore = score === selectedQuizzes.length;
-        
-        router.post(route('quiz.complete'), {
-            kabanata_id: kabanataId,
-            score: score,
-            total_questions: selectedQuizzes.length,
-            perfect_score: isPerfectScore,
-        }, {
-            onSuccess: (response) => {
-                console.log('Quiz completed successfully', response);
-                if (isPerfectScore) {
-                    console.log('Perfect score achieved!');
-                    
-                    // Use get instead of visit for client-side navigation
-                    router.get(route('challenge', {
+const proceedToKabanataPage = () => {
+    const isPerfectScore = score === selectedQuizzes.length;
+    
+    router.post(route('quiz.complete'), {
+        kabanata_id: kabanataId,
+        score: score,
+        total_score: selectedQuizzes.length, // Changed from total_questions to total_score
+        perfect_score: isPerfectScore,
+    }, {
+        onSuccess: (response) => {
+            console.log('Quiz completed successfully', response);
+            if (isPerfectScore) {
+                console.log('Perfect score achieved!');
+                
+                router.get(route('challenge', {
                     showVideo: true,
                     kabanataId: kabanataId + 1
                 }), {
                     preserveState: true,
                     preserveScroll: true
                 });
-
-                } else {
-                    router.get(route('challenge'));
-                }
-            },
-            onError: (errors) => {
-                console.error('Failed to complete quiz:', errors);
+            } else {
                 router.get(route('challenge'));
             }
-        });
-    };
+        },
+        onError: (errors) => {
+            console.error('Failed to complete quiz:', errors);
+            router.get(route('challenge'));
+        }
+    });
+};
 
     // Show instruction modals if not all have been shown yet
     if (instructionIndex < instructions.length) {

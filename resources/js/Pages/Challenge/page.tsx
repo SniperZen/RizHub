@@ -79,10 +79,10 @@ const KabanataPage: React.FC<PageProps> = ({
     const [vibratingLockedId, setVibratingLockedId] = useState<number | null>(null);
 
     // Filter kabanatas -based on development needs
-    // const filteredKabanatas = {
-    //     ...kabanatas,
-    //     data: kabanatas.data.filter(k => k.id <= 64)
-    // };
+    const filteredKabanatas = {
+        ...kabanatas,
+        data: kabanatas.data.filter(k => k.id <= 64)
+    };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -118,17 +118,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // // testing purposes only - remove this on production
-    const filteredKabanatas = {
-    ...kabanatas,
-    data: kabanatas.data
-        .filter(k => k.id <= 64)
-        .map(k => ({
-        ...k,
-        progress: 10,
-        stars: 3,
-        unlocked: true
-        }))
-    };
+    // const filteredKabanatas = {
+    // ...kabanatas,
+    // data: kabanatas.data
+    //     .filter(k => k.id <= 64)
+    //     .map(k => ({
+    //     ...k,
+    //     progress: 10,
+    //     stars: 3,
+    //     unlocked: true
+    //     }))
+    // };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -877,79 +877,79 @@ const KabanataPage: React.FC<PageProps> = ({
                     />
                 )}
 
-                {showEndModal && (
-                    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                        {/* Backdrop with fade-in animation */}
-                        <div 
-                            className="absolute inset-0 bg-black/70"
-                            style={{
-                                animation: 'fadeIn 0.3s ease-out forwards'
-                            }}
-                        ></div>
-                        
-                        {/* Modal background image - appears first with no delay */}
-                        <div 
-                            className="relative w-full max-w-2xl"
-                            style={{
-                                animation: 'scaleIn 0.4s ease-out forwards',
-                                transformOrigin: 'center'
-                            }}
-                        >
-                            <img
-                                src="/Img/Challenge/vidModal.png"
-                                alt="Wooden Modal"
-                                className="w-full h-auto"
-                            />
-                        </div>
-                        
-                        {/* Text content container - positioned absolutely over the background */}
-                        <div className="absolute inset-0 flex items-center justify-center z-10">
-                            <div className="relative w-full max-w-2xl flex flex-col justify-center items-center text-center px-10">
-                                {/* Text appears after background image */}
-                                <p 
-                                    className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-28"
-                                    style={{
-                                        animation: 'fadeIn 0.5s ease-out 0.4s both'
-                                    }}
-                                >
-                                    <span className="text-[#B26D42]">
-                                        Gusto mo bang{" "}
-                                        <span className="decoration-[#FF7E47]">
-                                        ulitin ang panonood
-                                        </span>{" "}
-                                        o{" "}
-                                        <span className="decoration-[#FFA500]">
-                                        magpatuloy na lamang sa hamon?
-                                        </span>
-                                    </span>
-                                </p>
+{showEndModal && (
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+        {/* Backdrop with fade-in animation */}
+        <div 
+            className="absolute inset-0 bg-black/70"
+            style={{
+                animation: 'fadeIn 0.3s ease-out forwards'
+            }}
+        ></div>
+        
+        {/* Modal background image - appears first */}
+        <div 
+            className="relative w-full max-w-2xl opacity-0"
+            style={{
+                animation: 'scaleIn 0.4s ease-out forwards, fadeIn 0.4s ease-out forwards',
+                transformOrigin: 'center'
+            }}
+        >
+            <img
+                src="/Img/Challenge/vidModal.png"
+                alt="Wooden Modal"
+                className="w-full h-auto"
+            />
+        </div>
+        
+        {/* Text content container - appears after background image is fully visible */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="relative w-full max-w-2xl flex flex-col justify-center items-center text-center px-10 opacity-0"
+                 style={{
+                     animation: 'fadeIn 0.5s ease-out 0.4s both'
+                 }}>
+                {/* Text */}
+                <p 
+                    className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-28 opacity-0"
+                    style={{
+                        animation: 'fadeIn 0.5s ease-out 0.6s both'
+                    }}
+                >
+                    <span className="text-[#B26D42]">
+                        Gusto mo bang{" "}
+                        <span className="decoration-[#FF7E47]">
+                        ulitin ang panonood
+                        </span>{" "}
+                        o{" "}
+                        <span className="decoration-[#FFA500]">
+                        magpatuloy na lamang sa hamon?
+                        </span>
+                    </span>
+                </p>
 
-                                {/* Buttons appear after text */}
-                                <div className="flex gap-6 mt-[155px] flex-wrap justify-center">
-                                    <button
-                                        onClick={retryVideo}
-                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
-                                        style={{
-                                            animation: 'fadeIn 0.5s ease-out 0.6s both'
-                                        }}
-                                    >
-                                        Retry
-                                    </button>
+                {/* Buttons appear after text */}
+                <div className="flex gap-6 mt-[155px] flex-wrap justify-center opacity-0"
+                     style={{
+                         animation: 'fadeIn 0.5s ease-out 0.8s both'
+                     }}>
+                    <button
+                        onClick={retryVideo}
+                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
+                    >
+                        Retry
+                    </button>
 
-                                    <button
-                                        onClick={proceedNext}
-                                        className="w-auto h-[60px] px-8 w-auto h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
-                                        style={{
-                                            animation: 'fadeIn 0.5s ease-out 0.7s both'
-                                        }}
-                                    >
-                                        Proceed
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    <button
+                        onClick={proceedNext}
+                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
+                    >
+                        Proceed
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+)}
 
                 {/* Certificate Modal */}
                 <CertificateModal 

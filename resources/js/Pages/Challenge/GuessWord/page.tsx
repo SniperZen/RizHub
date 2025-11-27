@@ -415,6 +415,10 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 // Apply penalty but STAY on same question
                 setTimeLeft((prev) => Math.max(prev - 5, 0));
                 setPenalty(-5);
+
+                setTimeout(() => {
+                setPenalty(null);
+                }, 3000);
                 
                 setTimeout(() => {
                     console.log(`🔄 RESETTING for retry on question ${currentIndex}`);
@@ -575,7 +579,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[488px] flex flex-col items-center gap-[30px]">
+                    <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[483px] flex flex-col items-center gap-[30px]">
                         <div className="relative w-20 h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
                                 <div
