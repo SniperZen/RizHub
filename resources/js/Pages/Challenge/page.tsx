@@ -79,10 +79,10 @@ const KabanataPage: React.FC<PageProps> = ({
     const [vibratingLockedId, setVibratingLockedId] = useState<number | null>(null);
 
     // Filter kabanatas -based on development needs
-    const filteredKabanatas = {
-        ...kabanatas,
-        data: kabanatas.data.filter(k => k.id <= 64)
-    };
+    // const filteredKabanatas = {
+    //     ...kabanatas,
+    //     data: kabanatas.data.filter(k => k.id <= 64)
+    // };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -118,17 +118,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // // testing purposes only - remove this on production
-    // const filteredKabanatas = {
-    // ...kabanatas,
-    // data: kabanatas.data
-    //     .filter(k => k.id <= 64)
-    //     .map(k => ({
-    //     ...k,
-    //     progress: 10,
-    //     stars: 3,
-    //     unlocked: true
-    //     }))
-    // };
+    const filteredKabanatas = {
+    ...kabanatas,
+    data: kabanatas.data
+        .filter(k => k.id <= 64)
+        .map(k => ({
+        ...k,
+        progress: 10,
+        stars: 3,
+        unlocked: true
+        }))
+    };
 
     // Positions for different screen sizes
     const desktopPositions = [

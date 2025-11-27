@@ -28,7 +28,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
     }
   };
 
-const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async () => {
     try {
       const jsPDF = (await import("jspdf")).default;
       const pdf = new jsPDF("landscape", "mm", "a4");
@@ -36,8 +36,8 @@ const handleDownloadPDF = async () => {
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      // Set background color to WHITE
-      pdf.setFillColor(255, 255, 255); // White background
+      // Set background color
+      pdf.setFillColor(249, 239, 205);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
       // Load images
@@ -76,7 +76,7 @@ const handleDownloadPDF = async () => {
 
         // Add "Ang sertipikong ito ay ipinagkakaloob kay" text
         pdf.setFont("helvetica", "normal");
-        pdf.setTextColor(0, 0, 0); // Black text
+        pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(16);
 
         // moved from 85 → 90
@@ -89,7 +89,7 @@ const handleDownloadPDF = async () => {
 
         // Student Name - using helvetica bolditalic
         pdf.setFont("helvetica", "bolditalic");
-        pdf.setTextColor(0, 0, 0); // Black text
+        pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(28);
 
         // Get the text width to center the underline properly
@@ -106,14 +106,14 @@ const handleDownloadPDF = async () => {
         const underlineX = (pageWidth - textWidth) / 2;
 
         // Draw the underline
-        pdf.setDrawColor(0, 0, 0); // Black underline
+        pdf.setDrawColor(0, 0, 0);
         pdf.setLineWidth(0.8);
         pdf.line(underlineX, underlineY, underlineX + textWidth, underlineY);
 
         // Body text - using helvetica normal
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(14);
-        pdf.setTextColor(0, 0, 0); // Black text for better contrast on white background
+        pdf.setTextColor(60, 40, 20);
         
         const displayPercentage = percentageDisplayType === "decimal" 
           ? totalStarsPercentage.toFixed(2) + "%"
@@ -154,7 +154,7 @@ const handleDownloadPDF = async () => {
         console.error("Error loading images:", imageError);
         // Fallback: Create PDF with text title if images fail to load
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(0, 0, 0); // Black text for fallback
+        pdf.setTextColor(92, 62, 30);
         pdf.setFontSize(36);
         pdf.text("Katibayan ng Pagtatapos", pageWidth / 2, 60, { align: "center" });
         
@@ -189,30 +189,53 @@ const handleDownloadPDF = async () => {
   if (!isOpen) return null;
 
    return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
-      <div className="relative w-full max-w-5xl">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+      {/* Backdrop with fade-in animation */}
+      <div 
+        className="absolute inset-0 bg-black/70"
+        style={{
+          animation: 'fadeIn 0.3s ease-out forwards'
+        }}
+      ></div>
+      
+      {/* Certificate background - appears first */}
+      <div className="relative w-full max-w-5xl opacity-0"
+           style={{
+             animation: 'scaleIn 0.5s ease-out forwards, fadeIn 0.5s ease-out forwards',
+             transformOrigin: 'center'
+           }}>
+        
         {/* Certificate Design */}
         <div
           ref={certificateRef}
           className="relative w-full aspect-[16/10] bg-no-repeat bg-center bg-contain flex flex-col items-center justify-center"
           style={{ backgroundImage: "url('/Img/Challenge/certificate2.png')" }}
         >
-          {/* Title */}
-          <div className="absolute top-[25%] ml-[12%] w-full text-center">
+          {/* Title - appears after certificate background */}
+          <div className="absolute top-[25%] ml-[12%] w-full text-center opacity-0"
+               style={{
+                 animation: 'fadeIn 0.5s ease-out 0.6s both'
+               }}>
             <h1 className="text-5xl md:text-6xl font-lavish text-black">
               Katibayan ng Pagtatapos
             </h1>
           </div>
 
-          {/* Student Name */}
-          <div className="absolute top-[43%] ml-[15%] w-full text-center">
+          {/* Student Name - appears after title */}
+          <div className="absolute top-[43%] ml-[15%] w-full text-center opacity-0"
+               style={{
+                 animation: 'fadeIn 0.5s ease-out 0.6s both'
+               }}>
             <h2 className="text-2xl font-bold italic text-black">
               {studentName.toUpperCase()}
             </h2>
           </div>
 
-          {/* Certificate Body Text */}
-          <div className="absolute top-[55%] ml-[12%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black">
+          {/* Certificate Body Text - appears after student name */}
+          <div className="absolute top-[55%] ml-[12%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black opacity-0"
+               style={{
+                 animation: 'fadeIn 0.5s ease-out 0.6s both'
+               }}>
             <p>
               bilang pagkilala sa kanyang matagumpay na pagtatapos sa aralin sa pamamagitan
               pagpapamalas ng malalim na paglalakbay sa mga kabanata ng{" "}
@@ -235,8 +258,11 @@ const handleDownloadPDF = async () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-center ml-20 -mt-10">
+        {/* Action Buttons - appears last (outside the certificate) */}
+        <div className="flex justify-center ml-20 -mt-10 opacity-0"
+             style={{
+               animation: 'fadeIn 0.5s ease-out 1.2s both'
+             }}>
           <button
             onClick={handleDownloadPDF}
             className="p-2 hover:opacity-90 transition"
