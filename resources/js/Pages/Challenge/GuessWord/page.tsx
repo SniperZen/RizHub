@@ -295,157 +295,172 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         }
     };
 
-    // FIXED CHECK ANSWER FUNCTION
-    const checkAnswer = async (source = "manual") => {
-        console.log(`=== CHECK ANSWER CALLED ===`);
-        console.log(`Source: ${source}, Current Index: ${currentIndex}, Processing: ${isProcessingRef.current}, Answered: ${hasAnsweredRef.current}`);
-        
-        // Add bounds checking
-        if (currentIndex >= initialQuestionsRef.current.length) {
-            console.log(`🚫 BLOCKED - Current index out of bounds`);
-            return;
-        }
+const checkAnswer = async (source = "manual") => {
+    console.log(`=== CHECK ANSWER CALLED ===`);
+    console.log(`Source: ${source}, Current Index: ${currentIndex}, Processing: ${isProcessingRef.current}, Answered: ${hasAnsweredRef.current}`);
+    
+    // Add bounds checking
+    if (currentIndex >= initialQuestionsRef.current.length) {
+        console.log(`🚫 BLOCKED - Current index out of bounds`);
+        return;
+    }
 
-        const currentQ = initialQuestionsRef.current[currentIndex];
-        console.log(`Current Question: ${currentQ.question}, Question ID: ${currentQ.id}`);
+    const currentQ = initialQuestionsRef.current[currentIndex];
+    console.log(`Current Question: ${currentQ.question}, Question ID: ${currentQ.id}`);
 
-        // Multiple protection layers
-        if (isProcessingRef.current || hasAnsweredRef.current || !gameActive) {
-            console.log(`🚫 BLOCKED - Already processing or answered`);
-            return;
-        }
+    // Multiple protection layers
+    if (isProcessingRef.current || hasAnsweredRef.current || !gameActive) {
+        console.log(`🚫 BLOCKED - Already processing or answered`);
+        return;
+    }
 
-        const allFilled = currentQ.answer.split("").every((char, i) =>
-            shouldAutoFill(char) || (currentGuess[i] && currentGuess[i] !== "")
-        );
-        
-        if (!allFilled) {
-            console.log(`🚫 BLOCKED - Not all filled`);
-            return;
-        }
+    const allFilled = currentQ.answer.split("").every((char, i) =>
+        shouldAutoFill(char) || (currentGuess[i] && currentGuess[i] !== "")
+    );
+    
+    if (!allFilled) {
+        console.log(`🚫 BLOCKED - Not all filled`);
+        return;
+    }
 
-        // Set ALL processing flags IMMEDIATELY
-        isProcessingRef.current = true;
-        hasAnsweredRef.current = true;
-        setGameActive(false);
+    // Set ALL processing flags IMMEDIATELY
+    isProcessingRef.current = true;
+    hasAnsweredRef.current = true;
+    setGameActive(false);
 
-        const userAnswer = currentGuess.join("");
-        const isAnswerCorrect = userAnswer === currentQ.answer;
+    const userAnswer = currentGuess.join("");
+    const isAnswerCorrect = userAnswer === currentQ.answer;
 
-        console.log(`User answer: "${userAnswer}", Correct answer: "${currentQ.answer}", Is correct: ${isAnswerCorrect}`);
+    console.log(`User answer: "${userAnswer}", Correct answer: "${currentQ.answer}", Is correct: ${isAnswerCorrect}`);
 
-        try {
-            if (isAnswerCorrect) {
-                // CORRECT ANSWER - Move to next question
-                console.log(`✅ CORRECT ANSWER - Processing...`);
-                playSound(correctSoundRef);
-                setAnswerStatus("correct");
+    try {
+        if (isAnswerCorrect) {
+            // CORRECT ANSWER - Move to next question
+            console.log(`✅ CORRECT ANSWER - Processing...`);
+            playSound(correctSoundRef);
+            setAnswerStatus("correct");
 
-                const newScore = score + 1;
-                const isGameFinished = currentIndex + 1 >= initialQuestionsRef.current.length;
+            const newScore = score + 1;
+            const isGameFinished = currentIndex + 1 >= initialQuestionsRef.current.length;
 
-                console.log(`New score: ${newScore}, Game finished: ${isGameFinished}`);
+            console.log(`New score: ${newScore}, Game finished: ${isGameFinished}`);
 
-                // Save progress
-                await router.post(route("guessword.saveProgress"), {
-                    character_id: character.id,
-                    kabanata_id: kabanataId,
-                    question_id: currentQ.id,
-                    current_index: currentIndex,
-                    completed: isGameFinished,
-                    total_score: newScore,
-                    is_correct: true,
-                }, {
-                    preserveState: true,
-                    preserveScroll: true,
-                });
+            // Save progress
+            await router.post(route("guessword.saveProgress"), {
+                character_id: character.id,
+                kabanata_id: kabanataId,
+                question_id: currentQ.id,
+                current_index: currentIndex,
+                completed: isGameFinished,
+                total_score: newScore,
+                is_correct: true,
+            }, {
+                preserveState: true,
+                preserveScroll: true,
+            });
 
-                if (isGameFinished) {
-                    // GAME FINISHED
-                    console.log(`🎮 GAME FINISHED - Showing finished modal`);
-                    setFinishMessage(finishMessages[newScore] || "GAME FINISHED!");
-                    setShowModal("finished");
-                    setScore(newScore);
-                    
-                    const stars = calculateStars(newScore);
-                    if (stars <= 0) {
-                        playSound(gameOverSoundRef);
-                    } else {
-                        playSound(finishSoundRef);
-                    }
+            if (isGameFinished) {
+                // GAME FINISHED
+                console.log(`🎮 GAME FINISHED - Showing finished modal`);
+                setFinishMessage(finishMessages[newScore] || "GAME FINISHED!");
+                setShowModal("finished");
+                setScore(newScore);
+                
+                const stars = calculateStars(newScore);
+                if (stars <= 0) {
+                    playSound(gameOverSoundRef);
                 } else {
-                    // MOVE TO NEXT QUESTION after delay
-                    console.log(`➡️ MOVING to next question from ${currentIndex} to ${currentIndex + 1}`);
-                    setTimeout(() => {
-                        setCurrentIndex(prev => {
-                            const newIndex = prev + 1;
-                            console.log(`🔀 SETTING new index: ${newIndex}`);
-                            return newIndex;
-                        });
-                        setScore(newScore);
-                        setAnswerStatus("idle");
-                        setGameActive(true);
-                        isProcessingRef.current = false;
-                        hasAnsweredRef.current = false;
-                        lastAutoCheckRef.current = 0;
-                        console.log(`🔄 RESET flags for next question`);
-                    }, 1500);
+                    playSound(finishSoundRef);
                 }
             } else {
-                // WRONG ANSWER - Stay on CURRENT question
-                console.log(`❌ WRONG ANSWER - Staying on question ${currentIndex}`);
-                console.log(`Current question ID: ${currentQ.id}, Question: ${currentQ.question}`);
-                setAnswerStatus("wrong");
-                playSound(wrongSoundRef);
-                
-                // Save progress for wrong attempt
-                await router.post(route("guessword.saveProgress"), {
-                    character_id: character.id,
-                    kabanata_id: kabanataId,
-                    question_id: currentQ.id,
-                    current_index: currentIndex, // Keep same index
-                    completed: false,
-                    total_score: score, // Don't increment score
-                    is_correct: false,
-                }, {
-                    preserveState: true,
-                    preserveScroll: true,
-                });
-
-                // Apply penalty but STAY on same question
-                setTimeLeft((prev) => Math.max(prev - 5, 0));
-                setPenalty(-5);
-
+                // MOVE TO NEXT QUESTION after delay
+                console.log(`➡️ MOVING to next question from ${currentIndex} to ${currentIndex + 1}`);
                 setTimeout(() => {
-                setPenalty(null);
-                }, 3000);
-                
-                setTimeout(() => {
-                    console.log(`🔄 RESETTING for retry on question ${currentIndex}`);
-                    console.log(`Question after reset should be: ${currentQ.question}`);
-                    setPenalty(null);
+                    setCurrentIndex(prev => {
+                        const newIndex = prev + 1;
+                        console.log(`🔀 SETTING new index: ${newIndex}`);
+                        return newIndex;
+                    });
+                    setScore(newScore);
                     setAnswerStatus("idle");
                     setGameActive(true);
                     isProcessingRef.current = false;
                     hasAnsweredRef.current = false;
-                    
-                    // Reset current guess for retry on SAME question
-                    const initialGuess = currentQ.answer.split("").map(char => {
-                        return shouldAutoFill(char) ? char : "";
-                    });
-                    setCurrentGuess(initialGuess);
-                    console.log(`♻️ Guess reset for question ${currentIndex}`);
+                    lastAutoCheckRef.current = 0;
+                    console.log(`🔄 RESET flags for next question`);
                 }, 1500);
             }
-        } catch (error) {
-            console.error('Error in checkAnswer:', error);
-            // Reset flags on error - DON'T move to next question
-            isProcessingRef.current = false;
-            hasAnsweredRef.current = false;
-            setGameActive(true);
-            setAnswerStatus("idle");
+        } else {
+            // WRONG ANSWER - Move to NEXT question (CHANGED)
+            console.log(`❌ WRONG ANSWER - Moving to next question from ${currentIndex}`);
+            console.log(`Current question ID: ${currentQ.id}, Question: ${currentQ.question}`);
+            setAnswerStatus("wrong");
+            playSound(wrongSoundRef);
+            
+            // Save progress for wrong attempt
+            await router.post(route("guessword.saveProgress"), {
+                character_id: character.id,
+                kabanata_id: kabanataId,
+                question_id: currentQ.id,
+                current_index: currentIndex + 1, // Move to next index (CHANGED)
+                completed: currentIndex + 1 >= initialQuestionsRef.current.length, // Check if next is last (CHANGED)
+                total_score: score, // Don't increment score
+                is_correct: false,
+            }, {
+                preserveState: true,
+                preserveScroll: true,
+            });
+
+            // Apply penalty and MOVE to next question (CHANGED)
+            setTimeLeft((prev) => Math.max(prev - 5, 0));
+            setPenalty(-5);
+
+            // Automatically clear penalty after 3 seconds
+            setTimeout(() => {
+                setPenalty(null);
+            }, 1500);
+
+            const isGameFinished = currentIndex + 1 >= initialQuestionsRef.current.length;
+
+            if (isGameFinished) {
+                // GAME FINISHED after wrong answer (CHANGED)
+                console.log(`🎮 GAME FINISHED after wrong answer - Showing finished modal`);
+                setFinishMessage(finishMessages[score] || "GAME FINISHED!");
+                setShowModal("finished");
+                
+                const stars = calculateStars(score);
+                if (stars <= 0) {
+                    playSound(gameOverSoundRef);
+                } else {
+                    playSound(finishSoundRef);
+                }
+            } else {
+                // MOVE TO NEXT QUESTION after delay (CHANGED)
+                console.log(`➡️ MOVING to next question from ${currentIndex} to ${currentIndex + 1} after wrong answer`);
+                setTimeout(() => {
+                    setCurrentIndex(prev => {
+                        const newIndex = prev + 1;
+                        console.log(`🔀 SETTING new index after wrong: ${newIndex}`);
+                        return newIndex;
+                    });
+                    setAnswerStatus("idle");
+                    setGameActive(true);
+                    isProcessingRef.current = false;
+                    hasAnsweredRef.current = false;
+                    lastAutoCheckRef.current = 0;
+                    console.log(`🔄 RESET flags for next question after wrong answer`);
+                }, 1500);
+            }
         }
-    };
+    } catch (error) {
+        console.error('Error in checkAnswer:', error);
+        // Reset flags on error - DON'T move to next question
+        isProcessingRef.current = false;
+        hasAnsweredRef.current = false;
+        setGameActive(true);
+        setAnswerStatus("idle");
+    }
+};
 
     const fillHeight = (timeLeft / totalTime) * 100;
 

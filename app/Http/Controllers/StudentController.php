@@ -540,38 +540,54 @@ class StudentController extends Controller
             }
         }
 
-        // Save guessword progress to database if exists in session
-        if (!empty($guesswordProgressData)) {
-            // Get the highest existing score for this kabanata (regardless of character)
-            $existingGuesswordProgress = GuesswordProgress::where([
-                'kabanata_progress_id' => $kabanataProgress->id,
-            ])->orderBy('total_score', 'desc')->first();
-
-            // Only create/update if new score is higher than existing or no record exists
-            if (!$existingGuesswordProgress || $guesswordProgressData['total_score'] > $existingGuesswordProgress->total_score) {
-                if ($existingGuesswordProgress) {
-                    // Update existing record with higher score
-                    $existingGuesswordProgress->update([
-                        'character_id' => $guesswordProgressData['character_id'],
-                        'question_id' => $guesswordProgressData['question_id'],
-                        'current_index' => $guesswordProgressData['current_index'],
-                        'completed' => $guesswordProgressData['completed'],
-                        'total_score' => $guesswordProgressData['total_score'],
-                    ]);
-                } else {
-                    // Create new record if none exists
-                    GuesswordProgress::create([
-                        'kabanata_progress_id' => $kabanataProgress->id,
-                        'character_id' => $guesswordProgressData['character_id'],
-                        'question_id' => $guesswordProgressData['question_id'],
-                        'current_index' => $guesswordProgressData['current_index'],
-                        'completed' => $guesswordProgressData['completed'],
-                        'total_score' => $guesswordProgressData['total_score'],
-                    ]);
-                }
-            }
-            // If new score is not higher, do nothing (don't create duplicate)
+// Save guessword progress to database if exists in session
+if (!empty($guesswordProgressData)) {
+    // Since guesswordProgressData contains multiple questions, we need to process the one with highest score
+    $highestScoreData = null;
+    $highestScore = 0;
+    
+    // Find the question with the highest score
+    foreach ($guesswordProgressData as $questionData) {
+        if (isset($questionData['total_score']) && $questionData['total_score'] > $highestScore) {
+            $highestScore = $questionData['total_score'];
+            $highestScoreData = $questionData;
         }
+    }
+    
+    if ($highestScoreData) {
+        // Get the highest existing score for this kabanata (regardless of character)
+        $existingGuesswordProgress = GuesswordProgress::where([
+            'kabanata_progress_id' => $kabanataProgress->id,
+        ])->orderBy('total_score', 'desc')->first();
+
+        // Only create/update if new score is higher than existing or no record exists
+        if (!$existingGuesswordProgress || $highestScoreData['total_score'] > $existingGuesswordProgress->total_score) {
+            
+            // Build update data with null safety
+            $updateData = [
+                'question_id' => $highestScoreData['question_id'] ?? null,
+                'current_index' => $highestScoreData['current_index'] ?? 0,
+                'completed' => $highestScoreData['completed'] ?? false,
+                'total_score' => $highestScoreData['total_score'] ?? 0,
+            ];
+            
+            // Only include character_id if it exists in the data
+            if (isset($highestScoreData['character_id'])) {
+                $updateData['character_id'] = $highestScoreData['character_id'];
+            }
+            
+            if ($existingGuesswordProgress) {
+                // Update existing record with higher score
+                $existingGuesswordProgress->update($updateData);
+            } else {
+                // Create new record if none exists
+                $updateData['kabanata_progress_id'] = $kabanataProgress->id;
+                GuesswordProgress::create($updateData);
+            }
+        }
+        // If new score is not higher, do nothing (don't create duplicate)
+    }
+}
 
         if (!empty($videoProgressData)) {
             // Use updateOrCreate to ensure only one record exists per combination
