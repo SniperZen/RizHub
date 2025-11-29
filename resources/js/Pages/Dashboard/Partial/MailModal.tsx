@@ -334,7 +334,7 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                                 </div>
 
                                                 <div onClick={() => handleSelect(notification)}>
-                                                    <h3 className="font-bold text-[#3D2410] text-lg pr-8">
+                                                    <h3 className="font-bold text-[#3D2410] text-base lg:text-xl pr-8">
                                                         {notification.title}
                                                         {!notification.is_read && (
                                                             <span className="ml-2 w-2 h-2 bg-red-500 rounded-full inline-block"></span>
@@ -358,7 +358,7 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                 {selected ? (
                                     <div className="p-4">
                                         <div className="flex justify-between items-center mb-4">
-                                            <h2 className="font-bold text-2xl text-[#3D2410]">
+                                            <h2 className="font-bold text-lg lg:text-2xl text-[#3D2410]">
                                                 {selected.title}
                                             </h2>
                                             <div className="flex gap-2">
