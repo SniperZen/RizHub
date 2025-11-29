@@ -284,7 +284,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         const isPerfectScore = score === selectedQuizzes.length;
         
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-amber-50 p-6 bg-cover bg-center" 
+            <div className="min-h-screen flex flex-col items-center justify-center bg-amber-50 p-6 bg-cover bg-center overflow-hidden" 
                  style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
                 
                 {/* Audio elements */}
@@ -308,7 +308,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     />
 
                     {/* Modal Content */}
-                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[-3px]">
+                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[-3px] overflow-hidden">
                         <h2 className=" fixed
                             font-mono
                             mr-5
@@ -395,7 +395,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-start bg-amber-50 p-6 bg-cover bg-center" 
+        <div className="min-h-screen flex flex-col items-center justify-start bg-amber-50 p-6 bg-cover bg-center overflow-hidden" 
              style={{ backgroundImage: "url('/Img/Challenge/Quiz/BG.png')" }}>
             
             {/* Audio elements */}
@@ -419,15 +419,20 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 </div>
             </div>
             
-            <div className='flex flex-col items-center justify-center relative w-[750px] h-[600px] bg-transparent mt-20'>
+            <div className='flex flex-col items-center justify-center relative w-[750px] h-[600px] bg-transparent mt-20 overflow-hidden'>
                 <img
                     src="/Img/Challenge/Quiz/modalBG.png"
                     alt="Wooden Frame"
-                    className="w-full h-auto"
+                    className="w-full h-auto lg:block hidden"
                 />
-                <div className='absolute top-[20px] left-1/2 -translate-x-1/2 flex flex-col justify-center items-center w-full h-full'>
+                    <img
+                    src="/Img/Challenge/Quiz/modalBG-mobile.png"
+                    alt="Wooden Frame Mobile"
+                    className="w-[500px] h-auto block lg:hidden overflow-hidden"
+                />
+                <div className='absolute top-[20px] left-1/2 -translate-x-1/2 flex flex-col justify-center items-center w-full h-full overflow-hidden'>
                     {/* Lives Display */}
-                    <div className="absolute top-[45px] mb-4 flex items-center">
+                    <div className="absolute top-[45px] mb-4 flex items-center overflow-hidden">
                         <div className="flex">
                             {Array.from({ length: 3 }).map((_, index) => (
                                 lostHearts.includes(index) ? null : (
@@ -443,15 +448,17 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     </div>
 
                     {/* Question */}
-                    <div className="absolute top-[95px] p-6 rounded-lg mb-6 w-full max-w-2xl">
-                        <div className='width-full text-center'>
-                            <p className="text-xl font-black text-white mb-4 mt-2 ml-5 mr-5">{currentQuiz.question}</p>
-                        </div>
-                    </div>
+                <div className="absolute top-[85px] p-4 rounded-lg w-[100%] max-w-[450px] lg:max-w-[600px] mx-auto">
+                    <div className='w-full text-center rounded-lg p-4'>
+                        <p className="text-lg md:text-xl font-black text-white break-words">
+                            {currentQuiz.question}
+                        </p>
+                            </div>
+                                </div>
 
                     {/* Drop Zone */}
                     <div 
-                        className="absolute top-[290px] bg-gray-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-md min-h-[40px] flex items-center justify-center"
+                        className="absolute top-[290px] bg-gray-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-sm lg:max-w-md min-h-[10px] md:min-h-[40px] g:min-h-[40px] flex items-center justify-center overflow-hidden"
                         onDragOver={handleDragOver}
                         onDrop={handleDrop}
                     >
@@ -467,23 +474,23 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     </div>
 
                     {/* Answer Options */}
-                    <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-4 mb-6 w-full max-w-2xl">
+                    <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
                         <div 
-                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
+                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'A')}
                         >
-                            <p className="text-lg font-medium">{currentQuiz.choice_a}</p>
+                            <p className="text-xl font-medium">{currentQuiz.choice_a}</p>
                         </div>
                         <div 
-                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
+                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'B')}
                         >
                             <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
                         </div>
                         <div 
-                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105"
+                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'C')}
                         >
@@ -492,8 +499,8 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     </div>
 
                     {/* Progress Bar */}
-                    <div className=" absolute bottom-0 w-full max-w-lg mb-6">
-                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className=" absolute bottom-0 w-full max-w-lg mb-6 overflow-hidden">
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                             <div 
                                 className="bg-amber-600 h-2.5 rounded-full transition-all duration-300" 
                                 style={{ width: `${((currentQuizIndex + 1) / selectedQuizzes.length) * 100}%` }}
