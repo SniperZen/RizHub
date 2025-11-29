@@ -594,9 +594,9 @@ const checkAnswer = async (source = "manual") => {
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="fixed top-[220px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[470px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
+                    <div className="fixed top-[200px] sm:top-[200px] md:top-[200px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[481px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
                         <div className="relative w-12 h-12 lg:w-20 lg:h-20 mb-4">
-                            <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
+                            <div className="absolute inset-0 rounded-full border-2 lg:border-4 border-black overflow-hidden shadow-lg">
                                 <div
                                     className="absolute bottom-0 w-full origin-bottom transition-transform duration-300 ease-linear will-change-transform"
                                     style={{
@@ -665,7 +665,7 @@ const checkAnswer = async (source = "manual") => {
                             </div>
                         </div>
 
-                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-100px] sm:mb-[-100px] md:mb-[-100px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
+                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-120px] sm:mb-[-120px] md:mb-[-120px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
                             {/* Question Display */}
                             <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[300px] sm:mb-[300px] md:mb-[300px] lg:mb-[5px] flex items-center justify-center">
                                 <img
@@ -684,7 +684,7 @@ const checkAnswer = async (source = "manual") => {
                             </div>
 
                             {/* Answer Input */}
-                            <div className="flex items-center font-mono justify-center gap-[2px] mt-10 lg:mt-8 md:mt-8 w-full max-w-6xl">
+                            <div className="flex items-center font-mono justify-center gap-[2px] mt-3 lg:mt-8 md:mt-3 w-full max-w-6xl">
                                 <div
                                     className={`flex-1 text-5xl mx-1 text-center font-black 
                                     ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
