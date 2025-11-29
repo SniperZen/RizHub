@@ -594,8 +594,8 @@ const checkAnswer = async (source = "manual") => {
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="absolute top-[140px] lg:top-[140px] right-[485px] lg:right-[483px] flex flex-col items-center gap-[30px]">
-                        <div className="relative w-20 h-20 mb-4">
+                    <div className="fixed top-[220px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[470px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
+                        <div className="relative w-12 h-12 lg:w-20 lg:h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
                                 <div
                                     className="absolute bottom-0 w-full origin-bottom transition-transform duration-300 ease-linear will-change-transform"
@@ -612,7 +612,7 @@ const checkAnswer = async (source = "manual") => {
                                     }}
                                 />
                             </div>
-                            <span className="absolute inset-0 flex items-center justify-center text-xl font-bold drop-shadow-md">
+                            <span className="absolute inset-0 flex items-center justify-center text-sm lg:text-xl font-bold drop-shadow-md text-white">
                                 {Math.ceil(timeLeft)}
                             </span>
                             {penalty && (
@@ -622,7 +622,6 @@ const checkAnswer = async (source = "manual") => {
                             )}
                         </div>
                     </div>
-
                     {/* Main Game Content */}
                     <div
                         className="h-screen flex flex-col items-start justify-end bg-amber-50 p-6 bg-cover bg-center overflow-hidden"
@@ -639,19 +638,19 @@ const checkAnswer = async (source = "manual") => {
                         />
                         
                         {/* Content */}
-                        <div className="relative z-10 w-full">
-                            <div className="flex flex-row justify-between overflow-hidden">
+                        <div className=" relative z-10 w-full">
+                            <div className=" fixed flex flex-row justify-between overflow-hidden top-5">
                                 <div className="flex flex-row overflow-hidden">
-                                    <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl overflow-hidden">
+                                    <div className="bg-orange-600 text-white font-mono font-bold px-2 md:px-2 lg:px-4 md:py-2 lg:py-2 py-2 text-xl md:text-xl lg:text-2xl overflow-hidden">
                                         Kabanata {kabanata_number}:
                                     </div>
-                                    <div className="text-white font-bold font-mono px-2 py-2 text-2xl overflow-hidden">
+                                    <div className="text-white font-bold font-mono px-2 md:px-2 lg:px-2 py-2 md:py-2 lg:py-2 text-xl md:text-xl lg:text-2xl overflow-hidden">
                                         {kabanata_title}
                                     </div>
                                 </div>
                                 <button
                                     onClick={togglePause}
-                                    className="absolute top-6 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
+                                    className="fixed top-6 right-10 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
                                     title="Pause Game"
                                 >
                                     <svg 
@@ -666,9 +665,9 @@ const checkAnswer = async (source = "manual") => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col lg:ml-16 lg:scale-90 items-center justify-start p-6 overflow-hidden">
+                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-100px] sm:mb-[-100px] md:mb-[-100px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
                             {/* Question Display */}
-                            <div className="relative w-[550px] h-[250px] flex items-center justify-center">
+                            <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[300px] sm:mb-[300px] md:mb-[300px] lg:mb-[5px] flex items-center justify-center">
                                 <img
                                     src="/Img/Challenge/GuessWord/modalBG.png"
                                     alt="Wooden Background"
@@ -678,14 +677,14 @@ const checkAnswer = async (source = "manual") => {
                                     <span className="text-white text-xl mt-3 font-bold">
                                         {currentIndex + 1}/{initialQuestionsRef.current.length}
                                     </span>
-                                    <p className="text-white italic mt-5 text-base font-bold ml-5 mr-5 leading-relaxed">
+                                    <p className="text-white mt-5 text-base font-mono ml-5 mr-5 leading-relaxed">
                                         {currentQ.question}
                                     </p>
                                 </div>
                             </div>
 
                             {/* Answer Input */}
-                            <div className="flex items-center font-mono justify-center gap-[2px] mt-8 w-full max-w-6xl">
+                            <div className="flex items-center font-mono justify-center gap-[2px] mt-10 lg:mt-8 md:mt-8 w-full max-w-6xl">
                                 <div
                                     className={`flex-1 text-5xl mx-1 text-center font-black 
                                     ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
@@ -722,7 +721,7 @@ const checkAnswer = async (source = "manual") => {
                             </div>
 
                             {/* Keyboard */}
-                            <div className="flex flex-col items-center gap-3 mt-10">
+                            <div className="flex flex-col items-center gap-3 mt-8">
                                 {keyboardLayout.map((row, rowIndex) => (
                                     <div key={rowIndex} className="flex gap-3">
                                         {row.map((letter, index) => (
@@ -802,7 +801,7 @@ const checkAnswer = async (source = "manual") => {
                                         </h2>
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[115px] sm:bottom-[105px] md:bottom-[105px] lg:bottom-[105px]">
+                                        <div className="fixed flex gap-8 bottom-[140px]">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
