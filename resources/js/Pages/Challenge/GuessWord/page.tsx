@@ -594,7 +594,7 @@ const checkAnswer = async (source = "manual") => {
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="fixed top-[200px] sm:top-[200px] md:top-[200px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[481px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
+                    <div className="fixed top-[200px] sm:top-[200px] md:top-[200px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[480px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
                         <div className="relative w-12 h-12 lg:w-20 lg:h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-2 lg:border-4 border-black overflow-hidden shadow-lg">
                                 <div
@@ -801,7 +801,7 @@ const checkAnswer = async (source = "manual") => {
                                         </h2>
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[140px]">
+                                        <div className="fixed flex gap-8 bottom-[125px] sm:bottom-[100px] md:bottom-[100px] lg:bottom-[100px]">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>

@@ -419,7 +419,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 </div>
             </div>
             
-            <div className='flex flex-col items-center justify-center relative w-[750px] h-[600px] bg-transparent mt-20 overflow-hidden'>
+            <div className='flex flex-col items-center justify-center relative w-[750px] h-[600px] bg-transparent mt-10 overflow-hidden'>
                 <img
                     src="/Img/Challenge/Quiz/modalBG.png"
                     alt="Wooden Frame"
