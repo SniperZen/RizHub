@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>New Image Unlocked!</title>
+    <title>Na-unlock mo ang bagong larawan sa RizHub!</title>
     <style>
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -99,8 +99,8 @@
         
         <!-- Header -->
         <div class="header">
-            <h1>New Image Unlocked!</h1>
-            <p>Congratulations on your achievement!</p>
+            <h1>Na-unlock mo ang bagong larawan sa RizHub!</h1>
+            <p>Binabati kita sa  iyong tagumpay</p>
         </div>
         
         <!-- Content -->
@@ -116,7 +116,7 @@
                 </p>
             </div>
 
-            <p>This image has been added to your personal gallery collection. Keep completing challenges to unlock more!</p>
+            <p>Ang larawang ito ay naidagdag na sa iyong personal na koleksiyon. Patuloy lang sa pag-complete ng mga hamon para makapag-unlock pa ng iba!</p>
             
             <div style="text-align: center;">
                 <a href="{{ url('image.gallery') }}" class="button">View Your Gallery</a>

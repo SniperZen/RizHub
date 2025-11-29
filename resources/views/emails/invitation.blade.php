@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Invitation to Join</title>
+    <title>Paanyaya para Sumali</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -25,15 +25,15 @@
 </head>
 <body>
     <div class="container">
-        <h2>You've been invited!</h2>
-        <p>Your friend has invited you to join our platform. Click the button below to accept the invitation:</p>
+        <h2>Ikaw ay Inaanyayahan!</h2>
+        <p>Inaanyayahan ka ng iyong kaibigan na sumali sa aming platform. I-click ang button sa ibaba upang tanggapin ang paanyaya:</p>
         
-        <a href="{{ $shareLink }}" class="button">Accept Invitation</a>
+        <a href="{{ $shareLink }}" class="button">Tanggapin ang Paanyaya</a>
         
-        <p>Or copy and paste this link into your browser:</p>
+        <p>O kopyahin at i-paste ang link na ito sa iyong browser:</p>
         <div class="link">{{ $shareLink }}</div>
         
-        <p>If you didn't request this invitation, you can safely ignore this email.</p>
+        <p>Kung hindi ikaw ang humiling ng paanyayang ito, maaari mo lamang balewalain ang email na ito.</p>
     </div>
 </body>
 </html>

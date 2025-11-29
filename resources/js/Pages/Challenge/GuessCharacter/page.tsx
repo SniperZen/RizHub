@@ -89,7 +89,7 @@
                 <InstructionModal
                   isOpen={showModal}
                   onClose={startSpinning}
-                  title={`KABANATA ${kabanata_number}: ${kabanata_title}`}
+                  title={`Kabanata ${kabanata_number}: ${kabanata_title}`}
                   content={modalContent}
                   buttonText="Start Choosing Character"
                 />

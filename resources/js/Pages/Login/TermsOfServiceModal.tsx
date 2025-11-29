@@ -12,7 +12,7 @@ const TermsOfServiceModal: React.FC<ModalProps> = ({ open, onClose }) => {
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-[#FAF7F0] rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-[#5A3416]">Terms of Service</h2>
+          <h2 className="text-2xl font-bold text-[#5A3416]">Mga Tuntunin ng Serbisyo</h2>
           <button
             onClick={onClose}
             className="text-[#5A3416] hover:text-[#E26F42] text-2xl font-bold"
@@ -22,68 +22,68 @@ const TermsOfServiceModal: React.FC<ModalProps> = ({ open, onClose }) => {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-[#E26F42] mb-3">RizHub – Terms and Conditions</h3>
-          <p className="text-sm text-gray-600 mb-4">Last Updated: July 4, 2025</p>
+          <h3 className="text-xl font-bold text-[#E26F42] mb-3">RizHub – Mga Tuntunin at Kundisyon</h3>
+          <p className="text-sm text-gray-600 mb-4">Huling In-update: Hulyo 4, 2025</p>
           
           <p className="mb-4 text-[#282725]">
-            Welcome to RizHub, an interactive educational platform designed to enhance students' understanding of Noli Me Tangere. By using RizHub, you agree to the following terms:
+            Maligayang pagdating sa RizHub, isang interaktibong platapormang pang-edukasyon na idinisenyo upang mapalalim ang pag-unawa ng mga estudyante sa <em>Noli Me Tangere</em>. Sa paggamit ng RizHub, sumasang-ayon ka sa mga sumusunod na tuntunin:
           </p>
 
           <div className="space-y-4">
             <div>
-              <h4 className="font-bold text-[#5A3416]">1. Acceptance of Terms</h4>
+              <h4 className="font-bold text-[#5A3416]">1. Pagtanggap ng Mga Tuntunin</h4>
               <p className="text-[#282725]">
-                By using RizHub, you accept these Terms of Use along with our Privacy Policy. Users are encouraged to read the Privacy Policy to understand how personal information is collected, used, and protected. 
+                Sa paggamit ng RizHub, tinatanggap mo ang Mga Tuntunin ng Paggamit kasama ang aming Patakaran sa Pagkapribado. Hinihikayat ang mga gumagamit na basahin ang Patakaran sa Pagkapribado upang maunawaan kung paano kinokolekta, ginagamit, at pinoprotektahan ang personal na impormasyon.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">2. Eligibility</h4>
+              <h4 className="font-bold text-[#5A3416]">2. Karapat-dapat na Gumamit</h4>
               <p className="text-[#282725]">
-                RizHub is open to students and teachers of all ages. For users under 18, we encourage parental or guardian guidance while using the platform.
+                Bukas ang RizHub sa lahat ng estudyante at guro anuman ang edad. Para sa mga gumagamit na wala pang 18 taong gulang, hinihikayat ang gabay ng magulang o tagapag-alaga habang ginagamit ang plataporma.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">3. Description of Services</h4>
+              <h4 className="font-bold text-[#5A3416]">3. Paglalarawan ng Mga Serbisyo</h4>
               <p className="text-[#282725]">
-                RizHub provides interactive assessment, and information about Noli Me Tangere. Its goal is to enhance students' understanding of Dr. Jose Rizal's novel in a fun and modern way.
+                Nagbibigay ang RizHub ng interaktibong pagsusuri at impormasyon tungkol sa <em>Noli Me Tangere</em>. Layunin nitong mapalalim ang pag-unawa ng mga estudyante sa nobela ni Dr. Jose Rizal sa isang masaya at makabagong paraan.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">4. Quizzes and Chapter Progression</h4>
+              <h4 className="font-bold text-[#5A3416]">4. Mga Pagsusulit at Pag-unlad ng Kabanata</h4>
               <ol className="list-decimal pl-5 space-y-2 text-[#282725]">
-                <li>Before proceeding to the next chapter, users must complete the assessment.</li>
-                <li>Passing the quiz is required to unlock the next chapter.</li>
-                <li>Each quiz is based on the content of the chapter that was played or watched.</li>
+                <li>Bago magpatuloy sa susunod na kabanata, dapat munang matapos ng gumagamit ang pagsusulit.</li>
+                <li>Kinakailangan makapasa sa pagsusulit upang ma-unlock ang susunod na kabanata.</li>
+                <li>Ang bawat pagsusulit ay nakabatay sa nilalaman ng kabanatang nilaro o pinanood.</li>
               </ol>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">5. Code of Conduct</h4>
+              <h4 className="font-bold text-[#5A3416]">5. Kodigo ng Pag-uugali</h4>
               <ol className="list-decimal pl-5 space-y-2 text-[#282725]">
-                <li>All RizHub players are expected to act respectfully, fairly, and with integrity while using the platform.</li>
-                <li>Any form of harassment, offensive language, or inappropriate behavior is strictly discouraged.</li>
+                <li>Inaasahan ang lahat ng manlalaro ng RizHub na kumilos nang may respeto, katarungan, at integridad habang ginagamit ang plataporma.</li>
+                <li>Ang anumang anyo ng panliligalig, bastos na pananalita, o hindi angkop na pag-uugali ay mahigpit na ipinagbabawal.</li>
               </ol>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">6. Limitation of Liability</h4>
+              <h4 className="font-bold text-[#5A3416]">6. Limitasyon ng Pananagutan</h4>
               <p className="text-[#282725]">
-                RizHub is provided "as-is" and "as-available." We do not guarantee uninterrupted access or functionality of the platform. We are not liable for any damage resulting from technical issues, loss of internet connection, or user error.
+                Ang RizHub ay ibinibigay "as-is" at "as-available." Hindi namin ginagarantiyahan ang tuloy-tuloy na akses o paggana ng plataporma. Hindi kami mananagot sa anumang pinsala na maaaring magmula sa teknikal na problema, pagkawala ng koneksyon sa internet, o pagkakamali ng gumagamit.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">Contact Us</h4>
+              <h4 className="font-bold text-[#5A3416]">Makipag-ugnayan sa Amin</h4>
               <p className="text-[#282725]">
-                For inquiries, assistance, or reports:
+                Para sa mga katanungan, tulong, o ulat:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
                 <li>Email: rizhub.caps@gmail.com</li>
                 <li>Facebook Page: RizHub EdGame</li>
-                <li>Location: Lubang, Occidental Mindoro, Philippines</li>
+                <li>Lokasyon: Lubang, Occidental Mindoro, Pilipinas</li>
               </ul>
             </div>
           </div>

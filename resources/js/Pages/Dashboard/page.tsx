@@ -291,7 +291,7 @@ export default function Dashboard({
     <img
         src="/Img/Dashboard/t-bg1.png"
         alt="Noli Me Tangere BG"
-        className="absolute inset-0 top-10 w-full h-full object-cover z-10"
+        className="absolute inset-0 top-10 scale-75 md:scale-90 lg:scale-90 md:w-full lg:w-full h-full object-cover z-10"
         style={{
             animation: 'gentleHeartbeat 3s ease-in-out infinite'
         }}

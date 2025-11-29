@@ -61,8 +61,8 @@ class RegisteredUserController extends Controller
             // Create welcome notification
             $notification = Notification::create([
                 'user_id' => $user->id,
-                'title' => 'Welcome to RizHub!',
-                'message' => 'Hello ' . $user->name . '! Welcome to RizHub. We\'re excited to have you on board. Start your journey with Noli Me Tangere Challenge!',
+                'title' => 'Maligayang Pagdating sa RizHub!',
+                'message' => 'Kumusta, ' . $user->name . '! Maligayang pagdating sa RizHub. Nasasabik kaming makasama ka rito. Simulan ang iyong paglalakbay sa Noli Me Tangere Challenge!',
                 'type' => 'welcome',
                 'is_read' => false,
             ]);
