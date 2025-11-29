@@ -340,9 +340,6 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                                             <span className="ml-2 w-2 h-2 bg-red-500 rounded-full inline-block"></span>
                                                         )}
                                                     </h3>
-                                                    <p className="text-[#3D2410] text-sm truncate">
-                                                        {notification.message}
-                                                    </p>
                                                     <p className="text-xs text-gray-500 mt-2">
                                                         {new Date(notification.created_at).toLocaleDateString()}
                                                     </p>

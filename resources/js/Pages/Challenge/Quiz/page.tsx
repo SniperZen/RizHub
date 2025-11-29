@@ -300,7 +300,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 />
                 
                 {/* Wooden Frame Modal */}
-                <div className="relative w-[600px] bg-transparent">
+                <div className="relative w-[520px] md:w-[550px] lg:w-[600px] bg-transparent">
                     <img
                         src="/Img/Challenge/GuessWord/wooden_frame1.png"
                         alt="Wooden Frame"
@@ -448,13 +448,13 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     </div>
 
                     {/* Question */}
-                <div className="absolute top-[85px] p-4 rounded-lg w-[100%] max-w-[450px] lg:max-w-[600px] mx-auto">
-                    <div className='w-full text-center rounded-lg p-4'>
-                        <p className="text-lg md:text-xl font-black text-white break-words">
-                            {currentQuiz.question}
-                        </p>
-                            </div>
-                                </div>
+                    <div className="absolute top-[85px] p-4 rounded-lg w-[100%] max-w-[450px] lg:max-w-[600px] mx-auto">
+                        <div className='w-full text-center rounded-lg p-4'>
+                            <p className="text-lg md:text-xl font-black text-white break-words">
+                                {currentQuiz.question}
+                            </p>
+                        </div>
+                    </div>
 
                     {/* Drop Zone */}
                     <div 
@@ -474,7 +474,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     </div>
 
                     {/* Answer Options */}
-                    <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
+                    <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
                         <div 
                             className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
