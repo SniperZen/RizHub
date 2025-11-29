@@ -105,47 +105,60 @@
         </div>
 
 
-        {/* Main Content - Only show when not in modal and characters exist */}
-        {!showModal && characters.length > 0 && (
-          <div className="flex flex-col items-center justify-center h-full gap-8">
-            <div className="relative flex flex-col items-center">
-              {/* Character Display */}
-              <div className="flex items-center justify-center w-[1100px] h-[300px]">
-                {isSpinning ? (
-                  <>
-                    <img
-                      src="/Img/Challenge/GuessChar/ModalBG2.png"
-                      alt="modal background"
-                      className="absolute w-[1000px] h-auto"
-                    />
+{!showModal && characters.length > 0 && (
+  <div className="flex flex-col items-center justify-center h-full gap-8 overflow-hidden">
+    <div className="relative flex flex-col items-center">
+      {/* Character Display */}
+      <div className="flex items-center justify-center w-[1100px] h-[300px]">
+        {isSpinning ? (
+          <>
+            <img
+              src="/Img/Challenge/GuessChar/ModalBG.png"
+              alt="modal background"
+              className="absolute w-[550px] h-auto block lg:hidden"
+            />
 
-                      {/* Title header positioned at the top of the background */}
-                      <div className="absolute bottom-[296px] left-0 right-6 py-4 z-10">
-                        <h1 className="text-white text-3xl font-bold text-center">
-                          Mangyaring iligtas...
-                        </h1>
-                      </div>
-                    <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
-                      {[...getVisibleCharacters()]
-                        .sort(() => Math.random() - 0.5)
-                        .map((char, index) => (
-                          <div
-                            key={char.id}
-                            className="text-center flex-shrink-0 flex flex-col items-center"
-                            style={{ width: "140px", margin: "0 16px" }}
-                          >
-                            <img
-                              src={`/Img/LandingPage/character/${char.filename}.png`}
-                              alt={char.c_name}
-                              className={`w-28 h-36 object-contain ${
-                                index === half ? "scale-125" : "opacity-70"
-                              } transition-all duration-300`}
-                            />
-                            <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
-                          </div>
-                        ))}
+            <img
+              src="/Img/Challenge/GuessChar/ModalBG2.png"
+              alt="modal background"
+              className="absolute md:w-[800px] lg:w-[1000px] h-auto hidden lg:block"
+            />
+            
+            {/* Title header positioned at the top of the background */}
+            <div className="absolute bottom-[296px] left-0 right-6 py-4 z-10">
+              <h1 className="text-white text-3xl font-bold text-center">
+                Mangyaring iligtas...
+              </h1>
+            </div>
+            
+            <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
+              {[...getVisibleCharacters()]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, window.innerWidth < 1024 ? 3 : 5) // 3 for mobile/tablet, 5 for desktop
+                .map((char, index, array) => {
+                  const half = Math.floor(array.length / 2);
+                  return (
+                    <div
+                      key={char.id}
+                      className="text-center flex-shrink-0 flex flex-col items-center"
+                      style={{ 
+                        width: window.innerWidth < 1024 ? "120px" : "140px", 
+                        margin: window.innerWidth < 1024 ? "0 8px" : "0 16px" 
+                      }}
+                    >
+                      <img
+                        src={`/Img/LandingPage/character/${char.filename}.png`}
+                        alt={char.c_name}
+                        className={`${window.innerWidth < 1024 ? "w-20 h-28" : "w-28 h-36"} object-contain ${
+                          index === half ? "scale-125" : "opacity-70"
+                        } transition-all duration-300`}
+                      />
+                      <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
                     </div>
-                  </>
+                  );
+                })}
+            </div>
+           </>
                 ) : (
                   <div className="flex flex-col items-center justify-center">
                     <img
