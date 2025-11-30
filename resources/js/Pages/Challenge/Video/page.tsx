@@ -19,13 +19,39 @@ const VideoModal: React.FC<VideoModalProps> = ({
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoDuration, setVideoDuration] = useState<number>(0);
+    const [isPortrait, setIsPortrait] = useState<boolean>(false);
 
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
             video.play().catch(() => {});
         }
+
+        // Check initial orientation
+        checkOrientation();
+        
+        // Add orientation change listener
+        const handleOrientationChange = () => {
+            checkOrientation();
+        };
+
+        window.addEventListener('resize', handleOrientationChange);
+        screen.orientation?.addEventListener('change', handleOrientationChange);
+
+        return () => {
+            window.removeEventListener('resize', handleOrientationChange);
+            screen.orientation?.removeEventListener('change', handleOrientationChange);
+        };
     }, []);
+
+    const checkOrientation = () => {
+        // Check if device is mobile/tablet and in portrait mode
+        const isMobile = window.innerWidth <= 768;
+        const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+        const isPortraitMode = window.innerHeight > window.innerWidth;
+        
+        setIsPortrait((isMobile || isTablet) && isPortraitMode);
+    };
 
     const handleLoadedMetadata = () => {
         if (videoRef.current) {
@@ -38,20 +64,26 @@ const VideoModal: React.FC<VideoModalProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 bg-black z-50">
+        <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
             {/* Grayscale filter container */}
-            <div className="relative w-full h-full grayscale">
+            <div className={`relative grayscale ${isPortrait ? 'w-full max-w-full' : 'w-full h-full'}`}>
                 <video
                     ref={videoRef}
                     src={videoSrc}
                     controls
                     autoPlay
-                    controlsList="nodownload" // ❌ hides the download button
-                    disablePictureInPicture={false} // ✅ allows picture-in-picture
-                    className="w-screen h-screen object-cover"
+                    controlsList="nodownload"
+                    disablePictureInPicture={false}
+                    className={`
+                        ${isPortrait 
+                            ? 'max-h-[85vh] w-auto mx-auto object-contain' 
+                            : 'w-full h-full object-contain md:object-cover'
+                        }
+                        transition-all duration-300
+                    `}
                     onLoadedMetadata={handleLoadedMetadata}
                     onEnded={onVideoEnd}
-                    onContextMenu={(e) => e.preventDefault()} // ❌ disables right-click → save as
+                    onContextMenu={(e) => e.preventDefault()}
                     style={{
                         filter: "grayscale(100%) contrast(1.1) brightness(0.9)"
                     }}
