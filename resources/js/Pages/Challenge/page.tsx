@@ -927,29 +927,29 @@ const KabanataPage: React.FC<PageProps> = ({
                     </span>
                 </p>
 
-                {/* Buttons appear after text */}
-                <div className="flex gap-6 mt-[155px] flex-wrap justify-center opacity-0"
-                     style={{
-                         animation: 'fadeIn 0.5s ease-out 0.8s both'
-                     }}>
-                    <button
-                        onClick={retryVideo}
-                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
-                    >
-                        Retry
-                    </button>
+                                {/* Buttons appear after text */}
+                                <div className="flex gap-6 mt-[155px] flex-wrap justify-center opacity-0"
+                                    style={{
+                                        animation: 'fadeIn 0.5s ease-out 0.8s both'
+                                    }}>
+                                    <button
+                                        onClick={retryVideo}
+                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
+                                    >
+                                        Retry
+                                    </button>
 
-                    <button
-                        onClick={proceedNext}
-                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
-                    >
-                        Proceed
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-)}
+                                    <button
+                                        onClick={proceedNext}
+                                        className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
+                                    >
+                                        Proceed
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Certificate Modal */}
                 <CertificateModal 
