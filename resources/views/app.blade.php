@@ -7,8 +7,8 @@
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- ✅ App Favicon and Preview Image -->
-    <link rel="icon" type="image/png" href="{{ asset('Img/LandingPage/jose.jpg') }}" />
-    <link rel="apple-touch-icon" href="{{ asset('Img/LandingPage/jose.jpg') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('Img/LandingPage/logoapp1.jpg') }}" />
+    <link rel="apple-touch-icon" href="{{ asset('Img/LandingPage/logoapp1.jpg') }}" />
     <meta name="theme-color" content="#faf8f7ff" />
 
     <!-- ✅ Open Graph / Meta Preview -->

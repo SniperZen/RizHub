@@ -122,17 +122,18 @@
                 <a href="{{ url('image.gallery') }}" class="button">View Your Gallery</a>
             </div>
             
-            <p>Continue your journey through <em>Noli Me Tangere</em> and discover more hidden treasures!</p>
-            
-            <p>Happy exploring!<br>
-            <strong>The RizHub Team</strong></p>
+           <p>Ipagpatuloy ang iyong paglalakbay sa <em>Noli Me Tangere</em> at tuklasin pa ang iba pang nakatagong yaman!</p>
+
+            <p>Masayang paglalakbay!<br>
+            <strong>Ang RizHub Team</strong></p>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>&copy; {{ date('Y') }} RizHub. All rights reserved.</p>
+                <p>Damhin ang Panitikang Pilipino sa isang bago at makabagong paraan</p>
+            </div>
         </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            <p>&copy; {{ date('Y') }} RizHub. All rights reserved.</p>
-            <p>Experience Philippine literature in a whole new way</p>
-        </div>
-    </div>
-</body>
+    </body>
 </html>
+
