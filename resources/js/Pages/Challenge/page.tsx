@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { router, Link } from "@inertiajs/react";
 import StudentLayout from "../../Layouts/StudentLayout";
-import VideoModal from "../Challenge/Video/page"; 
+import YouTubeVideoModal from "../Challenge/Video/YouTubeVideoModal"; // NEW: Changed import
 import PreVideoModal from "./Video/Modal/page";
 import CertificateModal from "../../Components/CertificateModal"; 
 import Button from '@/Components/Button';
@@ -78,6 +78,22 @@ const KabanataPage: React.FC<PageProps> = ({
     const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("decimal");
     const [vibratingLockedId, setVibratingLockedId] = useState<number | null>(null);
 
+    // YouTube video mappings for kabanata 1-64
+    const youtubeVideoMappings: Record<number, string> = {
+        1: "Oy-HT0nlexQ",
+        2: "YOUR_KABANATA_2_ID",
+        3: "YOUR_KABANATA_3_ID",
+        4: "YOUR_KABANATA_4_ID",
+        5: "YOUR_KABANATA_5_ID",
+        6: "YOUR_KABANATA_6_ID",
+        7: "YOUR_KABANATA_7_ID",
+        8: "YOUR_KABANATA_8_ID",
+        9: "YOUR_KABANATA_9_ID",
+        10: "YOUR_KABANATA_10_ID",
+        // Add mappings for 11-64 as you get the YouTube IDs
+        64: "YOUR_KABANATA_64_ID",
+    };
+
     // Filter kabanatas -based on development needs
     const filteredKabanatas = {
         ...kabanatas,
@@ -116,19 +132,6 @@ const KabanataPage: React.FC<PageProps> = ({
             return Math.round(percentage) + "%";
         }
     };
-
-    // // testing purposes only - remove this on production
-    // const filteredKabanatas = {
-    // ...kabanatas,
-    // data: kabanatas.data
-    //     .filter(k => k.id <= 64)
-    //     .map(k => ({
-    //     ...k,
-    //     progress: 10,
-    //     stars: 3,
-    //     unlocked: true
-    //     }))
-    // };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -250,12 +253,6 @@ const KabanataPage: React.FC<PageProps> = ({
             window.history.replaceState({}, '', newUrl);
             }
         }
-
-        // Check if all kabanatas are completed
-        // const allCompleted = filteredKabanatas.data.every(k => isVideoCompleted(k.id));
-        // if (allCompleted && filteredKabanatas.data.length > 0) {
-        //     setShowCertificateModal(true);
-        // }
     }, [ videoProgress]);
 
     useEffect(() => {
@@ -331,15 +328,21 @@ const KabanataPage: React.FC<PageProps> = ({
         setHasVideoEnded(false);
     };
 
+    // UPDATED: Now sets YouTube ID instead of file path
     const handleProceedToVideo = () => {
         setShowPreVideoModal(false);
         if (pendingKabanataId !== null) {
-            const src = `/Video/K${pendingKabanataId}.mp4`;
-            setCurrentVideo(src);
-            setLastPlayedVideo(src);
-            setSelectedKabanataId(pendingKabanataId);
-            setIsModalOpen(true);
-            pauseBackgroundMusic();
+            const youtubeId = youtubeVideoMappings[pendingKabanataId];
+            if (youtubeId) {
+                setCurrentVideo(youtubeId);
+                setLastPlayedVideo(youtubeId);
+                setSelectedKabanataId(pendingKabanataId);
+                setIsModalOpen(true);
+                pauseBackgroundMusic();
+            } else {
+                console.error(`No YouTube ID found for kabanata ${pendingKabanataId}`);
+                // Fallback or show error message
+            }
         }
     };
 
@@ -367,6 +370,7 @@ const KabanataPage: React.FC<PageProps> = ({
         setHasVideoEnded(true);
     };
 
+    // UPDATED: Now works with YouTube IDs
     const retryVideo = () => {
         setShowEndModal(false);
         setCurrentVideo(lastPlayedVideo);
@@ -492,21 +496,6 @@ const KabanataPage: React.FC<PageProps> = ({
 
                 {/* Header */}
                 <div className="flex items-center justify-end px-8 py-4">
-                    {/* Percentage Display Toggle */}
-                    {/* <div className="mr-4 bg-white/80 rounded-lg p-2">
-                        <label className="flex items-center space-x-2 text-sm">
-                            <span>Percentage Display:</span>
-                            <select 
-                                value={percentageDisplayType}
-                                onChange={(e) => setPercentageDisplayType(e.target.value as "rounded" | "decimal")}
-                                className="border rounded px-2 py-1"
-                            >
-                                <option value="rounded">Rounded (67%)</option>
-                                <option value="decimal">Decimal (66.67%)</option>
-                            </select>
-                        </label>
-                    </div> */}
-                    
                     {/* AudioControls is now justified to the right side of the remaining space */}
                     <AudioControls 
                         initialMusic={music}
@@ -564,24 +553,6 @@ const KabanataPage: React.FC<PageProps> = ({
                         </button>
                     </div>
                 </div>
-
-                {/* Progress indicator
-                <div className="absolute top-28 right-8 bg-white/80 rounded-lg p-3 z-10">
-                    <div className="text-center">
-                        <p className="text-sm font-semibold text-gray-800">
-                            Stars Progress: {getPercentageDisplayText()}
-                        </p>
-                        <div className="w-32 h-2 bg-gray-300 rounded-full mt-1">
-                            <div 
-                                className="h-2 bg-green-500 rounded-full" 
-                                style={{ width: `${getTotalStarsPercentage()}%` }}
-                            ></div>
-                        </div>
-                        <p className="text-xs text-gray-600 mt-1">
-                            {filteredKabanatas.data.reduce((sum, k) => sum + k.stars, 0)} / {filteredKabanatas.data.length * 3} stars
-                        </p>
-                    </div>
-                </div> */}
 
                 {/* Kabanata Map */}
                 <div className="w-full h-[600px] flex justify-center ml-4 items-center z-0">
@@ -866,9 +837,10 @@ const KabanataPage: React.FC<PageProps> = ({
                     ))}
                     </div>
 
-                {isModalOpen && (
-                    <VideoModal
-                        videoSrc={currentVideo}
+                {/* UPDATED: Changed VideoModal to YouTubeVideoModal */}
+                {isModalOpen && currentVideo && (
+                    <YouTubeVideoModal
+                        youtubeId={currentVideo}
                         onClose={closeModal}
                         onVideoEnd={handleVideoEnded}
                         skippable={selectedKabanataId !== null && isVideoSkippable(selectedKabanataId)}
