@@ -1,5 +1,4 @@
 // resources/js/Pages/Challenge/Video/YouTubeVideoModal.tsx
-import { div } from "framer-motion/client";
 import React, { useRef, useEffect, useState } from "react";
 
 interface YouTubeVideoModalProps {
@@ -31,10 +30,10 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
     const [volume, setVolume] = useState<number>(80);
     const [playbackRate, setPlaybackRate] = useState<number>(1);
     const [showSettings, setShowSettings] = useState<boolean>(false);
+    const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null); // New state for submenus
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
     const [availableQualities, setAvailableQualities] = useState<string[]>([]);
     const [currentQuality, setCurrentQuality] = useState<string>('auto');
-    const [showQualityOptions, setShowQualityOptions] = useState<boolean>(false);
     const playerRef = useRef<any>(null);
     const updateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -127,7 +126,7 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                     
                     // Note: YouTube doesn't expose available qualities via API in embed mode
                     // We'll just show common quality options
-                    setAvailableQualities(['auto', 'hd1080', 'hd720', 'large', 'medium', 'small']);
+                    setAvailableQualities(['hd1080', 'hd720', 'large', 'medium', 'small']);
                     
                     // Try to get current quality
                     setTimeout(() => {
@@ -179,7 +178,7 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
             try {
                 playerRef.current.setPlaybackQuality(quality);
                 setCurrentQuality(quality);
-                setShowQualityOptions(false);
+                setActiveSubMenu(null);
                 setShowSettings(false);
                 
                 // Provide feedback
@@ -262,6 +261,7 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
         if (playerRef.current) {
             playerRef.current.setPlaybackRate(rate);
             setPlaybackRate(rate);
+            setActiveSubMenu(null);
             setShowSettings(false);
         }
     };
@@ -398,7 +398,7 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                                 >
                                     {!isPlaying && (
                                         <div className="w-20 h-20 bg-black/60 rounded-full flex items-center justify-center">
-                                            <svg className="w-12 h-12 text-white ml-2" fill="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M8 5v14l11-7z"/>
                                             </svg>
                                         </div>
@@ -432,12 +432,12 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                         </button>
 
                             {/* Volume Control - matches your original design */}
-                            <div className="flex items-center space-x-3">
-                                <button className="text-white hover:text-gray-300 transition-colors duration-200">
+                            <div className="flex items-center space-x-5">
+                                <button className="text-white hover:text-gray-300 transition-colors duration-200 ">
                                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                                         {volume === 0 ? (
                                             <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                                        ) : volume < 50 ? (
+                                        ) : volume < 1 ? (
                                             <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                                         ) : (
                                             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
@@ -487,7 +487,10 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                         {/* Settings Button */}
                         <div className="relative">
                             <button
-                                onClick={() => setShowSettings(!showSettings)}
+                                onClick={() => {
+                                    setShowSettings(!showSettings);
+                                    setActiveSubMenu(null); // Reset submenu when opening settings
+                                }}
                                 className="text-white hover:text-gray-300 transition-colors duration-200"
                             >
                                 <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
@@ -495,57 +498,151 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                                 </svg>
                             </button>
                             
-                            {/* Settings Dropdown */}
+                            {/* Settings Dropdown - YouTube Style */}
                             {showSettings && (
-                                <div className="absolute bottom-full right-0 mb-3 bg-black/95 backdrop-blur-md rounded-lg shadow-2xl py-2 min-w-[180px] z-50 border border-gray-700">
-                                    {/* Playback Speed Section */}
-                                    <div className="text-gray-300 text-sm px-4 py-3 border-b border-gray-700 font-medium">
-                                        Playback Speed
-                                    </div>
-                                    {[1, 1.25, 1.5, 1.75, 2].map((rate) => (
-                                        <button
-                                            key={rate}
-                                            onClick={() => handlePlaybackRateChange(rate)}
-                                            className={`block w-full text-left px-4 py-2.5 text-sm hover:bg-gray-800/80 transition-colors ${
-                                                playbackRate === rate ? 'text-gray-300 font-semibold bg-gray-800/50' : 'text-gray-400'
-                                            }`}
-                                        >
-                                            {rate === 1 ? 'Normal' : `${rate}x`}
-                                        </button>
-                                    ))}
-                                    
-                                    {/* Divider */}
-                                    <div className="border-t border-gray-700 my-1"></div>
-                                    
-                                    {/* Quality Section */}
-                                    <div className="text-gray-300 text-sm px-4 py-3 font-medium">
-                                        Quality
-                                    </div>
-                                    {availableQualities.map((quality) => (
-                                        <button
-                                            key={quality}
-                                            onClick={() => handleQualityChange(quality)}
-                                            className={`block w-full text-left px-4 py-2.5 text-sm hover:bg-gray-800/80 transition-colors ${
-                                                currentQuality === quality ? 'text-gray-300 font-semibold bg-gray-800/50' : 'text-gray-400'
-                                            }`}
-                                        >
-                                            {getQualityLabel(quality)}
-                                        </button>
-                                    ))}
-                                    
-                                    {/* If no qualities are available yet */}
-                                    {availableQualities.length === 0 && (
-                                        <div className="px-4 py-2.5 text-gray-500 text-sm italic">
-                                            Loading qualities...
+                                <div className="absolute bottom-full right-0 mb-3 bg-black/95 backdrop-blur-md rounded-lg shadow-2xl py-2 min-w-[220px] z-50 border border-gray-700 overflow-hidden">
+                                    {/* First Level - Main Settings Menu */}
+                                    {!activeSubMenu && (
+                                        <div className="main-settings-menu">
+                                            {/* Playback Speed Row - Main Menu */}
+                                            <button
+                                                onClick={() => setActiveSubMenu('playback')}
+                                                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-800/80 transition-colors group"
+                                            >
+                                                <span className="text-gray-300 text-sm font-medium">Playback speed</span>
+                                                <div className="flex items-center">
+                                                    <span className="text-gray-400 text-sm mr-2">
+                                                        {playbackRate === 1 ? 'Normal' : `${playbackRate}x`}
+                                                    </span>
+                                                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+
+                                            {/* Quality Row - Main Menu */}
+                                            <button
+                                                onClick={() => setActiveSubMenu('quality')}
+                                                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-800/80 transition-colors group border-t border-gray-800"
+                                            >
+                                                <span className="text-gray-300 text-sm font-medium">Quality</span>
+                                                <div className="flex items-center">
+                                                    <span className="text-gray-400 text-sm mr-2">
+                                                        {getQualityLabel(currentQuality)}
+                                                    </span>
+                                                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
                                         </div>
                                     )}
-                                    
-                                    {/* Quality Info Note */}
-                                    <div className="border-t border-gray-700 mt-1 pt-2 px-4">
-                                        <p className="text-gray-500 text-xs">
-                                            Note: Quality changes might take a moment to apply.
-                                        </p>
-                                    </div>
+
+                                    {/* Second Level - Playback Speed Submenu */}
+                                    {activeSubMenu === 'playback' && (
+                                        <div className="submenu">
+                                            {/* Submenu Header with Back Button */}
+                                            <div className="flex items-center px-4 py-3 border-b border-gray-800">
+                                                <button
+                                                    onClick={() => setActiveSubMenu(null)}
+                                                    className="mr-3 text-gray-400 hover:text-gray-300 transition-colors"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
+                                                <span className="text-gray-300 text-sm font-medium">Playback speed</span>
+                                            </div>
+
+                                            {/* Playback Speed Options */}
+                                            <div className="py-2">
+                                                {[1, 1.25, 1.5, 1.75, 2].map((rate) => (
+                                                    <button
+                                                        key={rate}
+                                                        onClick={() => handlePlaybackRateChange(rate)}
+                                                        className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-gray-800/80 transition-colors ${
+                                                            playbackRate === rate ? 'text-gray-300 font-medium bg-gray-800/60' : 'text-gray-400'
+                                                        }`}
+                                                    >
+                                                        <span>{rate === 1 ? 'Normal' : `${rate}x`}</span>
+                                                        {playbackRate === rate && (
+                                                            <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                            </svg>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Second Level - Quality Submenu */}
+                                    {activeSubMenu === 'quality' && (
+                                        <div className="submenu">
+                                            {/* Submenu Header with Back Button */}
+                                            <div className="flex items-center px-4 py-3 border-b border-gray-800">
+                                                <button
+                                                    onClick={() => setActiveSubMenu(null)}
+                                                    className="mr-3 text-gray-400 hover:text-gray-300 transition-colors"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                    </svg>
+                                                </button>
+                                                <span className="text-gray-300 text-sm font-medium">Quality</span>
+                                            </div>
+
+                                            {/* Quality Options */}
+                                            <div className="py-2">
+                                                {/* Auto Option */}
+                                                <button
+                                                    onClick={() => handleQualityChange('auto')}
+                                                    className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-gray-800/80 transition-colors ${
+                                                        currentQuality === 'auto' ? 'text-gray-300 font-medium bg-gray-800/60' : 'text-gray-400'
+                                                    }`}
+                                                >
+                                                    <span>Auto</span>
+                                                    {currentQuality === 'auto' && (
+                                                        <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                        </svg>
+                                                    )}
+                                                </button>
+
+                                                {/* Manual Quality Options */}
+                                                {availableQualities.map((quality) => (
+                                                    <button
+                                                        key={quality}
+                                                        onClick={() => handleQualityChange(quality)}
+                                                        className={`w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-gray-800/80 transition-colors ${
+                                                            currentQuality === quality ? 'text-gray-300 font-medium bg-gray-800/60' : 'text-gray-400'
+                                                        }`}
+                                                    >
+                                                        <span>{getQualityLabel(quality)}</span>
+                                                        {currentQuality === quality && currentQuality !== 'auto' && (
+                                                            <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                            </svg>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                                
+                                                {/* If no qualities are available yet */}
+                                                {availableQualities.length === 0 && (
+                                                    <div className="px-4 py-2.5 text-gray-500 text-sm italic">
+                                                        Loading qualities...
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Quality Info Note */}
+                                            <div className="border-t border-gray-700 mt-2 pt-3 px-4 pb-2">
+                                                <p className="text-gray-500 text-xs">
+                                                    Note: Quality changes might take a moment to apply.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
