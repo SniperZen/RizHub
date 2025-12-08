@@ -8,11 +8,67 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+    const [cooldown, setCooldown] = useState(0);
+    const [isCooldownActive, setIsCooldownActive] = useState(false);
+
+    // Check if there's an existing cooldown in localStorage on component mount
+    useEffect(() => {
+        const savedCooldown = localStorage.getItem('passwordResetCooldown');
+        if (savedCooldown) {
+            const cooldownEnd = parseInt(savedCooldown);
+            const now = Date.now();
+            const remaining = Math.max(0, Math.ceil((cooldownEnd - now) / 1000));
+            
+            if (remaining > 0) {
+                setCooldown(remaining);
+                setIsCooldownActive(true);
+            } else {
+                localStorage.removeItem('passwordResetCooldown');
+            }
+        }
+    }, []);
+
+    // Handle cooldown timer
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+
+        if (isCooldownActive && cooldown > 0) {
+            interval = setInterval(() => {
+                setCooldown((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        setIsCooldownActive(false);
+                        localStorage.removeItem('passwordResetCooldown');
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isCooldownActive, cooldown]);
+
+    // Start cooldown function
+    const startCooldown = (seconds: number = 60) => {
+        setCooldown(seconds);
+        setIsCooldownActive(true);
+        
+        // Save cooldown end time to localStorage
+        const cooldownEnd = Date.now() + (seconds * 1000);
+        localStorage.setItem('passwordResetCooldown', cooldownEnd.toString());
+    };
 
     useEffect(() => {
         if (status) {
             setToastMessage(status);
             setShowToast(true);
+            
+            // Start cooldown when email is sent
+            startCooldown(60);
+            
             const timer = setTimeout(() => {
                 setShowToast(false);
             }, 5000);
@@ -22,10 +78,25 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
+        
+        if (isCooldownActive && cooldown > 0) {
+            setToastMessage(`Pakihintay ng ${cooldown} segundo bago muling magpadala ng password reset email.`);
+            setShowToast(true);
+            
+            const timer = setTimeout(() => {
+                setShowToast(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+        
         post(route('password.email'), {
             onSuccess: () => {
                 setToastMessage("If that email address is in our database, we've sent you an email with instructions to reset your password.");
                 setShowToast(true);
+                
+                // Start cooldown on successful send
+                startCooldown(60);
+
                 const timer = setTimeout(() => {
                     setShowToast(false);
                 }, 5000);
@@ -47,9 +118,15 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     <div className="p-4 rounded-lg bg-orange-50 text-orange-700 border border-orange-200 shadow-lg max-w-sm">
                         <div className="flex items-start">
                             <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                </svg>
+                                {isCooldownActive && cooldown > 0 ? (
+                                    <svg className="h-5 w-5 text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                    </svg>
+                                ) : (
+                                    <svg className="h-5 w-5 text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                )}
                             </div>
                             <div className="ml-3">
                                 <p className="text-sm font-medium">
@@ -102,7 +179,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             {/* Custom Lock Icon */}
                             <div className="mx-auto flex items-center justify-center mb-4">
                                 <img
-                                    src="\Img\VerificationPage\email-icon.gif" // You might want to create/use a lock icon GIF
+                                    src="\Img\VerificationPage\email-icon.gif"
                                     alt="Password Reset Icon"
                                     className="h-30 w-30 object-contain"
                                 />
@@ -111,8 +188,13 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             <h2 className="text-3xl font-extrabold text-white mb-2">
                                 I-reset ng Password
                             </h2>
-                            <p className="text-white">
+                            <p className="text-white mb-4">
                                 I-enter ang iyong email address upang mabalik ang iyong account.
+                                {isCooldownActive && cooldown > 0 && (
+                                    <span className="inline-block ml-1 font-bold animate-pulse">
+                                        {cooldown}s
+                                    </span>
+                                )}
                             </p>
                         </div>
 
@@ -136,10 +218,26 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                             <button
                                 type="submit"
-                                disabled={processing}
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-75 transition-colors duration-200"
+                                disabled={processing || (isCooldownActive && cooldown > 0)}
+                                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors duration-200 ${
+                                    processing || (isCooldownActive && cooldown > 0) 
+                                    ? 'bg-[#5A3416]/70 cursor-not-allowed hover:bg-[#5A3416]/70 border border-[#5A3416]/50' 
+                                    : 'bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500'
+                                }`}
                             >
-                                {processing ? "Sending..." : "Ipadala ang link"}
+                                {processing ? (
+                                    <span className="flex items-center">
+                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Ipinapadala...
+                                    </span>
+                                ) : isCooldownActive && cooldown > 0 ? (
+                                    `Maghintay`
+                                ) : (
+                                    "Ipadala ang link"
+                                )}
                             </button>
 
                             <div className="text-center">
