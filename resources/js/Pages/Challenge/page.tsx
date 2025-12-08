@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { router, Link } from "@inertiajs/react";
 import StudentLayout from "../../Layouts/StudentLayout";
-import YouTubeVideoModal from "../Challenge/Video/YoutubeVideoModal"; // NEW: Changed import
+import YouTubeVideoModal from "../Challenge/Video/YouTubeVideoModal"; // NEW: Changed import
 import PreVideoModal from "./Video/Modal/page";
 import CertificateModal from "../../Components/CertificateModal"; 
 import Button from '@/Components/Button';
 import AudioControls from "../../Components/AudioControls";
+import youtubeMappings from "./youtubeMappings";
 
 interface Kabanata {
     id: number;
@@ -358,21 +359,22 @@ const KabanataPage: React.FC<PageProps> = ({
         router.post(route("student.saveVideoProgress"), {
             kabanata_id: kabanataId,
             completed: completed,
-            seconds_watched: secondsWatched
+            seconds_watched: secondsWatched,
+            youtube_id: currentVideo, // send current YouTube id so backend can create/update Video row
+        }, {
+            onSuccess: () => {
+                if (completed) {
+                    setVideoCompleted(prev => ({
+                        ...prev,
+                        [kabanataId]: true
+                    }));
+                    addDebugLog(`Marked kabanata ${kabanataId} as completed in local state`);
+                    const newCount = Object.values({...videoCompleted, [kabanataId]: true}).filter(v => v).length;
+                    setCompletedCount(newCount);
+                }
+            }
         });
-        // local state update
-        if (completed) {
-        setVideoCompleted(prev => ({
-            ...prev,
-            [kabanataId]: true
-        }));
-        addDebugLog(`Marked kabanata ${kabanataId} as completed in local state`);
-        
-        // Update completed count
-        const newCount = Object.values({...videoCompleted, [kabanataId]: true}).filter(v => v).length;
-        setCompletedCount(newCount);
-    }
-}, [videoCompleted]);
+    }, [currentVideo, videoCompleted, addDebugLog]);
 
     const openVideoModal = (kabanataId: number) => {
         setPendingKabanataId(kabanataId);
@@ -895,6 +897,8 @@ const KabanataPage: React.FC<PageProps> = ({
                         youtubeId={currentVideo}
                         onClose={closeModal}
                         onVideoEnd={handleVideoEnded}
+                        kabanataId={selectedKabanataId}
+                        isCompleted={selectedKabanataId !== null && isVideoCompleted(selectedKabanataId)} // NEW
                         skippable={selectedKabanataId !== null && isVideoSkippable(selectedKabanataId)}
                         showSkipOption={pendingKabanataId !== null && isVideoCompleted(pendingKabanataId)}
                         onSkip={() => selectedKabanataId !== null && handleSkipVideo(selectedKabanataId)}

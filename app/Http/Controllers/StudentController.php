@@ -214,37 +214,42 @@ class StudentController extends Controller
             'kabanata_id' => 'required|exists:kabanatas,id',
             'completed' => 'required|boolean',
             'seconds_watched' => 'sometimes|integer|min:0',
-            'perfect_score' => 'sometimes|boolean',
+            'youtube_id' => 'sometimes|string|nullable',
         ]);
 
         $user = Auth::user();
-        
-        // Get the video for this kabanata
-        $video = Video::where('kabanata_id', $request->kabanata_id)->first();
-        
-        if (!$video) {
-            return response()->json(['error' => 'Video not found for this kabanata'], 404);
-        }
-        
-        // Get kabanata progress for this user
+
+        $youtubeId = $request->youtube_id ? trim($request->youtube_id) : null;
+
+        // Create or update the Video record for this kabanata and attach the youtube id
+        $video = Video::updateOrCreate(
+            ['kabanata_id' => $request->kabanata_id],
+            [
+                'title' => $youtubeId ? 'YouTube - ' . $youtubeId : ('Video for kabanata ' . $request->kabanata_id),
+                'duration' => 0,
+                'youtube_id' => $youtubeId,
+            ]
+        );
+
+        // Get or create kabanata progress
         $kabanataProgress = UserKabanataProgress::firstOrCreate([
             'user_id' => $user->id,
             'kabanata_id' => $request->kabanata_id,
         ]);
-        
-        // Store video progress in session using KABANATA_ID as the key (not video_id)
-        $sessionKey = "video_progress_{$user->id}_{$request->kabanata_id}";
-        $progressData = [
-            'video_id' => $video->id,
-            'completed' => $request->completed,
-            'seconds_watched' => $request->seconds_watched ?? 0,
-            'perfect_score' => $request->perfect_score ?? false,
-            'kabanata_progress_id' => $kabanataProgress->id,
-        ];
-        
-        session()->put($sessionKey, $progressData);
 
-        // return response()->json(['message' => 'Video progress saved to session']);
+        // Persist video progress (one record per video_id + kabanata_progress_id)
+        $vp = VideoProgress::updateOrCreate(
+            [
+                'video_id' => $video->id,
+                'kabanata_progress_id' => $kabanataProgress->id,
+            ],
+            [
+                'seconds_watched' => $request->seconds_watched ?? 0,
+                'completed' => (bool)$request->completed,
+            ]
+        );
+
+        //return response()->json(['success' => true, 'video_id' => $video->id, 'video_progress_id' => $vp->id]);
     }
 
 
