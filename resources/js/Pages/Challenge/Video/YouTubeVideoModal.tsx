@@ -387,9 +387,9 @@ export default function YouTubeVideoModal({
                 {shouldShowSkipButton && (
                     <button
                         onClick={handleSkip}
-                        className="absolute bottom-6 right-6 text-white rounded-lg px-5 py-3 text-base font-semibold hover:bg-gray-800 transition-all duration-200 z-30"
+                        className="absolute bottom-12 right-6 text-white rounded-lg px-3 py-3 text-base font-semibold hover:bg-gray-800 transition-all duration-200 z-30"
                         style={{
-                            background: 'linear-gradient(135deg, #374151 0%, #1f2937 50%)',
+                            background: 'linear-gradient(135deg, #374151 0%, #36373aff 50%)',
                         }}
                     >
                         Skip Video

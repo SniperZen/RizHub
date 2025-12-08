@@ -801,7 +801,7 @@ const checkAnswer = async (source = "manual") => {
                                         </h2>
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[145px]">
+                                        <div className="fixed flex gap-8 bottom-[105px]">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
