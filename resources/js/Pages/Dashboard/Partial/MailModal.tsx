@@ -189,7 +189,7 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                 </div>
 
                 <div className="mt-24 ml-16 flex w-full h-full px-10 gap-6">
-                    <div className="w-[350px] border-r-2 border-[#88643D] overflow-y-auto p-3">
+                    <div className="w-[350px] h-[350px] border-r-2 border-[#88643D] overflow-y-auto p-3 rounded-md">
                         {localNotifications.length > 0 ? (
                             <div className="space-y-4">
                                 {localNotifications.map((notification) => (

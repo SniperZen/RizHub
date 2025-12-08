@@ -276,15 +276,21 @@ export default function Dashboard({
                         </Button>
                     </div>
                     <div className="absolute bottom-16 flex gap-20 justify-center items-center">
-                        <button
+                        <Button
                             type="button"
                             className="transition hover:scale-110 focus:outline-none"
                             aria-label="Star Folder"
+                            soundHover="/sounds/button-hover.mp3"
+                            soundClick="/Music/Sound.mp3"
+                            soundVolume={volume}
                             onClick={() => router.get(route('image.gallery'))}
                         >
                             <img src="/Img/Dashboard/star-folder.png" alt="Star Folder" className="w-20" />
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                        soundHover="/sounds/button-hover.mp3"
+                            soundClick="/Music/Sound.mp3"
+                            soundVolume={volume}
                             type="button"
                             className="transition hover:scale-110 focus:outline-none relative"
                             aria-label="Mail"
@@ -299,7 +305,7 @@ export default function Dashboard({
                                     {unreadCount > 9 ? '9+' : unreadCount}
                                 </span>
                             )}
-                        </button>
+                        </Button>
                         <Button
                             className="transition hover:scale-110 focus:outline-none"
                             onClick={() => setShowSettings(true)}
@@ -326,13 +332,16 @@ export default function Dashboard({
                                 <div className="flex flex-col items-center w-full px-[80px]">
                                     
                                     <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Settings</span>
-                                    <button
+                                    <Button
+                                        soundHover="/sounds/button-hover.mp3"
+                                        soundClick="/Music/Sound.mp3"
+                                        soundVolume={volume}
                                         className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
                                         onClick={() => setShowSettings(false)}
                                         aria-label="Close"
                                     >
                                        <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
-                                    </button>
+                                    </Button>
                                     {/* Sliders */}
                                     <div className="flex flex-col gap-8 mt-20 mb-5 w-full items-center w-[450px]">
                                         {/* Volume Slider */}
@@ -446,17 +455,22 @@ export default function Dashboard({
                                     </div>
                                     {/* Action Buttons */}
                                     <div className="flex gap-10">
-                                        <button className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
+                                        <Button className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
                                         onClick={() => {
                                                 setShowSettings(false);
                                                 setShowShare(true);
                                             }}
                                             aria-label="Share"
-
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
                                         >
                                             <img src="/Img/Dashboard/share.png" alt="Share" className="w-full h-full object-contain" />
-                                        </button>
-                                        <button 
+                                        </Button>
+                                        <Button 
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
                                             type="button"
                                             className="transition hover:scale-110 focus:outline-none"
                                             aria-label="Profile"
@@ -467,16 +481,18 @@ export default function Dashboard({
 
                                         >
                                             <img src="/Img/Dashboard/profile.png" alt="Profile" className="w-20" />
-                                        </button>
-                                        <button className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
+                                        </Button>
+                                        <Button className="rounded-full w-20 h-20 flex items-center justify-center shadow-lg transition hover:scale-110 overflow-hidden"
                                         onClick={() => {
                                             setShowSettings(false);
                                             setShowLogoutModal(true);
                                         }}
-
+                                        soundHover="/sounds/button-hover.mp3"
+                                        soundClick="/Music/Sound.mp3"
+                                        soundVolume={volume}
                                         >
                                             <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
@@ -498,19 +514,25 @@ export default function Dashboard({
                               <span className="absolute text-white text-4xl font-black tracking-wide bottom-190">Account</span>
                                 
                                 {/* Close Button */}
-                                <button
+                                <Button
+                                    soundHover="/sounds/button-hover.mp3"
+                                    soundClick="/Music/Sound.mp3"
+                                    soundVolume={volume}
                                     className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
                                     onClick={() => setShowAccount(false)}
                                     aria-label="Close"
                                 >
                                     <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
-                                </button>
+                                </Button>
 
                                 <div className="w-full max-w-md mt-16 mb-8 flex flex-row items-start justify-center gap-[10px]">
                                     {/* Nav Button */}
 
                                     <div className="flex flex-col gap-4 p-5">
-                                        <button 
+                                        <Button 
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
                                             className={`box-border flex items-center px-[11px] py-[4px] gap-[8px] border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] w-[150px] ${
                                                 showGeneral 
                                                     ? 'bg-[#9A4112] text-white' 
@@ -519,8 +541,11 @@ export default function Dashboard({
                                             onClick={() => setShowGeneral(true)}
                                         >
                                             General
-                                        </button>
-                                        <button 
+                                        </Button>
+                                        <Button 
+                                            soundHover="/sounds/button-hover.mp3"
+                                            soundClick="/Music/Sound.mp3"
+                                            soundVolume={volume}
                                             className={`box-border flex items-center px-[11px] py-[4px] gap-[8px] border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] w-[150px] ${
                                                 !showGeneral 
                                                     ? 'bg-[#9A4112] text-white' 
@@ -529,7 +554,7 @@ export default function Dashboard({
                                             onClick={() => setShowGeneral(false)}
                                         >
                                             Password
-                                        </button>
+                                        </Button>
                                     </div>
                                     {/* Password Form */}
                                     {!showGeneral ? (
@@ -587,13 +612,16 @@ export default function Dashboard({
                                                 </div>
                                                 </div>
 
-                                                <button
+                                                <Button
+                                                soundHover="/sounds/button-hover.mp3"
+                                                soundClick="/Music/Sound.mp3"
+                                                soundVolume={volume}
                                                 type="submit"
                                                 disabled={processing}
                                                 className="w-[100px] h-[30px] flex items-center px-4 py-2 bg-[#9A4112] text-[#000] text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
                                                 >
                                                 Save Changes
-                                                </button>
+                                                </Button>
                                             </div>
                                         </form>
                                     ) :
@@ -646,21 +674,27 @@ export default function Dashboard({
                                                 </div>
 
                                                 <div className="flex flex-row gap-4">
-                                                    <button
+                                                    <Button
+                                                        soundHover="/sounds/button-hover.mp3"
+                                                        soundClick="/Music/Sound.mp3"
+                                                        soundVolume={volume}
                                                         type="button"
                                                         className="w-auto h-[30px] flex items-center px-4 py-2 bg-[#9A4112] text-[#000] text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
                                                         onClick={() => setShowDeleteModal(true)}
                                                     >
                                                         Delete Account
-                                                    </button>
+                                                    </Button>
 
-                                                    <button
+                                                    <Button
+                                                        soundHover="/sounds/button-hover.mp3"
+                                                        soundClick="/Music/Sound.mp3"
+                                                        soundVolume={volume}
                                                         type="submit"
                                                         disabled={processing}
                                                         className="w-auto h-[30px] flex items-center px-4 py-2 bg-[#9A4112] text-[#000] text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
                                                     >
                                                         Save Changes
-                                                    </button>
+                                                    </Button>
                                                 </div>
 
                                                 {recentlySuccessful && (

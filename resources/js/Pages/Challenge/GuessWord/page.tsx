@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { router } from "@inertiajs/react";
 import InstructionModal from "../../../Components/InstructionModal";
+import PauseModal from "../../../Components/PauseModal";
+import StudentLayout from "../../../Layouts/StudentLayout";
 
 interface GuessWordData {
     id: number;
@@ -18,9 +20,11 @@ interface GuessWordProps {
     kabanataId: number;
     kabanata_number: number;
     kabanata_title: string;
+    music: number;
+    sound: number;
 }
 
-export default function GuessWord({ character, questions, kabanataId, kabanata_number, kabanata_title }: GuessWordProps) {
+export default function GuessWord({ character, questions, kabanataId, kabanata_number, kabanata_title, music: initialMusic, sound: initialSound }: GuessWordProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState<string[]>([]);
     const [showModal, setShowModal] = useState<null | "correct" | "wrong" | "timesup" | "finished">(null);
@@ -36,6 +40,19 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     const [isUnlocked, setIsUnlocked] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [penalty, setPenalty] = useState<null | number>(null);
+    const [answerStatus, setAnswerStatus] = useState<"idle" | "correct" | "wrong">("idle");
+    const [hasProcessedCorrect, setHasProcessedCorrect] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
+    const [musicVolume, setMusicVolume] = useState(initialMusic);
+    const [soundVolume, setSoundVolume] = useState(initialSound);
+    const bgMusicRef = useRef<HTMLAudioElement>(null);
+    const correctSoundRef = useRef<HTMLAudioElement>(null);
+    const wrongSoundRef = useRef<HTMLAudioElement>(null);
+    const clickSoundRef = useRef<HTMLAudioElement>(null);
+    const backspaceSoundRef = useRef<HTMLAudioElement>(null);
+    const finishSoundRef = useRef<HTMLAudioElement>(null);
+    const gameOverSoundRef = useRef<HTMLAudioElement>(null);
+    
 
     const totalTime = 60;
     const [timeLeft, setTimeLeft] = useState(totalTime);
@@ -54,13 +71,67 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         setCurrentGuess(initialGuess);
     }, [currentQ]);
 
+    const togglePause = () => {
+        setIsPaused(!isPaused);
+        setGameActive(isPaused);
+    };
+
     useEffect(() => {
+        if (isPaused && timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+    }, [isPaused]);
+
+    useEffect(() => {
+        if (bgMusicRef.current) {
+        bgMusicRef.current.volume = musicVolume / 100;
+        }
+        
+        [correctSoundRef, wrongSoundRef, clickSoundRef, backspaceSoundRef, finishSoundRef, gameOverSoundRef].forEach(ref => {
+        if (ref.current) {
+            ref.current.volume = soundVolume / 100;
+        }
+        });
+    }, [musicVolume, soundVolume]);
+
+    useEffect(() => {
+        if (instructionIndex >= instructions.length && bgMusicRef.current) {
+        bgMusicRef.current.play().catch(error => {
+            console.log("Autoplay prevented:", error);
+        });
+        }
+    }, [instructionIndex]);
+
+    const playSound = (soundRef: React.RefObject<HTMLAudioElement>) => {
+        if (soundRef.current && soundVolume > 0) {
+        soundRef.current.currentTime = 0;
+        soundRef.current.play().catch(error => {
+            console.log("Sound play prevented:", error);
+        });
+        }
+    };
+
+    const saveVolumeSettings = (music: number, sound: number) => {
+        router.post(route("student.updateSettings"), {
+        music,
+        sound,
+        }, {
+        preserveState: true,
+        onSuccess: () => {
+            // Settings saved successfully
+        }
+        });
+    };
+
+    useEffect(() => {
+        if (hasProcessedCorrect) return; 
+
         if (currentGuess.length > 0 && currentGuess.every((char, i) => 
             char !== "" || shouldAutoFill(currentQ.answer[i])
         )) {
             checkAnswer();
         }
-    }, [currentGuess]);
+    }, [currentGuess, hasProcessedCorrect]);
 
     useEffect(() => {
         if (score === 5 && !isUnlocked) {
@@ -87,6 +158,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     clearInterval(timerRef.current!);
                     setShowModal("timesup");
                     setGameActive(false);
+                    playSound(gameOverSoundRef);
                     return 0;
                 }
                 return newTime;
@@ -128,7 +200,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
     const addLetter = (letter: string) => {
         if (!gameActive) return;
-        
+        playSound(clickSoundRef);
         let nextEmptyIndex = -1;
         for (let i = 0; i < currentQ.answer.length; i++) {
             if (!currentGuess[i] && !shouldAutoFill(currentQ.answer[i])) {
@@ -146,7 +218,8 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
     const removeLetter = () => {
         if (!gameActive) return;
-        
+        playSound(backspaceSoundRef);
+
         let lastFilledIndex = -1;
         for (let i = currentGuess.length - 1; i >= 0; i--) {
             if (currentGuess[i] && !shouldAutoFill(currentQ.answer[i])) {
@@ -163,11 +236,13 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
     };
 
     const checkAnswer = () => {
-        if (!gameActive) return;
+        if (!gameActive || hasProcessedCorrect) return;
 
         if (isCorrect) {
-            const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
-            setSuccessMessage(randomMessage);
+            playSound(correctSoundRef);
+            setHasProcessedCorrect(true);
+            setAnswerStatus("correct");
+            setGameActive(false);
 
             setScore((prevScore) => {
                 const newScore = prevScore + 1;
@@ -186,38 +261,42 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                 if (isGameFinished) {
                     setFinishMessage(finishMessages[newScore] || "GAME FINISHED!");
                     setShowModal("finished");
+                    playSound(finishSoundRef);
                 } else {
-                    setShowModal("correct");
+                    // ✅ move to next question
+                    setTimeout(() => {
+                        setCurrentIndex((prev) => prev + 1); 
+                        setAnswerStatus("idle");
+                        setGameActive(true);
+                        setHasProcessedCorrect(false);
+                    }, 1000);
                 }
 
                 return newScore;
             });
         } else {
-            router.post(route("guessword.saveProgress"), {
-                character_id: character.id,
-                kabanata_id: kabanataId,
-                question_id: currentQ.id,
-                current_index: currentIndex,
-                completed: false,
-                total_score: score,
-                is_correct: false,
-            });
+            setAnswerStatus("wrong");
+            playSound(wrongSoundRef);
+            // router.post(route("guessword.saveProgress"), {
+            //     character_id: character.id,
+            //     kabanata_id: kabanataId,
+            //     question_id: currentQ.id,
+            //     current_index: currentIndex,
+            //     completed: false,
+            //     total_score: score,
+            //     is_correct: false,
+            // });
+
             setTimeLeft((prev) => Math.max(prev - 5, 0));
             setPenalty(-5);
             setTimeout(() => setPenalty(null), 1000);
-            setShowModal("wrong");
-        }
 
-        setGameActive(false);
-    };
-
-    const nextQuestion = () => {
-        setShowModal(null);
-        if (currentIndex < questions.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-            setGameActive(true);
-        } else {
-            setShowModal("finished");
+            // shake then reset
+            setTimeout(() => {
+                setAnswerStatus("idle");
+                setCurrentGuess(currentQ.answer.split("").map(char => shouldAutoFill(char) ? char : ""));
+                setGameActive(true); 
+            }, 1000);
         }
     };
 
@@ -232,6 +311,51 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
     const handleProceed = () => {
         router.visit(route("challenge.quiz", { kabanataId, kabanata_number, kabanata_title }));
+    };
+
+    const handleRestart = () => {
+        setCurrentIndex(0);
+        setCurrentGuess([]);
+        setShowModal(null);
+        setScore(0);
+        setTimeLeft(totalTime);
+        setGameActive(true);
+        setAnswerStatus("idle");
+        setHasProcessedCorrect(false);
+        setPenalty(null);
+        
+        // Clear any timer
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+
+        if(isPaused){
+            setIsPaused(!isPaused);
+        }
+        
+        // Reset the guess for the first question
+        const initialGuess = questions[0].answer.split("").map(char => {
+            return shouldAutoFill(char) ? char : "";
+        });
+        setCurrentGuess(initialGuess);
+    };
+
+    useEffect(() => {
+        if (bgMusicRef.current) {
+        bgMusicRef.current.volume = musicVolume / 100;
+        }
+        
+        [correctSoundRef, wrongSoundRef, clickSoundRef, backspaceSoundRef, finishSoundRef, gameOverSoundRef].forEach(ref => {
+        if (ref.current) {
+            ref.current.volume = soundVolume / 100;
+        }
+        });
+    }, [musicVolume, soundVolume]);
+
+    const handleVolumeSettingsChange = (music: number, sound: number) => {
+        setMusicVolume(music);
+        setSoundVolume(sound);
+        saveVolumeSettings(music, sound);
     };
 
     const instructions = [
@@ -264,14 +388,14 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
         ["O","P","M","L","I"]
     ];
 
-    const successMessages = [
-        "NICE ONE!",
-        "GOOD JOB!",
-        "YOU'RE GREAT!",
-        "WELL DONE!",
-        "AMAZING!",
-        "KEEP IT UP!",
-    ];
+    // const successMessages = [
+    //     "NICE ONE!",
+    //     "GOOD JOB!",
+    //     "YOU'RE GREAT!",
+    //     "WELL DONE!",
+    //     "AMAZING!",
+    //     "KEEP IT UP!",
+    // ];
 
     const finishMessages: Record<number, string> = {
         0: "TRAIN HARDER!",
@@ -284,8 +408,19 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
 
     const stars = calculateStars(score);
 
+    const handleVolumeChange = (music: number, sound: number) => {
+        setMusicVolume(music);
+        setSoundVolume(sound);
+        saveVolumeSettings(music, sound);
+    };
+
+
     return (
-        <>
+        <StudentLayout
+            musicVolume={musicVolume}
+            soundVolume={soundVolume}
+            onVolumeChange={handleVolumeChange}
+>
         {instructionIndex < instructions.length ? (
             <InstructionModal
                 isOpen={true}
@@ -304,6 +439,37 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
             />
         ) : (
             <>
+            {/* Audio elements */}
+            {/* <audio 
+                ref={bgMusicRef} 
+                id="bg-music" 
+                loop
+                src="/audio/guessword-bg-music.mp3" 
+            /> */}
+            <audio 
+                ref={correctSoundRef} 
+                src="/Music/plankton-correct.mp3" 
+            />
+            <audio 
+                ref={wrongSoundRef} 
+                src="/Music/ksiwhatthehellmusic1.mp3" 
+            />
+            <audio 
+                ref={clickSoundRef} 
+                src="/Music/typingsound.mp3" 
+            />
+            <audio 
+                ref={backspaceSoundRef} 
+                src="/Music/backspace.wav" 
+            />
+            <audio 
+                ref={finishSoundRef} 
+                src="/Music/winner.mp3" 
+            />
+            <audio 
+                ref={gameOverSoundRef} 
+                src="/Music/over.wav" 
+            />
                 <div className="absolute top-[200px] right-[440px] flex flex-col items-center gap-[30px]">
                     <div className="relative w-20 h-20 mb-4">
                         <div className="absolute inset-0 rounded-full border-4 border-black overflow-hidden shadow-lg">
@@ -340,13 +506,29 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                     backgroundPosition: "center",
                     }}
                 >
-                    <div className="absolute top-4 left-4 flex items-center">
-                        <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
-                            KABANATA {kabanata_number}:
+                    <div className="flex flex-row justify-between">
+                        <div className="flex flex-row">
+                            <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
+                                KABANATA {kabanata_number}:
+                            </div>
+                            <div className="text-white font-bold px-2 py-2 text-2xl">
+                                {kabanata_title}
+                            </div>
                         </div>
-                        <div className="text-white font-bold px-2 py-2 text-2xl">
-                            {kabanata_title}
-                        </div>
+                        <button
+                            onClick={togglePause}
+                            className="absolute top-4 right-4 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors"
+                            title="Pause Game"
+                            >
+                            <svg 
+                                className="w-6 h-6 text-white" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
                     </div>
                     <div className="flex flex-col items-center justify-start p-6">
                         <div className="relative w-[550px] h-[250px] flex items-center justify-center">
@@ -365,19 +547,18 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             </div>
                         </div>
                         <div className="flex items-center justify-center gap-[5px] mt-8 w-full max-w-xl">
-                            <div className="flex-1 text-5xl tracking-widest font-mono text-center text-white font-black">
-                                {currentQ.answer
-                                    .split("")
-                                    .map((char, i) => {
+                            <div
+                            className={`flex-1 text-5xl tracking-widest font-mono text-center font-black 
+                            ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
+                            >
+                                {currentQ.answer.split("").map((char, i) => {
                                     if (char === " ") return "\u00A0";
                                     if (shouldAutoFill(char)) {
                                         return char;
                                     } else {
                                         return currentGuess[i] ? currentGuess[i] : "_";
                                     }
-                                    })
-                                    .join(" ")
-                                }
+                                }).join(" ")}
                             </div>
                             <div className="flex flex-row gap-3">
                                 <button
@@ -496,8 +677,8 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 </div>
                             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center top-[140px]">
                                 <h2 className="font-erica 
-                                    text-[48px] leading-[72px] 
-                                    font-black 
+                                    text-[58px] leading-[72px] 
+                                    font-bold 
                                     text-[#F6D65A] 
                                     stroke-text"
                                 >
@@ -629,7 +810,7 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                 )}
                                 
                                 <div className="flex gap-4 mt-[125px]">
-                                {showModal === "correct" && (
+                                {/* {showModal === "correct" && (
                                     <>
                                         <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
                                             <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
@@ -664,15 +845,14 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                                         <img src="/Img/Challenge/GuessWord/skip.png" alt="Skip" className="w-[60px] h-[60px]" />
                                     </button>
                                     </>
-                                )}
+                                )} */}
 
                                 {(showModal === "timesup" || showModal === "finished") && (
                                     <>
                                             <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
                                                 <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
                                             </button>
-                                            <button className="rounded-full p-3 relative"
-                                            onClick={() => window.location.reload()}>
+                                            <button className="rounded-full p-3 relative"onClick={handleRestart}>
                                                 <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
                                             </button>
                                             {stars > 0 && (
@@ -700,11 +880,38 @@ export default function GuessWord({ character, questions, kabanataId, kabanata_n
                             .animate-bounce {
                                 animation: floatUp 1s ease forwards;
                             }
+                            .shake {
+                                animation: shake 0.3s;
+                            }
+                            @keyframes shake {
+                                0% { transform: translateX(0); }
+                                25% { transform: translateX(-5px); }
+                                50% { transform: translateX(5px); }
+                                75% { transform: translateX(-5px); }
+                                100% { transform: translateX(0); }
+                            }
                         `}</style>
                     </div>
                 </div>
+                <PauseModal
+                    isOpen={isPaused}
+                    onResume={togglePause}
+                    onRestart={handleRestart}
+                    onHome={() => router.get(route('challenge'))}
+                    initialMusic={musicVolume}
+                    initialSound={soundVolume}
+                    onMusicChange={(volume) => {
+                    setMusicVolume(volume);
+                    saveVolumeSettings(volume, soundVolume);
+                    }}
+                    onSoundChange={(volume) => {
+                    setSoundVolume(volume);
+                    saveVolumeSettings(musicVolume, volume);
+                    }}
+                    onVolumeSettingsChange={handleVolumeSettingsChange}
+                />
             </>
         )}
-        </>
+        </StudentLayout>
     );
 }

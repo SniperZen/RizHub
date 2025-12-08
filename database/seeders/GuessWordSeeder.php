@@ -70,6 +70,18 @@ class GuessWordSeeder extends Seeder
                 ['question' => 'TAO (3 titik): Sa kanyang pangitain, sino ang lalaking nakita ni Ibarra na nagdurusa sa kulungan?', 'answer' => 'AMA'],
                 ['question' => 'BAGAY (4 titik): Ano ang namatay sa katapat na bahay Ibarra?', 'answer' => 'ILAW'],
             ],
+            6 => [
+                ['question' => 'DAMDAMIN (13 titik): Ano ang naramdaman ni Ibarra nang siya\'y umupo sa isang silyon?', 'answer' => 'BALISANG-BALISA'],
+                ['question' => 'PANGITAIN (14 titik): Sa pangitain ni Ibarra, sino ang binatang masayang nakita niya sa ibayong dagat?', 'answer' => 'KANYANG SARILI'],
+                ['question' => 'BAHAGI NG SILID (10 titik): Saang bahagi ng kanyang silid natatanaw ni Ibarra ang bahay na nagliliwanag sa kabilang ibayo?', 'answer' => 'DURUNGAWAN'],
+                ['question' => 'TAO (11 titik): Sino ang magandang dilag na nakita ni Ibarra na nakadamit Pilipina?', 'answer' => 'MARIA CLARA'],
+                ['question' => 'INSTRUMENTO (7 titik): Ito ang himig ng tugtugin na nanuot sa pandinig ni Ibarra.', 'answer' => 'BIYULIN'],
+                ['question' => 'TAO (11 titik): Sino ang palaging laman ng isip ni Ibarra?', 'answer' => 'MARIA CLARA'],
+                ['question' => 'LUGAR (8 titik): Saan nagmula si Maria Clara?', 'answer' => 'BEATERYO'],
+                ['question' => 'BILANG (6 titik): Ilan ang pangitain na nasilayan ni Ibarra sa kalawakan?', 'answer' => 'DALAWA'],
+                ['question' => 'TAO (3 titik): Sa kanyang pangitain, sino ang lalaking nakita ni Ibarra na nagdurusa sa kulungan?', 'answer' => 'AMA'],
+                ['question' => 'BAGAY (4 titik): Ano ang namatay sa katapat na bahay Ibarra?', 'answer' => 'ILAW'],
+            ],
         ];
 
         foreach ($kabanatas as $kabanataId => $items) {

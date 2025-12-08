@@ -49,12 +49,19 @@ class StudentController extends Controller
 
     public function saveSettings(Request $request)
     {
+        $validated = $request->validate([
+            'music' => 'required|integer|min:0|max:100',
+            'sound' => 'required|integer|min:0|max:100',
+        ]);
+        
         $user = Auth::user();
-        $user->music = $request->music;
-        $user->sound = $request->sound;
+        $user->music = $validated['music'];
+        $user->sound = $validated['sound'];
         $user->save();
-        return back();
+        
+        // return response()->json(['message' => 'Settings saved successfully']);
     }
+
 
     public function sendInvite(Request $request)
     {
@@ -123,6 +130,7 @@ class StudentController extends Controller
             'videoProgress' => $videoProgress,
             'music' => $user->music ?? 40, 
             'sound' => $user->sound ?? 70,
+            'studentName' => auth()->user()->name,
         ]);
     }
 
@@ -240,6 +248,7 @@ class StudentController extends Controller
     public function guessW($characterId, $kabanataId)
     {
         $character = GuessCharacter::findOrFail($characterId);
+        $user = Auth::user();
         
         // Get the kabanata details
         $kabanata = Kabanata::findOrFail($kabanataId);
@@ -255,7 +264,7 @@ class StudentController extends Controller
             'kabanata_id' => $kabanataId,
         ]);
 
-        // ✅ Get saved progress for this player using kabanata_progress_id
+        // Get saved progress for this player using kabanata_progress_id
         $progress = GuessWordProgress::where('kabanata_progress_id', $kabanataProgress->id)
             ->where('character_id', $characterId)
             ->first();
@@ -264,9 +273,11 @@ class StudentController extends Controller
             'character' => $character,
             'questions' => $questions,
             'kabanataId' => (int) $kabanataId,
-            'kabanata_number' => $kabanata->id, // Add this
-            'kabanata_title' => $kabanata->title, // Add this
+            'kabanata_number' => $kabanata->id,
+            'kabanata_title' => $kabanata->title,
             'savedProgress' => $progress ? $progress->current_index : 0,
+            'music' => $user->music ?? 40, 
+            'sound' => $user->sound ?? 70,
         ]);
     }
 
@@ -721,7 +732,9 @@ class StudentController extends Controller
         });
 
         return Inertia::render('Dashboard/ImageGallery/page', [
-            'images' => $images
+            'images' => $images,
+            'music' => $user->music ?? 40,
+            'sound' => $user->sound ?? 70,
         ]);
     }
 
@@ -819,5 +832,21 @@ class StudentController extends Controller
 
         // return response()->json(['success' => true]);
     }
+
+    public function updateSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'music' => 'required|integer|between:0,100',
+            'sound' => 'required|integer|between:0,100',
+        ]);
+
+        auth()->user()->update([
+            'music' => $validated['music'],
+            'sound' => $validated['sound'],
+        ]);
+
+        // return response()->json(['message' => 'Settings updated successfully']);
+    }
+
 
 }
