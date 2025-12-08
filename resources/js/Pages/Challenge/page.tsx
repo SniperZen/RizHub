@@ -950,7 +950,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         </span>{" "}
                         o{" "}
                         <span className="decoration-[#FFA500]">
-                        magpatuloy na lamang sa hamon?
+                        magpatuloy na sa hamon?
                         </span>
                     </span>
                 </p>
