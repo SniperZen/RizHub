@@ -12,11 +12,11 @@ class VideoProgress extends Model
     protected $table = 'video_progress';
 
     protected $fillable = [
-        'user_id',
         'video_id',
         'kabanata_progress_id',
         'seconds_watched',
         'completed',
+        'perfect_score',
     ];
 
     protected $casts = [

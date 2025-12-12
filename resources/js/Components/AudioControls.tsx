@@ -30,29 +30,36 @@ const AudioControls: React.FC<AudioControlsProps> = ({
     setIsSoundMuted(initialSound === 0);
   }, [initialMusic, initialSound]);
 
-  const saveAudioSettings = useCallback(() => {
+  const saveAudioSettings = useCallback((immediate: boolean = false) => {
     const musicValue = isMusicMuted ? 0 : musicVolume;
     const soundValue = isSoundMuted ? 0 : soundVolume;
     
-    router.post(route("student.saveAudioSettings"), { 
-      music: musicValue,
-      sound: soundValue
-    });
-    
+    // Immediate UI feedback
     if (onSettingsChange) {
       onSettingsChange(musicValue, soundValue);
     }
-  }, [musicVolume, soundVolume, isMusicMuted, isSoundMuted, onSettingsChange]);
-
-  const debouncedSave = useCallback(() => {
+    
+    // Clear any pending saves
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
     
-    saveTimeoutRef.current = setTimeout(() => {
-      saveAudioSettings();
-    }, 1000);
-  }, [saveAudioSettings]);
+    if (immediate) {
+      // Save immediately for important actions
+      router.post(route("student.saveAudioSettings"), { 
+        music: musicValue,
+        sound: soundValue
+      });
+    } else {
+      // Debounced save for frequent updates (shorter delay)
+      saveTimeoutRef.current = setTimeout(() => {
+        router.post(route("student.saveAudioSettings"), { 
+          music: musicValue,
+          sound: soundValue
+        });
+      }, 300);
+    }
+  }, [musicVolume, soundVolume, isMusicMuted, isSoundMuted, onSettingsChange]);
 
   const toggleMusic = () => {
     if (isMusicMuted) {
@@ -66,7 +73,8 @@ const AudioControls: React.FC<AudioControlsProps> = ({
       setMusicVolume(0);
     }
     
-    debouncedSave();
+    // Save immediately for mute/unmute actions
+    saveAudioSettings(true);
   };
 
   const toggleSound = () => {
@@ -81,125 +89,222 @@ const AudioControls: React.FC<AudioControlsProps> = ({
       setSoundVolume(0);
     }
     
-    debouncedSave();
+    // Save immediately for mute/unmute actions
+    saveAudioSettings(true);
   };
 
-  const adjustMusic = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    
+  // Handle volume adjustment with immediate UI feedback
+  const handleMusicVolumeChange = (newValue: number) => {
     // Update the previous volume reference if not muted
     if (!isMusicMuted) {
-      previousMusicVolume.current = value;
+      previousMusicVolume.current = newValue;
     }
     
-    setMusicVolume(value);
+    setMusicVolume(newValue);
     
     // If adjusting volume while muted, automatically unmute
-    if (value > 0 && isMusicMuted) {
+    if (newValue > 0 && isMusicMuted) {
       setIsMusicMuted(false);
     }
     
-    debouncedSave();
-  };
-
-  const adjustSound = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    
-    // Update the previous volume reference if not muted
-    if (!isSoundMuted) {
-      previousSoundVolume.current = value;
+    // Provide immediate UI/audio feedback
+    if (onSettingsChange) {
+      const musicValue = isMusicMuted ? 0 : newValue;
+      const soundValue = isSoundMuted ? 0 : soundVolume;
+      onSettingsChange(musicValue, soundValue);
     }
     
-    setSoundVolume(value);
+    // Debounced server save (shorter delay)
+    saveAudioSettings(false);
+  };
+
+  const handleSoundVolumeChange = (newValue: number) => {
+    // Update the previous volume reference if not muted
+    if (!isSoundMuted) {
+      previousSoundVolume.current = newValue;
+    }
+    
+    setSoundVolume(newValue);
     
     // If adjusting volume while muted, automatically unmute
-    if (value > 0 && isSoundMuted) {
+    if (newValue > 0 && isSoundMuted) {
       setIsSoundMuted(false);
     }
     
-    debouncedSave();
+    // Provide immediate UI/audio feedback
+    if (onSettingsChange) {
+      const musicValue = isMusicMuted ? 0 : musicVolume;
+      const soundValue = isSoundMuted ? 0 : newValue;
+      onSettingsChange(musicValue, soundValue);
+    }
+    
+    // Debounced server save (shorter delay)
+    saveAudioSettings(false);
   };
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="flex items-center space-x-3">
-      {/* Music Control - Icon only by default */}
-      <div 
-        className="flex items-center transition-all duration-300 group/music"
+      {/* Music Control */}
+      <div
+        className="relative group"
         onMouseEnter={() => setHoveredControl("music")}
         onMouseLeave={() => setHoveredControl(null)}
       >
-        <button 
+        <button
           onClick={toggleMusic}
-          className="relative w-12 h-12 flex items-center justify-center transition-all duration-300"
+          className="relative w-12 h-12 flex items-center justify-center transition-all duration-300 hover:scale-110"
           title={isMusicMuted ? "Unmute music" : "Mute music"}
         >
-          <img 
-            src="/Img/Dashboard/music.png" 
-            alt="Music" 
-            className="w-full h-auto transition-transform duration-300 group-hover/music:scale-110" 
-          />
+          <img src="/Img/Dashboard/music.png" alt="Music" className="w-full h-full" />
           {isMusicMuted && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-1 bg-red-500 rotate-45 transform origin-center"></div>
+              <div className="w-8 h-1 bg-red-500 rotate-45 rounded-full"></div>
             </div>
           )}
         </button>
-        
-        {/* Volume slider - expands on hover */}
-        <div className={`transition-all duration-300 overflow-hidden flex items-center ${
-          hoveredControl === "music" ? "max-w-24 opacity-100 bg-white/80 rounded-full shadow-lg p-2" : "w-0 opacity-0"
-        }`}>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={musicVolume}
-            onChange={adjustMusic}
-            className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className="text-xs text-center text-gray-600 ml-2 min-w-[30px]">
-            {isMusicMuted ? "Muted" : `${musicVolume}%`}
+
+        {/* Hover Panel */}
+        <div
+          className={`absolute top-full left-1/2 transform -translate-x-1/2 mt-3 
+          bg-orange-600 rounded-2xl p-4 z-50 min-w-[50px] transition-all duration-300 ${
+            hoveredControl === "music"
+              ? "opacity-100 visible scale-100"
+              : "opacity-0 invisible scale-95"
+          }`}
+        >
+          <div className="flex flex-col items-center space-y-3 text-white">
+            <div className="text-xs font-bold tracking-wide">Music</div>
+            <div className="text-xs text-white">
+              {isMusicMuted ? "Muted" : `${musicVolume}%`}
+            </div>
+
+            {/* Clickable Vertical Slider */}
+            <div
+              className="relative w-4 h-32 bg-[white]/80 rounded-full cursor-pointer select-none"
+              onMouseDown={(e) => {
+                const slider = e.currentTarget;
+                const rect = slider.getBoundingClientRect();
+
+                const updateVolume = (clientY: number) => {
+                  const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+                  const newValue = 100 - Math.round((y / rect.height) * 100);
+                  handleMusicVolumeChange(newValue);
+                };
+
+                // Start drag immediately
+                updateVolume(e.clientY);
+
+                const handleMouseMove = (moveEvent: MouseEvent) => {
+                  updateVolume(moveEvent.clientY);
+                };
+
+                const handleMouseUp = () => {
+                  document.removeEventListener("mousemove", handleMouseMove);
+                  document.removeEventListener("mouseup", handleMouseUp);
+                  // Save immediately when user stops dragging
+                  saveAudioSettings(true);
+                };
+
+                document.addEventListener("mousemove", handleMouseMove);
+                document.addEventListener("mouseup", handleMouseUp);
+              }}
+            >
+              <div
+                className="absolute bottom-0 w-full bg-gradient-to-t from-orange-500 to-orange-400 rounded-full  transition-[height] duration-100 ease-linear"
+                style={{ height: `${musicVolume}%` }}
+              ></div>
+              <div
+                className="absolute left-1/2 w-4 h-4 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full transform -translate-x-1/2 transition-[bottom] duration-100 ease-linear"
+                style={{ bottom: `calc(${musicVolume}% - 8px)` }}
+              ></div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Sound Control - Icon only by default */}
-      <div 
-        className="flex items-center transition-all duration-300 group/sound"
+      {/* Sound Control */}
+      <div
+        className="relative group"
         onMouseEnter={() => setHoveredControl("sound")}
         onMouseLeave={() => setHoveredControl(null)}
       >
-        <button 
+        <button
           onClick={toggleSound}
-          className="relative w-12 h-12 flex items-center justify-center transition-all duration-300"
+          className="relative w-12 h-12 flex items-center justify-center transition-all duration-300 hover:scale-110"
           title={isSoundMuted ? "Unmute sound" : "Mute sound"}
         >
-          <img 
-            src="/Img/Dashboard/volume.png" 
-            alt="Volume" 
-            className="w-full h-auto transition-transform duration-300 group-hover/sound:scale-110" 
-          />
+          <img src="/Img/Dashboard/volume.png" alt="Volume" className="w-full h-auto" />
           {isSoundMuted && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-1 bg-red-500 rotate-45 transform origin-center"></div>
+              <div className="w-8 h-1 bg-red-500 rotate-45 rounded-full"></div>
             </div>
           )}
         </button>
-        
-        {/* Volume slider - expands on hover */}
-        <div className={`transition-all duration-300 overflow-hidden flex items-center ${
-          hoveredControl === "sound" ? "max-w-24 opacity-100 bg-white/80 rounded-full shadow-lg p-2" : "w-0 opacity-0"
-        }`}>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={soundVolume}
-            onChange={adjustSound}
-            className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className="text-xs text-center text-gray-600 ml-2 min-w-[30px]">
-            {isSoundMuted ? "Muted" : `${soundVolume}%`}
+
+        {/* Hover Panel */}
+        <div
+          className={`absolute top-full left-1/2 transform -translate-x-1/2 mt-3 
+          bg-orange-600 rounded-2xl p-4 z-50 min-w-[50px] transition-all duration-300 ${
+            hoveredControl === "sound"
+              ? "opacity-100 visible scale-100"
+              : "opacity-0 invisible scale-95"
+          }`}
+        >
+          <div className="flex flex-col items-center space-y-3 text-white">
+            <div className="text-xs font-bold tracking-wide">Sound</div>
+            <div className="text-xs text-white">
+              {isSoundMuted ? "Muted" : `${soundVolume}%`}
+            </div>
+
+            {/* Clickable Vertical Slider */}
+            <div
+              className="relative w-4 h-32 bg-[white]/80 rounded-full cursor-pointer select-none"
+              onMouseDown={(e) => {
+                const slider = e.currentTarget;
+                const rect = slider.getBoundingClientRect();
+
+                const updateVolume = (clientY: number) => {
+                  const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+                  const newValue = 100 - Math.round((y / rect.height) * 100);
+                  handleSoundVolumeChange(newValue);
+                };
+
+                // Start dragging immediately
+                updateVolume(e.clientY);
+
+                const handleMouseMove = (moveEvent: MouseEvent) => {
+                  updateVolume(moveEvent.clientY);
+                };
+
+                const handleMouseUp = () => {
+                  document.removeEventListener("mousemove", handleMouseMove);
+                  document.removeEventListener("mouseup", handleMouseUp);
+                  // Save immediately when user stops dragging
+                  saveAudioSettings(true);
+                };
+
+                document.addEventListener("mousemove", handleMouseMove);
+                document.addEventListener("mouseup", handleMouseUp);
+              }}
+            >
+              <div
+                className="absolute bottom-0 w-full bg-gradient-to-t from-orange-500 to-orange-400 rounded-full transition-[height] duration-100 ease-linear"
+                style={{ height: `${soundVolume}%` }}
+              ></div>
+              <div
+                className="absolute left-1/2 w-4 h-4 bg-gradient-to-b from-yellow-400 to-orange-600 rounded-full transform -translate-x-1/2 transition-[bottom] duration-100 ease-linear"
+                style={{ bottom: `calc(${soundVolume}% - 8px)` }}
+              ></div>
+            </div>
           </div>
         </div>
       </div>

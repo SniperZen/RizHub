@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Welcome to RizHub</title>
+    <title>Maligayang Pagdating sa RizHub</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -14,31 +14,30 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Welcome to RizHub!</h1>
+            <h1>Maligayang Pagdating sa RizHub!</h1>
         </div>
         <div class="content">
-            <h2>Hello {{ $user->name }}!</h2>
+            <h2>Kumusta, {{ $user->name }}!</h2>
             <p>{{ $notification->message }}</p>
-            <p>We're excited to have you join our community and explore the world of Noli Me Tangere through our interactive challenges.</p>
+            <p>Nalulugod kaming makasama ka sa aming komunidad at tuklasin ang mundo ng <em>Noli Me Tangere</em> sa pamamagitan ng aming mga interaktibong hamon.</p>
             
-            <h3>What you can do:</h3>
+            <h3>Mga Magagawa Mo:</h3>
             <ul>
-                <li>Play the Noli Me Tangere Challenge game</li>
-                <li>Explore different kabanatas (chapters)</li>
-                <li>Solve quizzes and guessword puzzles</li>
-                <li>Unlock character images and collect stars</li>
-                <li>Customize your audio settings</li>
+                <li>Maglaro ng Noli Me Tangere Challenge game</li>
+                <li>Galugarin ang iba’t ibang kabanata</li>
+                <li>Mag-unlock ng mga larawan ng karakter at mangolekta ng mga bituin</li>
+                <li>Kumuha ng sertipiko sa iyong pagtatapos</li>
             </ul>
 
-            <p>Get started by clicking the button below:</p>
+            <p>Simulan na sa pag-click ng button sa ibaba:</p>
             
-            <a href="{{ route('dashboard') }}" class="button">Start Playing</a>
+            <a href="{{ route('dashboard') }}" class="button">Simulan ang Paglalaro</a>
             
             <p style="margin-top: 20px;">
-                If you have any questions, feel free to reply to this email.
+                Kung mayroon kang mga katanungan, huwag mag-atubiling mag-reply sa email na ito.
             </p>
             
-            <p>Happy gaming!<br>The RizHub Team</p>
+            <p>Masayang paglalaro!<br>The RizHub Team</p>
         </div>
     </div>
 </body>

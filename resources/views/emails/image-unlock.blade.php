@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>New Image Unlocked!</title>
+    <title>Na-unlock mo ang bagong larawan sa RizHub!</title>
     <style>
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -99,8 +99,8 @@
         
         <!-- Header -->
         <div class="header">
-            <h1>New Image Unlocked!</h1>
-            <p>Congratulations on your achievement!</p>
+            <h1>Na-unlock mo ang bagong larawan sa RizHub!</h1>
+            <p>Binabati kita sa  iyong tagumpay</p>
         </div>
         
         <!-- Content -->
@@ -116,23 +116,24 @@
                 </p>
             </div>
 
-            <p>This image has been added to your personal gallery collection. Keep completing challenges to unlock more!</p>
+            <p>Ang larawang ito ay naidagdag na sa iyong personal na koleksiyon. Patuloy lang sa pag-complete ng mga hamon para makapag-unlock pa ng iba!</p>
             
             <div style="text-align: center;">
                 <a href="{{ url('image.gallery') }}" class="button">View Your Gallery</a>
             </div>
             
-            <p>Continue your journey through <em>Noli Me Tangere</em> and discover more hidden treasures!</p>
-            
-            <p>Happy exploring!<br>
-            <strong>The RizHub Team</strong></p>
+           <p>Ipagpatuloy ang iyong paglalakbay sa <em>Noli Me Tangere</em> at tuklasin pa ang iba pang nakatagong yaman!</p>
+
+            <p>Masayang paglalakbay!<br>
+            <strong>Ang RizHub Team</strong></p>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>&copy; {{ date('Y') }} RizHub. All rights reserved.</p>
+                <p>Damhin ang Panitikang Pilipino sa isang bago at makabagong paraan</p>
+            </div>
         </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            <p>&copy; {{ date('Y') }} RizHub. All rights reserved.</p>
-            <p>Experience Philippine literature in a whole new way</p>
-        </div>
-    </div>
-</body>
+    </body>
 </html>
+

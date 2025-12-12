@@ -12,7 +12,7 @@ const PrivacyPolicyModal: React.FC<ModalProps> = ({ open, onClose }) => {
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-[#FAF7F0] rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-[#5A3416]">Privacy Policy</h2>
+          <h2 className="text-2xl font-bold text-[#5A3416]">Patakaran sa Pagkapribado</h2>
           <button
             onClick={onClose}
             className="text-[#5A3416] hover:text-[#E26F42] text-2xl font-bold"
@@ -22,97 +22,88 @@ const PrivacyPolicyModal: React.FC<ModalProps> = ({ open, onClose }) => {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-[#E26F42] mb-3">RizHub: Privacy Policy</h3>
-          <p className="text-sm text-gray-600 mb-4">Last Updated: July 4, 2025</p>
+          <h3 className="text-xl font-bold text-[#E26F42] mb-3">RizHub: Patakaran sa Pagkapribado</h3>
+          <p className="text-sm text-gray-600 mb-4">Huling In-update: Hulyo 4, 2025</p>
           
           <p className="mb-4 text-[#282725]">
-            At RizHub, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you access our platform, in accordance with applicable data privacy laws in the Philippines.
+            Sa RizHub, kami ay nakatuon sa pangangalaga ng iyong pribadong impormasyon. Ang Patakarang ito sa Pagkapribado ay nagpapaliwanag kung paano namin kinokolekta, ginagamit, at pinoprotektahan ang iyong personal na impormasyon kapag ginamit mo ang aming plataporma, alinsunod sa umiiral na mga batas sa pagkapribado ng datos sa Pilipinas.
           </p>
 
           <div className="space-y-4">
             <div>
-              <h4 className="font-bold text-[#5A3416]">1. Data Privacy Laws</h4>
+              <h4 className="font-bold text-[#5A3416]">1. Mga Batas sa Pagkapribado ng Datos</h4>
               <p className="text-[#282725]">
-                We adhere to the Data Privacy Act of 2012 (Republic Act No. 10173) to ensure your personal information is handled responsibly and securely.
+                Sumusunod kami sa Data Privacy Act of 2012 (Republic Act No. 10173) upang matiyak na ang iyong personal na impormasyon ay pinangangasiwaan nang responsable at ligtas.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">2. What We Collect</h4>
+              <h4 className="font-bold text-[#5A3416]">2. Anong Impormasyon ang Kinokolekta Namin</h4>
               <p className="text-[#282725]">
-                We may collect the following types of information:
+                Maaaring kolektahin namin ang sumusunod na uri ng impormasyon:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
-                <li>Username</li>
+                <li>Pangalan</li>
                 <li>Email address</li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">3. How We Use Your Information</h4>
+              <h4 className="font-bold text-[#5A3416]">3. Paano Ginagamit ang Iyong Impormasyon</h4>
               <p className="text-[#282725]">
-                We use your information to:
+                Ginagamit namin ang iyong impormasyon upang:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
-                <li>Provide account access and functionality</li>
-                <li>Communicate important updates or responses to inquiries</li>
+                <li>Magbigay ng akses sa account at mga functionality ng plataporma</li>
+                <li>Makipag-ugnayan sa mahahalagang update o sagutin ang mga katanungan</li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">4. Data Protection</h4>
+              <h4 className="font-bold text-[#5A3416]">4. Proteksyon ng Datos</h4>
               <p className="text-[#282725]">
-                We apply reasonable security measures, including encrypted storage and access controls, to protect your data from unauthorized access or misuse. However, no system is completely secure. Users are encouraged to use unique passwords and keep their accounts private.
+                Nagpapatupad kami ng makatuwirang hakbang sa seguridad, kabilang ang encrypted na storage at kontrol sa akses, upang protektahan ang iyong datos mula sa hindi awtorisadong pag-access o maling paggamit. Gayunpaman, walang sistema ang ganap na ligtas. Hinihikayat ang mga gumagamit na gumamit ng natatanging password at panatilihing pribado ang kanilang account.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">5. Sharing of Data</h4>
+              <h4 className="font-bold text-[#5A3416]">5. Pagbabahagi ng Datos</h4>
               <p className="text-[#282725]">
-                We do not sell or share personal information with third parties. Data may be shared internally within the RizHub development team for platform improvements only.
+                Hindi namin ibinebenta o ibinabahagi ang personal na impormasyon sa mga third party. Ang datos ay maaaring ibahagi sa loob ng RizHub development team para lamang sa pagpapabuti ng plataporma.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">6. Your Rights</h4>
+              <h4 className="font-bold text-[#5A3416]">6. Iyong mga Karapatan</h4>
               <p className="text-[#282725]">
-                As a user, you have the right to:
+                Bilang gumagamit, may karapatan kang:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
-                <li>Update your data</li>
-                <li>Correct inaccurate information</li>
-                <li>Delete your account and data</li>
+                <li>I-update ang iyong datos</li>
+                <li>Itama ang anumang maling impormasyon</li>
+                <li>Burahin ang iyong account at datos</li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">7. Retention Policy</h4>
+              <h4 className="font-bold text-[#5A3416]">7. Patakaran sa Pag-iimbak ng Datos</h4>
               <p className="text-[#282725]">
-                We retain user data only for as long as necessary to operate the platform or until the user requests deletion.
+                Iniimbak lamang namin ang datos ng gumagamit hangga’t kinakailangan para sa operasyon ng plataporma o hanggang sa hilingin ng gumagamit ang pagtanggal nito.
               </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-[#5A3416]">Contact Us</h4>
+              <h4 className="font-bold text-[#5A3416]">Makipag-ugnayan sa Amin</h4>
               <p className="text-[#282725]">
-                For questions about this policy or your data, please contact:
+                Para sa mga katanungan tungkol sa patakarang ito o sa iyong datos, makipag-ugnayan sa:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
                 <li>Email: rizhub.caps@gmail.com</li>
                 <li>Facebook Page: RizHub EdGame</li>
-                <li>Location: Looc, Occidental Mindoro, Philippines</li>
+                <li>Lokasyon: Looc, Occidental Mindoro, Pilipinas</li>
               </ul>
             </div>
           </div>
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-[#5A3416] text-white rounded hover:bg-[#3d2410] transition-colors"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>

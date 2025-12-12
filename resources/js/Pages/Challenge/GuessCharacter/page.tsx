@@ -1,153 +1,164 @@
-import React, { useEffect, useState } from "react";
-import { router } from "@inertiajs/react";
-import InstructionModal from "../../../Components/InstructionModal";
-import StudentLayout from "../../../Layouts/StudentLayout";
+        import React, { useEffect, useState } from "react";
+        import { router } from "@inertiajs/react";
+        import InstructionModal from "../../../Components/InstructionModal";
+        import StudentLayout from "../../../Layouts/StudentLayout";
 
-interface GuessCharacter {
-  id: number;
-  c_name: string;
-  filename: string;
-}
+        interface GuessCharacter {
+          id: number;
+          c_name: string;
+          filename: string;
+        }
 
-interface Props {
-  characters: GuessCharacter[];
-  kabanata_id: number;
-  kabanata_number: number;
-  kabanata_title: string;
-}
+        interface Props {
+          characters: GuessCharacter[];
+          kabanata_id: number;
+          kabanata_number: number;
+          kabanata_title: string;
+        }
 
-export default function Page({ 
-  characters, 
-  kabanata_id, 
-  kabanata_number, 
-  kabanata_title 
-}: Props) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSpinning, setIsSpinning] = useState(false); // Start as false
-  const [showModal, setShowModal] = useState(true); // Show modal initially
+        export default function Page({ 
+          characters, 
+          kabanata_id, 
+          kabanata_number, 
+          kabanata_title 
+        }: Props) {
+          const [currentIndex, setCurrentIndex] = useState(0);
+          const [isSpinning, setIsSpinning] = useState(false); // Start as false
+          const [showModal, setShowModal] = useState(true); // Show modal initially
 
-  const modalContent = `The system will randomly pick one character for you to protect in the upcoming challenge. They will be trapped inside a failing elevator — pass the challenge to save them before the doors close, but fail, and the elevator will drop with your character inside.
+          const modalContent = `Random na pipili ang system ng karakter na ililigtas mo. Siya ay nasa loob ng isang kulungan — tapusin ang hamon para mailigtas, pero kapag nabigo, hindi mo maililigtas ang karakter.`;
+          const startSpinning = () => {
+            setShowModal(false);
+            setIsSpinning(true);
+            
+            // Start the spinning animation after modal is closed
+            if (characters.length === 0) return;
 
-*Ang sistema ay pipili nang sapalaran ng isang karakter na lyong poprotektahan sa paparating na hamon. Siya ay makukulong sa isang bumabagsak na elevator — ipasa ang hamon upang mailigtas siya bago magsara ang pinto, ngunit kung mahigo ka, babagsak ang elevator kasama ang lyong karakter sa loob.*`;
+            let speed = 120;
+            let spins = 0;
+            let current = 0;
 
-  const startSpinning = () => {
-    setShowModal(false);
-    setIsSpinning(true);
-    
-    // Start the spinning animation after modal is closed
-    if (characters.length === 0) return;
+            const targetIndex = Math.floor(Math.random() * characters.length);
+            const totalSpinsBeforeStop = characters.length * 3 + targetIndex;
 
-    let speed = 120;
-    let spins = 0;
-    let current = 0;
+            const spin = () => {
+              current = (current + 1) % characters.length;
+              setCurrentIndex(current);
+              spins++;
 
-    const targetIndex = Math.floor(Math.random() * characters.length);
-    const totalSpinsBeforeStop = characters.length * 3 + targetIndex;
+              if (spins >= totalSpinsBeforeStop) {
+                setIsSpinning(false);
 
-    const spin = () => {
-      current = (current + 1) % characters.length;
-      setCurrentIndex(current);
-      spins++;
+                // ⏳ After 3 seconds, redirect
+                setTimeout(() => {
+                  const finalCharacterId = characters[current].id;
+                  router.visit(`/challenge/guessword/${finalCharacterId}/${kabanata_id}`);
+                }, 3000);
 
-      if (spins >= totalSpinsBeforeStop) {
-        setIsSpinning(false);
+                return;
+              }
 
-        // ⏳ After 3 seconds, redirect
-        setTimeout(() => {
-          const finalCharacterId = characters[current].id;
-          router.visit(`/challenge/guessword/${finalCharacterId}/${kabanata_id}`);
-        }, 3000);
+              if (spins > characters.length * 2) speed += 30;
 
-        return;
-      }
+              setTimeout(spin, speed);
+            };
 
-      if (spins > characters.length * 2) speed += 30;
+            spin();
+          };
 
-      setTimeout(spin, speed);
-    };
+          const visibleCount = 5;
+          const half = Math.floor(visibleCount / 2);
 
-    spin();
-  };
+          const getVisibleCharacters = () => {
+            const result: GuessCharacter[] = [];
+            const total = characters.length;
+            for (let i = -half; i <= half; i++) {
+              const idx = (currentIndex + i + total) % total;
+              result.push(characters[idx]);
+            }
+            return result;
+          };
 
-  const visibleCount = 5;
-  const half = Math.floor(visibleCount / 2);
-
-  const getVisibleCharacters = () => {
-    const result: GuessCharacter[] = [];
-    const total = characters.length;
-    for (let i = -half; i <= half; i++) {
-      const idx = (currentIndex + i + total) % total;
-      result.push(characters[idx]);
-    }
-    return result;
-  };
-
-  return (
-    <StudentLayout>
-      <div
-        className="relative w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG.png')" }}
-      >
-        {/* Instruction Modal */}
-        <InstructionModal
-          isOpen={showModal}
-          onClose={startSpinning}
-          title={`KABANATA ${kabanata_number}: ${kabanata_title}`}
-          content={modalContent}
-          buttonText="Start Choosing Character"
-        />
+          return (
+            <StudentLayout>
+              <div
+                className="relative w-full h-screen bg-cover bg-center"
+                style={{ backgroundImage: "url('/Img/Challenge/GuessChar/BG1.png')" }}
+              >
+                {/* Instruction Modal */}
+                <InstructionModal
+                  isOpen={showModal}
+                  onClose={startSpinning}
+                  title={`Kabanata ${kabanata_number}: ${kabanata_title}`}
+                  content={modalContent}
+                  buttonText="Start Choosing Character"
+                />
 
         {/* Title */}
         <div className="absolute top-4 left-4 flex items-center">
-          <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
-            KABANATA {kabanata_number}:
+          <div className="bg-orange-600 text-white font-bold font-mono px-4 py-2 text-2xl">
+            Kabanata {kabanata_number}:
           </div>
-          <div className="text-white font-bold px-2 py-2 text-2xl">
+          <div className="text-white font-bold font-mono px-2 py-2 text-2xl">
             {kabanata_title}
           </div>
         </div>
 
-        {/* Icons */}
-        <div className="absolute top-4 right-4 flex gap-4">
-          <img src="/Img/UI/music_icon.png" alt="music" className="w-12 h-12" />
-          <img src="/Img/UI/sound_icon.png" alt="sound" className="w-12 h-12" />
-          <img src="/Img/UI/settings_icon.png" alt="settings" className="w-12 h-12" />
-        </div>
 
-        {/* Main Content - Only show when not in modal and characters exist */}
-        {!showModal && characters.length > 0 && (
-          <div className="flex flex-col items-center justify-center h-full gap-8">
-            <div className="relative flex flex-col items-center">
-              {/* Character Display */}
-              <div className="flex items-center justify-center w-[1100px] h-[300px]">
-                {isSpinning ? (
-                  <>
-                    <img
-                      src="/Img/Challenge/GuessChar/ModalBG2.png"
-                      alt="modal background"
-                      className="absolute w-[1000px] h-auto"
-                    />
-                    <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
-                      {[...getVisibleCharacters()]
-                        .sort(() => Math.random() - 0.5)
-                        .map((char, index) => (
-                          <div
-                            key={char.id}
-                            className="text-center flex-shrink-0 flex flex-col items-center"
-                            style={{ width: "140px", margin: "0 16px" }}
-                          >
-                            <img
-                              src={`/Img/LandingPage/character/${char.filename}.png`}
-                              alt={char.c_name}
-                              className={`w-28 h-36 object-contain ${
-                                index === half ? "scale-125" : "opacity-70"
-                              } transition-all duration-300`}
-                            />
-                            <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
-                          </div>
-                        ))}
+{!showModal && characters.length > 0 && (
+  <div className="flex flex-col items-center justify-center h-full gap-8 overflow-hidden">
+    <div className="relative flex flex-col items-center">
+      {/* Character Display */}
+      <div className="flex items-center justify-center w-[1100px] h-[300px]">
+        {isSpinning ? (
+          <>
+            <img
+              src="/Img/Challenge/GuessChar/ModalBG.png"
+              alt="modal background"
+              className="absolute w-[550px] h-auto block lg:hidden"
+            />
+
+            <img
+              src="/Img/Challenge/GuessChar/ModalBG2.png"
+              alt="modal background"
+              className="absolute md:w-[800px] lg:w-[1000px] h-auto hidden lg:block"
+            />
+            
+            {/* Title header positioned at the top of the background */}
+            <div className="absolute bottom-[296px] left-0 right-6 py-4 z-10">
+              <h1 className="text-white text-3xl font-bold text-center">
+                Mangyaring iligtas...
+              </h1>
+            </div>
+            
+            <div className="flex transition-transform duration-200 ease-out relative mt-[100px]">
+              {[...getVisibleCharacters()]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, window.innerWidth < 1024 ? 3 : 5) // 3 for mobile/tablet, 5 for desktop
+                .map((char, index, array) => {
+                  const half = Math.floor(array.length / 2);
+                  return (
+                    <div
+                      key={char.id}
+                      className="text-center flex-shrink-0 flex flex-col items-center"
+                      style={{ 
+                        width: window.innerWidth < 1024 ? "120px" : "140px", 
+                        margin: window.innerWidth < 1024 ? "0 8px" : "0 16px" 
+                      }}
+                    >
+                      <img
+                        src={`/Img/LandingPage/character/${char.filename}.png`}
+                        alt={char.c_name}
+                        className={`${window.innerWidth < 1024 ? "w-20 h-28" : "w-28 h-36"} object-contain ${
+                          index === half ? "scale-125" : "opacity-70"
+                        } transition-all duration-300`}
+                      />
+                      <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
                     </div>
-                  </>
+                  );
+                })}
+            </div>
+           </>
                 ) : (
                   <div className="flex flex-col items-center justify-center">
                     <img
@@ -155,6 +166,12 @@ export default function Page({
                       alt="modal"
                       className="w-[550px]"
                     />
+                      {/* Title header positioned at the top of the background */}
+                      <div className="absolute bottom-[266px] left-0 right-6 py-4 z-10">
+                        <h1 className="text-white text-3xl font-bold text-center">
+                          Ang isang ito!
+                        </h1>
+                      </div>
                     <div className="flex flex-col items-center justify-center -mt-[300px]">
                       <img
                         src={`/Img/LandingPage/character/${characters[currentIndex].filename}.png`}

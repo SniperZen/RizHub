@@ -9,68 +9,10 @@ return new class extends Migration
 {
     public function up()
     {
-        // Remove user_id from video_progress
-        if (Schema::hasTable('video_progress') && Schema::hasColumn('video_progress', 'user_id')) {
-            Schema::table('video_progress', function (Blueprint $table) {
-                // Drop foreign key first
-                $foreignKeys = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-                    WHERE TABLE_NAME = 'video_progress' 
-                    AND COLUMN_NAME = 'user_id' 
-                    AND CONSTRAINT_NAME LIKE '%_foreign'
-                ");
-
-                if (!empty($foreignKeys)) {
-                    $table->dropForeign(['user_id']);
-                }
-                
-                // Then drop the column
-                $table->dropColumn('user_id');
-            });
-        }
-
-        // Remove user_id from guessword_progress
-        if (Schema::hasTable('guessword_progress') && Schema::hasColumn('guessword_progress', 'user_id')) {
-            Schema::table('guessword_progress', function (Blueprint $table) {
-                // Drop foreign key first
-                $foreignKeys = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-                    WHERE TABLE_NAME = 'guessword_progress' 
-                    AND COLUMN_NAME = 'user_id' 
-                    AND CONSTRAINT_NAME LIKE '%_foreign'
-                ");
-
-                if (!empty($foreignKeys)) {
-                    $table->dropForeign(['user_id']);
-                }
-                
-                // Then drop the column
-                $table->dropColumn('user_id');
-            });
-        }
-
-        // Remove user_id from quiz_progress
-        if (Schema::hasTable('quiz_progress') && Schema::hasColumn('quiz_progress', 'user_id')) {
-            Schema::table('quiz_progress', function (Blueprint $table) {
-                // Drop foreign key first
-                $foreignKeys = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-                    WHERE TABLE_NAME = 'quiz_progress' 
-                    AND COLUMN_NAME = 'user_id' 
-                    AND CONSTRAINT_NAME LIKE '%_foreign'
-                ");
-
-                if (!empty($foreignKeys)) {
-                    $table->dropForeign(['user_id']);
-                }
-                
-                // Then drop the column
-                $table->dropColumn('user_id');
-            });
-        }
+        // Use raw SQL to safely drop columns
+        $this->safeDropColumnWithRawSQL('video_progress', 'user_id');
+        $this->safeDropColumnWithRawSQL('guessword_progress', 'user_id');
+        $this->safeDropColumnWithRawSQL('quiz_progress', 'user_id');
 
         // Ensure kabanata_progress_id has proper foreign key constraint
         $this->ensureKabanataProgressForeignKeys();
@@ -103,56 +45,85 @@ return new class extends Migration
         }
     }
 
+    private function safeDropColumnWithRawSQL(string $tableName, string $columnName)
+    {
+        if (!Schema::hasTable($tableName) || !Schema::hasColumn($tableName, $columnName)) {
+            return;
+        }
+
+        try {
+            // First, drop any foreign key constraints using raw SQL
+            $constraints = DB::select("
+                SELECT CONSTRAINT_NAME 
+                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                WHERE TABLE_SCHEMA = ? 
+                AND TABLE_NAME = ? 
+                AND COLUMN_NAME = ? 
+                AND REFERENCED_TABLE_NAME IS NOT NULL
+            ", [DB::getDatabaseName(), $tableName, $columnName]);
+
+            foreach ($constraints as $constraint) {
+                DB::statement("ALTER TABLE {$tableName} DROP FOREIGN KEY {$constraint->CONSTRAINT_NAME}");
+            }
+
+            // Drop any indexes on the column
+            $indexes = DB::select("
+                SELECT INDEX_NAME 
+                FROM INFORMATION_SCHEMA.STATISTICS 
+                WHERE TABLE_SCHEMA = ? 
+                AND TABLE_NAME = ? 
+                AND COLUMN_NAME = ?
+            ", [DB::getDatabaseName(), $tableName, $columnName]);
+
+            foreach ($indexes as $index) {
+                if ($index->INDEX_NAME !== 'PRIMARY') {
+                    DB::statement("ALTER TABLE {$tableName} DROP INDEX {$index->INDEX_NAME}");
+                }
+            }
+
+            // Finally, drop the column
+            DB::statement("ALTER TABLE {$tableName} DROP COLUMN {$columnName}");
+
+        } catch (\Exception $e) {
+            // If we can't drop the column, output the error but don't stop the migration
+            echo "Could not drop column {$columnName} from {$tableName}: " . $e->getMessage() . "\n";
+        }
+    }
+
     private function ensureKabanataProgressForeignKeys()
     {
-        // Ensure video_progress has kabanata_progress_id foreign key
-        if (Schema::hasTable('video_progress') && Schema::hasColumn('video_progress', 'kabanata_progress_id')) {
-            Schema::table('video_progress', function (Blueprint $table) {
-                $foreignKeys = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-                    WHERE TABLE_NAME = 'video_progress' 
-                    AND COLUMN_NAME = 'kabanata_progress_id' 
-                    AND CONSTRAINT_NAME LIKE '%_foreign'
-                ");
-
-                if (empty($foreignKeys)) {
-                    $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
-                }
-            });
+        $tables = ['video_progress', 'guessword_progress', 'quiz_progress'];
+        
+        foreach ($tables as $tableName) {
+            if (Schema::hasTable($tableName) && Schema::hasColumn($tableName, 'kabanata_progress_id')) {
+                $this->addForeignKeyIfNotExists(
+                    $tableName,
+                    'kabanata_progress_id',
+                    'user_kabanata_progress',
+                    'id',
+                    'cascade'
+                );
+            }
         }
+    }
 
-        // Ensure guessword_progress has kabanata_progress_id foreign key
-        if (Schema::hasTable('guessword_progress') && Schema::hasColumn('guessword_progress', 'kabanata_progress_id')) {
-            Schema::table('guessword_progress', function (Blueprint $table) {
-                $foreignKeys = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-                    WHERE TABLE_NAME = 'guessword_progress' 
-                    AND COLUMN_NAME = 'kabanata_progress_id' 
-                    AND CONSTRAINT_NAME LIKE '%_foreign'
-                ");
+    private function addForeignKeyIfNotExists(string $tableName, string $columnName, string $referencedTable, string $referencedColumn, string $onDelete = 'cascade')
+    {
+        $constraint = DB::select("
+            SELECT CONSTRAINT_NAME 
+            FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+            WHERE TABLE_SCHEMA = ? 
+            AND TABLE_NAME = ? 
+            AND COLUMN_NAME = ? 
+            AND REFERENCED_TABLE_NAME = ?
+        ", [DB::getDatabaseName(), $tableName, $columnName, $referencedTable]);
 
-                if (empty($foreignKeys)) {
-                    $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
-                }
-            });
-        }
-
-        // Ensure quiz_progress has kabanata_progress_id foreign key
-        if (Schema::hasTable('quiz_progress') && Schema::hasColumn('quiz_progress', 'kabanata_progress_id')) {
-            Schema::table('quiz_progress', function (Blueprint $table) {
-                $foreignKeys = DB::select("
-                    SELECT CONSTRAINT_NAME 
-                    FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-                    WHERE TABLE_NAME = 'quiz_progress' 
-                    AND COLUMN_NAME = 'kabanata_progress_id' 
-                    AND CONSTRAINT_NAME LIKE '%_foreign'
-                ");
-
-                if (empty($foreignKeys)) {
-                    $table->foreign('kabanata_progress_id')->references('id')->on('user_kabanata_progress')->onDelete('cascade');
-                }
+        if (empty($constraint)) {
+            Schema::table($tableName, function (Blueprint $table) use ($columnName, $referencedTable, $referencedColumn, $onDelete) {
+                $table->foreign($columnName)
+                      ->references($referencedColumn)
+                      ->on($referencedTable)
+                      ->onDelete($onDelete);
             });
         }
     }

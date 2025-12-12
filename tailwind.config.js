@@ -38,5 +38,5 @@ export default {
       addUtilities(Object.fromEntries(utilities));
     },
   ],
-
+    
 };

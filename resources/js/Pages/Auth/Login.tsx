@@ -1,170 +1,200 @@
 import { useState, useEffect, FormEventHandler } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function AuthPage() {
-    const [isLogin, setIsLogin] = useState(true);
+export default function Login() {
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     // Login form state
-    const { data: loginData, setData: setLoginData, post: loginPost, processing: loginProcessing, errors: loginErrors, reset: loginReset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
-    });
-
-    // Register form state
-    const { data: regData, setData: setRegData, post: regPost, processing: regProcessing, errors: regErrors, reset: regReset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
     });
 
     useEffect(() => {
         return () => {
-            loginReset('password');
-            regReset('password', 'password_confirmation');
+            reset('password');
         };
     }, []);
 
-    const handleLogin: FormEventHandler = (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        loginPost(route('login'));
-    };
-
-    const handleRegister: FormEventHandler = (e) => {
-        e.preventDefault();
-        regPost(route('register'));
+        post(route('login'), {
+            onSuccess: () => {
+                // Success message would typically be handled by the backend
+            },
+            onError: (errors) => {
+                if (errors.email || errors.password) {
+                    setToastMessage("Invalid credentials. Please try again.");
+                    setShowToast(true);
+                    const timer = setTimeout(() => {
+                        setShowToast(false);
+                    }, 5000);
+                    return () => clearTimeout(timer);
+                }
+            }
+        });
     };
 
     return (
-        <GuestLayout>
-            <Head title={isLogin ? "Login" : "Register"} />
+        <div
+            className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+            style={{ backgroundImage: "url('/Img/VerificationPage/color-bg.png')" }}
+        >
+            <Head title="Login" />
 
-            <div className="flex justify-center mb-6">
-                <button
-                    className={`px-4 py-2 rounded-l ${isLogin ? 'bg-orange-500 text-white' : 'bg-orange-200'}`}
-                    onClick={() => setIsLogin(true)}
-                    type="button"
-                >
-                    Login
-                </button>
-                <button
-                    className={`px-4 py-2 rounded-r ${!isLogin ? 'bg-orange-500 text-white' : 'bg-orange-200'}`}
-                    onClick={() => setIsLogin(false)}
-                    type="button"
-                >
-                    Register
-                </button>
+            {/* Toast Notification */}
+            {showToast && (
+                <div className="fixed top-4 right-4 z-50 animate-fadeIn">
+                    <div className="p-4 rounded-lg bg-orange-50 text-orange-700 border border-orange-200 shadow-lg max-w-sm">
+                        <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm font-medium">
+                                    {toastMessage}
+                                </p>
+                            </div>
+                            <div className="ml-4 flex-shrink-0 flex">
+                                <button
+                                    className="inline-flex text-orange-500 hover:text-orange-700 focus:outline-none"
+                                    onClick={() => setShowToast(false)}
+                                >
+                                    <span className="sr-only">Close</span>
+                                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Form box with left + right sections */}
+            <div className="relative z-10 flex max-w-3xl w-full bg-[#FA7816] rounded-2xl shadow-xl overflow-hidden">
+
+                {/* Left Side Image + Text */}
+                <div className="hidden md:flex w-1/2 items-center justify-center relative bg-orange-100">
+                    <img
+                        src="/Img/LandingPage/character/noli-form.gif"
+                        alt="Login Illustration"
+                        className="w-full h-full object-cover"
+                    />
+
+                    {/* Centered Text Overlay */}
+                    <div className="absolute inset-0 flex py-40 p-6 text-center">
+                        {/* Smooth glowing background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/30 via-orange-500/20 to-orange-700/30 
+                                        blur-3xl animate-pulse opacity-70 -z-10"></div>
+
+                        <h2 className="text-[#FA7816] text-lg md:text-2xl font-extrabold drop-shadow-md leading-snug max-w-xs mt-10">
+                            Maligayang Pagbabalik! Maghanda sa paglalakbay.
+                        </h2>
+                    </div>
+                </div>
+
+                {/* Right Side Form */}
+                <div className="flex-1 flex items-center justify-center p-8">
+                    <div className="w-full max-w-md">
+                        <div className="text-center mb-8">
+                            {/* Custom Login Icon */}
+                            <div className="mx-auto flex items-center justify-center mb-4">
+                                <img
+                                    src="/Img/LandingPage/Login/quill.png"
+                                    alt="Login Icon"
+                                    className="h-15 w-14 object-contain"
+                                />
+                            </div>
+
+                            <h2 className="text-3xl font-extrabold text-white mb-2">
+                                Welcome Back
+                            </h2>
+                            <p className="text-white">
+                                I-enter ang iyong account sa ibaba.
+                            </p>
+                        </div>
+
+                        <form onSubmit={submit} className="space-y-6">
+                            <div>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    value={data.email}
+                                    className="mt-1 block w-full px-4 py-3 rounded-md border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                                    placeholder="Email address"
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    required
+                                    autoFocus
+                                />
+                                {errors.email && (
+                                    <div className="text-red-100 mt-2 text-sm">{errors.email}</div>
+                                )}
+                            </div>
+
+                            <div>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    value={data.password}
+                                    className="mt-1 block w-full px-4 py-3 rounded-md border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                                    placeholder="Password"
+                                    onChange={(e) => setData('password', e.target.value)}
+                                    required
+                                />
+                                {errors.password && (
+                                    <div className="text-red-100 mt-2 text-sm">{errors.password}</div>
+                                )}
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <Link
+                                    href={route('password.request')}
+                                    className="text-sm text-white hover:text-gray-200 transition-colors duration-200"
+                                >
+                                    Forgot password?
+                                </Link>
+                                
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-75 transition-colors duration-200"
+                                >
+                                    {processing ? "Signing in..." : "Mag-Login"}
+                                </button>
+                            </div>
+                        </form>
+
+                        <div className="text-center mt-6">
+                            <Link
+                                href={route("welcome")}
+                                className="text-sm text-gray-200 hover:text-gray-100 transition-colors duration-200"
+                            >
+                                Bumalik
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {isLogin ? (
-                <form onSubmit={handleLogin}>
-                    <div>
-                        <InputLabel htmlFor="login_email" value="Email" />
-                        <TextInput
-                            id="login_email"
-                            type="email"
-                            name="email"
-                            value={loginData.email}
-                            className="mt-1 block w-full"
-                            autoComplete="username"
-                            onChange={e => setLoginData('email', e.target.value)}
-                            required
-                        />
-                        <InputError message={loginErrors.email} className="mt-2" />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel htmlFor="login_password" value="Password" />
-                        <TextInput
-                            id="login_password"
-                            type="password"
-                            name="password"
-                            value={loginData.password}
-                            className="mt-1 block w-full"
-                            autoComplete="current-password"
-                            onChange={e => setLoginData('password', e.target.value)}
-                            required
-                        />
-                        <InputError message={loginErrors.password} className="mt-2" />
-                    </div>
-                    <div className="flex items-center justify-between mt-4">
-                        <Link href={route('password.request')} className="text-sm text-gray-600 hover:text-gray-900">
-                            Forgot password?
-                        </Link>
-                        <PrimaryButton className="ms-4" disabled={loginProcessing}>
-                            Login
-                        </PrimaryButton>
-                    </div>
-                </form>
-            ) : (
-                <form onSubmit={handleRegister}>
-                    <div>
-                        <InputLabel htmlFor="reg_name" value="Name" />
-                        <TextInput
-                            id="reg_name"
-                            name="name"
-                            value={regData.name}
-                            className="mt-1 block w-full"
-                            autoComplete="name"
-                            isFocused={true}
-                            onChange={e => setRegData('name', e.target.value)}
-                            required
-                        />
-                        <InputError message={regErrors.name} className="mt-2" />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel htmlFor="reg_email" value="Email" />
-                        <TextInput
-                            id="reg_email"
-                            type="email"
-                            name="email"
-                            value={regData.email}
-                            className="mt-1 block w-full"
-                            autoComplete="username"
-                            onChange={e => setRegData('email', e.target.value)}
-                            required
-                        />
-                        <InputError message={regErrors.email} className="mt-2" />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel htmlFor="reg_password" value="Password" />
-                        <TextInput
-                            id="reg_password"
-                            type="password"
-                            name="password"
-                            value={regData.password}
-                            className="mt-1 block w-full"
-                            autoComplete="new-password"
-                            onChange={e => setRegData('password', e.target.value)}
-                            required
-                        />
-                        <InputError message={regErrors.password} className="mt-2" />
-                    </div>
-                    <div className="mt-4">
-                        <InputLabel htmlFor="reg_password_confirmation" value="Confirm Password" />
-                        <TextInput
-                            id="reg_password_confirmation"
-                            type="password"
-                            name="password_confirmation"
-                            value={regData.password_confirmation}
-                            className="mt-1 block w-full"
-                            autoComplete="new-password"
-                            onChange={e => setRegData('password_confirmation', e.target.value)}
-                            required
-                        />
-                        <InputError message={regErrors.password_confirmation} className="mt-2" />
-                    </div>
-                    <div className="flex items-center justify-end mt-4">
-                        <PrimaryButton className="ms-4" disabled={regProcessing}>
-                            Register
-                        </PrimaryButton>
-                    </div>
-                </form>
-            )}
-        </GuestLayout>
+            {/* Add CSS animation for the toast */}
+            <style>
+                {`
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(-10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .animate-fadeIn {
+                        animation: fadeIn 0.3s ease-out forwards;
+                    }
+                `}
+            </style>
+        </div>
     );
 }

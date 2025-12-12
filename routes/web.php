@@ -1,6 +1,4 @@
 <?php
-
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -25,7 +23,8 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('welcome'); // Add this line
+
 Route::get('/sample', [StudentController::class, 'sample'])->name('sample');
 Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(function () {
     
@@ -69,8 +68,14 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::post('/user/update-settings', [StudentController::class, 'updateSettings'])->name('student.updateSettings');
     Route::post('/api/user/save-settings', [StudentController::class, 'saveSettings']);
     Route::get('/api/user/settings', [StudentController::class, 'getSettings']);
+    
 
 });
+
+Route::get('/book/{kabanata?}', [StudentController::class, 'book'])->name('book.read');
+
+        Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
+        Route::get('/help', [StudentController::class, 'help'])->name('help');
 
 // Route::get('/login', [LoginController::class, 'login'])->name('login');
 

@@ -18,53 +18,130 @@ const InstructionModal: React.FC<ModalProps> = ({
   bgImage,
 }) => {
   const [displayedText, setDisplayedText] = useState("");
-  const [index, setIndex] = useState(0);
   const [isTextComplete, setIsTextComplete] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const safeContentRef = useRef<string>("");
+  const posRef = useRef<number>(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastWordPlayedRef = useRef<number>(0);
+
+  // Initialize audio
+  useEffect(() => {
+    audioRef.current = new Audio("/Music/typingsound.mp3");
+    audioRef.current.volume = 0.2; // Lower volume for smoother experience
+    audioRef.current.playbackRate = 0.9; // Slightly slower for better feel
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  // Split title for formatting
+  const getTitleParts = () => {
+    if (!title) return { part1: "Kabanata", part2: "" };
+    const parts = title.split(":");
+    return { part1: parts[0], part2: parts.slice(1).join(":") };
+  };
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
 
+    if (!isOpen) {
+      safeContentRef.current = "";
+      posRef.current = 0;
+      setDisplayedText("");
+      setIsTextComplete(false);
+      lastWordPlayedRef.current = 0;
+      return;
+    }
+
+    safeContentRef.current = (content ?? "") as string;
     setDisplayedText("");
-    setIndex(0);
+    posRef.current = 0;
     setIsTextComplete(false);
+    lastWordPlayedRef.current = 0;
 
-    const text = content;
-    let i = 0;
-    
-    intervalRef.current = setInterval(() => {
-      setDisplayedText((prev) => prev + text[i]);
-      i++;
-      setIndex(i);
-      
-      if (i >= text.length) {
+    if (!safeContentRef.current.trim()) {
+      setDisplayedText(safeContentRef.current);
+      setIsTextComplete(true);
+      return;
+    }
+
+    const typeNext = () => {
+      const text = safeContentRef.current;
+      const pos = posRef.current;
+      if (pos < text.length) {
+        const currentChar = text.charAt(pos);
+        setDisplayedText((prev) => prev + currentChar);
+        posRef.current = pos + 1;
+        
+        // Play sound at the start of each word (after spaces or at beginning)
+        if (audioRef.current && (pos === 0 || text.charAt(pos - 1) === ' ')) {
+          // Only play sound for actual words (not after very short gaps)
+          const currentWord = text.substring(pos).split(' ')[0];
+          if (currentWord.length > 1) { // Only play for words longer than 2 characters
+            // Add some randomness to make it feel more natural
+            if (Math.random() > 0.3) { // 70% chance to play sound per word
+              audioRef.current.currentTime = 0;
+              // Slightly randomize volume and playback rate for natural feel
+              audioRef.current.volume = 0.15 + (Math.random() * 0.1);
+              audioRef.current.playbackRate = 0.85 + (Math.random() * 0.3);
+              audioRef.current.play().catch((e) => {
+                console.log("Audio play error:", e);
+              });
+            }
+          }
+        }
+        
+        timerRef.current = window.setTimeout(typeNext, 25);
+      } else {
         setIsTextComplete(true);
-        if (intervalRef.current) clearInterval(intervalRef.current);
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
       }
-    }, 30);
+    };
+
+    timerRef.current = window.setTimeout(typeNext, 200);
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [isOpen, content]);
 
   const handleButtonClick = () => {
     if (!isTextComplete) {
-      // Complete the text immediately
-      setDisplayedText(content);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      setDisplayedText(safeContentRef.current);
+      posRef.current = (safeContentRef.current ?? "").length;
       setIsTextComplete(true);
-      if (intervalRef.current) clearInterval(intervalRef.current);
     } else {
-      // Close the modal
       onClose();
     }
   };
+
+  const handleBackgroundClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) return;
+  };
+
+  const titleParts = getTitleParts();
 
   if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50"
+      onClick={handleBackgroundClick}
       style={
         bgImage
           ? {
@@ -78,49 +155,65 @@ const InstructionModal: React.FC<ModalProps> = ({
       <img
         src="/Img/Challenge/GuessChar/commander.png"
         alt="Commander"
-        className="absolute bottom-0 right-8 w-[280px] md:w-[320px] z-10"
+        className="absolute bottom-0 right-8 w-[380px] md:w-[440px] z-10 hidden xl:block"
       />
 
+      {/* Title Section */}
       <div className="absolute top-4 left-4 flex items-center">
-        <div className="bg-orange-600 text-white font-bold px-4 py-2 text-2xl">
-          {title.split(":")[0]}:
+        <div className="bg-orange-600 font-mono text-white font-bold px-4 py-2 text-2xl">
+          {titleParts.part1}:
         </div>
-        <div className="text-white font-bold px-2 py-2 text-2xl">
-          {title.split(":")[1]}
-        </div>
-      </div>
-
-      <div className="w-full bg-[rgba(52,27,7,0.7)] backdrop-blur-sm absolute bottom-0 p-[50px] z-9">
-        <div className="max-w-5xl text-white whitespace-pre-line text-md leading-[30px]">
-          {displayedText}
+        <div className="text-white font-mono font-bold px-2 py-2 text-2xl">
+          {titleParts.part2}
         </div>
       </div>
 
-      <button
+      {/* Smooth Typing Text */}
+      <div
         onClick={handleButtonClick}
-        className="absolute bottom-12 right-[400px] bg-transparent hover:scale-110 transition-transform"
+        className="w-full bg-[rgba(52,27,7,0.7)] backdrop-blur-sm absolute bottom-0 p-8 z-9 cursor-pointer hover:bg-[rgba(52,27,7,0.8)] transition-colors"
+        style={{ minHeight: "150px" }}
       >
-        <svg
-          width="44"
-          height="33"
-          viewBox="0 0 44 33"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+        <div
+          className="max-w-5xl text-white whitespace-pre-line text-md leading-relaxed break-words"
+          style={{
+            transition: "opacity 0.3s ease-in-out",
+          }}
         >
-          <path
-            d="M35.0519 15.9999L8.84689 29.9413L8.75708 2.22865L35.0519 15.9999Z"
-            fill="white"
-          />
-          <line
-            x1="41.5"
-            y1="0"
-            x2="41.5"
-            y2="33"
-            stroke="white"
-            strokeWidth="5"
-          />
-        </svg>
-      </button>
+          {displayedText.split("").map((char, i) => (
+            <span
+              key={i}
+              style={{
+                opacity: 0,
+                animation: `fadeIn 0.10s forwards`,
+                animationDelay: `${i * 0.0}s`,
+              }}
+            >
+              {char}
+            </span>
+          ))}
+        </div>
+
+        {/* Only shows after animation completes */}
+        {isTextComplete && (
+          <div
+            className="text-center mt-4 text-orange-300 font-semibold animate-pulse"
+            style={{
+              opacity: isTextComplete ? 1 : 0,
+              transition: "opacity 0.5s ease-in",
+            }}
+          >
+            Pindutin para magpatuloy...
+          </div>
+        )}
+      </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(3px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
