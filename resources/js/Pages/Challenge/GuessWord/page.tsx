@@ -594,7 +594,7 @@ const checkAnswer = async (source = "manual") => {
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="fixed top-[220px] sm:top-[220px] md:top-[220px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[545px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
+                    <div className="fixed top-[220px] sm:top-[220px] md:top-[220px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[430px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
                         <div className="relative w-12 h-12 lg:w-20 lg:h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-2 lg:border-4 border-black overflow-hidden shadow-lg">
                                 <div
