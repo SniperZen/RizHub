@@ -148,10 +148,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // Filter kabanatas -based on development needs
-    const filteredKabanatas = {
-        ...kabanatas,
-        data: kabanatas.data.filter(k => k.id <= 64)
-    };
+    // const filteredKabanatas = {
+    //     ...kabanatas,
+    //     data: kabanatas.data.filter(k => k.id <= 64)
+    // };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -187,17 +187,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    // const filteredKabanatas = {
-    // ...kabanatas,
-    // data: kabanatas.data
-    //     .filter(k => k.id <= 64)
-    //     .map(k => ({
-    //     ...k,
-    //     progress: 10,
-    //     stars: 3,
-    //     unlocked: true
-    //     }))
-    // };
+    const filteredKabanatas = {
+    ...kabanatas,
+    data: kabanatas.data
+        .filter(k => k.id <= 64)
+        .map(k => ({
+        ...k,
+        progress: 10,
+        stars: 3,
+        unlocked: true
+        }))
+    };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -224,15 +224,37 @@ const KabanataPage: React.FC<PageProps> = ({
         { top: "55%", left: "85%" },
     ];
 
-    const buildingOffsets = [
-        "-70px",  
-        "-150px",
-        "-100px",
-        "-160px",
-        "-100px",
-        "-160px",
-        "-100px",
-    ];
+    // Responsive building offsets based on screen size
+    const getBuildingOffsets = () => {
+        // For mobile and tablet views (itemsPerPage = 3 or 5)
+        if (itemsPerPage < 7) {
+            // Mobile and tablet offsets as requested
+            return [
+                "-70px",  
+                "-120px",
+                "-70px",
+                "-120px",
+                "-70px",
+                "-120px",
+                "-70px",
+            ];
+        } 
+        // For desktop view (itemsPerPage = 7)
+        else {
+            // Desktop offsets as requested
+            return [
+                "-70px",  
+                "-150px",
+                "-100px",
+                "-160px",
+                "-100px",
+                "-160px",
+                "-100px",
+            ];
+        }
+    };
+
+    const buildingOffsets = getBuildingOffsets();
 
     const getPositions = () => {
         if (itemsPerPage === 7) return desktopPositions;
@@ -492,7 +514,7 @@ const KabanataPage: React.FC<PageProps> = ({
                 newItemsPerPage = 3;
                 newScreenSize = "mobile";
             } else if (window.innerWidth < 1024) {
-                newItemsPerPage = 5;
+                newItemsPerPage = 4;
                 newScreenSize = "tablet";
             } else {
                 newItemsPerPage = 7;
@@ -581,7 +603,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage <= 1}
                             onClick={handlePreviousPage}
-                            className={`absolute -left-[-180px] top-[12%] z-[60] w-auto h-auto mt-10 ${
+                            className={`absolute right-[390px] md:-left-[-180px] lg:right-[685px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage <= 1
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -590,7 +612,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             <img
                                 src="/Img/Challenge/ALeft.png"
                                 alt="Previous"
-                                className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                className="h-12 w-12 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
                             />
                         </button>
 
@@ -608,7 +630,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage >= totalPages}
                             onClick={handleNextPage}
-                            className={`absolute -right-[-185px] top-[12%] z-[60] w-auto h-auto mt-10 ${
+                            className={`absolute left-[380px] md:left-[620px] lg:left-[715px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage >= totalPages
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -617,7 +639,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             <img
                                 src="/Img/Challenge/ARight.png"
                                 alt="Next"
-                                className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+                                className="h-12 w-12 sm:h-12 sm:w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
                             />
                         </button>
                     </div>
@@ -626,60 +648,66 @@ const KabanataPage: React.FC<PageProps> = ({
                 {/* Kabanata Map */}
                 <div className="w-full h-[600px] flex justify-center ml-4 items-center z-0">
 
-                    {filteredKabanatas.data.some(k => k.id === 64) && (
-                        <div
-                            className="absolute flex flex-col items-center z-10 left-[530px] sm:left-[230px] md:left-[240px] lg:left-[560px] top-[205px] lg:top-[220px]"
-                        >
-                            <div className="relative max-w-[170px] sm:max-w-[300px] lg:max-w-[370px] md:max-w-[370px] h-auto rounded-full flex items-center justify-center">
-                                {/* Conditionally render locked or unlocked door */}
-                                {completedCount === 64 ? (
-                                    <img src="/Img/Challenge/locked-door2.png" alt="Unlocked Door" className="w-full h-auto" />
+                {filteredKabanatas.data.some(k => k.id === 64) && (
+                    <div className="absolute flex flex-col items-center z-10 left-1/2 transform -translate-x-1/2 top-[180px] sm:top-[190px] md:top-[200px] lg:top-[220px]">
+                        <div className="relative w-[300px] h-[300px] top-[100px] md:top-[38px] lg:top-[3px] sm:w-[300px] sm:h-[300px] md:w-[350px] md:h-[350px] lg:w-[380px] lg:h-[380px] rounded-full flex items-center justify-center">
+                            {/* Conditionally render locked or unlocked door */}
+                            {completedCount === 64 ? (
+                                <img 
+                                    src="/Img/Challenge/locked-door2.png" 
+                                    alt="Unlocked Door" 
+                                    className="w-full h-full object-contain"
+                                />
+                            ) : (
+                                <img 
+                                    src="/Img/Challenge/unlocked-door.png" 
+                                    alt="Locked Door" 
+                                    className="w-full h-full object-contain"
+                                />
+                            )}
+                            
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                {(filteredKabanatas.data.find(k => k.id === 64)?.progress || 0) > 0 ? (
+                                    <div className="flex items-center justify-center">
+                                        <div className="absolute w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] lg:w-[160px] lg:h-[160px] rounded-full overflow-hidden">
+                                            <div className="absolute inset-0 
+                                                            bg-[conic-gradient(from_0deg,transparent_0deg,rgba(253, 212, 149, 0.76)_20deg,transparent_40deg)]
+                                                            animate-spin-slower blur-xl opacity-70">
+                                            </div>
+                                        </div>
+
+                                        {/* Background Glow */}
+                                        <div className="absolute w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] md:w-[130px] md:h-[130px] lg:w-[150px] lg:h-[150px] rounded-full 
+                                            bg-[radial-gradient(circle,rgba(255,200,100,0.6),rgba(255,106,0,0.25),transparent)]
+                                            blur-2xl animate-pulse">
+                                        </div>
+
+                                        <img 
+                                            src="/Img/Challenge/lightBG2.png" 
+                                            alt="Treasure Box" 
+                                            className="absolute top-[80px] sm:top-[50px] md:top-[80px] lg:top-[80px] w-[200px] sm:w-[150px] md:w-[270px] lg:w-[300px] h-auto z-50 animate-pulse opacity-80 cursor-pointer transition hover:scale-105 pointer-events-auto"
+                                            onClick={() => setShowCertificateModal(true)}
+                                        />
+                                    </div>
                                 ) : (
-                                    <img src="/Img/Challenge/unlocked-door.png" alt="Locked Door" className="w-full h-auto" />
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                                        <div className="absolute w-[80px] h-[100px] sm:w-[100px] sm:h-[120px] md:w-[110px] md:h-[130px] lg:w-[120px] lg:h-[140px] z-2 top-[20px] sm:top-[25px] md:top-[30px] lg:top-[35px]">
+                                        </div>
+                                        <div className="group relative">
+                                            <svg className="z-0 w-12 h-12 sm:w-8 sm:h-8 md:w-14 md:h-14 lg:w-16 lg:h-16" viewBox="0 0 82 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="white"/>
+                                            </svg>
+                                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 sm:px-3 sm:py-2 bg-gray-800 text-white text-xs sm:text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-20">
+                                                Tapusin lahat ng kabanata at kumuha ng 80% na grado para ma-unlock!
+                                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 )}
-                                
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    {(filteredKabanatas.data.find(k => k.id === 64)?.progress || 0) > 0 ? (
-                                        <div className="flex items-center justify-center">
-                                            <div className="absolute w-[280px] h-[280px] rounded-full overflow-hidden">
-                                                <div className="absolute inset-0 
-                                                                bg-[conic-gradient(from_0deg,transparent_0deg,rgba(253, 212, 149, 0.76)_20deg,transparent_40deg)]
-                                                                animate-spin-slower blur-xl opacity-70">
-                                                </div>
-                                            </div>
-
-                                            {/* Background Glow */}
-                                            <div className="absolute w-[250px] h-[250px] rounded-full 
-                                                bg-[radial-gradient(circle,rgba(255,200,100,0.6),rgba(255,106,0,0.25),transparent)]
-                                                blur-2xl animate-pulse">
-                                            </div>
-
-                                            <img 
-                                                src="/Img/Challenge/lightBG2.png" 
-                                                alt="Treasure Box" 
-                                                className="absolute top-[110px] w-[300px] h-auto z-50 animate-pulse opacity-80 cursor-pointer transition hover:scale-105 pointer-events-auto"
-                                                onClick={() => setShowCertificateModal(true)}
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div className="w-12 h-12 flex items-center justify-center">
-                                            <div className="absolute w-[220px] h-[240px] z-2 top-[60px]">
-                                            </div>
-                                            <div className="group relative">
-                                                <svg className="z-0" width="82" height="70" viewBox="0 0 82 95" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M41.0684 0.91626C27.1104 0.91626 15.7546 11.3684 15.7546 24.2158V38.1955H10.6919C8.00645 38.1955 5.43099 39.1774 3.53209 40.9252C1.6332 42.673 0.566406 45.0435 0.566406 47.5153V84.7945C0.566406 87.2663 1.6332 89.6368 3.53209 91.3846C5.43099 93.1324 8.00645 94.1143 10.6919 94.1143H71.4448C74.1303 94.1143 76.7057 93.1324 78.6046 91.3846C80.5035 89.6368 81.5703 87.2663 81.5703 84.7945V47.5153C81.5703 45.0435 80.5035 42.673 78.6046 40.9252C76.7057 39.1774 74.1303 38.1955 71.4448 38.1955H66.3821V24.2158C66.3821 11.3684 55.0263 0.91626 41.0684 0.91626ZM25.8801 24.2158C25.8801 16.5083 32.6946 10.2361 41.0684 10.2361C49.4421 10.2361 56.2566 16.5083 56.2566 24.2158V38.1955H25.8801V24.2158ZM46.1311 74.1839V84.7945H36.0056V74.1839C34.2356 73.251 32.8143 71.8462 31.9292 70.1547C31.0441 68.4633 30.7367 66.5647 31.0476 64.7093C31.3584 62.8538 32.2729 61.1286 33.6705 59.7612C35.0681 58.3938 36.8831 57.4483 38.8762 57.0494C40.3566 56.7482 41.8917 56.7566 43.3681 57.0741C44.8445 57.3916 46.2247 58.0101 47.4068 58.8839C48.589 59.7578 49.5429 60.8647 50.1984 62.1232C50.8538 63.3816 51.194 64.7594 51.1938 66.1549C51.1909 67.7847 50.7214 69.3849 49.8326 70.7945C48.9438 72.2041 47.6671 73.3731 46.1311 74.1839Z" fill="white"/>
-                                                </svg>
-                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-20">
-                                                    Tapusin lahat ng kabanata at kumuha ng 80% na grado para ma-unlock!
-                                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
                         </div>
-                    )}
+                    </div>
+                )}
 
                     {/* Certificate node at the end if all kabanatas are completed */}
                     {completedCount === 64 && (
@@ -691,7 +719,7 @@ const KabanataPage: React.FC<PageProps> = ({
                                 transform: "translate(-50%, -50%)",
                             }}
                         >
-                            <p className="font-[Risque] text-[20px] text-black">certificate</p>
+                            <p className="font-[Risque] text-[20px] lg:text-[20px] text-black">certificate</p>
                             <div 
                                 className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
                                 onClick={() => setShowCertificateModal(true)}
@@ -734,9 +762,12 @@ const KabanataPage: React.FC<PageProps> = ({
                         key={`building-${k.id}`}
                         className="flex w-full relative pointer-events-auto"
                     >
-                        {/* Kabanata 64 Special Building */}
+                        {/* Kabanata 64 Special Building - Made Responsive */}
                         {k.id === 64 ? (
-                        <div className="relative w-full flex justify-start pl-10">
+                        <div className={`relative w-full flex justify-start ${
+                            screenSize === "mobile" ? "pl-6" : 
+                            screenSize === "tablet" ? "pl-10" : "pl-10"
+                        }`}>
                             <img 
                             src="/Img/Challenge/building(1).png" 
                             alt="Building" 
@@ -744,8 +775,10 @@ const KabanataPage: React.FC<PageProps> = ({
                             style={{ 
                                 top: buildingOffsets[itemsPerPage - 1] || "0px",
                                 left: "0",
-                                width: "250px",
-                                height: "auto",
+                                // Responsive width for Kabanata 64
+                                width: screenSize === "mobile" ? "180px" : 
+                                       screenSize === "tablet" ? "250px" : "250px",
+                                height: "auto", 
                             }}
                             />
 
@@ -753,22 +786,33 @@ const KabanataPage: React.FC<PageProps> = ({
                             <div
                             className="absolute flex flex-col items-center pointer-events-auto z-40 floating-group"
                             style={{
-                                top: `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)`,
-                                left: "125px",
+                                // Responsive positioning for Kabanata 64 node
+                                top: screenSize === "mobile" ? 
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 105px)` :
+                                     screenSize === "tablet" ? 
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)` :
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)`,
+                                left: screenSize === "mobile" ? "90px" :
+                                      screenSize === "tablet" ? "105px" : "125px",
                                 transform: "translateX(-50%)",
                             }}
                             >
-                            <p className="font-[Risque] text-[20px] text-orange-400 mb-3 pointer-events-auto
+                            <p className="font-[Risque] text-orange-400 mb-3 pointer-events-auto
                                             drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]
                                             hover:drop-shadow-[0_0_15px_rgba(251,191,36,1)]
-                                            transition-all duration-300 text-center"
+                                            transition-all duration-300 text-center
+                                            text-lg md:text-lg lg:text-[20px]"
                             >
                                 {k.kabanata ? k.kabanata.charAt(0).toUpperCase() + k.kabanata.slice(1).toLowerCase() : ''}
                             </p>
 
                             <div className="relative">
                                 <div
-                                className="max-w-20 h-20 rounded-full flex items-center justify-center z-50 cursor-pointer"
+                                className={`rounded-full flex items-center justify-center z-50 cursor-pointer ${
+                                    screenSize === "mobile" ? "w-20 h-20" : 
+                                    screenSize === "tablet" ? "w-20 h-20" :
+                                    "w-20 h-20"
+                                }`}
                                 onClick={() => { 
                                     if (k.unlocked) {
                                         openVideoModal(k.id); 
@@ -790,13 +834,18 @@ const KabanataPage: React.FC<PageProps> = ({
                             </div>
                             </div>
 
-                            {/* Stars + Progress */}
+                            {/* Stars + Progress for Kabanata 64 */}
                             {k.unlocked && (
                             <div 
                                 className="absolute flex flex-col items-center"
                                 style={{ 
-                                top: `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 45px)`,
-                                left: "125px",
+                                top: screenSize === "mobile" ?
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 25px)` :
+                                     screenSize === "tablet" ?
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 30px)` :
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 45px)`,
+                                left: screenSize === "mobile" ? "75px" :
+                                      screenSize === "tablet" ? "90px" : "125px",
                                 transform: "translateX(-50%)"
                                 }}
                             >
@@ -806,17 +855,27 @@ const KabanataPage: React.FC<PageProps> = ({
                                     key={i} 
                                     src="/Img/Challenge/star.png" 
                                     alt="star" 
-                                    className={`w-5 h-5 ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
+                                    className={`${screenSize === "mobile" ? "w-3 h-3" :
+                                               screenSize === "tablet" ? "w-4 h-4" :
+                                               "w-5 h-5"} ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
                                     />
                                 ))}
                                 </div>
-                                <div className="w-20 h-2 bg-gray-300 rounded-full mt-1 relative">
+                                <div className={`bg-gray-300 rounded-full mt-1 relative ${
+                                    screenSize === "mobile" ? "w-12 h-1.5" :
+                                    screenSize === "tablet" ? "w-14 h-1.5" :
+                                    "w-20 h-2"
+                                }`}>
                                 <div
-                                    className="absolute left-0 top-0 h-2 bg-orange-500 rounded-full"
+                                    className="absolute left-0 top-0 h-full bg-orange-500 rounded-full"
                                     style={{ width: `${(k.progress / 10) * 100}%` }}
                                 ></div>
                                 </div>
-                                <span className="text-xs text-gray-700 mt-1">{k.progress}/10</span>
+                                <span className={`text-gray-700 mt-0.5 ${
+                                    screenSize === "mobile" ? "text-xs" :
+                                    screenSize === "tablet" ? "text-xs" :
+                                    "text-xs"
+                                }`}>{k.progress}/10</span>
                             </div>
                             )}
                         </div>
@@ -839,7 +898,7 @@ const KabanataPage: React.FC<PageProps> = ({
                                 transform: "translateX(-50%)",
                             }}
                             >
-                            <p className="font-[Risque] text-[20px] text-orange-400 mb-3 pointer-events-auto
+                            <p className="font-[Risque] text-lg md:text-lg lg:text-[20px] text-orange-400 mb-3 pointer-events-auto
                                             drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]
                                             hover:drop-shadow-[0_0_15px_rgba(251,191,36,1)]
                                             transition-all duration-300 text-center"

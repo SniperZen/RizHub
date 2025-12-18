@@ -212,27 +212,27 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
           style={{ backgroundImage: "url('/Img/Challenge/certificate2.png')" }}
         >
           {/* Title - appears after certificate background */}
-          <div className="absolute top-[25%] ml-[12%] w-full text-center opacity-0"
+          <div className="absolute top-[25%] md:top-[25%] lg:top-[25%] ml-[12%] w-full text-center opacity-0"
                style={{
                  animation: 'fadeIn 0.5s ease-out 0.6s both'
                }}>
-            <h1 className="text-5xl md:text-6xl font-lavish text-black">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-lavish text-black">
               Katibayan ng Pagtatapos
             </h1>
           </div>
 
           {/* Student Name - appears after title */}
-          <div className="absolute top-[43%] ml-[15%] w-full text-center opacity-0"
+          <div className="absolute top-[40%] md:top-[40%] lg:top-[40%] ml-[15%] w-full text-center opacity-0"
                style={{
                  animation: 'fadeIn 0.5s ease-out 0.6s both'
                }}>
-            <h2 className="text-2xl font-bold italic text-black">
+            <h2 className="text-base md:text-xl lg:text-2xl font-bold italic text-black">
               {studentName.toUpperCase()}
             </h2>
           </div>
 
           {/* Certificate Body Text - appears after student name */}
-          <div className="absolute top-[55%] ml-[12%] w-1/2 px-16 text-center text-base md:text-[14px] leading-[18px] text-black opacity-0"
+          <div className="absolute top-[50%] md:top-[50%] lg:top-[50%] ml-[12%] w-1/2 lg:px-16 text-center text-[8px] md:text-[14px] lg:text-base leading-[12px] md:leading-[15px] lg:leading-[18px] text-black opacity-0"
                style={{
                  animation: 'fadeIn 0.5s ease-out 0.6s both'
                }}>
@@ -247,7 +247,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
             </p>
 
             {totalStarsPercentage > 0 && (
-              <p className="mt-4 font-semibold">
+              <p className="mt-2 md:mt-5 font-semibold">
                 {new Date().toLocaleDateString("fil-PH", {
                   year: "numeric",
                   month: "long",
@@ -272,7 +272,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
               alt="I-download ang PDF"
               width="180"
               height="40"
-              className="min-w-[120px]"
+              className="w-[120px] md:w-[150px] lg:w-[170px]"
             />
           </button>
 
@@ -282,7 +282,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
               alt="Isara"
               width="180"
               height="40"
-              className="min-w-[120px]"
+              className="w-[120px] md:w-[150px] lg:w-[170px]"
             />
           </button>
         </div>
