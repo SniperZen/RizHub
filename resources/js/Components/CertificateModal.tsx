@@ -232,7 +232,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
           </div>
 
           {/* Certificate Body Text - appears after student name */}
-          <div className="absolute top-[50%] md:top-[50%] lg:top-[50%] ml-[12%] w-1/2 lg:px-16 text-center text-[8px] md:text-[14px] lg:text-base leading-[12px] md:leading-[15px] lg:leading-[18px] text-black opacity-0"
+          <div className="absolute top-[50%] md:top-[50%] lg:top-[50%] ml-[12%] w-1/2 px-5 md:px-5 lg:px-16 text-center text-[8px] md:text-[14px] lg:text-base leading-[12px] md:leading-[18px] lg:leading-[18px] text-black opacity-0"
                style={{
                  animation: 'fadeIn 0.5s ease-out 0.6s both'
                }}>
@@ -247,7 +247,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
             </p>
 
             {totalStarsPercentage > 0 && (
-              <p className="mt-2 md:mt-5 font-semibold">
+              <p className="mt-2 md:mt-2 font-semibold">
                 {new Date().toLocaleDateString("fil-PH", {
                   year: "numeric",
                   month: "long",

@@ -574,7 +574,7 @@ const KabanataPage: React.FC<PageProps> = ({
             soundVolume={currentSound}
             onVolumeChange={handleAudioSettingsChange}
         >
-            <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('/Img/Challenge/bg7.png')" }}>
+            <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden pointer-events-auto" style={{ backgroundImage: "url('/Img/Challenge/bg7.png')" }}>
                 {/* Vibration Sound Effect */}
                 <audio 
                     ref={vibrationAudioRef} 
@@ -586,7 +586,7 @@ const KabanataPage: React.FC<PageProps> = ({
                 </audio>
 
                 {/* Header */}
-                <div className="flex items-center justify-end px-8 py-4">
+                <div className="flex items-center justify-end px-8 py-4 pointer-events-auto">
                     {/* AudioControls is now justified to the right side of the remaining space */}
                     <AudioControls 
                         initialMusic={music}
