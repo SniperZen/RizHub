@@ -320,7 +320,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                             mb-12
                             -mt-10"
                         >
-                            {isPerfectScore ? "PERFECT SCORE!" : "QUIZ COMPLETED"}
+                           {isPerfectScore ? "MAGALING!" : "TAPOS NA!"}
                         </h2>
                         
                         <p className="fixed text-lg text-orange-800 mb-3 mt-20">
@@ -458,7 +458,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
                     {/* Drop Zone */}
                     <div 
-                        className="absolute top-[290px] bg-gray-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-sm lg:max-w-md min-h-[10px] md:min-h-[40px] g:min-h-[40px] flex items-center justify-center overflow-hidden"
+                        className="absolute top-[290px] bg-orange-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-sm lg:max-w-md min-h-[10px] md:min-h-[40px] g:min-h-[40px] flex items-center justify-center overflow-hidden"
                         onDragOver={handleDragOver}
                         onDrop={handleDrop}
                     >
@@ -469,28 +469,28 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                                 {selectedAnswer === 'C' && currentQuiz.choice_c}
                             </p>
                         ) : (
-                            <p className="text-gray-500">DRAG HERE THE ANSWER</p>
+                            <p className="text-gray-500">PINDUTIN AT IDALA RITO ANG SAGOT</p>
                         )}
                     </div>
 
                     {/* Answer Options */}
                     <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
                         <div 
-                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                            className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'A')}
                         >
                             <p className="text-xl font-medium">{currentQuiz.choice_a}</p>
                         </div>
                         <div 
-                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                            className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'B')}
                         >
                             <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
                         </div>
                         <div 
-                            className="bg-amber-200 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                            className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'C')}
                         >

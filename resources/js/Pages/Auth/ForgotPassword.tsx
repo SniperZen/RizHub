@@ -234,7 +234,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                         Ipinapadala...
                                     </span>
                                 ) : isCooldownActive && cooldown > 0 ? (
-                                    `Maghintay`
+                                    `Maghintay...`
                                 ) : (
                                     "Ipadala ang link"
                                 )}

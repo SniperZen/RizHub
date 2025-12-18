@@ -186,6 +186,19 @@ const KabanataPage: React.FC<PageProps> = ({
         }
     };
 
+    // testing purposes only - remove this on production
+    // const filteredKabanatas = {
+    // ...kabanatas,
+    // data: kabanatas.data
+    //     .filter(k => k.id <= 64)
+    //     .map(k => ({
+    //     ...k,
+    //     progress: 10,
+    //     stars: 3,
+    //     unlocked: true
+    //     }))
+    // };
+
     // Positions for different screen sizes
     const desktopPositions = [
         { top: "55%", left: "5%" },
@@ -255,6 +268,7 @@ const KabanataPage: React.FC<PageProps> = ({
         addDebugLog(`Received ${videoProgress.length} video progress records`);
         
         console.log("📘 Kabanata Progress Status:");
+        
         filteredKabanatas.data.forEach((k) => {
             console.log({
                 id: k.id,
@@ -264,6 +278,7 @@ const KabanataPage: React.FC<PageProps> = ({
                 progress: `${k.progress}/10`
             });
         });
+
         
         // Log all video progress data received from backend
         console.log("🎥 Video Progress Data:", videoProgress);
@@ -950,7 +965,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         </span>{" "}
                         o{" "}
                         <span className="decoration-[#FFA500]">
-                        magpatuloy na sa hamon?
+                        magpatuloy na lamang sa hamon?
                         </span>
                     </span>
                 </p>

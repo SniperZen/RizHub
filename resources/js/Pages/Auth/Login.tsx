@@ -112,7 +112,7 @@ export default function Login() {
                             </div>
 
                             <h2 className="text-3xl font-extrabold text-white mb-2">
-                                Welcome Back
+                                Maligayang Pag-login!
                             </h2>
                             <p className="text-white">
                                 I-enter ang iyong account sa ibaba.
@@ -166,7 +166,7 @@ export default function Login() {
                                     disabled={processing}
                                     className="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-75 transition-colors duration-200"
                                 >
-                                    {processing ? "Signing in..." : "Mag-Login"}
+                                    {processing ? "Maghintay..." : "Magpatuloy"}
                                 </button>
                             </div>
                         </form>
