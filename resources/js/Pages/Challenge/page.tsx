@@ -148,10 +148,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // Filter kabanatas -based on development needs
-    // const filteredKabanatas = {
-    //     ...kabanatas,
-    //     data: kabanatas.data.filter(k => k.id <= 64)
-    // };
+    const filteredKabanatas = {
+        ...kabanatas,
+        data: kabanatas.data.filter(k => k.id <= 64)
+    };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -187,17 +187,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    const filteredKabanatas = {
-    ...kabanatas,
-    data: kabanatas.data
-        .filter(k => k.id <= 64)
-        .map(k => ({
-        ...k,
-        progress: 10,
-        stars: 3,
-        unlocked: true
-        }))
-    };
+    // const filteredKabanatas = {
+    // ...kabanatas,
+    // data: kabanatas.data
+    //     .filter(k => k.id <= 64)
+    //     .map(k => ({
+    //     ...k,
+    //     progress: 10,
+    //     stars: 3,
+    //     unlocked: true
+    //     }))
+    // };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -603,7 +603,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage <= 1}
                             onClick={handlePreviousPage}
-                            className={`absolute right-[390px] md:-left-[-180px] lg:right-[685px] top-[12%] z-[60] w-auto h-auto mt-10 ${
+                            className={`absolute right-[390px] md:right-[640px] lg:right-[685px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage <= 1
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -788,12 +788,12 @@ const KabanataPage: React.FC<PageProps> = ({
                             style={{
                                 // Responsive positioning for Kabanata 64 node
                                 top: screenSize === "mobile" ? 
-                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 105px)` :
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)` :
                                      screenSize === "tablet" ? 
                                      `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)` :
                                      `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)`,
                                 left: screenSize === "mobile" ? "90px" :
-                                      screenSize === "tablet" ? "105px" : "125px",
+                                      screenSize === "tablet" ? "115px" : "125px",
                                 transform: "translateX(-50%)",
                             }}
                             >
@@ -840,12 +840,12 @@ const KabanataPage: React.FC<PageProps> = ({
                                 className="absolute flex flex-col items-center"
                                 style={{ 
                                 top: screenSize === "mobile" ?
-                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 25px)` :
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 35px)` :
                                      screenSize === "tablet" ?
-                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 30px)` :
-                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 45px)`,
-                                left: screenSize === "mobile" ? "75px" :
-                                      screenSize === "tablet" ? "90px" : "125px",
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 45px)` :
+                                     `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 55px)`,
+                                left: screenSize === "mobile" ? "85px" :
+                                      screenSize === "tablet" ? "115px" : "125px",
                                 transform: "translateX(-50%)"
                                 }}
                             >
@@ -855,15 +855,15 @@ const KabanataPage: React.FC<PageProps> = ({
                                     key={i} 
                                     src="/Img/Challenge/star.png" 
                                     alt="star" 
-                                    className={`${screenSize === "mobile" ? "w-3 h-3" :
-                                               screenSize === "tablet" ? "w-4 h-4" :
+                                    className={`${screenSize === "mobile" ? "w-5 h-5" :
+                                               screenSize === "tablet" ? "w-5 h-5" :
                                                "w-5 h-5"} ${i < k.stars ? 'opacity-100' : 'opacity-30'}`} 
                                     />
                                 ))}
                                 </div>
                                 <div className={`bg-gray-300 rounded-full mt-1 relative ${
-                                    screenSize === "mobile" ? "w-12 h-1.5" :
-                                    screenSize === "tablet" ? "w-14 h-1.5" :
+                                    screenSize === "mobile" ? "w-20 h-2" :
+                                    screenSize === "tablet" ? "w-20 h-2" :
                                     "w-20 h-2"
                                 }`}>
                                 <div
