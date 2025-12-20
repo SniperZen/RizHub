@@ -22,9 +22,16 @@ interface GuessWordProps {
     kabanata_title: string;
     music: number;
     sound: number;
+
+    unlockableImage?: {
+        id: number;
+        title: string;
+        filename: string;
+        description?: string;
+    };
 }
 
-export default function GuessWord({ character, questions, kabanataId, kabanata_number, kabanata_title, music: initialMusic, sound: initialSound }: GuessWordProps) {
+export default function GuessWord({ character, questions, kabanataId, kabanata_number, kabanata_title, music: initialMusic, sound: initialSound,  unlockableImage }: GuessWordProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState<string[]>([]);
     const [showModal, setShowModal] = useState<null | "correct" | "wrong" | "timesup" | "finished">(null);
@@ -551,10 +558,10 @@ const checkAnswer = async (source = "manual") => {
     ];
 
     const finishMessages: Record<number, string> = {
-        0: "PAGBUTIHIN PA!",
-        1: "SALAMAT SA PAGSUSUBOK!",
-        2: "YEHEY! NAKAYA MO!",
-        3: "ANG GALING GALING!",
+        0: "SUBUKAN MULI!",
+        1: "SUBUKAN MULI",
+        2: "SUBUKAN MULI!",
+        3: "PAGBUTIHIN PA!",
         4: "NAGAWA MO!",
         5: "TAGUMPAY SA MISYON!"
     };
@@ -594,7 +601,7 @@ const checkAnswer = async (source = "manual") => {
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="fixed top-[220px] sm:top-[220px] md:top-[220px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[545px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
+                    <div className="fixed top-[200px] sm:top-[200px] md:top-[200px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[485px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
                         <div className="relative w-12 h-12 lg:w-20 lg:h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-2 lg:border-4 border-black overflow-hidden shadow-lg">
                                 <div
@@ -665,9 +672,9 @@ const checkAnswer = async (source = "manual") => {
                             </div>
                         </div>
 
-                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-90px] sm:mb-[-120px] md:mb-[-100px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
+                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-120px] sm:mb-[-120px] md:mb-[-110px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
                             {/* Question Display */}
-                            <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[350px] sm:mb-[350px] md:mb-[360px] lg:mb-[5px] flex items-center justify-center">
+                            <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[300px] sm:mb-[350px] md:mb-[280px] lg:mb-[5px] flex items-center justify-center">
                                 <img
                                     src="/Img/Challenge/GuessWord/modalBG.png"
                                     alt="Wooden Background"
@@ -783,7 +790,7 @@ const checkAnswer = async (source = "manual") => {
                                         )}
                                     </div>
 
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                                    <div className="absolute inset-0 flex lg:-mb-5 flex-col items-center justify-center p-6 text-center">
                                         <h2 className="
                                             font-mono
                                             mr-2
@@ -792,16 +799,88 @@ const checkAnswer = async (source = "manual") => {
                                             font-bold 
                                             text-orange-800
                                             text-shadow
-                                            z-10"
+                                            z-10
+                                            -mb-12
+                                            lg:-mb-12"
                                         >
                                             {showModal === "correct" && successMessage}
-                                            {showModal === "wrong" && "TRY AGAIN"}
-                                            {showModal === "timesup" && "TIME'S UP!"}
-                                            {showModal === "finished" && (finishMessages[score] || "GAME FINISHED!")}
+                                            {showModal === "wrong" && "Subukan ulit!"}
+                                            {showModal === "timesup" && "Naubos ang oras!"}
+                                            {showModal === "finished" && (finishMessages[score] || "Natapos na!")}
                                         </h2>
 
+                                        {/* Gift/Unlock Image Section */}
+                                        {showModal === "finished" && (
+                                            <div className="flex flex-col -mb-[65px] lg:-mb-10 items-center">
+                                                {/* Gift/Unlock Image Container */}
+                                                <div 
+                                                    className="relative w-60 h-60 flex items-center justify-center cursor-pointer transition-all duration-300"
+                                                    onMouseEnter={() => {
+                                                        if (score === 5) {
+                                                            setShowGiftTooltip(true);
+                                                        } else {
+                                                            setShowLockTooltip(true);
+                                                        }
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        setShowGiftTooltip(false);
+                                                        setShowLockTooltip(false);
+                                                    }}
+                                                >
+                                                    {/* Background Image - Blurred for scores below 5 */}
+                                                    <img
+                                                        src="/Img/Challenge/lightBG1.png"
+                                                        alt="Gift Background"
+                                                        className={`absolute inset-0 w-full h-full object-contain ${
+                                                            score < 5 ? 'filter blur-lg' : ''
+                                                        }`}
+                                                    />
+                                                    
+                                                    {/* Gift or Lock Image */}
+                                                    <div className="relative z-10">
+                                                        {score === 5 ? (
+                                                            <div className={`relative ${isAnimating ? 'animate-pulse scale-110' : ''}`}>
+                                                                {/* Hover Effect - Show unlocked image from gallery */}
+                                                                {showGiftTooltip && (
+                                                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white text-orange-800 font-bold p-3 rounded-lg whitespace-nowrap z-50">
+                                                                        <p className="font-bold">Na-unlock ang Bagong Larawan!</p>
+                                                                        <p className="text-sm">Ipagpatuloy ang challenge at kumuha ng perpektong sagot para makita.</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="relative">
+                                                                {/* Lock overlay - only show for scores below 5 */}
+                                                                <div className="relative flex flex-col items-center justify-center">
+                                                                    {/* Lock Image Overlay */}
+                                                                    <div className="relative z-20">
+                                                                        <img
+                                                                            src="/Img/Challenge/locked1.png"
+                                                                            alt="Locked Gift"
+                                                                            className="w-[80px] h-[80px] object-contain"
+                                                                        />
+                                                                    </div>
+                                                                    {/* Text below lock */}
+                                                                    <div className="mt-2 text-center">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                {/* Hover Effect - Show lock message */}
+                                                                {showLockTooltip && (
+                                                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white text-orange-800 font-bold p-3 rounded-lg whitespace-nowrap z-50 text-center">
+                                                                        <p className="text-sm">Kumuha ng perpektong sagot</p>
+                                                                        <p className="text-sm">upang makakuha ng bagong imahe.</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[105px]">
+                                        <div className="fixed flex gap-8 bottom-[115px] md:bottom-[105px] lg:bottom-[105px]">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
@@ -833,6 +912,15 @@ const checkAnswer = async (source = "manual") => {
                                 50% { transform: translateX(5px); }
                                 75% { transform: translateX(-5px); }
                                 100% { transform: translateX(0); }
+                            }
+                            /* Add pulse animation for unlocked gift */
+                            @keyframes pulse {
+                                0% { transform: scale(1); }
+                                50% { transform: scale(1.1); }
+                                100% { transform: scale(1); }
+                            }
+                            .animate-pulse {
+                                animation: pulse 1s ease-in-out infinite;
                             }
                         `}</style>
                     </div>
