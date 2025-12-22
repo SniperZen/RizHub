@@ -4,13 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Quiz;
 
 class QuizSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('quizzes')->insert([
-
+        $quizzes = [
             // ===== KABANATA 1 =====
             [
                 'kabanata_id'   => 1,
@@ -74,6 +74,7 @@ class QuizSeeder extends Seeder
             ],
             [
                 'kabanata_id'   => 1,
+                'question'      => 'Sino ang nagpatunay sa sinabi ni Padre Damaso na ang mga Indio ay mangmang at mapagwalang-bahala?',
                 'question'      => 'Sino ang nagpatunay sa sinabi ni Padre Damaso na ang mga Indio ay mangmang at mapagwalang-bahala?',
                 'choice_a'      => 'Padre Sibyla',
                 'choice_b'      => 'G. Laruja',
@@ -2218,6 +2219,7 @@ class QuizSeeder extends Seeder
                 'question'      => 'Sino ang naging usap-usapan na laging natitigilan at madalas magkamali sa pagmimisa?',
                 'choice_a'      => 'Padre Damaso',
                 'choice_b'      => 'Padre Sibyla',
+                'choice_c'      => 'Padre Salvi',
                 'correct_answer'=> 'A',
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -3337,6 +3339,9 @@ class QuizSeeder extends Seeder
                 'updated_at'    => now(),
             ],
 
-        ]);
+        ];
+        foreach (array_chunk($quizzes, 50) as $chunk) {
+            Quiz::insert($chunk);
+        }
     }
 }
