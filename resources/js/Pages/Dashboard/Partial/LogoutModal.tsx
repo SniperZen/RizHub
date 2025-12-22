@@ -41,8 +41,8 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
             {/* Message */}
             <div className="mb-[35px] text-center">
               <p className="fix text-[#3D2410] text-2xl font-bold mt-153">
-                Are you sure you want
-              </p> <p className="fix text-[#3D2410] text-2xl font-bold mt-153">to logout?</p>
+               Sigurado ka ba na gusto mong
+              </p> <p className="fix text-[#3D2410] text-2xl font-bold mt-153">mag-logout?</p>
             </div>
             
             {/* Buttons */}
@@ -50,16 +50,16 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-1.5 bg-[#F8E193] mb-25 text-[#282725] text-lg font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                className="px-5 py-1.5 bg-[#F8E193] mb-25 text-[#282725] text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
               >
-                Cancel
+                Kanselahin
               </button>
               <button
                 type="button"
                 onClick={onConfirm}
-                className="px-5 py-1.5 bg-[#9A4112] text-white text-lg font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                className="px-5 py-1.5 bg-[#9A4112] text-white text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
               >
-                Logout
+                Magpatuloy
               </button>
             </div>
           </div>

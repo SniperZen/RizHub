@@ -50,7 +50,7 @@ export default function DeleteAccountModal({ isOpen, onClose, onSuccess }: Delet
       }
     >
       <p className="mb-6 text-[#3D2410]">
-        Are you sure you want to delete your account? This action cannot be undone.
+        Sigurado ka bang gusto mong burahin ang iyong account? Hindi na maaaring bawiin ang aksyon na ito.
       </p>
 
       <form id="delete-account-form" onSubmit={handleDelete}>

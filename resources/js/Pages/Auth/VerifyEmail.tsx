@@ -197,7 +197,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                             <button
                                 type="submit"
                                 disabled={processing || (isCooldownActive && cooldown > 0)}
-                                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors duration-200 ${
+                                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white transition-colors duration-200 ${
                                     processing || (isCooldownActive && cooldown > 0) 
                                     ? 'bg-[#5A3416]/70 cursor-not-allowed hover:bg-[#5A3416]/70 border border-[#5A3416]/50' 
                                     : 'bg-[#5A3416] hover:bg-[#3d2410] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5A3416]'
@@ -212,7 +212,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                                         Ipinapadala...
                                     </span>
                                 ) : isCooldownActive && cooldown > 0 ? (
-                                    `Maghintay`
+                                    `Maghintay...`
                                 ) : (
                                     "Ipadala Muli ang Verification Email"
                                 )}

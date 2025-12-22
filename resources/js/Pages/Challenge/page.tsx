@@ -148,10 +148,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // Filter kabanatas -based on development needs
-    const filteredKabanatas = {
-        ...kabanatas,
-        data: kabanatas.data.filter(k => k.id <= 64)
-    };
+    // const filteredKabanatas = {
+    //     ...kabanatas,
+    //     data: kabanatas.data.filter(k => k.id <= 64)
+    // };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -187,17 +187,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    // const filteredKabanatas = {
-    // ...kabanatas,
-    // data: kabanatas.data
-    //     .filter(k => k.id <= 64)
-    //     .map(k => ({
-    //     ...k,
-    //     progress: 10,
-    //     stars: 3,
-    //     unlocked: true
-    //     }))
-    // };
+    const filteredKabanatas = {
+    ...kabanatas,
+    data: kabanatas.data
+        .filter(k => k.id <= 64)
+        .map(k => ({
+        ...k,
+        progress: 10,
+        stars: 3,
+        unlocked: true
+        }))
+    };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -300,7 +300,7 @@ const KabanataPage: React.FC<PageProps> = ({
                 progress: `${k.progress}/10`
             });
         });
-
+        
         
         // Log all video progress data received from backend
         console.log("🎥 Video Progress Data:", videoProgress);
@@ -603,7 +603,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage <= 1}
                             onClick={handlePreviousPage}
-                            className={`absolute right-[390px] md:right-[640px] lg:right-[685px] top-[12%] z-[60] w-auto h-auto mt-10 ${
+                            className={`absolute right-[390px] md:right-[640px] lg:right-[735px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage <= 1
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -1038,14 +1038,14 @@ const KabanataPage: React.FC<PageProps> = ({
                                         onClick={retryVideo}
                                         className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
                                     >
-                                        Retry
+                                        Panoorin muli
                                     </button>
 
                                     <button
                                         onClick={proceedNext}
                                         className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
                                     >
-                                        Proceed
+                                        Magpatuloy
                                     </button>
                                 </div>
                             </div>

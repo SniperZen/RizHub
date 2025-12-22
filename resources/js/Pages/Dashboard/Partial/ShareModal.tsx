@@ -20,7 +20,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initia
 
     const handleSendInvite = () => {
         if (!email) {
-            setSendError('Please enter an email address');
+            setSendError('Mangyaring maglagay ng email address.');
             return;
         }
 
@@ -94,7 +94,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initia
                             <div className="mt-12 sm:mt-10 md:mt-12 lg:mt-4 w-full max-w-2xl">
                                 {/* Email Invitation Section */}
                                 <div className="mb-6 sm:mb-8 md:mb-[35px]">
-                                    <h3 className="text-[#3D2410] text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Invite via Email</h3>
+                                    <h3 className="text-[#3D2410] text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Mag-imbita sa pamamagitan ng Email</h3>
                                     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                         <input
                                             type="email"
@@ -104,37 +104,37 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, onBack, initia
                                                 setSendError('');
                                                 setSendSuccess(false);
                                             }}
-                                            placeholder="Enter email address"
+                                            placeholder="I-enter ang email address"
                                             className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFB84C] text-base sm:text-lg w-full"
                                         />
                                         <button
                                             onClick={handleSendInvite}
                                             disabled={isSending}
-                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-[#9A4112] text-white font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 disabled:opacity-70 whitespace-nowrap text-sm sm:text-base"
+                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-[#9A4112] text-white font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 disabled:opacity-70 whitespace-nowrap text-sm sm:text-base"
                                         >
-                                            {isSending ? 'Sending...' : 'Send'}
+                                            {isSending ? 'Nagpapadala...' : 'Ipadala'}
                                         </button>
                                     </div>
                                     {sendError && (
-                                        <p className="text-red-500 text-sm mt-2">{sendError}</p>
+                                        <p className="text-red-800 text-base mt-2">{sendError}</p>
                                     )}
                                     {sendSuccess && (
-                                        <p className="text-green-600 text-sm mt-2">Invitation sent successfully!</p>
+                                        <p className="text-green-600 text-sm mt-2">Matagumpay na naipadala ang imbitasyon!</p>
                                     )}
                                 </div>
                                 
                                 {/* Share Link Section */}
                                 <div>
-                                    <h3 className="text-[#3D2410] text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Or share this link</h3>
+                                    <h3 className="text-[#3D2410] text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">O ibahagi ang link na ito</h3>
                                     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                         <div className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-white/80 border-2 border-[#000] text-[#3D2410] rounded-lg overflow-hidden text-sm sm:text-base break-all">
                                             {shareLink}
                                         </div>
                                         <button
                                             onClick={copyToClipboard}
-                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-[#9A4112] text-white font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 whitespace-nowrap text-sm sm:text-base"
+                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-[#9A4112] text-white font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 whitespace-nowrap text-sm sm:text-base"
                                         >
-                                            {isCopied ? 'Copied!' : 'Copy'}
+                                            {isCopied ? 'Kinopya!' : 'Kopyahin'}
                                         </button>
                                     </div>
                                 </div>

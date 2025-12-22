@@ -867,9 +867,9 @@ export default function Dashboard({
                                                         soundVolume={volume}
                                                         type="submit"
                                                         disabled={processing}
-                                                        className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-[#000] text-xs sm:text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 mt-2"
+                                                        className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-white text-sm sm:text-sm font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105 mt-2"
                                                     >
-                                                        Save Changes
+                                                        I-save ang pagbabago
                                                     </Button>
                                                 </div>
                                             </form>
@@ -924,7 +924,7 @@ export default function Dashboard({
                                                             soundClick="/Music/Sound.mp3"
                                                             soundVolume={volume}
                                                             type="button"
-                                                            className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-[#000] text-xs sm:text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                                                            className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-white text-sm sm:text-sm font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
                                                             onClick={() => setShowDeleteModal(true)}
                                                         >
                                                             Delete Account
@@ -936,7 +936,7 @@ export default function Dashboard({
                                                             soundVolume={volume}
                                                             type="submit"
                                                             disabled={processing}
-                                                            className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-[#000] text-xs sm:text-[10px] font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                                                            className="w-auto h-8 sm:h-[30px] flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-[#9A4112] text-white text-sm sm:text-sm font-extrabold border-[2px] border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
                                                         >
                                                             Save Changes
                                                         </Button>

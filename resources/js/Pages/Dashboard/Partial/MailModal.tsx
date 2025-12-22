@@ -58,15 +58,12 @@ function DeleteConfirmationModal({ isOpen, onClose, onConfirm, isDeletingAll = f
           <div className="mt-3 mb-8 w-full max-w-md">
             {/* Message */}
             <div className="mb-[35px] text-center">
-              <p className="fix text-[#3D2410] text-2xl font-bold mt-153">
+              <p className="fix text-[#3D2410] text-2xl px-5 font-bold mt-153">
                 {isDeletingAll 
-                  ? 'Are you sure you want to delete ALL'
-                  : 'Are you sure you want to delete this'
+                  ? 'Sigurado ka ba na gusto mong burahin ang lahat ng mga notification?'
+                  : 'Sigurado ka ba na gusto mong burahin ang notification?'
                 }
               </p> 
-              <p className="fix text-[#3D2410] text-2xl font-bold mt-153">
-                {isDeletingAll ? 'notifications?' : 'notification?'}
-              </p>
               {isDeletingAll && (
                 <p className="fix text-[#3D2410] text-lg font-medium mt-2">
                   This action cannot be undone.
@@ -79,14 +76,14 @@ function DeleteConfirmationModal({ isOpen, onClose, onConfirm, isDeletingAll = f
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-1.5 bg-[#F8E193] mb-25 text-[#282725] text-lg font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                className="px-5 py-1.5 bg-[#F8E193] mb-25 text-[#282725] text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={onConfirm}
-                className="px-5 py-1.5 bg-[#9A4112] text-white text-lg font-bold rounded-lg border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
+                className="px-5 py-1.5 bg-[#9A4112] text-white text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
               >
                 Delete
               </button>

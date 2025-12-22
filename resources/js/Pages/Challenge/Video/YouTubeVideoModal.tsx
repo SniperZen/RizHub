@@ -449,13 +449,13 @@ export default function YouTubeVideoModal({
                                     className="w-auto h-[50px] lg:h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-xl lg:text-3xl font-extrabold relative transition hover:scale-105"
                                     onClick={handleCancelClose}
                                 >
-                                    Cancel
+                                    Kanselahin
                                 </button>
                                 <button
                                     className="w-auto h-[50px] lg:h-[60px] px-6 rounded-[40px] bg-gradient-to-b from-[#FFA500] to-[#D76D00] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-xl lg:text-3xl font-extrabold relative transition hover:scale-105"
                                     onClick={handleConfirmClose}
                                 >
-                                    Proceed
+                                    Magpatuloy
                                 </button>
                             </div>
                         </div>
