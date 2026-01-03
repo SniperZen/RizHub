@@ -23,6 +23,7 @@ class PublicVerifyEmailController extends Controller
             event(new Verified($user));
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME.'?verified=1');
+        // Redirect to login page after successful verification (don't send to dashboard)
+        return redirect()->to('/login?verified=1');
     }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "RizHub",
+  "short_name": "RizHub",
+  "description": "RizHub — A Web-Based Game-Integrated Learning Tool",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf8f7",
+  "theme_color": "#FA7816",
+  "icons": [
+    {
+      "src": "/Img/LandingPage/logoapp1.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/Img/LandingPage/logoapp1.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
