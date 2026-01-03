@@ -147,11 +147,11 @@ const KabanataPage: React.FC<PageProps> = ({
         64: "zLGcQ4FY9IE",
     };
 
-    // Filter kabanatas -based on development needs
-    // const filteredKabanatas = {
-    //     ...kabanatas,
-    //     data: kabanatas.data.filter(k => k.id <= 64)
-    // };
+    //Filter kabanatas -based on development needs
+    const filteredKabanatas = {
+        ...kabanatas,
+        data: kabanatas.data.filter(k => k.id <= 64)
+    };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -187,17 +187,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    const filteredKabanatas = {
-    ...kabanatas,
-    data: kabanatas.data
-        .filter(k => k.id <= 64)
-        .map(k => ({
-        ...k,
-        progress: 10,
-        stars: 3,
-        unlocked: true
-        }))
-    };
+    // const filteredKabanatas = {
+    // ...kabanatas,
+    // data: kabanatas.data
+    //     .filter(k => k.id <= 64)
+    //     .map(k => ({
+    //     ...k,
+    //     progress: 10,
+    //     stars: 3,
+    //     unlocked: true
+    //     }))
+    // };
 
     // Positions for different screen sizes
     const desktopPositions = [
@@ -286,10 +286,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     useEffect(() => {
-        addDebugLog("📘 Kabanata Page Mounted");
+        addDebugLog("ðŸ“˜ Kabanata Page Mounted");
         addDebugLog(`Received ${videoProgress.length} video progress records`);
         
-        console.log("📘 Kabanata Progress Status:");
+        console.log("ðŸ“˜ Kabanata Progress Status:");
         
         filteredKabanatas.data.forEach((k) => {
             console.log({
@@ -303,7 +303,7 @@ const KabanataPage: React.FC<PageProps> = ({
         
         
         // Log all video progress data received from backend
-        console.log("🎥 Video Progress Data:", videoProgress);
+        console.log("ðŸŽ¥ Video Progress Data:", videoProgress);
         videoProgress.forEach((progress, index) => {
             addDebugLog(`Video Progress ${index + 1}: Video ID ${progress.video_id}, Completed: ${progress.completed}, Kabanata Progress ID: ${progress.kabanata_progress_id}`);
         });
