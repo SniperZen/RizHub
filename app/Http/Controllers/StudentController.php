@@ -25,6 +25,10 @@ class StudentController extends Controller
 {
     public function dash() {
         $user = Auth::user();
+        if (! $user) {
+            return redirect('/login');
+        }
+
         $unreadNotifications = $user->unreadNotifications()->count();
         $notifications = $user->notifications()
         ->orderBy('created_at', 'desc')
@@ -51,6 +55,10 @@ class StudentController extends Controller
         public function help()
         {
             $user = Auth::user();
+            if (! $user) {
+                return redirect('/login');
+            }
+
             $unreadNotifications = $user->unreadNotifications()->count();
             $notifications = $user->notifications()
                 ->orderBy('created_at', 'desc')
