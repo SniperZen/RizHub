@@ -363,19 +363,27 @@ export default function Dashboard({
             <div className="min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden">
                 {/* Background image full screen */}
                 <img
-                    src="/Img/Dashboard/BG1.png"
+                    src="/Img/Dashboard/BG1.png" 
                     alt="Noli Me Tangere BG"
                     className="absolute inset-0 w-full h-full object-cover z-10"
                 />
 
-                <img
-                    src="/Img/Dashboard/t-bg1.png"
-                    alt="Noli Me Tangere BG"
-                    className="absolute inset-0 top-10 scale-75 md:scale-90 lg:scale-90 md:w-full lg:w-full h-full object-cover z-10"
-                    style={{
-                        animation: 'gentleHeartbeat 3s ease-in-out infinite'
-                    }}
-                />
+<div className="absolute top-20 sm:top-5 md:top-20 lg:top-5 xl:top-5 2xl:top-5 left-0 right-0 z-10 flex justify-center overflow-hidden">
+    <img
+        src="/Img/Dashboard/t-bg1.png"
+        alt="Noli Me Tangere BG"
+        className="object-contain h-auto
+            w-[800vw] max-w-[800px]
+            sm:w-[500vw] sm:max-w-[1000px]
+            md:w-[200vw] md:max-w-[1400px]
+            lg:w-[120vw] lg:max-w-[1800px]
+            xl:w-[100vw] xl:max-w-[2200px]
+            2xl:w-[100vw] 2xl:max-w-[2500px]"
+        style={{
+            animation: 'gentleHeartbeat 3s ease-in-out infinite'
+        }}
+    />
+</div>
 
                 <style>
                     {`
@@ -878,7 +886,7 @@ export default function Dashboard({
                                                 <h3 className="text-[#3D2410] text-xl sm:text-2xl md:text-3xl font-semibold mb-0 sm:mb-0">General</h3>
 
                                                 <div
-                                                    className="relative h-16 sm:h-20 w-auto flex justify-center items-center text-white font-extrabold mb-4 sm:mb-6"
+                                                    className="relative h-14 sm:h-16 md:h-16 lg:h-20 w-auto flex justify-center items-center text-white font-extrabold mb-4 sm:mb-6"
                                                     style={{
                                                         backgroundImage: "url('/Img/Dashboard/name.png')",
                                                         backgroundSize: 'contain',
