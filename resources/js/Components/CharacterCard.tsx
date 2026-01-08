@@ -4,6 +4,7 @@ interface CharacterCardProps {
     detail: string;
     imgSrc: string;
     compact?: boolean;
+    className?: string;
 }
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ name, detail, imgSrc, compact = false }) => {

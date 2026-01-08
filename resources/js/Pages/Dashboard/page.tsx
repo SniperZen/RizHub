@@ -368,7 +368,7 @@ export default function Dashboard({
                     className="absolute inset-0 w-full h-full object-cover z-10"
                 />
 
-<div className="absolute top-20 sm:top-5 md:top-20 lg:top-5 xl:top-5 2xl:top-5 left-0 right-0 z-10 flex justify-center overflow-hidden">
+<div className="absolute top-20 sm:top-5 md:top-5 lg:top-3 xl:top-5 2xl:top-5 left-0 right-0 z-10 flex justify-center overflow-hidden">
     <img
         src="/Img/Dashboard/t-bg1.png"
         alt="Noli Me Tangere BG"

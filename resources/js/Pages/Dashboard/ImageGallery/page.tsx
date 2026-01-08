@@ -421,8 +421,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
             {/* Gallery Collection Button - Desktop Only */}
 <button
     onClick={() => setShowGalleryModal(true)}
-    className="hidden w-[330px] xs:w-[340px] sm:w-[305px] md:flex items-center space-x-1 xs:space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-3 xs:px-4 py-2 xs:py-2.5 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
->
+    className="hidden w-[330px] xs:w-[340px] sm:w-[305px] md:w-[150px] lg:w-[150px] md:flex items-center space-x-1 xs:space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-3 xs:px-4 py-2 xs:py-2.5 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
     <svg 
         className="w-4 h-4 xs:w-[245px] xs:h-3" 
         fill="none" 
@@ -821,7 +820,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
         {/* Mobile Collection Button - Bottom Center - Now applies to lg and below */}
         <button
           onClick={() => setShowGalleryModal(true)}
-          className="fixed bottom-12 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 z-50 block md:hidden"
+          className="fixed bottom-5 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 z-50 block md:hidden"
         >
           <svg 
             className="w-5 h-5" 
@@ -842,7 +841,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
               d="M9 4v16M4 9h16" 
             />
           </svg>
-          <span className="font-bold">
+          <span className="font-bold w-[130px] xs:w-[130px] sm:w-[130px] md:w-[150px] lg:w-[150px]">
             Collection: {unlockedCount}/{images.length}
           </span>
         </button>

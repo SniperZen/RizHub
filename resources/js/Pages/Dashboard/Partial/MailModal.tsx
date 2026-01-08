@@ -105,9 +105,9 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
 
     if (!isOpen) return null;
 
-    const handleSelect = (notification: AppNotification) => {
+    const handleSelect = (notification: AppNotification | null) => {
         setSelected(notification);
-        if (!notification.is_read) {
+        if (notification && !notification.is_read) {
             markAsRead(notification.id);
         }
     };
@@ -254,31 +254,13 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                 {/* Content Container - Only show when image is loaded */}
                 {isBgLoaded && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <div className="flex flex-col items-center w-full px-[80px]">
-                            <span className="absolute text-white text-4xl font-black tracking-wide top-3">
+                        <div className="flex flex-col items-center w-full px-4 md:px-[80px]">
+                            <span className="absolute text-white text-2xl md:text-4xl font-black tracking-wide top-3">
                                 Notifications {unreadCount > 0 && `(${unreadCount} unread)`}
                             </span>
                             
-                            {/* Action Buttons (commented out as per your original code) */}
-                            {/* <div className="absolute top-7 left-9 flex gap-2">
-                                <button
-                                    onClick={markAllAsRead}
-                                    disabled={unreadCount === 0}
-                                    className="px-3 py-1 bg-[#9A4112] text-white text-xs rounded-lg disabled:opacity-50 transition hover:scale-105"
-                                >
-                                    Mark All Read
-                                </button>
-                                <button
-                                    onClick={() => openDeleteModal("all")}
-                                    disabled={localNotifications.length === 0}
-                                    className="px-3 py-1 bg-red-600 text-white text-xs rounded-lg disabled:opacity-50 transition hover:scale-105"
-                                >
-                                    Delete All
-                                </button>
-                            </div> */}
-
                             <button
-                                className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                className="absolute top-4 md:top-7 right-4 md:right-9 rounded-full w-[40px] h-[40px] md:w-[60px] md:h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
                                 onClick={onClose}
                                 aria-label="Close"
                                 disabled={isDeleting}
@@ -287,8 +269,131 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                             </button>
                         </div>
 
-                        <div className="mt-24 md:mt-24 lg:mt-24 ml-16 flex w-full h-full px-10 gap-6">
-                            <div className="w-[190px] md:w-[250px] lg:w-[350px] h-[350px] md:h-[350px] lg:h-[350px] border-r-2 border-[#88643D] overflow-y-auto p-3 rounded-md">
+                        {/* Mobile View - Full Screen Modal */}
+                        <div className="lg:hidden mt-20 flex w-full h-full px-4">
+                            {!selected ? (
+                                // Notification List View
+                                <div className="w-full h-full overflow-y-auto p-3">
+                                    {localNotifications.length > 0 ? (
+                                        <div className="space-y-4">
+                                            {localNotifications.map((notification) => (
+                                                <div
+                                                    key={notification.id}
+                                                    className={`cursor-pointer p-5 rounded-lg border-2 border-[#88643D] transition hover:bg-yellow-50/80 group relative ${
+                                                        notification.is_read
+                                                            ? 'bg-white/80'
+                                                            : 'bg-yellow-100/90'
+                                                    }`}
+                                                    onClick={() => handleSelect(notification)}
+                                                >
+                                                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                notification.is_read 
+                                                                    ? markAsUnread(notification.id)
+                                                                    : markAsRead(notification.id);
+                                                            }}
+                                                            className="w-6 h-6 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center"
+                                                            title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
+                                                        >
+                                                            {notification.is_read ? '↶' : '✓'}
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                openDeleteModal(notification.id);
+                                                            }}
+                                                            className="w-6 h-6 bg-red-600 text-white text-xs rounded-full flex items-center justify-center"
+                                                            title="Delete"
+                                                            disabled={isDeleting}
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+
+                                                    <div>
+                                                        <h3 className="font-bold text-[#3D2410] text-base pr-8">
+                                                            {notification.title}
+                                                            {!notification.is_read && (
+                                                                <span className="ml-2 w-2 h-2 bg-red-500 rounded-full inline-block"></span>
+                                                            )}
+                                                        </h3>
+
+                                                        <p className="text-xs text-gray-500 mt-2">
+                                                            {new Date(notification.created_at).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center text-[#3D2410] py-8">
+                                            <p>No notifications yet.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                // Full Screen Message View
+                                <div className="w-full h-full flex flex-col bg-white/90 rounded-lg p-4">
+                                    {/* Header with Back Button */}
+                                    <div className="flex items-center mb-4 pb-3 border-b border-[#88643D]">
+                                        <button
+                                            onClick={() => handleSelect(null)}
+                                            className="flex items-center gap-2 text-[#3D2410] hover:text-[#9A4112] transition"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                            <span className="font-medium">Back to Notifications</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Message Content */}
+                                    <div className="flex-1 overflow-y-auto">
+                                        <h2 className="font-bold text-2xl text-[#3D2410] mb-4">
+                                            {selected.title}
+                                        </h2>
+                                        
+                                        <div className="bg-white p-4 rounded-lg border border-[#88643D] min-h-[60vh]">
+                                            <p className="text-[#3D2410] text-lg leading-relaxed whitespace-pre-line">
+                                                {selected.message}
+                                            </p>
+                                        </div>
+                                        
+                                        <div className="flex justify-between items-center mt-6 pt-4 border-t border-[#88643D]">
+                                            <div>
+                                                <p className="text-sm text-gray-500">
+                                                    {new Date(selected.created_at).toLocaleString()}
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    onClick={() => selected.is_read 
+                                                        ? markAsUnread(selected.id)
+                                                        : markAsRead(selected.id)
+                                                    }
+                                                    className="px-4 py-2 bg-[#9A4112] text-white text-sm rounded-lg transition hover:scale-105"
+                                                >
+                                                    {selected.is_read ? 'Mark as Unread' : 'Mark as Read'}
+                                                </button>
+                                                <span className={`px-3 py-1 text-sm rounded-full ${
+                                                    selected.is_read 
+                                                        ? 'bg-green-100 text-green-800' 
+                                                        : 'bg-yellow-100 text-yellow-800'
+                                                }`}>
+                                                    {selected.is_read ? 'Read' : 'Unread'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Desktop View (Original Layout) */}
+                        <div className="hidden lg:flex mt-24 ml-16 w-full h-full px-10 gap-6">
+                            <div className="w-[350px] h-[350px] border-r-2 border-[#88643D] overflow-y-auto p-3 rounded-md">
                                 {localNotifications.length > 0 ? (
                                     <div className="space-y-4">
                                         {localNotifications.map((notification) => (
@@ -303,6 +408,7 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                                         ? 'ring-2 ring-[#D97706]'
                                                         : ''
                                                 }`}
+                                                onClick={() => handleSelect(notification)}
                                             >
                                                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button
@@ -330,8 +436,8 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                                     </button>
                                                 </div>
 
-                                                <div onClick={() => handleSelect(notification)}>
-                                                    <h3 className="font-bold text-[#3D2410] text-base lg:text-xl pr-8">
+                                                <div>
+                                                    <h3 className="font-bold text-[#3D2410] text-xl pr-8">
                                                         {notification.title}
                                                         {!notification.is_read && (
                                                             <span className="ml-2 w-2 h-2 bg-red-500 rounded-full inline-block"></span>
@@ -355,27 +461,11 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                 {selected ? (
                                     <div className="p-4">
                                         <div className="flex justify-between items-center mb-4">
-                                            <h2 className="font-bold text-lg lg:text-2xl text-[#3D2410]">
+                                            <h2 className="font-bold text-2xl text-[#3D2410]">
                                                 {selected.title}
                                             </h2>
                                             <div className="flex gap-2">
-                                                {/* Action buttons for selected notification (commented out) */}
-                                                {/* <button
-                                                    onClick={() => selected.is_read 
-                                                        ? markAsUnread(selected.id)
-                                                        : markAsRead(selected.id)
-                                                    }
-                                                    className="px-3 py-1 bg-[#9A4112] text-white text-xs rounded-lg transition hover:scale-105"
-                                                >
-                                                    {selected.is_read ? 'Mark Unread' : 'Mark Read'}
-                                                </button>
-                                                <button
-                                                    onClick={() => openDeleteModal(selected.id)}
-                                                    className="px-3 py-1 bg-red-600 text-white text-xs rounded-lg transition hover:scale-105"
-                                                    disabled={isDeleting}
-                                                >
-                                                    Delete
-                                                </button> */}
+                                                {/* Action buttons for selected notification */}
                                             </div>
                                         </div>
                                         
@@ -411,7 +501,7 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
         </div>
 
         {/* New Delete Confirmation Modal */}
-        <DeleteConfirmationModal
+        <DeleteConfirmationModal    
             isOpen={showDeleteModal}
             onClose={closeDeleteModal}
             onConfirm={confirmDelete}

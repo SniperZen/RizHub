@@ -734,7 +734,7 @@ if (!empty($guesswordProgressData)) {
             // Create notification
             $notification = Notification::create([
                 'user_id' => $user->id,
-                'title' => 'Na-unlock mo ang bagong larawan sa RizHub! 🎉',
+                'title' => 'Na-unlock mo ang bagong larawan sa RizHub!',
                 'message' => 'Binabati kita! Nakapag-unlock ka ng bagong imahe mula sa Kabanata ' . $kabanataId . '. Suriin mo ang iyong gallery upang makita ito!!',
                 'type' => 'image_unlock',
                 'is_read' => false,

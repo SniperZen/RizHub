@@ -223,33 +223,33 @@ export default function HelpPage() {
               <img 
                 src="/Img/Dashboard/mobileIllustartion.png" 
                 alt="Help Illustration Mobile"
-                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[50px] xl:top-[0px] block md:hidden"
+                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[150px] xl:top-[0px] block md:hidden"
               />
               
               {/* Desktop Illustration */}
               <img 
                 src="/Img/Dashboard/Illustartion.png" 
                 alt="Help Illustration" 
-                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[50px] xl:top-[0px] hidden md:block"
+                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:bottom-[10px] xl:top-[0px] hidden md:block"
               />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-20 md:px-20 lg:px-20 xl:px-20 sm:mr-5 md:mr-10 lg:mr-20">
-                <p className="text-white text-base sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[50px] space-y-5">
+                <p className="text-white text-sm sm:text-xl md:text-xl lg:text-2xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[50px] space-y-5">
                   <TypingText soundVolume={userSound} />
                 </p>
               </div>
               
               {/* Header stays centered with smooth floating animation */}
               <div 
-                className="absolute left-1/2 bottom-[370px] sm:bottom-[420px] md:bottom-[370px] lg:bottom-[400px] lg:pr-[60px]
+                className="absolute left-1/2 top-[90px] sm:top-[50px] md:top-[90px] lg:top-[90px] lg:pr-[60px]
                           transform -translate-x-1/2 z-30 h-60 scale-150 w-[500px]
-                          md:w-[950px] lg:w-[650px] xl:w-[650px]"
+                          md:w-[990px] lg:w-[650px] xl:w-[650px]"
                 style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
               >
                 <img 
                   src={headerImage} 
                   alt="Help Header" 
-                  className="h-20 lg:h-[100px] w-auto mx-auto"
+                  className="h-20 sm:h-20 md:h-[120px] lg:h-[100px] w-auto mx-auto"
                 />
               </div>
               <style>
@@ -271,7 +271,7 @@ export default function HelpPage() {
           <img 
             src={personImage} 
             alt="Person" 
-            className="max-w-[90vw] max-h-[90vh] h-auto w-auto"
+            className="lg:max-w-[90vw] lg:max-h-[90vh] h-auto w-auto"
           />
         </div>
       </div>

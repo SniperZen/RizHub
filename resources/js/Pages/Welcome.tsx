@@ -442,177 +442,192 @@ export default function Welcome({ auth }: PageProps) {
                    </div>
                 </AnimatedSection>
 
-                {/* Characters Section */}
-                <AnimatedSection className="bg-gray-50 py-5 md:py-5 lg:pb-10 px-10 lg:px-10 text-center border-b-[1px] border-[#282725]">
-                    <AnimatedItem delay={0.1}>
-                      <h2 
-                        className="font-['Inter'] not-italic font-extrabold text-2xl md:text-3xl lg:text-[40px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-6 md:mb-12"
-                        style={{
-                            color: '#249EA0',
-                            textShadow: '-2px 3px 0px #282725'
-                        }}
-                      >
-                          Pangunahing Tauhan sa Noli Me Tangere
-                      </h2>
-                    </AnimatedItem>
+ {/* Characters Section */}
+<AnimatedSection className="bg-gray-50 py-5 md:py-5 lg:pb-10 px-4 md:px-10 lg:px-10 text-center border-b-[1px] border-[#282725]">
+    <AnimatedItem delay={0.1}>
+        <h2 
+            className="font-['Inter'] not-italic font-extrabold text-2xl md:text-3xl lg:text-[40px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-6 md:mb-12"
+            style={{
+                color: '#249EA0',
+                textShadow: '-2px 3px 0px #282725'
+            }}
+        >
+            Pangunahing Tauhan sa Noli Me Tangere
+        </h2>
+    </AnimatedItem>
 
-                    {/* Desktop Grid View (hidden on mobile/tablet) */}
-                    <AnimatedItem className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto" delay={0.2}>
-                        <CharacterCard
-                            name="Crisostomo Ibarra"
-                            detail="Si Crisostomo ay binatang anak ni Don Rafael Ibarra na nag-aral sa Europa. Siya ang kababata at kasintahan ni Maria Clara."
-                            imgSrc="/Img/LandingPage/character/char-1.png"
-                        />
-                        <CharacterCard
-                            name="Maria Clara"
-                            detail="Si Maria Clara ay mayuming kasintahan ni Crisostomo Ibarra. Siya ang anak ni Donya Pia Alba kay Padre Damaso."
-                            imgSrc="/Img/LandingPage/character/char-2.png"
-                        />
-                        <CharacterCard
-                            name="Padre Damaso"
-                            detail="Si Padre Damaso ay isang paring Pransiskano na matapos maglingkod nang mahabang panahon sa San Diego ay naipalipat sa ibang parokya. Siya ang tunay na ama ni Maria Clara."
-                            imgSrc="/Img/LandingPage/character/char-3.png"
-                        />
-                        <CharacterCard
-                            name="Crispin"
-                            detail="Si Crispin ay nakababatang anak ni Sisa. Siya ay isang sakristan at tagatugtog ng kampana sa simbahan ng San Diego."
-                            imgSrc="/Img/LandingPage/character/char-4.png"
-                        />
-                        <CharacterCard
-                            name="Sisa"
-                            detail="Si Sisa ay ina nina Crispin at Basilio. Siya ay martir na asawa ni Pedro na pabaya at malupit sa kanyang pamilya."
-                            imgSrc="/Img/LandingPage/character/char-5.png"
-                        />
-                        <CharacterCard
-                            name="Padre Salvi"
-                            detail="Si Padre Salvi ay humalili kay Padre Damaso bilang pari ng San Diego. Siya ay may lihim na pagsinta kay Maria Clara."
-                            imgSrc="/Img/LandingPage/character/char-6.png"
-                        />
-                        <CharacterCard
-                            name="Kapitan Heneral"
-                            detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan sa Pilipinas. Siya ang lumakad na maalisan ng pagka-ekskomunyon si Ibarra."
-                            imgSrc="/Img/LandingPage/character/char-7.png"
-                        />
-                        <CharacterCard
-                            name="Tenyente Guevarra"
-                            detail="Si Tenyente Guevarra ay isang matapat na tenyente ng mga guwardiya sibil."
-                            imgSrc="/Img/LandingPage/character/char-8.png"
-                        />
-                    </AnimatedItem>
+    {/* Desktop Grid View (hidden on mobile/tablet) */}
+    <AnimatedItem className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto" delay={0.2}>
+        <CharacterCard
+            name="Crisostomo Ibarra"
+            detail="Si Crisostomo ay binatang anak ni Don Rafael Ibarra na nag-aral sa Europa. Siya ang kababata at kasintahan ni Maria Clara."
+            imgSrc="/Img/LandingPage/character/char-1.png"
+        />
+        <CharacterCard
+            name="Maria Clara"
+            detail="Si Maria Clara ay mayuming kasintahan ni Crisostomo Ibarra. Siya ang anak ni Donya Pia Alba kay Padre Damaso."
+            imgSrc="/Img/LandingPage/character/char-2.png"
+        />
+        <CharacterCard
+            name="Padre Damaso"
+            detail="Si Padre Damaso ay isang paring Pransiskano na matapos maglingkod nang mahabang panahon sa San Diego ay naipalipat sa ibang parokya. Siya ang tunay na ama ni Maria Clara."
+            imgSrc="/Img/LandingPage/character/char-3.png"
+        />
+        <CharacterCard
+            name="Crispin"
+            detail="Si Crispin ay nakababatang anak ni Sisa. Siya ay isang sakristan at tagatugtog ng kampana sa simbahan ng San Diego."
+            imgSrc="/Img/LandingPage/character/char-4.png"
+        />
+        <CharacterCard
+            name="Sisa"
+            detail="Si Sisa ay ina nina Crispin at Basilio. Siya ay martir na asawa ni Pedro na pabaya at malupit sa kanyang pamilya."
+            imgSrc="/Img/LandingPage/character/char-5.png"
+        />
+        <CharacterCard
+            name="Padre Salvi"
+            detail="Si Padre Salvi ay humalili kay Padre Damaso bilang pari ng San Diego. Siya ay may lihim na pagsinta kay Maria Clara."
+            imgSrc="/Img/LandingPage/character/char-6.png"
+        />
+        <CharacterCard
+            name="Kapitan Heneral"
+            detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan sa Pilipinas. Siya ang lumakad na maalisan ng pagka-ekskomunyon si Ibarra."
+            imgSrc="/Img/LandingPage/character/char-7.png"
+        />
+        <CharacterCard
+            name="Tenyente Guevarra"
+            detail="Si Tenyente Guevarra ay isang matapat na tenyente ng mga guwardiya sibil."
+            imgSrc="/Img/LandingPage/character/char-8.png"
+        />
+    </AnimatedItem>
 
-                        {/* Mobile/Tablet Carousel (visible on mobile/tablet) */}
-                        <AnimatedItem className="lg:hidden relative overflow-hidden max-w-2xl md:max-w-3xl mx-auto" delay={0.3}>
-                            <div
-                                className="flex transition-transform duration-500 ease-in-out"
-                                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                            >
-                                {/* Slide 1 */}
-                                <div className="w-full flex-shrink-0 px-4 flex justify-center">
-                                    <div className="grid grid-cols-3 md:grid-cols-3 gap-6 min-w-2xl md:max-w-xl">
-                                        <CharacterCard
-                                        name="Crisostomo Ibarra"
-                                        detail="Si Crisostomo ay binatang anak ni Don Rafael Ibarra na nag-aral sa Europa. Siya ang kababata at kasintahan ni Maria Clara."
-                                        imgSrc="/Img/LandingPage/character/char-1.png"
-                                        compact={true}
-                                        />
-                                        <CharacterCard
-                                        name="Maria Clara"
-                                        detail="Si Maria Clara ay mayuming kasintahan ni Crisostomo Ibarra. Siya ang anak ni Donya Pia Alba kay Padre Damaso."
-                                        imgSrc="/Img/LandingPage/character/char-2.png"
-                                        compact={true}
-                                        />
-                                        <CharacterCard
-                                        name="Padre Damaso"
-                                        detail="Si Padre Damaso ay isang paring Pransiskano ..."
-                                        imgSrc="/Img/LandingPage/character/char-3.png"
-                                        compact={true}
-                                        />
-                                    </div>
-                                </div>
+    {/* Mobile/Tablet Carousel - 2 images per slide (visible on mobile/tablet) */}
+    <AnimatedItem className="lg:hidden relative overflow-hidden max-w-2xl mx-auto" delay={0.3}>
+        <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+            {/* Slide 1 */}
+            <div className="w-full flex-shrink-0 px-2">
+                <div className="flex justify-center items-center gap-4 md:gap-6">
+                    <CharacterCard
+                        name="Crisostomo Ibarra"
+                        detail="Si Crisostomo ay binatang anak ni Don Rafael Ibarra na nag-aral sa Europa. Siya ang kababata at kasintahan ni Maria Clara."
+                        imgSrc="/Img/LandingPage/character/char-1.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]" // 2rem gap = 0.5rem per side
+                    />
+                    <CharacterCard
+                        name="Maria Clara"
+                        detail="Si Maria Clara ay mayuming kasintahan ni Crisostomo Ibarra. Siya ang anak ni Donya Pia Alba kay Padre Damaso."
+                        imgSrc="/Img/LandingPage/character/char-2.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                </div>
+            </div>
 
-                                {/* Slide 2 */}
-                                <div className="w-full flex-shrink-0 px-4 flex justify-center">
-                                    <div className="grid grid-cols-3 md:grid-cols-3 gap-4 max-w-md md:max-w-lg">
-                                        <CharacterCard
-                                        name="Crispin"
-                                        detail="Si Crispin ay nakababatang anak ni Sisa..."
-                                        imgSrc="/Img/LandingPage/character/char-4.png"
-                                        compact={true}
-                                        />
-                                        <CharacterCard
-                                        name="Sisa"
-                                        detail="Si Sisa ay ina nina Crispin at Basilio..."
-                                        imgSrc="/Img/LandingPage/character/char-5.png"
-                                        compact={true}
-                                        />
-                                        <CharacterCard
-                                        name="Padre Salvi"
-                                        detail="Si Padre Salvi ay humalili kay Padre Damaso..."
-                                        imgSrc="/Img/LandingPage/character/char-6.png"
-                                        compact={true}
-                                        />
-                                    </div>
-                                </div>
+            {/* Slide 2 */}
+            <div className="w-full flex-shrink-0 px-2">
+                <div className="flex justify-center items-center gap-4 md:gap-6">
+                    <CharacterCard
+                        name="Padre Damaso"
+                        detail="Si Padre Damaso ay isang paring Pransiskano na matapos maglingkod nang mahabang panahon sa San Diego ay naipalipat sa ibang parokya. Siya ang tunay na ama ni Maria Clara."
+                        imgSrc="/Img/LandingPage/character/char-3.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                    <CharacterCard
+                        name="Crispin"
+                        detail="Si Crispin ay nakababatang anak ni Sisa. Siya ay isang sakristan at tagatugtog ng kampana sa simbahan ng San Diego."
+                        imgSrc="/Img/LandingPage/character/char-4.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                </div>
+            </div>
 
-                                {/* Slide 3 */}
-                                <div className="w-full flex-shrink-0 px-4 flex justify-center">
-                                    <div className="grid grid-cols-3 md:grid-cols-3 gap-4 max-w-md md:max-w-lg">
-                                        <CharacterCard
-                                        name="Kapitan Heneral"
-                                        detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan..."
-                                        imgSrc="/Img/LandingPage/character/char-7.png"
-                                        compact={true}
-                                        />
-                                        <CharacterCard
-                                        name="Tenyente Guevarra"
-                                        detail="Si Tenyente Guevarra ay isang matapat na tenyente..."
-                                        imgSrc="/Img/LandingPage/character/char-8.png"
-                                        compact={true}
-                                        />
-                                    </div>
-                                </div>
-                            </div>       
-                            {/* Navigation Dots */}
-                            <div className="flex justify-center mt-6 space-x-2">
-                            {[0, 1, 2].map((index) => (
-                                <motion.button
-                                key={index}
-                                className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                                    currentSlide === index ? 'bg-[#249EA0]' : 'bg-gray-300'
-                                }`}
-                                onClick={() => setCurrentSlide(index)}
-                                aria-label={`Go to slide ${index + 1}`}
-                                whileHover={{ scale: 1.2 }}
-                                whileTap={{ scale: 0.9 }}
-                                />
-                            ))}
-                            </div>
-                            
-                            {/* Navigation Arrows */}
-                            <motion.button
-                            className="absolute left-0 top-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
-                            onClick={() => setCurrentSlide((prev) => (prev === 0 ? 2 : prev - 1))}
-                            aria-label="Previous slide"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            >
-                            <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            </motion.button>
-                            <motion.button
-                            className="absolute right-0 top-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
-                            onClick={() => setCurrentSlide((prev) => (prev === 2 ? 0 : prev + 1))}
-                            aria-label="Next slide"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            >
-                            <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                            </motion.button>
-                        </AnimatedItem>
-                    </AnimatedSection>
+            {/* Slide 3 */}
+            <div className="w-full flex-shrink-0 px-2">
+                <div className="flex justify-center items-center gap-4 md:gap-6">
+                    <CharacterCard
+                        name="Sisa"
+                        detail="Si Sisa ay ina nina Crispin at Basilio. Siya ay martir na asawa ni Pedro na pabaya at malupit sa kanyang pamilya."
+                        imgSrc="/Img/LandingPage/character/char-5.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                    <CharacterCard
+                        name="Padre Salvi"
+                        detail="Si Padre Salvi ay humalili kay Padre Damaso bilang pari ng San Diego. Siya ay may lihim na pagsinta kay Maria Clara."
+                        imgSrc="/Img/LandingPage/character/char-6.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                </div>
+            </div>
+
+            {/* Slide 4 */}
+            <div className="w-full flex-shrink-0 px-2">
+                <div className="flex justify-center items-center gap-4 md:gap-6">
+                    <CharacterCard
+                        name="Kapitan Heneral"
+                        detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan sa Pilipinas. Siya ang lumakad na maalisan ng pagka-ekskomunyon si Ibarra."
+                        imgSrc="/Img/LandingPage/character/char-7.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                    <CharacterCard
+                        name="Tenyente Guevarra"
+                        detail="Si Tenyente Guevarra ay isang matapat na tenyente ng mga guwardiya sibil."
+                        imgSrc="/Img/LandingPage/character/char-8.png"
+                        compact={true}
+                        className="w-[calc(50%-0.5rem)]"
+                    />
+                </div>
+            </div>
+        </div>
+        
+        {/* Navigation Dots */}
+        <div className="flex justify-center mt-6 space-x-2">
+            {[0, 1, 2, 3].map((index) => (
+                <motion.button
+                    key={index}
+                    className={`w-3 h-3 rounded-full transition-colors duration-200 ${
+                        currentSlide === index ? 'bg-[#249EA0]' : 'bg-gray-300'
+                    }`}
+                    onClick={() => setCurrentSlide(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                />
+            ))}
+        </div>
+        
+        {/* Navigation Arrows */}
+        <motion.button
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+            onClick={() => setCurrentSlide((prev) => (prev === 0 ? 3 : prev - 1))}
+            aria-label="Previous slide"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+        >
+            <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+        </motion.button>
+        <motion.button
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+            onClick={() => setCurrentSlide((prev) => (prev === 3 ? 0 : prev + 1))}
+            aria-label="Next slide"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+        >
+            <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+        </motion.button>
+    </AnimatedItem>
+</AnimatedSection>
                 
                   <AnimatedSection className='py-5 px-15'  delay={0.1}>
                     <div className="flex flex-row justify-between items-center pb-5 gap-5 border-b-[1px] border-[#282725] ">
