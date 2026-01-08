@@ -313,17 +313,42 @@ export default function YouTubeVideoModal({
 
     const saveProgress = (completed: boolean) => {
         if (!kabanataId || hasAlreadySaved) {
+            console.log('No kabanataId or already saved');
             return;
         }
 
         setHasAlreadySaved(true);
 
-        router.post(route("student.saveVideoProgress"), {
-            kabanata_id: kabanataId,
+        const secondsWatched = Math.floor(secondsWatchedRef.current || 0);
+        
+        console.log('Saving progress:', {
+            kabanataId,
             completed,
-            seconds_watched: secondsWatchedRef.current || 0,
-            youtube_id: youtubeId,
-        }, { preserveState: true });
+            secondsWatched,
+            youtubeId
+        });
+
+        // Add error handling
+        try {
+            router.post(route("student.saveVideoProgress"), {
+                kabanata_id: kabanataId,
+                completed,
+                seconds_watched: secondsWatched,
+                youtube_id: youtubeId,
+            }, {
+                preserveState: true,
+                onError: (errors) => {
+                    console.error('Error saving video progress:', errors);
+                    setHasAlreadySaved(false); // Reset flag so we can retry
+                },
+                onSuccess: (response) => {
+                    console.log('Progress saved successfully:', response);
+                }
+            });
+        } catch (error) {
+            console.error('Failed to save progress:', error);
+            setHasAlreadySaved(false);
+        }
     };
 
     const handleCloseClick = () => {

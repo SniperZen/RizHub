@@ -419,33 +419,33 @@ const renderUnlockedContent = (image: PageData, index: number) => {
           {/* Left side - Empty on mobile, Gallery button on desktop */}
           <div className="flex-1">
             {/* Gallery Collection Button - Desktop Only */}
-            <button
-              onClick={() => setShowGalleryModal(true)}
-              className="hidden md:flex items-center space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-6 py-3 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              <svg 
-                className="w-5 h-5" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" 
-                />
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M9 4v16M4 9h16" 
-                />
-              </svg>
-              <span className="font-bold md:text-base">
-                Collection: {unlockedCount}/{images.length}
-              </span>
-            </button>
+<button
+    onClick={() => setShowGalleryModal(true)}
+    className="hidden w-[330px] xs:w-[340px] sm:w-[305px] md:flex items-center space-x-1 xs:space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-3 xs:px-4 py-2 xs:py-2.5 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+>
+    <svg 
+        className="w-4 h-4 xs:w-[245px] xs:h-3" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+    >
+        <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth={2} 
+            d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" 
+        />
+        <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth={2} 
+            d="M9 4v16M4 9h16" 
+        />
+    </svg>
+    <span className="font-bold text-xs xs:text-sm md:text-[13px] truncate">
+        Collection: {unlockedCount}/{images.length}
+    </span>
+</button>
           </div>
 
           {/* Right side - Audio Controls and Back Button */}

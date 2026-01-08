@@ -15,6 +15,7 @@
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="#faf8f7ff"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="{{ config('app.name', 'RizHub') }}">
     <link rel="apple-touch-icon" href="{{ asset('Img/LandingPage/logoapp1.jpg') }}">

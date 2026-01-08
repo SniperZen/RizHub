@@ -209,19 +209,49 @@ class StudentController extends Controller
     }
 
     public function saveVideoProgress(Request $request)
-    {
-        $request->validate([
-            'kabanata_id' => 'required|exists:kabanatas,id',
-            'completed' => 'required|boolean',
-            'seconds_watched' => 'sometimes|integer|min:0',
-            'youtube_id' => 'sometimes|string|nullable',
-        ]);
+{
+    // 1. Check if user is authenticated
+    if (!Auth::check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User not authenticated'
+        ], 401);
+    }
 
-        $user = Auth::user();
+    $request->validate([
+        'kabanata_id' => 'required|exists:kabanatas,id',
+        'completed' => 'required|boolean',
+        'seconds_watched' => 'sometimes|integer|min:0',
+        'youtube_id' => 'sometimes|string|nullable',
+    ]);
 
-        $youtubeId = $request->youtube_id ? trim($request->youtube_id) : null;
+    $user = Auth::user();
+    $youtubeId = $request->youtube_id ? trim($request->youtube_id) : null;
 
-        // Create or update the Video record for this kabanata and attach the youtube id
+    // 2. Debug logging
+    \Log::info('Video progress save attempt', [
+        'user_id' => $user->id,
+        'kabanata_id' => $request->kabanata_id,
+        'youtube_id' => $youtubeId,
+        'completed' => $request->completed,
+        'seconds_watched' => $request->seconds_watched
+    ]);
+
+    try {
+        // 3. First, ensure kabanata progress exists
+        $kabanataProgress = UserKabanataProgress::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'kabanata_id' => $request->kabanata_id,
+            ],
+            [
+                'unlocked' => true, // Default unlocked when first created
+                'progress' => 0,
+                'stars' => 0
+            ]
+        );
+
+        // 4. Create or update video record
         $video = Video::updateOrCreate(
             ['kabanata_id' => $request->kabanata_id],
             [
@@ -231,14 +261,8 @@ class StudentController extends Controller
             ]
         );
 
-        // Get or create kabanata progress
-        $kabanataProgress = UserKabanataProgress::firstOrCreate([
-            'user_id' => $user->id,
-            'kabanata_id' => $request->kabanata_id,
-        ]);
-
-        // Persist video progress (one record per video_id + kabanata_progress_id)
-        $vp = VideoProgress::updateOrCreate(
+        // 5. Save video progress
+        $videoProgress = VideoProgress::updateOrCreate(
             [
                 'video_id' => $video->id,
                 'kabanata_progress_id' => $kabanataProgress->id,
@@ -249,8 +273,28 @@ class StudentController extends Controller
             ]
         );
 
-        //return response()->json(['success' => true, 'video_id' => $video->id, 'video_progress_id' => $vp->id]);
+        \Log::info('Video progress saved successfully', [
+            'video_id' => $video->id,
+            'video_progress_id' => $videoProgress->id
+        ]);
+
+        // return response()->json([
+        //     'success' => true, 
+        //     'video_id' => $video->id, 
+        //     'video_progress_id' => $videoProgress->id
+        // ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error saving video progress: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        // return response()->json([
+        //     'success' => false,
+        //     'message' => 'Error saving progress: ' . $e->getMessage()
+        // ], 500);
     }
+}
 
 
     public function GuessCharacterPicker()

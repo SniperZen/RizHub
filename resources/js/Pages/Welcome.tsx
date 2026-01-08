@@ -325,22 +325,22 @@ export default function Welcome({ auth }: PageProps) {
                   
                   <div className="z-10 w-full md:flex-1 flex flex-col items-center md:items-start justify-center max-w-lg mx-auto md:mx-0 md:pl-10">
                     <motion.div 
-                        className="mt-5 md:mt-5 absolute left-5 top-5  md:mb-15 md:left-10 md:top-5 lg:top-5 xl:top-5"
+                        className="mt-5 md:mt-5 absolute left-5 top-2  md:mb-15 md:left-10 md:top-5 lg:top-5 xl:top-5"
                         variants={itemVariants}
                         transition={{ delay: 0.1 }}
                     >
                         <img 
                             src="/Img/LandingPage/Title.png" 
                             alt="RizHub Logo" 
-                            className="h-[80px] md:h-[90px] lg:h-[100px] transition-transform duration-300 hover:scale-105" 
+                            className="h-[70px] md:h-[90px] lg:h-[100px] transition-transform duration-300 hover:scale-105" 
                         />
                     </motion.div>
                       <motion.div 
-                        className="absolute left-[4%] top-[150px] md:top-[160px] lg:top-[170px] xl:top-[170px] max-w-md text-center"
+                        className="absolute left-[4%] top-[130px] md:top-[160px] lg:top-[170px] xl:top-[170px] max-w-md text-center"
                         variants={itemVariants}
                         transition={{ delay: 0.3 }}
                       >
-                            <p className="text-left font-['mono'] font-medium text-2xl md:text-2xl lg:text-2xl xl:text-2xl leading-8 lg:leading-10 text-[#282725]"
+                            <p className="text-left font-['mono'] font-medium text-base md:text-lg lg:text-[22px] leading-8 lg:leading-10 text-[#282725]"
                           >
                              Magsimula sa paglalakbay ng diwa ni Rizal!<br/>
                              Damhin ang saya at aral ng Noli Me Tangere<br/>
@@ -355,12 +355,12 @@ export default function Welcome({ auth }: PageProps) {
                         <motion.button
                         className="
                             absolute
-                            w-[160px] md:w-[180px] lg:w-[220px] lg:top-[10px] lg:left-[-20px]
-                            h-[50px] bottom-[60px] md:h-[60px] lg:h-[70px] lg:w-[210px]
+                            w-[150px] md:w-[180px] lg:w-[220px] lg:top-[10px] lg:left-[-20px]
+                            h-[50px] bottom-[80px] md:h-[60px] lg:h-[70px] lg:w-[210px]
                             bg-orange-500 hover:bg-orange-600 text-white 
                             text-2xl sm:text-2xl md:text-2xl lg:text-3xl font-extrabold
                             rounded-[50px] border-4 md:border-[6px] lg:border-[5px] border-[#C97B3A]
-                            flex items-center justify-center
+                            flex items-center justify-center left-[-30px] 
                             md:left-[-5px] md:bottom-[50px] xl:bottom-[30px]
                             z-50
 "
@@ -446,7 +446,7 @@ export default function Welcome({ auth }: PageProps) {
                 <AnimatedSection className="bg-gray-50 py-5 md:py-5 lg:pb-10 px-10 lg:px-10 text-center border-b-[1px] border-[#282725]">
                     <AnimatedItem delay={0.1}>
                       <h2 
-                        className="font-['Inter'] not-italic font-extrabold text-3xl md:text-4xl lg:text-[55px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-6 md:mb-12"
+                        className="font-['Inter'] not-italic font-extrabold text-2xl md:text-3xl lg:text-[40px] leading-[1.2] md:leading-[1.3] lg:leading-[69px] mb-6 md:mb-12"
                         style={{
                             color: '#249EA0',
                             textShadow: '-2px 3px 0px #282725'
@@ -500,119 +500,119 @@ export default function Welcome({ auth }: PageProps) {
                         />
                     </AnimatedItem>
 
-                    {/* Mobile/Tablet Carousel (visible on mobile/tablet) */}
-                    <AnimatedItem className="lg:hidden relative overflow-hidden max-w-2xl md:max-w-3xl mx-auto" delay={0.3}>
-                        <div
-                            className="flex transition-transform duration-500 ease-in-out"
-                            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                        >
-                            {/* Slide 1 */}
-                            <div className="w-full flex-shrink-0 px-4 flex justify-center">
-                                <div className="grid grid-cols-3 md:grid-cols-3 gap-4 min-w-2xl md:max-w-xl">
-                                    <CharacterCard
-                                    name="Crisostomo Ibarra"
-                                    detail="Si Crisostomo ay binatang anak ni Don Rafael Ibarra na nag-aral sa Europa. Siya ang kababata at kasintahan ni Maria Clara."
-                                    imgSrc="/Img/LandingPage/character/char-1.png"
-                                    compact={true}
-                                    />
-                                    <CharacterCard
-                                    name="Maria Clara"
-                                    detail="Si Maria Clara ay mayuming kasintahan ni Crisostomo Ibarra. Siya ang anak ni Donya Pia Alba kay Padre Damaso."
-                                    imgSrc="/Img/LandingPage/character/char-2.png"
-                                    compact={true}
-                                    />
-                                    <CharacterCard
-                                    name="Padre Damaso"
-                                    detail="Si Padre Damaso ay isang paring Pransiskano ..."
-                                    imgSrc="/Img/LandingPage/character/char-3.png"
-                                    compact={true}
-                                    />
+                        {/* Mobile/Tablet Carousel (visible on mobile/tablet) */}
+                        <AnimatedItem className="lg:hidden relative overflow-hidden max-w-2xl md:max-w-3xl mx-auto" delay={0.3}>
+                            <div
+                                className="flex transition-transform duration-500 ease-in-out"
+                                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                            >
+                                {/* Slide 1 */}
+                                <div className="w-full flex-shrink-0 px-4 flex justify-center">
+                                    <div className="grid grid-cols-3 md:grid-cols-3 gap-6 min-w-2xl md:max-w-xl">
+                                        <CharacterCard
+                                        name="Crisostomo Ibarra"
+                                        detail="Si Crisostomo ay binatang anak ni Don Rafael Ibarra na nag-aral sa Europa. Siya ang kababata at kasintahan ni Maria Clara."
+                                        imgSrc="/Img/LandingPage/character/char-1.png"
+                                        compact={true}
+                                        />
+                                        <CharacterCard
+                                        name="Maria Clara"
+                                        detail="Si Maria Clara ay mayuming kasintahan ni Crisostomo Ibarra. Siya ang anak ni Donya Pia Alba kay Padre Damaso."
+                                        imgSrc="/Img/LandingPage/character/char-2.png"
+                                        compact={true}
+                                        />
+                                        <CharacterCard
+                                        name="Padre Damaso"
+                                        detail="Si Padre Damaso ay isang paring Pransiskano ..."
+                                        imgSrc="/Img/LandingPage/character/char-3.png"
+                                        compact={true}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Slide 2 */}
-                            <div className="w-full flex-shrink-0 px-4 flex justify-center">
-                                <div className="grid grid-cols-3 md:grid-cols-3 gap-4 max-w-md md:max-w-lg">
-                                    <CharacterCard
-                                    name="Crispin"
-                                    detail="Si Crispin ay nakababatang anak ni Sisa..."
-                                    imgSrc="/Img/LandingPage/character/char-4.png"
-                                    compact={true}
-                                    />
-                                    <CharacterCard
-                                    name="Sisa"
-                                    detail="Si Sisa ay ina nina Crispin at Basilio..."
-                                    imgSrc="/Img/LandingPage/character/char-5.png"
-                                    compact={true}
-                                    />
-                                    <CharacterCard
-                                    name="Padre Salvi"
-                                    detail="Si Padre Salvi ay humalili kay Padre Damaso..."
-                                    imgSrc="/Img/LandingPage/character/char-6.png"
-                                    compact={true}
-                                    />
+                                {/* Slide 2 */}
+                                <div className="w-full flex-shrink-0 px-4 flex justify-center">
+                                    <div className="grid grid-cols-3 md:grid-cols-3 gap-4 max-w-md md:max-w-lg">
+                                        <CharacterCard
+                                        name="Crispin"
+                                        detail="Si Crispin ay nakababatang anak ni Sisa..."
+                                        imgSrc="/Img/LandingPage/character/char-4.png"
+                                        compact={true}
+                                        />
+                                        <CharacterCard
+                                        name="Sisa"
+                                        detail="Si Sisa ay ina nina Crispin at Basilio..."
+                                        imgSrc="/Img/LandingPage/character/char-5.png"
+                                        compact={true}
+                                        />
+                                        <CharacterCard
+                                        name="Padre Salvi"
+                                        detail="Si Padre Salvi ay humalili kay Padre Damaso..."
+                                        imgSrc="/Img/LandingPage/character/char-6.png"
+                                        compact={true}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Slide 3 */}
-                            <div className="w-full flex-shrink-0 px-4 flex justify-center">
-                                <div className="grid grid-cols-3 md:grid-cols-3 gap-4 max-w-md md:max-w-lg">
-                                    <CharacterCard
-                                    name="Kapitan Heneral"
-                                    detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan..."
-                                    imgSrc="/Img/LandingPage/character/char-7.png"
-                                    compact={true}
-                                    />
-                                    <CharacterCard
-                                    name="Tenyente Guevarra"
-                                    detail="Si Tenyente Guevarra ay isang matapat na tenyente..."
-                                    imgSrc="/Img/LandingPage/character/char-8.png"
-                                    compact={true}
-                                    />
+                                {/* Slide 3 */}
+                                <div className="w-full flex-shrink-0 px-4 flex justify-center">
+                                    <div className="grid grid-cols-3 md:grid-cols-3 gap-4 max-w-md md:max-w-lg">
+                                        <CharacterCard
+                                        name="Kapitan Heneral"
+                                        detail="Ang Kapitan Heneral ay ang pinakamakapangyarihan..."
+                                        imgSrc="/Img/LandingPage/character/char-7.png"
+                                        compact={true}
+                                        />
+                                        <CharacterCard
+                                        name="Tenyente Guevarra"
+                                        detail="Si Tenyente Guevarra ay isang matapat na tenyente..."
+                                        imgSrc="/Img/LandingPage/character/char-8.png"
+                                        compact={true}
+                                        />
+                                    </div>
                                 </div>
+                            </div>       
+                            {/* Navigation Dots */}
+                            <div className="flex justify-center mt-6 space-x-2">
+                            {[0, 1, 2].map((index) => (
+                                <motion.button
+                                key={index}
+                                className={`w-3 h-3 rounded-full transition-colors duration-200 ${
+                                    currentSlide === index ? 'bg-[#249EA0]' : 'bg-gray-300'
+                                }`}
+                                onClick={() => setCurrentSlide(index)}
+                                aria-label={`Go to slide ${index + 1}`}
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                                />
+                            ))}
                             </div>
-                        </div>       
-                        {/* Navigation Dots */}
-                        <div className="flex justify-center mt-6 space-x-2">
-                        {[0, 1, 2].map((index) => (
+                            
+                            {/* Navigation Arrows */}
                             <motion.button
-                            key={index}
-                            className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                                currentSlide === index ? 'bg-[#249EA0]' : 'bg-gray-300'
-                            }`}
-                            onClick={() => setCurrentSlide(index)}
-                            aria-label={`Go to slide ${index + 1}`}
-                            whileHover={{ scale: 1.2 }}
+                            className="absolute left-0 top-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+                            onClick={() => setCurrentSlide((prev) => (prev === 0 ? 2 : prev - 1))}
+                            aria-label="Previous slide"
+                            whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            />
-                        ))}
-                        </div>
-                        
-                        {/* Navigation Arrows */}
-                        <motion.button
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
-                        onClick={() => setCurrentSlide((prev) => (prev === 0 ? 2 : prev - 1))}
-                        aria-label="Previous slide"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        >
-                        <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                        </motion.button>
-                        <motion.button
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
-                        onClick={() => setCurrentSlide((prev) => (prev === 2 ? 0 : prev + 1))}
-                        aria-label="Next slide"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        >
-                        <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                        </motion.button>
-                    </AnimatedItem>
-                </AnimatedSection>
+                            >
+                            <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                            </motion.button>
+                            <motion.button
+                            className="absolute right-0 top-1/2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+                            onClick={() => setCurrentSlide((prev) => (prev === 2 ? 0 : prev + 1))}
+                            aria-label="Next slide"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            >
+                            <svg className="w-5 h-5 text-[#249EA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                            </motion.button>
+                        </AnimatedItem>
+                    </AnimatedSection>
                 
                   <AnimatedSection className='py-5 px-15'  delay={0.1}>
                     <div className="flex flex-row justify-between items-center pb-5 gap-5 border-b-[1px] border-[#282725] ">
@@ -620,11 +620,11 @@ export default function Welcome({ auth }: PageProps) {
                         <motion.img 
                           src="/Img/LandingPage/square2.png" 
                           alt="" 
-                          className="h-[300px] md:h-[400px] lg:h-[500px] transition-transform duration-300 hover:scale-105"
+                          className="h-[200px] md:h-[250px] lg:h-[400px] transition-transform duration-300 hover:scale-105"
                           whileHover={{ rotate: -2 }}
                         />
                       </AnimatedItem>
-                        <AnimatedItem className='flex flex-col items-center justify-center -ml-10 gap-4 order-1 md:order-2' delay={0.3}>
+                        <AnimatedItem className='flex flex-col items-center justify-center gap-4 order-1 md:order-2' delay={0.3}>
                            <h2 className="font-['Inter'] font-extrabold text-2xl md:text-3xl lg:text-[40px] mb-15 w-full md:w-[400px] lg:w-[500px] leading-[1.2] md:leading-[1.5] text-center">In Honor of Dr. José P. Rizal</h2>
                            <motion.img 
                              src="/Img/LandingPage/jose.png" 
@@ -663,7 +663,7 @@ export default function Welcome({ auth }: PageProps) {
 
                     {/* Copyright */} 
                     <AnimatedItem className='overflow-hidden' delay={0.4}>
-                        <p className="text-[#5b4a3b] font-['Inter'] font-medium text-sm md:text-base overflow-hidden">
+                        <p className="text-[#5b4a3b] font-['Inter'] font-medium text-xs md:text-base overflow-hidden">
                             © 2025 RizHub. All Rights Reserved.
                             | Developed with pride by the Occidental Mindoro State College |  Background music by 
                             <a 
@@ -675,7 +675,7 @@ export default function Welcome({ auth }: PageProps) {
                                 Bensound
                             </a>.
                         </p>      
-                        <p className="text-[#5b4a3b] font-['Inter'] font-medium text-sm md:text-base">
+                        <p className="text-[#5b4a3b] font-['Inter'] font-medium text-xs md:text-base">
                             Inspired by
                             <a
                             href="http://www.youtube.com/@CEFilipinoKlasiks"
