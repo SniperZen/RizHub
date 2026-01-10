@@ -12,6 +12,7 @@
         interface Props {
           characters: GuessCharacter[];
           kabanata_id: number;
+          kabanataHash?: string;
           kabanata_number: number;
           kabanata_title: string;
         }
@@ -20,7 +21,8 @@
           characters, 
           kabanata_id, 
           kabanata_number, 
-          kabanata_title 
+          kabanata_title,
+          kabanataHash,
         }: Props) {
           const [currentIndex, setCurrentIndex] = useState(0);
           const [isSpinning, setIsSpinning] = useState(false); // Start as false
@@ -52,7 +54,8 @@
                 // ⏳ After 3 seconds, redirect
                 setTimeout(() => {
                   const finalCharacterId = characters[current].id;
-                  router.visit(`/challenge/guessword/${finalCharacterId}/${kabanata_id}`);
+                  const kabanataParam = (typeof (kabanataHash) !== 'undefined' && kabanataHash) ? kabanataHash : kabanata_id;
+                  router.visit(`/challenge/guessword/${finalCharacterId}/${kabanataParam}`);
                 }, 3000);
 
                 return;

@@ -267,8 +267,9 @@ const ImageGalleryPage: React.FC<PageProps> = ({ images: initialImages, music, s
     }
   };
 
-  const playGuesswordGame = (kabanataId: number) => {
-    router.get(route('guessword.play', { kabanata: kabanataId }));
+  const playGuesswordGame = (kabanataId: number, kabanataHash?: string) => {
+    const param = kabanataHash ?? kabanataId;
+    router.get(route('guessword.play', { kabanata: param }));
   };
 
   const goUpOneLevel = () => {
