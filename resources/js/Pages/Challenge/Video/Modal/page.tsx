@@ -61,7 +61,7 @@ const PreVideoModal: React.FC<PreVideoModalProps> = ({
           </p>
 
           {/* Buttons appear after text */}
-          <div className="flex gap-6 mt-20 md:mt-24 lg:mt-24  relative top-[5px] sm:top-[55px] md:top-[50px] lg:top-[30px] opacity-0"
+          <div className="flex gap-6 mt-20 md:mt-24 lg:mt-24  relative top-[30px] sm:top-[55px] md:top-[50px] lg:top-[30px] opacity-0"
                style={{
                  animation: 'fadeIn 0.5s ease-out 0.8s both'
                }}>

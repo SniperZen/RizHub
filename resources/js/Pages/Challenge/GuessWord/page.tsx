@@ -674,7 +674,7 @@ const checkAnswer = async (source = "manual") => {
 
                         <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-120px] sm:mb-[-120px] md:mb-[-110px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
                             {/* Question Display */}
-                            <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[300px] sm:mb-[350px] md:mb-[280px] lg:mb-[5px] flex items-center justify-center">
+                            <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[280px] sm:mb-[350px] md:mb-[280px] lg:mb-[5px] flex items-center justify-center">
                                 <img
                                     src="/Img/Challenge/GuessWord/modalBG.png"
                                     alt="Wooden Background"

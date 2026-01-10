@@ -368,22 +368,22 @@ export default function Dashboard({
                     className="absolute inset-0 w-full h-full object-cover z-10"
                 />
 
-<div className="absolute top-20 sm:top-5 md:top-5 lg:top-3 xl:top-5 2xl:top-5 left-0 right-0 z-10 flex justify-center overflow-hidden">
-    <img
-        src="/Img/Dashboard/t-bg1.png"
-        alt="Noli Me Tangere BG"
-        className="object-contain h-auto
-            w-[800vw] max-w-[800px]
-            sm:w-[500vw] sm:max-w-[1000px]
-            md:w-[200vw] md:max-w-[1400px]
-            lg:w-[120vw] lg:max-w-[1800px]
-            xl:w-[100vw] xl:max-w-[2200px]
-            2xl:w-[100vw] 2xl:max-w-[2500px]"
-        style={{
-            animation: 'gentleHeartbeat 3s ease-in-out infinite'
-        }}
-    />
-</div>
+            <div className="absolute top-20 sm:top-5 md:top-5 lg:top-3 xl:top-5 2xl:top-5 left-0 right-0 z-10 flex justify-center overflow-hidden">
+                <img
+                    src="/Img/Dashboard/t-bg1.png"
+                    alt="Noli Me Tangere BG"
+                    className="object-contain h-auto
+                        w-[800vw] max-w-[800px]
+                        sm:w-[500vw] sm:max-w-[1000px]
+                        md:w-[200vw] md:max-w-[1400px]
+                        lg:w-[120vw] lg:max-w-[1800px]
+                        xl:w-[100vw] xl:max-w-[2200px]
+                        2xl:w-[100vw] 2xl:max-w-[2500px]"
+                    style={{
+                        animation: 'gentleHeartbeat 3s ease-in-out infinite'
+                    }}
+                />
+            </div>
 
                 <style>
                     {`
@@ -894,7 +894,7 @@ export default function Dashboard({
                                                         backgroundRepeat: 'no-repeat',
                                                     }}
                                                 >
-                                                    <h1 className="text-center text-lg sm:text-lg md:text-lg">{data.name}</h1>
+                                                    <h1 className="text-center text-base sm:text-lg md:text-lg">{data.name}</h1>
                                                 </div>
 
                                                 <div className="flex flex-col items-end">

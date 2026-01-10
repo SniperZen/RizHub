@@ -148,10 +148,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // Filter kabanatas (keep only first 64)
-    const filteredKabanatas = {
-        ...kabanatas,
-        data: kabanatas.data.filter(k => k.id <= 64)
-    };
+    // const filteredKabanatas = {
+    //     ...kabanatas,
+    //     data: kabanatas.data.filter(k => k.id <= 64)
+    // };
 
     // Function to check if all unlocked kabanatas have 80% or higher grade
     const areAllKabanatasAbove80Percent = () => {
@@ -169,17 +169,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    // const filteredKabanatas = {
-    // ...kabanatas,
-    // data: kabanatas.data
-    //     .filter(k => k.id <= 64)
-    //     .map(k => ({
-    //     ...k,
-    //     progress: 10,
-    //     stars: 3,
-    //     unlocked: true
-    //     }))
-    // };
+    const filteredKabanatas = {
+    ...kabanatas,
+    data: kabanatas.data
+        .filter(k => k.id <= 64)
+        .map(k => ({
+        ...k,
+        progress: 10,
+        stars: 3,
+        unlocked: true
+        }))
+    };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -772,7 +772,7 @@ const KabanataPage: React.FC<PageProps> = ({
                     {shouldShowDoor() ? (
                         /* Show only the door on the door page */
                         <div className="absolute flex flex-col items-center z-10 left-1/2 transform -translate-x-1/2 top-[180px] sm:top-[190px] md:top-[200px] lg:top-[220px]">
-                            <div className="relative w-[300px] h-[300px] top-[100px] md:top-[38px] lg:top-[3px] sm:w-[300px] sm:h-[300px] md:w-[350px] md:h-[350px] lg:w-[380px] lg:h-[380px] rounded-full flex items-center justify-center">
+                            <div className="relative w-[300px] h-[300px] top-[100px] md:top-[60px] lg:top-[3px] sm:w-[300px] sm:h-[300px] md:w-[350px] md:h-[350px] lg:w-[380px] lg:h-[380px] rounded-full flex items-center justify-center">
                                 {/* FIXED: Show UNLOCKED door when all unlocked kabanatas have 80% or higher grade */}
                                 {areAllKabanatasAbove80Percent() ? (
                                     // When all unlocked kabanatas have >= 80% grade, show UNLOCKED door
@@ -1143,7 +1143,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             }}>
                             {/* Text */}
                             <p 
-                                className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-28 opacity-0"
+                                className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-20 opacity-0"
                                 style={{
                                     animation: 'fadeIn 0.5s ease-out 0.6s both'
                                 }}
@@ -1161,20 +1161,20 @@ const KabanataPage: React.FC<PageProps> = ({
                             </p>
 
                             {/* Buttons appear after text */}
-                            <div className="flex gap-6 mt-[155px] flex-wrap justify-center opacity-0"
+                            <div className="flex gap-6 mt-[80px] flex-wrap justify-center opacity-0"
                                 style={{
                                     animation: 'fadeIn 0.5s ease-out 0.8s both'
                                 }}>
                                 <button
                                     onClick={retryVideo}
-                                    className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-3xl font-extrabold relative transition hover:scale-105"
+                                    className="w-auto h-[50px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Panoorin muli
                                 </button>
 
                                 <button
                                     onClick={proceedNext}
-                                    className="w-auto h-[60px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-extrabold relative transition hover:scale-105"
+                                    className="w-auto h-[50px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Magpatuloy
                                 </button>
