@@ -148,10 +148,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // Filter kabanatas (keep only first 64)
-    // const filteredKabanatas = {
-    //     ...kabanatas,
-    //     data: kabanatas.data.filter(k => k.id <= 64)
-    // };
+    const filteredKabanatas = {
+        ...kabanatas,
+        data: kabanatas.data.filter(k => k.id <= 64)
+    };
 
     // Function to check if all unlocked kabanatas have 80% or higher grade
     const areAllKabanatasAbove80Percent = () => {
@@ -169,17 +169,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    const filteredKabanatas = {
-    ...kabanatas,
-    data: kabanatas.data
-        .filter(k => k.id <= 64)
-        .map(k => ({
-        ...k,
-        progress: 10,
-        stars: 3,
-        unlocked: true
-        }))
-    };
+    // const filteredKabanatas = {
+    // ...kabanatas,
+    // data: kabanatas.data
+    //     .filter(k => k.id <= 64)
+    //     .map(k => ({
+    //     ...k,
+    //     progress: 10,
+    //     stars: 3,
+    //     unlocked: true
+    //     }))
+    // };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
@@ -725,7 +725,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage <= 1}
                             onClick={handlePreviousPage}
-                            className={`absolute right-[390px] md:right-[640px] lg:right-[735px] top-[12%] z-[60] w-auto h-auto mt-10 ${
+                            className={`absolute right-[290px] md:right-[640px] lg:right-[735px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage <= 1
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -752,7 +752,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <button
                             disabled={currentPage >= displayTotalPages}
                             onClick={handleNextPage}
-                            className={`absolute left-[380px] md:left-[620px] lg:left-[715px] top-[12%] z-[60] w-auto h-auto mt-10 ${
+                            className={`absolute left-[280px] md:left-[620px] lg:left-[715px] top-[12%] z-[60] w-auto h-auto mt-10 ${
                                 currentPage >= displayTotalPages
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:scale-110 transition-transform"
@@ -1143,7 +1143,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             }}>
                             {/* Text */}
                             <p 
-                                className="font-black-han-sans font-black text-3xl leading-[34px] text-[#95512C] mt-20 opacity-0"
+                                className="font-black-han-sans font-black text-base sm:text-lg md:text-2xl lg:text-3xl leading-[20px] lg:leading-[34px] text-[#95512C] mt-[55px] sm:mt-[55px] md:mt-[130px] lg:mt-[130px] opacity-0"
                                 style={{
                                     animation: 'fadeIn 0.5s ease-out 0.6s both'
                                 }}
@@ -1161,20 +1161,20 @@ const KabanataPage: React.FC<PageProps> = ({
                             </p>
 
                             {/* Buttons appear after text */}
-                            <div className="flex gap-6 mt-[80px] flex-wrap justify-center opacity-0"
+                            <div className="flex gap-4 md:gap-6 lg:gap-6 mt-[55px] sm:mt-[55px] md:mt-[150px] lg:mt-[150px] flex-wrap justify-center opacity-0"
                                 style={{
                                     animation: 'fadeIn 0.5s ease-out 0.8s both'
                                 }}>
                                 <button
                                     onClick={retryVideo}
-                                    className="w-auto h-[50px] px-8 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-xl font-extrabold relative transition hover:scale-105"
+                                    className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8  rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Panoorin muli
                                 </button>
 
                                 <button
                                     onClick={proceedNext}
-                                    className="w-auto h-[50px] px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-xl font-extrabold relative transition hover:scale-105"
+                                    className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Magpatuloy
                                 </button>

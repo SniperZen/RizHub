@@ -375,7 +375,7 @@ export default function Dashboard({
                     className="object-contain h-auto
                         w-[800vw] max-w-[800px]
                         sm:w-[500vw] sm:max-w-[1000px]
-                        md:w-[200vw] md:max-w-[1400px]
+                        md:w-[120vw] md:max-w-[1400px]
                         lg:w-[120vw] lg:max-w-[1800px]
                         xl:w-[100vw] xl:max-w-[2200px]
                         2xl:w-[100vw] 2xl:max-w-[2500px]"
@@ -422,7 +422,7 @@ export default function Dashboard({
                 </style>
                 
                 {/* Buttons Container - Fixed Positioning */}
-                <div className="relative z-50 flex flex-col items-center gap-6 mt-40 md:mt-42">
+                <div className="relative z-50 flex flex-col items-center gap-6 mt-40 md:mt-40">
                     {/* Play Button */}
                     <Button
                         className="w-[280px] h-[90px] py-4 rounded-[40px] bg-gradient-to-b from-[#FF6A00] to-[#D5703A] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-3xl font-black relative transition hover:scale-105 z-50"

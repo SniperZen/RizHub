@@ -39,11 +39,21 @@ const InstructionModal: React.FC<ModalProps> = ({
     };
   }, []);
 
-  // Split title for formatting
+  // Helper function to convert text to sentence case
+  const toSentenceCase = (str: string): string => {
+    if (!str || str.trim().length === 0) return str;
+    const trimmed = str.trim();
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+  };
+
+  // Split title for formatting and apply sentence case
   const getTitleParts = () => {
     if (!title) return { part1: "Kabanata", part2: "" };
     const parts = title.split(":");
-    return { part1: parts[0], part2: parts.slice(1).join(":") };
+    return { 
+      part1: toSentenceCase(parts[0] || ""), 
+      part2: parts.slice(1).join(":") 
+    };
   };
 
   useEffect(() => {
@@ -160,10 +170,10 @@ const InstructionModal: React.FC<ModalProps> = ({
 
       {/* Title Section */}
       <div className="absolute top-4 left-4 flex items-center">
-        <div className="bg-orange-600 font-mono text-white font-bold px-4 py-2 text-2xl">
+        <div className="bg-orange-600 font-mono text-white font-bold px-4 py-2 text-base sm:text-base md:text-xl lg:text-2xl">
           {titleParts.part1}:
         </div>
-        <div className="text-white font-mono font-bold px-2 py-2 text-2xl">
+        <div className="text-white font-mono font-bold px-2 py-2 text-base sm:text-base md:text-xl lg:text-2xl">
           {titleParts.part2}
         </div>
       </div>

@@ -25,68 +25,81 @@ interface DeleteConfirmationModalProps {
 }
 
 function DeleteConfirmationModal({ isOpen, onClose, onConfirm, isDeletingAll = false }: DeleteConfirmationModalProps) {
+  const [isBgLoaded, setIsBgLoaded] = useState(true);
+  
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div 
-        className="relative bg-gradient-to-b from-[#F9E3B0] to-[#E6C48B] rounded-[40px] px-1 pb-6 pt-5 flex flex-col items-center min-w-[500px] h-auto"
-        style={{ 
-          backgroundImage: "url('/Img/Dashboard/modalBG.png')",
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat"
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+      <div className="relative flex flex-col items-center">
+        {/* Background Image */}
+        <img
+          src="/Img/Dashboard/modalBG.png"
+          alt="Modal Background"
+          style={{
+          width: '700px',
+          height: '300px'
         }}
-      >
-        {/* Header Layer - Top Section */}
-        <div className="absolute bottom-[219px] left-0 right-0 h-25 flex items-center justify-center z-20">
-          <span className="text-white text-2xl font-black tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-            {isDeletingAll ? 'Delete All' : 'Delete'}
-          </span>
-        </div>
+          className="w-full h-auto rounded-[20px] md:rounded-[40px]"
+        />
         
-        {/* Close Button */}
-        <button
-          className="absolute top-2 right-10 rounded-full w-[45px] h-[60px] flex items-center justify-center transition hover:scale-110 z-50"
-          onClick={onClose}
-        >
-          <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
-        </button>
-        
-        {/* Body Layer - Content Section */}
-        <div className="relative flex flex-col items-center w-full px-[60px] mt-5 z-40">
-          <div className="mt-3 mb-8 w-full max-w-md">
-            {/* Message */}
-            <div className="mb-[35px] text-center">
-              <p className="fix text-[#3D2410] text-2xl px-5 font-bold mt-153">
-                {isDeletingAll 
-                  ? 'Sigurado ka ba na gusto mong burahin ang lahat ng mga notification?'
-                  : 'Sigurado ka ba na gusto mong burahin ang notification?'
-                }
-              </p> 
-              {isDeletingAll && (
-                <p className="fix text-[#3D2410] text-lg font-medium mt-2">
-                  This action cannot be undone.
-                </p>
-              )}
-            </div>
-            
-            {/* Buttons */}
-            <div className="flex justify-center gap-6 mb-25">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-5 py-1.5 bg-[#F8E193] mb-25 text-[#282725] text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={onConfirm}
-                className="px-5 py-1.5 bg-[#9A4112] text-white text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition hover:scale-105"
-              >
-                Delete
-              </button>
+        {/* Overlay Content Container */}
+        <div className="absolute inset-0 flex flex-col items-center justify-between rounded-[20px] md:rounded-[40px]">
+          {/* Header Layer - Top Section */}
+          <div className="relative h-[60px] md:h-[80px] w-full flex items-center justify-center z-20">
+            <span className="text-white text-xl md:text-2xl lg:text-3xl font-black tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] mt-2 md:mt-2 mb-6 sm:mb-6 md:mb-8 lg:mt-0">
+              {isDeletingAll ? 'Delete All' : 'Delete'}
+            </span>
+          </div>
+          
+          {/* Close Button */}
+          <button
+            className="absolute top-2 md:top-3 right-3 md:right-6 rounded-full w-[35px] h-[45px] md:w-[45px] md:h-[55px] flex items-center justify-center transition hover:scale-110 z-50 focus:outline-none focus:ring-2 focus:ring-white/50"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            <img 
+              src="/Img/Dashboard/X.png" 
+              alt="Close" 
+              className="w-full h-auto" 
+            />
+          </button>
+          
+          {/* Body Layer - Content Section */}
+          <div className="relative flex flex-col items-center w-full px-4 md:px-[60px] pb-4 md:pb-6 pt-2 md:pt-5 lg:bottom-5 z-40 flex-grow justify-center">
+            <div className="w-full max-w-md">
+              {/* Message */}
+              <div className="mb-6 md:mb-8 lg:mb-[20px] text-center">
+                <p className="text-[#3D2410] font-extrabold text-lg md:text-xl lg:text-3xl px-2 md:px-5 font-bold">
+                  {isDeletingAll 
+                    ? 'Sigurado ka ba na gusto mong burahin ang lahat ng mga mensahe?'
+                    : 'Sigurado ka ba na gusto mong burahin ang mensahe?'
+                  }
+                </p> 
+                {isDeletingAll && (
+                  <p className="text-[#3D2410] text-base md:text-lg font-medium mt-2 md:mt-3">
+                    This action cannot be undone.
+                  </p>
+                )}
+              </div>
+              
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6 mb-4 md:mb-6 lg:mb-6 pr-10 lg:pr-none pl-10 lg:pr-none">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-2 md:px-2 py-2 md:py-2.5 bg-[#F8E193] text-[#282725] text-base md:text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition-all hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto min-w-[120px] md:min-w-[140px]"
+                >
+                  Kanselahin
+                </button>
+                <button
+                  type="button"
+                  onClick={onConfirm}
+                  className="px-2 md:px-2 py-2 md:py-2.5 bg-[#9A4112] text-white text-base md:text-lg font-bold border-2 border-[#282725] shadow-[-2px_4px_0px_#282725] transition-all hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto min-w-[120px] md:min-w-[140px]"
+                >
+                  Burahin
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -270,125 +283,132 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                         </div>
 
                         {/* Mobile View - Full Screen Modal */}
-                        <div className="lg:hidden mt-20 flex w-full h-full px-4">
-                            {!selected ? (
-                                // Notification List View
-                                <div className="w-full h-full overflow-y-auto p-3">
-                                    {localNotifications.length > 0 ? (
-                                        <div className="space-y-4">
-                                            {localNotifications.map((notification) => (
-                                                <div
-                                                    key={notification.id}
-                                                    className={`cursor-pointer p-5 rounded-lg border-2 border-[#88643D] transition hover:bg-yellow-50/80 group relative ${
-                                                        notification.is_read
-                                                            ? 'bg-white/80'
-                                                            : 'bg-yellow-100/90'
-                                                    }`}
-                                                    onClick={() => handleSelect(notification)}
-                                                >
-                                                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                notification.is_read 
-                                                                    ? markAsUnread(notification.id)
-                                                                    : markAsRead(notification.id);
-                                                            }}
-                                                            className="w-6 h-6 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center"
-                                                            title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
-                                                        >
-                                                            {notification.is_read ? '↶' : '✓'}
-                                                        </button>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                openDeleteModal(notification.id);
-                                                            }}
-                                                            className="w-6 h-6 bg-red-600 text-white text-xs rounded-full flex items-center justify-center"
-                                                            title="Delete"
-                                                            disabled={isDeleting}
-                                                        >
-                                                            ×
-                                                        </button>
-                                                    </div>
-
-                                                    <div>
-                                                        <h3 className="font-bold text-[#3D2410] text-base pr-8">
-                                                            {notification.title}
-                                                            {!notification.is_read && (
-                                                                <span className="ml-2 w-2 h-2 bg-red-500 rounded-full inline-block"></span>
-                                                            )}
-                                                        </h3>
-
-                                                        <p className="text-xs text-gray-500 mt-2">
-                                                            {new Date(notification.created_at).toLocaleDateString()}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="text-center text-[#3D2410] py-8">
-                                            <p>No notifications yet.</p>
-                                        </div>
+                        <div className="lg:hidden mt-16 md:mt-20 w-full px-3 sm:px-4">
+                        {!selected ? (
+                            // Notification List View
+                            <div className="w-full max-w-full overflow-y-auto p-2 sm:p-3" 
+                                style={{ maxHeight: 'calc(500px - 100px)' }}>
+                            {localNotifications.length > 0 ? (
+                                <div className="space-y-3 sm:space-y-4">
+                                {localNotifications.map((notification) => (
+                                    <div
+                                    key={notification.id}
+                                    className={`cursor-pointer p-3 sm:p-4 rounded-lg border-2 border-[#88643D] transition-all duration-200 active:scale-[0.98] group relative ${
+                                        notification.is_read
+                                        ? 'bg-white/90'
+                                        : 'bg-yellow-100/90'
+                                    }`}
+                                    onClick={() => handleSelect(notification)}
+                                    >
+                                    {/* Unread indicator - more subtle */}
+                                    {!notification.is_read && (
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-lg"></div>
                                     )}
-                                </div>
-                            ) : (
-                                // Full Screen Message View
-                                <div className="w-full h-full flex flex-col bg-white/90 rounded-lg p-4">
-                                    {/* Header with Back Button */}
-                                    <div className="flex items-center mb-4 pb-3 border-b border-[#88643D]">
+
+                                    {/* Action Buttons - Always visible on mobile */}
+                                    <div className="absolute top-2 right-2 flex gap-1.5 sm:gap-2">
                                         <button
-                                            onClick={() => handleSelect(null)}
-                                            className="flex items-center gap-2 text-[#3D2410] hover:text-[#9A4112] transition"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            notification.is_read 
+                                            ? markAsUnread(notification.id)
+                                            : markAsRead(notification.id);
+                                        }}
+                                        className="w-6 h-6 sm:w-7 sm:h-7 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                        title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
                                         >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                            </svg>
-                                            <span className="font-medium">Back to Notifications</span>
+                                        {notification.is_read ? '↶' : '✓'}
+                                        </button>
+                                        <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openDeleteModal(notification.id);
+                                        }}
+                                        className="w-6 h-6 sm:w-7 sm:h-7 bg-red-600 text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                        title="Delete"
+                                        disabled={isDeleting}
+                                        >
+                                        ×
                                         </button>
                                     </div>
 
-                                    {/* Message Content */}
-                                    <div className="flex-1 overflow-y-auto">
-                                        <h2 className="font-bold text-2xl text-[#3D2410] mb-4">
-                                            {selected.title}
-                                        </h2>
-                                        
-                                        <div className="bg-white p-4 rounded-lg border border-[#88643D] min-h-[60vh]">
-                                            <p className="text-[#3D2410] text-lg leading-relaxed whitespace-pre-line">
-                                                {selected.message}
-                                            </p>
-                                        </div>
-                                        
-                                        <div className="flex justify-between items-center mt-6 pt-4 border-t border-[#88643D]">
-                                            <div>
-                                                <p className="text-sm text-gray-500">
-                                                    {new Date(selected.created_at).toLocaleString()}
-                                                </p>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <button
-                                                    onClick={() => selected.is_read 
-                                                        ? markAsUnread(selected.id)
-                                                        : markAsRead(selected.id)
-                                                    }
-                                                    className="px-4 py-2 bg-[#9A4112] text-white text-sm rounded-lg transition hover:scale-105"
-                                                >
-                                                    {selected.is_read ? 'Mark as Unread' : 'Mark as Read'}
-                                                </button>
-                                                <span className={`px-3 py-1 text-sm rounded-full ${
-                                                    selected.is_read 
-                                                        ? 'bg-green-100 text-green-800' 
-                                                        : 'bg-yellow-100 text-yellow-800'
-                                                }`}>
-                                                    {selected.is_read ? 'Read' : 'Unread'}
-                                                </span>
-                                            </div>
-                                        </div>
+                                    <div className="pr-12 sm:pr-14">
+                                        <h3 className="font-bold text-[#3D2410] text-sm sm:text-base pr-2">
+                                        {notification.title}
+                                        {/* Removed the floating dot for cleaner look */}
+                                        </h3>
+
+                                        <p className="text-xs text-gray-500 mt-1 sm:mt-2">
+                                        {new Date(notification.created_at).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                        })}
+                                        </p>
                                     </div>
+                                    </div>
+                                ))}
+                                </div>
+                            ) : (
+                                <div className="text-center text-[#3D2410] py-8">
+                                <p className="text-sm sm:text-base">No notifications yet.</p>
                                 </div>
                             )}
+                            </div>
+                        ) : (
+                            // Full Screen Message View
+                            <div className="w-full max-w-full flex flex-col p-3 sm:p-4" 
+                                style={{ maxHeight: 'calc(500px - 100px)' }}>
+                            {/* Header with Back Button */}
+                            <div className="flex items-center mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-[#88643D]">
+                                <button
+                                onClick={() => handleSelect(null)}
+                                className="flex items-center gap-1.5 sm:gap-2 text-[#3D2410] hover:text-[#9A4112] transition"
+                                >
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                                <span className="text-sm sm:text-lg font-bold">Back to Notifications</span>
+                                </button>
+                            </div>
+
+                            {/* Message Content */}
+                            <div className="flex-1 overflow-y-auto pr-1">
+                                <h2 className="font-bold text-base sm:text-lg text-[#3D2410] mb-3 sm:mb-4">
+                                {selected.title}
+                                </h2>
+                                
+                                <div className="bg-white/90 p-3 sm:p-4 rounded-lg border border-[#88643D] min-h-[100px] sm:min-h-[20vh]">
+                                <p className="text-[#3D2410] text-sm sm:text-base leading-relaxed whitespace-pre-line">
+                                    {selected.message}
+                                </p>
+                                </div>
+                                
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-[#88643D] gap-2">
+                                <div>
+                                    <p className="text-xs sm:text-sm text-gray-500">
+                                    {new Date(selected.created_at).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className={`px-2 py-1 text-xs rounded-full ${
+                                    selected.is_read 
+                                        ? 'bg-green-100 text-green-800' 
+                                        : 'bg-yellow-100 text-yellow-800'
+                                    }`}>
+                                    {selected.is_read ? 'Read' : 'Unread'}
+                                    </span>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        )}
                         </div>
 
                         {/* Desktop View (Original Layout) */}
