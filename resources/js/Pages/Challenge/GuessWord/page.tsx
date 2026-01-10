@@ -22,6 +22,7 @@ interface GuessWordProps {
     kabanata_title: string;
     music: number;
     sound: number;
+    kabanataHash?: string;
 
     unlockableImage?: {
         id: number;
@@ -31,7 +32,7 @@ interface GuessWordProps {
     };
 }
 
-export default function GuessWord({ character, questions, kabanataId, kabanata_number, kabanata_title, music: initialMusic, sound: initialSound,  unlockableImage }: GuessWordProps) {
+export default function GuessWord({ character, questions, kabanataId, kabanataHash, kabanata_number, kabanata_title, music: initialMusic, sound: initialSound,  unlockableImage }: GuessWordProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState<string[]>([]);
     const [showModal, setShowModal] = useState<null | "correct" | "wrong" | "timesup" | "finished">(null);
@@ -479,7 +480,10 @@ const checkAnswer = async (source = "manual") => {
     };
 
     const handleProceed = () => {
-        router.visit(route("challenge.quiz", { kabanataId, kabanata_number, kabanata_title }));
+        const kabanataParam = kabanataHash ?? kabanataId;
+        console.log('handleProceed called, kabanataParam=', kabanataParam);
+        // Provide both `kabanata` and `kabanataId` to satisfy Ziggy and the updated routes
+        router.visit(route("challenge.quiz", { kabanata: kabanataParam, kabanataId: kabanataParam, kabanata_number, kabanata_title }));
     };
 
     const handleRestart = () => {
@@ -890,7 +894,13 @@ const checkAnswer = async (source = "manual") => {
                                                         <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
                                                     </button>
                                                     {stars > 0 && (
-                                                        <button className="rounded-full relative z-20" onClick={handleProceed}>
+                                                        <button
+                                                            className="rounded-full relative z-50 pointer-events-auto"
+                                                            onClick={() => {
+                                                                console.log('Next button clicked');
+                                                                handleProceed();
+                                                            }}
+                                                        >
                                                             <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
                                                         </button>
                                                     )}

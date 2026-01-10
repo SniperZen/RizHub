@@ -46,16 +46,16 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     // Route::get('/dashboard', [StudentController::class, 'dashh'])->name('student.dashhboard');
     Route::get('/videos/{id}', [StudentController::class, 'show']);
     Route::post('/save-video-progress', [StudentController::class, 'saveVideoProgress'])->name('student.saveVideoProgress');
-    Route::get('/guess-characters/{kabanataId?}', [StudentController::class, 'guessCharacters'])->name('guess-characters');
-    Route::get('/challenge/guessword/{characterId}/{kabanataId?}', [StudentController::class, 'guessW'])->name('challenge.guessW');
+    Route::get('/guess-characters/{kabanata?}', [StudentController::class, 'guessCharacters'])->name('guess-characters');
+    Route::get('/challenge/guessword/{characterId}/{kabanata?}', [StudentController::class, 'guessW'])->name('challenge.guessW');
     Route::post('/guessword/save-progress', [StudentController::class, 'saveProgress'])->name('guessword.saveProgress');
-    Route::get('/challenge/quiz/{kabanataId}', [StudentController::class, 'Quiz'])
+    Route::get('/challenge/quiz/{kabanata}', [StudentController::class, 'Quiz'])
     ->name('challenge.quiz');
-    Route::get('/quiz/{kabanataId}', [StudentController::class, 'shows'])->name('quiz.show');
+    Route::get('/quiz/{kabanata}', [StudentController::class, 'shows'])->name('quiz.show');
     Route::post('/api/quiz/save-progress', [StudentController::class, 'saveProgresss'])->name('quiz.saveProgress');
     Route::post('/api/quiz/complete', [StudentController::class, 'complete'])->name('quiz.complete');
-    Route::get('/api/quiz/{kabanataId}/progress', [StudentController::class, 'getProgress'])->name('api.quiz.progress');
-    Route::delete('/api/quiz/{kabanataId}/reset', [StudentController::class, 'resetProgress'])->name('api.quiz.reset');
+    Route::get('/api/quiz/{kabanata}/progress', [StudentController::class, 'getProgress'])->name('api.quiz.progress');
+    Route::delete('/api/quiz/{kabanata}/reset', [StudentController::class, 'resetProgress'])->name('api.quiz.reset');
     Route::get('/Dashboard/image-gallery', [StudentController::class, 'gallery'])->name('image.gallery');
     Route::get('/notifications', [StudentController::class, 'notifications'])->name('notifications');
     Route::post('/notifications/mark-as-read', [StudentController::class, 'markAsRead'])->name('notifications.markAsRead');

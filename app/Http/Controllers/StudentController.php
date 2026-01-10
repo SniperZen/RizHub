@@ -20,6 +20,7 @@ use App\Models\Video;
 use App\Models\ImageGallery;
 use App\Models\Notification;
 use App\Mail\ImageUnlockMail;
+use App\Helpers\HashIdHelper;
 
 class StudentController extends Controller
 {
@@ -148,6 +149,9 @@ class StudentController extends Controller
             $kabanata->progress = $totalScore;
             $kabanata->stars = $p ? $p->stars : 0;
             $kabanata->unlocked = $p ? $p->unlocked : false;
+
+            // Add hashed id for frontend links
+            $kabanata->hash = HashIdHelper::encrypt($kabanata->id);
 
             return $kabanata;
         });
@@ -309,22 +313,34 @@ class StudentController extends Controller
     public function guessCharacters(Request $request)
     {
         $characters = GuessCharacter::all();
-        $kabanataId = $request->input('kabanata');
+        $kabanataParam = $request->input('kabanata');
 
-        $kabanata = Kabanata::find($kabanataId);
+        // Decode hashed kabanata if necessary
+        if ($kabanataParam) {
+            $decoded = HashIdHelper::decrypt($kabanataParam);
+            $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanataParam) ? (int) $kabanataParam : null);
+        } else {
+            $kabanataId = null;
+        }
+
+        $kabanata = $kabanataId ? Kabanata::find($kabanataId) : null;
 
         return Inertia::render('Challenge/GuessCharacter/page', [
             'characters' => $characters,
             'kabanata_id' => $kabanataId,
+            'kabanataHash' => $kabanataParam,
             'kabanata_number' => $kabanata->id ?? 1,
             'kabanata_title' => $kabanata->title ?? 'Unknown',
         ]);
     }
 
-    public function guessW($characterId, $kabanataId)
+    public function guessW($characterId, $kabanata)
     {
         $character = GuessCharacter::findOrFail($characterId);
         $user = Auth::user();
+        // Decode kabanata param (may be hashed)
+        $decoded = HashIdHelper::decrypt($kabanata);
+        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
         
         // Get the kabanata details
         $kabanata = Kabanata::findOrFail($kabanataId);
@@ -349,6 +365,7 @@ class StudentController extends Controller
             'character' => $character,
             'questions' => $questions,
             'kabanataId' => (int) $kabanataId,
+            'kabanataHash' => HashIdHelper::encrypt($kabanataId),
             'kabanata_number' => $kabanata->id,
             'kabanata_title' => $kabanata->title,
             'savedProgress' => $progress ? $progress->current_index : 0,
@@ -410,8 +427,12 @@ class StudentController extends Controller
     }
 
 
-    public function Quiz($kabanataId)
+    public function Quiz($kabanata)
     {
+        // Decode kabanata param (may be hashed)
+        $decoded = HashIdHelper::decrypt($kabanata);
+        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
+
         $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
 
         $kabanata = Kabanata::findOrFail($kabanataId);
@@ -423,14 +444,19 @@ class StudentController extends Controller
         
         return Inertia::render('Challenge/Quiz/page', [
             'kabanataId' => (int) $kabanataId,
+            'kabanataHash' => HashIdHelper::encrypt($kabanataId),
             'quizzes' => $quizzes,
             'kabanata_number' => $kabanata->number ?? $kabanata->id, 
             'kabanata_title' => $kabanata->title,
         ]);
     }
 
-    public function shows($kabanataId)
+    public function shows($kabanata)
     {
+        // Decode kabanata param (may be hashed)
+        $decoded = HashIdHelper::decrypt($kabanata);
+        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
+
         $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
         $kabanata = Kabanata::findOrFail($kabanataId);
         
@@ -442,6 +468,7 @@ class StudentController extends Controller
 
         return Inertia::render('Challenge/Quiz/Page', [
             'kabanataId' => (int) $kabanataId,
+            'kabanataHash' => HashIdHelper::encrypt($kabanataId),
             'kabanataTitle' => $kabanata->title,
             'quizzes' => $quizzes,
             'userProgress' => $userProgress,
@@ -774,11 +801,18 @@ if (!empty($guesswordProgressData)) {
 
     /**
      * Reset user's progress for a specific kabanata.
+     * Accepts a hashed kabanata id and decodes it via HashIdHelper::decrypt.
      */
-    public function resetProgress($kabanataId)
+    public function resetProgress($kabanataHash)
     {
         if (!Auth::check()) {
             return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Decode the hashed kabanata id
+        $kabanataId = HashIdHelper::decrypt($kabanataHash);
+        if (! $kabanataId) {
+            return response()->json(['error' => 'Invalid ID'], 404);
         }
 
         $kabanataProgress = UserKabanataProgress::where('user_id', Auth::id())
@@ -789,7 +823,7 @@ if (!empty($guesswordProgressData)) {
             // Delete related progress records
             QuizProgress::where('kabanata_progress_id', $kabanataProgress->id)->delete();
             GuessWordProgress::where('kabanata_progress_id', $kabanataProgress->id)->delete();
-            
+
             // Reset kabanata progress
             $kabanataProgress->update([
                 'progress' => 0,
@@ -797,6 +831,8 @@ if (!empty($guesswordProgressData)) {
                 'unlocked' => false,
             ]);
         }
+
+        return response()->json(['message' => 'Progress reset successfully'], 200);
     }
 
     public function sample(){
@@ -831,6 +867,8 @@ if (!empty($guesswordProgressData)) {
             // Unlock the image if perfect score was achieved
             $image->unlocked = (bool) $guesswordProgress;
             $image->image_url = asset($image->image_url);
+            // provide hashed kabanata id for frontend
+            $image->kabanata_hash = HashIdHelper::encrypt($image->kabanata_id);
         });
 
         return Inertia::render('Dashboard/ImageGallery/page', [

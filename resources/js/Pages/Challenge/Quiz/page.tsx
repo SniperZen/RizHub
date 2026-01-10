@@ -475,24 +475,36 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
 
                     {/* Answer Options */}
                     <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
-                        <div 
+                        <div
                             className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'A')}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => { setSelectedAnswer('A'); checkAnswer('A'); }}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('A'); checkAnswer('A'); } }}
                         >
                             <p className="text-xl font-medium">{currentQuiz.choice_a}</p>
                         </div>
-                        <div 
+                        <div
                             className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'B')}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => { setSelectedAnswer('B'); checkAnswer('B'); }}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('B'); checkAnswer('B'); } }}
                         >
                             <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
                         </div>
-                        <div 
+                        <div
                             className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
                             draggable
                             onDragStart={(e) => handleDragStart(e, 'C')}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => { setSelectedAnswer('C'); checkAnswer('C'); }}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('C'); checkAnswer('C'); } }}
                         >
                             <p className="text-lg font-medium">{currentQuiz.choice_c}</p>
                         </div>

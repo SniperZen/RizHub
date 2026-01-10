@@ -17,6 +17,7 @@ interface Kabanata {
     unlocked: boolean;
     music: number;
     sound: number;
+    hash?: string;
 }
 
 interface VideoProgress {
@@ -78,6 +79,13 @@ const KabanataPage: React.FC<PageProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("decimal");
     const [vibratingLockedId, setVibratingLockedId] = useState<number | null>(null);
+
+    // Helper: map numeric id to hashed id provided in `kabanatas` prop
+    const getKabanataHash = (id: number | null) => {
+        if (id === null) return null;
+        const found = filteredKabanatas.data.find(k => k.id === id) as any;
+        return found?.hash ?? id;
+    };
 
     // YouTube video mappings for kabanata 1-64
     const youtubeVideoMappings: Record<number, string> = {
@@ -521,7 +529,8 @@ const KabanataPage: React.FC<PageProps> = ({
         resumeBackgroundMusic();
 
         if (selectedKabanataId !== null) {
-            router.visit(route('guess-characters', { kabanata: selectedKabanataId }));
+            const hash = getKabanataHash(selectedKabanataId);
+            router.visit(route('guess-characters', { kabanata: hash }));
         }
     };
 
@@ -542,7 +551,8 @@ const KabanataPage: React.FC<PageProps> = ({
             ...prev,
             [kabanataId]: true
         }));
-        router.visit(route('guess-characters', { kabanata: kabanataId }));
+        const hash = getKabanataHash(kabanataId);
+        router.visit(route('guess-characters', { kabanata: hash }));
     };
 
     useEffect(() => {
