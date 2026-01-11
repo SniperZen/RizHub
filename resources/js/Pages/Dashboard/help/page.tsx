@@ -167,11 +167,6 @@ export default function HelpPage() {
   const userName = auth?.user?.name ?? name ?? 'User101';
   const userUnreadNotifications = auth?.user ? unreadNotifications : 0;
 
-  // Background images
-  const backgroundImage = '/Img/Dashboard/BG2.png';
-  const headerImage = '/Img/Dashboard/header-ins.png'; 
-  const personImage = '/Img/Dashboard/bg-per.png'; 
-
   const handleBack = () => {
     // Go back to dashboard
     if (auth?.user) {
@@ -196,7 +191,7 @@ export default function HelpPage() {
       
       <div 
         className="min-h-screen bg-cover bg-center bg-fixed relative overflow-hidden"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{ backgroundImage: "url('/Img/Dashboard/BG2.png')" }}
       >
         <div className="absolute inset-0"></div>
         
@@ -217,14 +212,19 @@ export default function HelpPage() {
 
         <div className="absolute z-10 min-h-screen">
           <div className="fix w-full max-w-4xl mb-2 overflow-hidden">
-            <div className="flex w-full h-screen overflow-hidden relative">
-              
-              {/* Mobile Illustration (425px and below) */}
-              <img 
-                src="/Img/Dashboard/mobileIllustartion.png" 
-                alt="Help Illustration Mobile"
-                className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:top-[150px] xl:top-[0px] block md:hidden"
-              />
+            <div className="flex w-full h-screen overflow-hidden relative items-center">
+
+              <div className="flex flex-col items-center justify-center ml-10">
+                <img 
+                  src="/Img/Dashboard/Illustartion.png" 
+                  alt="Help Illustration Mobile"
+                  style={{
+                    width: '900px',
+                    height: '500px'
+                  }}
+                  className="h-auto block md:hidden"
+                />
+              </div>
               
               {/* Desktop Illustration */}
               <img 
@@ -233,23 +233,23 @@ export default function HelpPage() {
                 className="object-contain w-[110vw] h-[110vh] ml-12 z-20 scale-110 top-[-500px] md:top-[120px] lg:bottom-[10px] xl:top-[0px] hidden md:block"
               />
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-20 md:px-20 lg:px-20 xl:px-20 sm:mr-5 md:mr-10 lg:mr-20">
-                <p className="text-white text-sm sm:text-xl md:text-xl lg:text-2xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[50px] space-y-5">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-5 sm:px-20 md:px-20 lg:px-20 xl:px-20 mr-12 ml-10 sm:mr-20 sm:ml-10 sm:ml-0 md:mr-2 lg:mr-10 ">
+                <p className="text-white text-[12px] sm:text-lg md:text-lg lg:text-xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[5px] sm:mb-[65px] md:mb-[80px] lg:mt-[50px] space-y-5">
                   <TypingText soundVolume={userSound} />
                 </p>
               </div>
               
               {/* Header stays centered with smooth floating animation */}
               <div 
-                className="absolute left-1/2 top-[90px] sm:top-[50px] md:top-[90px] lg:top-[90px] lg:pr-[60px]
+                className="absolute left-1/2 top-[10px] sm:top-[35px] md:top-[30px] lg:top-[80px] lg:ml-10 lg:top-[80px] lg:pr-[60px]
                           transform -translate-x-1/2 z-30 h-60 scale-150 w-[500px]
                           md:w-[990px] lg:w-[650px] xl:w-[650px]"
                 style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
               >
                 <img 
-                  src={headerImage} 
+                  src="/Img/Dashboard/header-ins.png"
                   alt="Help Header" 
-                  className="h-20 sm:h-20 md:h-[120px] lg:h-[100px] w-auto mx-auto"
+                  className="h-[50px] sm:h-20 md:h-[90px] lg:h-[100px] w-auto mx-auto"
                 />
               </div>
               <style>
@@ -269,7 +269,7 @@ export default function HelpPage() {
         {/* Person anchored to bottom-left of illustration */}
         <div className="hidden xl:block absolute bottom-0 right-12 z-30 scale-110">
           <img 
-            src={personImage} 
+            src="/Img/Dashboard/bg-per.png"
             alt="Person" 
             className="lg:max-w-[90vw] lg:max-h-[90vh] h-auto w-auto"
           />
