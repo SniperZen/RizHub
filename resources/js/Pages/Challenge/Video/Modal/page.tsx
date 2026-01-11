@@ -52,7 +52,7 @@ const PreVideoModal: React.FC<PreVideoModalProps> = ({
           
           {/* Text appears after background image */}
           <p 
-            className="font-black-han-sans font-black text-sm sm:text-sm md:text-xl lg:text-3xl leading-[20px] md:leading-[30px] lg:leading-[30px] text-center text-[#95512C] relative top-[10px] lg:top-[40px] opacity-0"
+            className="font-black-han-sans font-black text-sm sm:text-sm md:text-2xl lg:text-3xl leading-[20px] md:leading-[30px] lg:leading-[30px] text-center text-[#95512C] relative top-[10px] md:top-[30px] lg:top-[40px] opacity-0"
             style={{
               animation: 'fadeIn 0.5s ease-out 0.6s both'
             }}
@@ -61,7 +61,7 @@ const PreVideoModal: React.FC<PreVideoModalProps> = ({
           </p>
 
           {/* Buttons appear after text */}
-          <div className="flex gap-2 sm:gap-2 md:gap-6 lg:gap-6 mt-[35px] sm:mt-20 md:mt-24 lg:mt-24  relative top-[40px] sm:top-[50px] md:top-[50px] lg:top-[50px] opacity-0"
+          <div className="flex gap-2 sm:gap-2 md:gap-6 lg:gap-6 mt-[35px] sm:mt-20 md:mt-24 lg:mt-24  relative top-[25px] sm:top-[50px] md:top-[70px] lg:top-[50px] opacity-0"
                style={{
                  animation: 'fadeIn 0.5s ease-out 0.8s both'
                }}>
