@@ -99,10 +99,10 @@
 
         {/* Title */}
         <div className="absolute top-4 left-4 flex items-center">
-          <div className="bg-orange-600 text-white font-bold font-mono px-4 py-2 text-2xl">
+          <div className="bg-orange-600 text-white font-bold font-mono px-4 py-2 text-base sm:text-base md:text-xl lg:text-2xl">
             Kabanata {kabanata_number}:
           </div>
-          <div className="text-white font-bold font-mono px-2 py-2 text-2xl">
+          <div className="text-white font-bold font-mono px-2 py-2 text-base sm:text-base md:text-xl lg:text-2xl">
             {kabanata_title}
           </div>
         </div>
@@ -116,9 +116,9 @@
         {isSpinning ? (
           <>
             <img
-              src="/Img/Challenge/GuessChar/ModalBG.png"
-              alt="modal background"
-              className="absolute w-[550px] h-auto block lg:hidden"
+            src="/Img/Challenge/GuessChar/ModalBG.png"
+            alt="modal"
+            className="absolute w-[370px] h-[450px] lg:w-[600px] mx-auto lg:h-[450px] lg:w-auto block lg:hidden"
             />
 
             <img
@@ -128,8 +128,8 @@
             />
             
             {/* Title header positioned at the top of the background */}
-            <div className="absolute bottom-[296px] left-0 right-6 py-4 z-10">
-              <h1 className="text-white text-3xl font-bold text-center">
+            <div className="absolute bottom-[300px] lg:bottom-[296px] left-0 right-6 py-4 z-10">
+              <h1 className="text-white text-xl lg:text-3xl font-bold text-center">
                 Mangyaring iligtas...
               </h1>
             </div>
@@ -145,18 +145,18 @@
                       key={char.id}
                       className="text-center flex-shrink-0 flex flex-col items-center"
                       style={{ 
-                        width: window.innerWidth < 1024 ? "120px" : "140px", 
-                        margin: window.innerWidth < 1024 ? "0 8px" : "0 16px" 
+                        width: window.innerWidth < 1024 ? "100px" : "140px", 
+                        margin: window.innerWidth < 1024 ? "0 4px" : "0 16px" 
                       }}
                     >
                       <img
                         src={`/Img/LandingPage/character/${char.filename}.png`}
                         alt={char.c_name}
-                        className={`${window.innerWidth < 1024 ? "w-20 h-28" : "w-28 h-36"} object-contain ${
+                        className={`${window.innerWidth < 1024 ? "w-[125px] h-[130px]" : "w-[125px] h-[120px]"} object-contain ${
                           index === half ? "scale-125" : "opacity-70"
                         } transition-all duration-300`}
                       />
-                      <p className="mt-2 font-bold text-black text-2xl">{char.c_name}</p>
+                      <p className="mt-10 lg:mt-4 font-black text-sm lg:text-xl">{char.c_name}</p>
                     </div>
                   );
                 })}
@@ -167,21 +167,21 @@
                     <img
                       src="/Img/Challenge/GuessChar/ModalBG.png"
                       alt="modal"
-                      className="w-[550px]"
+                      className=" object-contain w-[370px] h-[450px] lg:w-[600px] mx-auto lg:h-[450px] lg:w-auto"
                     />
                       {/* Title header positioned at the top of the background */}
-                      <div className="absolute bottom-[266px] left-0 right-6 py-4 z-10">
-                        <h1 className="text-white text-3xl font-bold text-center">
+                      <div className="absolute bottom-[190px] lg:bottom-[270px] left-0 right-6 py-4 z-10">
+                        <h1 className="text-white text-xl lg:text-3xl font-bold text-center">
                           Ang isang ito!
                         </h1>
                       </div>
-                    <div className="flex flex-col items-center justify-center -mt-[300px]">
+                    <div className="flex flex-col items-center justify-center -mt-[275px] lg:-mt-[300px]">
                       <img
                         src={`/Img/LandingPage/character/${characters[currentIndex].filename}.png`}
                         alt={characters[currentIndex].c_name}
-                        className="w-40 h-48 object-contain drop-shadow-lg"
+                        className="w-[125px] h-[145px] lg:w-40 lg:h-48 object-contain drop-shadow-lg"
                       />
-                      <p className="mt-4 font-black text-3xl">
+                      <p className="lg:mt-4 font-black text-lg lg:text-2xl">
                         {characters[currentIndex].c_name}
                       </p>
                     </div>

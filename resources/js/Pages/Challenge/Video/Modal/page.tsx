@@ -36,11 +36,11 @@ const PreVideoModal: React.FC<PreVideoModalProps> = ({
           transformOrigin: 'center'
         }}
       >
-        <img
-          src="/Img/Challenge/vidModal.png"
-          alt="Wooden Modal"
-          className="w-full h-auto"
-        />
+      <img
+        src="/Img/Challenge/vidModal.png"
+        alt="Wooden Modal"
+        className="w-full h-auto object-contain max-w-[900px] mx-auto lg:h-[500px] lg:w-auto"
+      />
       </div>
       
       {/* Text content container - appears after background image is fully visible */}

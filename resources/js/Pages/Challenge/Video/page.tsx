@@ -261,7 +261,7 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                         <img
                             src="/Img/Challenge/vidModal.png"
                             alt="Wooden Modal"
-                            className="w-full h-auto"
+                            className="w-full h-auto object-contain max-w-[900px] mx-auto lg:h-[500px] lg:w-auto"
                         />
                     </div>
                     
@@ -274,7 +274,7 @@ const YouTubeVideoModal: React.FC<YouTubeVideoModalProps> = ({
                             
                             {/* Text appears after background image */}
                             <p 
-                                className="font-black-han-sans font-black text-2xl sm:text-2xl md:text-2xl lg:text-3xl leading-[30px] text-center text-[#95512C] relative top-[40px] lg:top-[40px] opacity-0"
+                                className="font-black-han-sans font-black text-sm sm:text-sm md:text-2xl lg:text-3xl leading-[30px] text-center text-[#95512C] relative top-[40px] lg:top-[40px] opacity-0"
                                 style={{
                                 animation: 'fadeIn 0.5s ease-out 0.6s both'
                                 }}

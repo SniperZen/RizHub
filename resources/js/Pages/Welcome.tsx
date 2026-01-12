@@ -648,7 +648,7 @@ export default function Welcome({ auth }: PageProps) {
                              whileHover={{ y: -5 }}
                            />
                             <p className="text-[#3d3b3a] mt-2 text-sm md:text-base lg:text-xl font-['Inter'] italic max-w-2xl mx-auto text-center leading-relaxed">
-                            “Noli Me Tangere” — ang dakilang akdang nagmulat sa kamalayan ng sambayanang Pilipino.
+                            "Noli Me Tangere" — ang dakilang akdang nagmulat sa kamalayan ng sambayanang Pilipino.
                             Ang RizHub ay handog bilang pagpupugay sa kanyang katalinuhan, kabayanihan, at walang-hanggang inspirasyon sa edukasyon at bayan.
                             </p>
                         </AnimatedItem>
@@ -1193,80 +1193,163 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                 </div>
                             </form>
                         ) : (
-                            <form onSubmit={handleRegister} className="w-full flex flex-col items-center">
-                                {/* Name */}
-                                <div className="w-full mb-5 relative">
-                                    <input
-                                        id="reg_name"
-                                        type="text"
-                                        name="name"
-                                        className="peer w-full rounded-full px-4 py-2 md:px-5 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
-                                        value={regData.name}
-                                        onChange={e => setRegData('name', e.target.value)}
-                                        onFocus={() => setIsPasswordFocused(false)}
-                                        placeholder="name"
-                                        required
-                                        style={{ border: '2px solid #fff' }}
-                                    />
-                                    <label
-                                        htmlFor="reg_name"
-                                        className={`
-                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
-                                            ${regData.name 
-                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
-                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
-                                            }
-                                        `}
-                                        style={{
-                                            transform: regData.name ? 'none' : 'translateY(-50%)'
-                                        }}
-                                    >
-                                        Name:
-                                    </label>
-                                </div>
-                                
-                                {/* Email */}
-                                <div className="w-full mb-5 relative">
-                                    <input
-                                        id="reg_email"
-                                        type="email"
-                                        name="email"
-                                        className="peer w-full rounded-full px-4 py-2 md:px-5 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
-                                        value={regData.email}
-                                        onChange={e => setRegData('email', e.target.value)}
-                                        onFocus={() => setIsPasswordFocused(false)}
-                                        placeholder="email"
-                                        required
-                                        style={{ border: '2px solid #fff' }}
-                                    />
-                                    <label
-                                        htmlFor="reg_email"
-                                        className={`
-                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
-                                            ${regData.email 
-                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
-                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
-                                            }
-                                        `}
-                                        style={{
-                                            transform: regData.email ? 'none' : 'translateY(-50%)'
-                                        }}
-                                    >
-                                        Email:
-                                    </label>
-                                </div>                     
-                                
-                                {/* Password */}
-                                <div className="w-full mb-5 relative">
-                                    <div className="relative">
+                            <div className="w-full flex flex-col items-center">
+                                <form onSubmit={handleRegister} className="w-full">
+                                    {/* Name */}
+                                    <div className="w-full mb-5 relative">
                                         <input
-                                            id="reg_password"
+                                            id="reg_name"
+                                            type="text"
+                                            name="name"
+                                            className="peer w-full rounded-full px-4 py-2 md:px-5 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                            value={regData.name}
+                                            onChange={e => setRegData('name', e.target.value)}
+                                            onFocus={() => setIsPasswordFocused(false)}
+                                            placeholder="name"
+                                            required
+                                            style={{ border: '2px solid #fff' }}
+                                        />
+                                        <label
+                                            htmlFor="reg_name"
+                                            className={`
+                                                absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                                ${regData.name 
+                                                    ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                    : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                                }
+                                            `}
+                                            style={{
+                                                transform: regData.name ? 'none' : 'translateY(-50%)'
+                                            }}
+                                        >
+                                            Name:
+                                        </label>
+                                    </div>
+                                    
+                                    {/* Email */}
+                                    <div className="w-full mb-5 relative">
+                                        <input
+                                            id="reg_email"
+                                            type="email"
+                                            name="email"
+                                            className="peer w-full rounded-full px-4 py-2 md:px-5 md:py-2.5 text-base md:text-base border-2 border-white outline-none focus:outline-none focus:ring-0 focus:shadow-none bg-[#FA7816] text-[#5A3416] placeholder-transparent font-semibold shadow-inner"
+                                            value={regData.email}
+                                            onChange={e => setRegData('email', e.target.value)}
+                                            onFocus={() => setIsPasswordFocused(false)}
+                                            placeholder="email"
+                                            required
+                                            style={{ border: '2px solid #fff' }}
+                                        />
+                                        <label
+                                            htmlFor="reg_email"
+                                            className={`
+                                                absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                                ${regData.email 
+                                                    ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                    : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                                }
+                                            `}
+                                            style={{
+                                                transform: regData.email ? 'none' : 'translateY(-50%)'
+                                            }}
+                                        >
+                                            Email:
+                                        </label>
+                                    </div>                     
+                                    
+                                    {/* Password */}
+                                    <div className="w-full mb-5 relative">
+                                        <div className="relative">
+                                            <input
+                                                id="reg_password"
+                                                type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                value={regData.password}
+                                                onChange={(e) => setRegData('password', e.target.value)}
+                                                onFocus={() => setIsPasswordFocused(true)}
+                                                onBlur={() => setIsPasswordFocused(false)}
+                                                placeholder="password"
+                                                required
+                                                className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold 
+                                                    ${
+                                                        regData.password_confirmation
+                                                        ? regData.password === regData.password_confirmation
+                                                            ? "border-orange-500 bg-orange-100"
+                                                            : "border-red-500 bg-red-100"
+                                                        : "border-white bg-[#FA7816]"
+                                                    } text-[#5A3416] placeholder-transparent`}
+                                            />
+                                            <label
+                                                htmlFor="reg_password"
+                                                className={`
+                                                    absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
+                                                    ${regData.password 
+                                                        ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
+                                                        : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
+                                                    }
+                                                `}
+                                                style={{
+                                                    transform: regData.password ? 'none' : 'translateY(-50%)'
+                                                }}
+                                            >
+                                                Password:
+                                            </label>
+                                        </div>
+                                        
+                                        {/* PASSWORD REQUIREMENTS - MOBILE VIEW ONLY (BELOW PASSWORD FIELD) */}
+                                        <div className="md:hidden">
+                                            {isPasswordFocused && !isLogin && (
+                                                <div className="mt-3 w-full">
+                                                    <div className="p-4 bg-white rounded-xl shadow-lg">
+                                                        <p className="text-[#5A3416] text-base font-bold mb-3">Password must contain:</p>
+                                                        <ul className="text-sm space-y-1.5">
+                                                            <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600' : 'text-red-600'}`}>
+                                                                <span className="mr-2 font-bold">{passwordChecks.hasUppercase ? '✓' : '✗'}</span>
+                                                                <span className={passwordChecks.hasUppercase ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                    At least one uppercase letter
+                                                                </span>
+                                                            </li>
+                                                            <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-green-600' : 'text-red-600'}`}>
+                                                                <span className="mr-2 font-bold">{passwordChecks.hasLowercase ? '✓' : '✗'}</span>
+                                                                <span className={passwordChecks.hasLowercase ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                    At least one lowercase letter
+                                                                </span>
+                                                            </li>
+                                                            <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600' : 'text-red-600'}`}>
+                                                                <span className="mr-2 font-bold">{passwordChecks.hasNumber ? '✓' : '✗'}</span>
+                                                                <span className={passwordChecks.hasNumber ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                    At least one number (0-9)
+                                                                </span>
+                                                            </li>
+                                                            <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-green-600' : 'text-red-600'}`}>
+                                                                <span className="mr-2 font-bold">{passwordChecks.hasSpecialChar ? '✓' : '✗'}</span>
+                                                                <span className={passwordChecks.hasSpecialChar ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                    At least one special character
+                                                                </span>
+                                                            </li>
+                                                            <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-green-600' : 'text-red-600'}`}>
+                                                                <span className="mr-2 font-bold">{passwordChecks.hasMinLength ? '✓' : '✗'}</span>
+                                                                <span className={passwordChecks.hasMinLength ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                    At least 8 characters long
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Confirm Password */}
+                                    <div className="w-full relative">
+                                        <input
+                                            id="reg_password_confirmation"
                                             type={showPassword ? "text" : "password"}
-                                            name="password"
-                                            value={regData.password}
-                                            onChange={(e) => setRegData('password', e.target.value)}
-                                            onFocus={() => setIsPasswordFocused(true)}
-                                            placeholder="password"
+                                            name="password_confirmation"
+                                            value={regData.password_confirmation}
+                                            onChange={(e) => setRegData('password_confirmation', e.target.value)}
+                                            onFocus={() => setIsPasswordFocused(false)}
+                                            placeholder="confirm password"
                                             required
                                             className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold 
                                                 ${
@@ -1274,171 +1357,136 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                                     ? regData.password === regData.password_confirmation
                                                         ? "border-orange-500 bg-orange-100"
                                                         : "border-red-500 bg-red-100"
-                                                    : "border-white bg-[#FA7816]"
+                                                    : "border-white  bg-[#FA7816]"
                                                 } text-[#5A3416] placeholder-transparent`}
                                         />
                                         <label
-                                            htmlFor="reg_password"
+                                            htmlFor="reg_password_confirmation"
                                             className={`
                                                 absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
-                                                ${regData.password 
+                                                ${regData.password_confirmation 
                                                     ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
                                                     : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
                                                 }
                                             `}
                                             style={{
-                                                transform: regData.password ? 'none' : 'translateY(-50%)'
+                                                transform: regData.password_confirmation ? 'none' : 'translateY(-50%)'
                                             }}
                                         >
-                                            Password:
+                                            Confirm Password:
+                                        </label>
+                                        
+                                        {/* Matching Indicator Message */}
+                                        {showMatchMessage && (
+                                            <p
+                                                className={`text-xs mt-1 text-base font-semibold ${
+                                                    regData.password === regData.password_confirmation
+                                                    ? "text-white"
+                                                    : "text-black"
+                                                }`}
+                                            >
+                                                {regData.password === regData.password_confirmation
+                                                    ? "Passwords match!"
+                                                    : "Passwords do not match!"}
+                                            </p>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="w-full mb-2 flex items-center justify-center">
+                                        <input
+                                            id="terms"
+                                            type="checkbox"
+                                            checked={regData.terms ?? false}
+                                            onChange={e => setRegData('terms', e.target.checked)}
+                                            onFocus={() => setIsPasswordFocused(false)}
+                                            required
+                                            className="mr-2 accent-[#5A3416]"
+                                        />
+                                        <label
+                                            htmlFor="terms"
+                                            className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
+                                        >
+                                            <span>
+                                            By registering, you agree to our{' '}
+                                            <button
+                                                type="button"
+                                                className="underline font-semibold hover:text-[#FF9B50]"
+                                                onClick={() => setShowTermsModal(true)}
+                                            >
+                                                Terms of Service
+                                            </button>{' '}
+                                            and{' '}
+                                            <button
+                                                type="button"
+                                                className="underline font-semibold hover:text-[#FF9B50]"
+                                                onClick={() => setShowPrivacyModal(true)}
+                                            >
+                                               Privacy Policy.
+                                            </button>
+                                            .
+                                        </span>
+
+                                            <span className="text-red-700 ml-1">*</span>
                                         </label>
                                     </div>
-                                </div>
-                                
-                                {/* Confirm Password */}
-                                <div className="w-full relative">
-                                    <input
-                                        id="reg_password_confirmation"
-                                        type={showPassword ? "text" : "password"}
-                                        name="password_confirmation"
-                                        value={regData.password_confirmation}
-                                        onChange={(e) => setRegData('password_confirmation', e.target.value)}
-                                        onFocus={() => setIsPasswordFocused(false)}
-                                        placeholder="confirm password"
-                                        required
-                                        className={`peer w-full rounded-full px-4 md:px-5 py-2 md:py-2.5 text-base md:text-base border-2 outline-none focus:ring-0 focus:shadow-none font-semibold 
-                                            ${
-                                                regData.password_confirmation
-                                                ? regData.password === regData.password_confirmation
-                                                    ? "border-orange-500 bg-orange-100"
-                                                    : "border-red-500 bg-red-100"
-                                                : "border-white  bg-[#FA7816]"
-                                            } text-[#5A3416] placeholder-transparent`}
-                                    />
-                                    <label
-                                        htmlFor="reg_password_confirmation"
-                                        className={`
-                                            absolute left-4 md:left-5 text-white text-base font-semibold pointer-events-none transition-all duration-200 z-10
-                                            ${regData.password_confirmation 
-                                                ? "-top-2.5 text-base bg-[#FA7816] px-2.5 rounded-full" 
-                                                : "top-1/2 -translate-y-1/2 peer-focus:-top-1 peer-focus:text-base peer-focus:bg-[#FA7816] peer-focus:px-2.5 peer-focus:rounded-full"
-                                            }
-                                        `}
-                                        style={{
-                                            transform: regData.password_confirmation ? 'none' : 'translateY(-50%)'
-                                        }}
-                                    >
-                                        Confirm Password:
-                                    </label>
                                     
-                                    {/* Matching Indicator Message */}
-                                    {showMatchMessage && (
-                                        <p
-                                            className={`text-xs mt-1 text-base font-semibold ${
-                                                regData.password === regData.password_confirmation
-                                                ? "text-white"
-                                                : "text-black"
-                                            }`}
-                                        >
-                                            {regData.password === regData.password_confirmation
-                                                ? "Passwords match!"
-                                                : "Passwords do not match!"}
-                                        </p>
-                                    )}
-                                </div>
-                                
-                                <div className="w-full mb-2 flex items-center justify-center">
-                                    <input
-                                        id="terms"
-                                        type="checkbox"
-                                        checked={regData.terms ?? false}
-                                        onChange={e => setRegData('terms', e.target.checked)}
-                                        onFocus={() => setIsPasswordFocused(false)}
-                                        required
-                                        className="mr-2 accent-[#5A3416]"
-                                    />
-                                    <label
-                                        htmlFor="terms"
-                                        className="flex items-center justify-center text-[#000000] text-10xxl md:text-10xxl mt-6 select-none"
-                                    >
-                                        <span>
-                                        By registering, you agree to our{' '}
-                                        <button
-                                            type="button"
-                                            className="underline font-semibold hover:text-[#FF9B50]"
-                                            onClick={() => setShowTermsModal(true)}
-                                        >
-                                            Terms of Service
-                                        </button>{' '}
-                                        and{' '}
-                                        <button
-                                            type="button"
-                                            className="underline font-semibold hover:text-[#FF9B50]"
-                                            onClick={() => setShowPrivacyModal(true)}
-                                        >
-                                           Privacy Policy.
-                                        </button>
-                                        .
-                                    </span>
-
-                                        <span className="text-red-700 ml-1">*</span>
-                                    </label>
-                                </div>
-                                
-                                <button
-                                    type="submit"
-                                    className="w-full mt-4 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={regProcessing}
-                                >
-                                    Signup
-                                </button>
-                                
-                                <div className="w-full text-center mt-2">
-                                    <span className="text-[000000] text-4xxl">Already have an account? </span>
                                     <button
-                                        type="button"
-                                        className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
-                                        onClick={() => setIsLogin(true)}
+                                        type="submit"
+                                        className="w-full mt-4 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled={regProcessing}
                                     >
-                                        Log in
+                                        Signup
                                     </button>
-                                </div>
-                            </form>
+                                    
+                                    <div className="w-full text-center mt-2">
+                                        <span className="text-[000000] text-4xxl">Already have an account? </span>
+                                        <button
+                                            type="button"
+                                            className="text-[#000000] underline font-semibold hover:text-[#5A3416] text-sm"
+                                            onClick={() => setIsLogin(true)}
+                                        >
+                                            Log in
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         )}
                     </div>
                 </div>
             </div>
             
-            {/* PASSWORD REQUIREMENTS - POSITIONED AS OVERLAY OUTSIDE THE MAIN MODAL */}
-            {isPasswordFocused && !isLogin && (
-                <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-64 z-80">
-                    <div className="relative p-4 bg-white rounded-xl shadow-2xl border-2 border-white">
-                        <p className="text-[#5A3416] text-3xxl font-bold mb-3">Password must contain:</p>
-                        <ul className="text-2xxl space-y-2">
-                            <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                                <span className="mr-2 font-bold">{passwordChecks.hasUppercase ? '✓' : '✗'}</span>
-                                At least one uppercase letter (A-Z)
-                            </li>
-                            <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                                <span className="mr-2 font-bold">{passwordChecks.hasLowercase ? '✓' : '✗'}</span>
-                                At least one lowercase letter (a-z)
-                            </li>
-                            <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                                <span className="mr-2 font-bold">{passwordChecks.hasNumber ? '✓' : '✗'}</span>
-                                At least one number (0-9)
-                            </li>
-                            <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                                <span className="mr-2 font-bold">{passwordChecks.hasSpecialChar ? '✓' : '✗'}</span>
-                                At least one special character
-                            </li>
-                            <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-orange-600' : 'text-[#5A3416]'}`}>
-                                <span className="mr-2 font-bold">{passwordChecks.hasMinLength ? '✓' : '✗'}</span>
-                                At least 8 characters long
-                            </li>
-                        </ul>
+            {/* PASSWORD REQUIREMENTS - DESKTOP VIEW ONLY (RIGHT SIDE OVERLAY) */}
+            <div className="hidden md:block">
+                {isPasswordFocused && !isLogin && (
+                    <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-64 z-80">
+                        <div className="relative p-4 bg-white rounded-xl shadow-2xl border-2 border-white">
+                            <p className="text-[#5A3416] text-3xxl font-bold mb-3">Password must contain:</p>
+                            <ul className="text-2xxl space-y-2">
+                                <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                    <span className="mr-2 font-bold">{passwordChecks.hasUppercase ? '✓' : '✗'}</span>
+                                    At least one uppercase letter (A-Z)
+                                </li>
+                                <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                    <span className="mr-2 font-bold">{passwordChecks.hasLowercase ? '✓' : '✗'}</span>
+                                    At least one lowercase letter (a-z)
+                                </li>
+                                <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                    <span className="mr-2 font-bold">{passwordChecks.hasNumber ? '✓' : '✗'}</span>
+                                    At least one number (0-9)
+                                </li>
+                                <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                    <span className="mr-2 font-bold">{passwordChecks.hasSpecialChar ? '✓' : '✗'}</span>
+                                    At least one special character
+                                </li>
+                                <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-orange-600' : 'text-[#5A3416]'}`}>
+                                    <span className="mr-2 font-bold">{passwordChecks.hasMinLength ? '✓' : '✗'}</span>
+                                    At least 8 characters long
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }

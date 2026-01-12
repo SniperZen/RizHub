@@ -1141,7 +1141,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         <img
                             src="/Img/Challenge/vidModal.png"
                             alt="Wooden Modal"
-                            className="w-full h-auto"
+                            className="w-full h-auto object-contain max-w-[900px] mx-auto lg:h-[500px] lg:w-auto"
                         />
                     </div>
                     
