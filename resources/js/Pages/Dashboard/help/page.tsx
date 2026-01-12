@@ -234,14 +234,14 @@ export default function HelpPage() {
               />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-5 sm:px-20 md:px-20 lg:px-20 xl:px-20 mr-12 ml-10 sm:mr-20 sm:ml-10 sm:ml-0 md:mr-2 lg:mr-10 ">
-                <p className="text-white text-[12px] sm:text-lg md:text-lg lg:text-xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mt-[5px] sm:mb-[65px] md:mb-[80px] lg:mt-[50px] space-y-5">
+                <p className="text-white text-[12px] sm:text-lg md:text-lg lg:text-xl xl:text-2xl font-semibold leading-relaxed drop-shadow-lg max-w-3xl mb-[55px] sm:mb-[65px] md:mb-[80px] lg:mt-[50px] space-y-5">
                   <TypingText soundVolume={userSound} />
                 </p>
               </div>
               
               {/* Header stays centered with smooth floating animation */}
               <div 
-                className="absolute left-1/2 top-[10px] sm:top-[35px] md:top-[30px] lg:top-[80px] lg:ml-10 lg:top-[80px] lg:pr-[60px]
+                className="absolute left-1/2 top-[115px] sm:top-[35px] md:top-[30px] lg:top-[80px] lg:ml-10 lg:top-[80px] lg:pr-[60px]
                           transform -translate-x-1/2 z-30 h-60 scale-150 w-[500px]
                           md:w-[990px] lg:w-[650px] xl:w-[650px]"
                 style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
