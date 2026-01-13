@@ -555,10 +555,10 @@ const checkAnswer = async (source = "manual") => {
     ];
 
     const keyboardLayout = [
-        ["Q","W","E","Z","R","T","Y","U"],
-        ["A","S","D","F","H","J","K"],
-        ["G","X","C","V","B","N"],
-        ["O","P","M","L","I"]
+        ["Q", "W", "E", "Z", "R", "T", "Y", "U"],
+        ["A", "S", "D", "F", "H", "J", "K"],
+        ["G", "X", "C", "V", "B", "N"],
+        ["O", "P", "M", "L", "I"]
     ];
 
     const finishMessages: Record<number, string> = {
@@ -605,7 +605,7 @@ const checkAnswer = async (source = "manual") => {
                     <audio ref={gameOverSoundRef} src="/Music/fail.mp3" />
 
                     {/* Timer Display */}
-                    <div className="fixed top-[200px] sm:top-[200px] md:top-[200px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[485px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
+                    <div className="fixed top-[180px] sm:top-[200px] md:top-[200px] left-1/2 transform -translate-x-1/2 lg:top-[140px] lg:right-[485px] lg:left-auto lg:transform-none flex flex-col items-center gap-[30px] z-50">
                         <div className="relative w-12 h-12 lg:w-20 lg:h-20 mb-4">
                             <div className="absolute inset-0 rounded-full border-2 lg:border-4 border-black overflow-hidden shadow-lg">
                                 <div
@@ -652,10 +652,10 @@ const checkAnswer = async (source = "manual") => {
                         <div className=" relative z-10 w-full">
                             <div className=" fixed flex flex-row justify-between overflow-hidden top-5">
                                 <div className="flex flex-row overflow-hidden">
-                                    <div className="bg-orange-600 text-white font-mono font-bold px-2 md:px-2 lg:px-4 md:py-2 lg:py-2 py-2 text-xl md:text-xl lg:text-2xl overflow-hidden">
+                                    <div className="bg-orange-600 text-white font-mono font-bold px-2 md:px-2 lg:px-4 md:py-2 lg:py-2 py-2 text-base sm:text-base md:text-xl lg:text-2xl overflow-hidden">
                                         Kabanata {kabanata_number}:
                                     </div>
-                                    <div className="text-white font-bold font-mono px-2 md:px-2 lg:px-2 py-2 md:py-2 lg:py-2 text-xl md:text-xl lg:text-2xl overflow-hidden">
+                                    <div className="text-white font-bold font-mono px-2 md:px-2 lg:px-2 py-2 md:py-2 lg:py-2 text-base sm:text-base md:text-xl lg:text-2xl overflow-hidden">
                                         {kabanata_title}
                                     </div>
                                 </div>
@@ -676,9 +676,9 @@ const checkAnswer = async (source = "manual") => {
                             </div>
                         </div>
 
-                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-120px] sm:mb-[-120px] md:mb-[-110px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
+                        <div className="fixed flex flex-col lg:ml-16 bottom-0 items-center justify-center p-6 overflow-hidden scale-75 md:scale-75 lg:scale-90 z-100 lg:ml-16 lg:justify-start mb-[-90px] sm:mb-[-120px] md:mb-[-110px] lg:mt-10 lg:mb-10 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 md:left-1/2 md:transform md:-translate-x-1/2 lg:left-auto lg:transform-none">
                             {/* Question Display */}
-                            <div className="relative w-[550px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[280px] sm:mb-[350px] md:mb-[280px] lg:mb-[5px] flex items-center justify-center">
+                            <div className="relative w-[500px] md:w-[550px] lg:w-[550px] h-[250px] md:h-[250px] lg:h-[250px] mb-[280px] sm:mb-[350px] md:mb-[280px] lg:mb-[5px] flex items-center justify-center">
                                 <img
                                     src="/Img/Challenge/GuessWord/modalBG.png"
                                     alt="Wooden Background"
@@ -688,39 +688,42 @@ const checkAnswer = async (source = "manual") => {
                                     <span className="text-white text-xl mt-3 font-bold">
                                         {currentIndex + 1}/{initialQuestionsRef.current.length}
                                     </span>
-                                    <p className="text-white mt-5 text-base font-mono ml-5 mr-5 leading-relaxed">
+                                    <p className="text-white mt-5 text-sm lg:text-base font-mono ml-5 mr-5 leading-relaxed">
                                         {currentQ.question}
                                     </p>
                                 </div>
                             </div>
 
                             {/* Answer Input */}
-                            <div className="flex items-center font-mono justify-center gap-[2px] mt-3 lg:mt-8 md:mt-3 w-full max-w-6xl">
-                                <div
-                                    className={`flex-1 text-5xl mx-1 text-center font-black 
-                                    ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}
-                                >
-                                    <div className="inline-flex flex-block font-mono justify-center gap-x-2 gap-y-0">
-                                        {currentQ.answer.split("").map((char, i) => {
-                                            if (char === " ") return <span key={i} className="inline-block w-2 mx-2"></span>;
-                                            if (shouldAutoFill(char)) {
-                                                return <span key={i} className="inline-block w-2 text-center mx-2">{char}</span>;
-                                            } else {
-                                                return currentGuess[i] ? (
-                                                    <span key={i} className="inline-block w-2 text-center mx-2">{currentGuess[i]}</span>
-                                                ) : (
-                                                    <span key={i} className="inline-block w-2 font-mono text-center text-white mx-2 text-4xl">_</span>
-                                                );
-                                            }
-                                        })}
+                            <div className="flex items-center font-mono mt-3 lg:mt-8 md:mt-3 w-full max-w-6xl">
+                                {/* Answer display - compressed for mobile */}
+                                <div className="flex-1 min-w-0">
+                                    <div className={`text-4xl sm:text-4xl md:text-5xl text-center font-black 
+                                        ${answerStatus === "correct" ? "text-green-400" : answerStatus === "wrong" ? "text-red-500 shake" : "text-white"}`}>
+                                        <div className="inline-flex flex-wrap justify-center gap-x-1 gap-y-0 sm:gap-x-2">
+                                            {currentQ.answer.split("").map((char, i) => {
+                                                if (char === " ") return <span key={i} className="inline-block w-1 sm:w-2 mx-1 sm:mx-2"></span>;
+                                                if (shouldAutoFill(char)) {
+                                                    return <span key={i} className="inline-block w-4 sm:w-4 text-center mx-0.5 sm:mx-1">{char}</span>;
+                                                } else {
+                                                    return currentGuess[i] ? (
+                                                        <span key={i} className="inline-block w-4 sm:w-4 text-center mx-0.5 sm:mx-1">{currentGuess[i]}</span>
+                                                    ) : (
+                                                        <span key={i} className="inline-block w-4 sm:w-4 font-mono text-center text-white mx-0.5 sm:mx-1 text-3xl sm:text-3xl md:text-4xl">_</span>
+                                                    );
+                                                }
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-row gap-3">
+                                
+                                {/* Delete button - closer to letters */}
+                                <div className="flex-shrink-0 mr-6 sm:ml-3">
                                     <button
-                                        className="h-12 w-12 flex items-center justify-center 
-                                                rounded-[12px] text-white font-bold text-lg
+                                        className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center 
+                                                rounded-[10px] sm:rounded-[12px] text-white font-bold text-base sm:text-lg
                                                 bg-gradient-to-b from-[#FF6A00] to-[#D5703A]
-                                                shadow-[4px_6px_0_#B97B4B]
+                                                shadow-[3px_4px_0_#B97B4B] sm:shadow-[4px_6px_0_#B97B4B]
                                                 border-2 border-[#E6B07B]
                                                 active:translate-y-1 disabled:opacity-50"
                                         onClick={removeLetter}
@@ -732,13 +735,13 @@ const checkAnswer = async (source = "manual") => {
                             </div>
 
                             {/* Keyboard */}
-                            <div className="flex flex-col items-center gap-3 mt-8">
+                            <div className="flex flex-col items-center lg:gap-3 mt-7 lg:mt-8">
                                 {keyboardLayout.map((row, rowIndex) => (
                                     <div key={rowIndex} className="flex gap-3">
                                         {row.map((letter, index) => (
                                             <button
                                                 key={index}
-                                                className="relative text-white rounded-full h-12 w-12 flex items-center justify-center shadow-md active:translate-y-1 disabled:opacity-50"
+                                                className="relative text-white rounded-full h-12 w-12 lg:h-12 lg:w-12 flex items-center justify-center shadow-md active:translate-y-1 disabled:opacity-50"
                                                 onClick={() => addLetter(letter)}
                                                 disabled={!gameActive || hasAnsweredRef.current}
                                             >
@@ -764,14 +767,14 @@ const checkAnswer = async (source = "manual") => {
                                         alt="Wooden Frame"
                                         className="w-full h-auto"
                                     />
-                                    <div className="absolute top-[-30px] ml-3 left-1/2 -translate-x-1/2 flex">
+                                    <div className="absolute top-[-40px] lg:top-[-30px] ml-3 left-1/2 -translate-x-1/2 flex">
                                         {(showModal === "finished") && (
                                             <>
                                                 {[...Array(3)].map((_, i) => (
                                                     <div
                                                         key={i}
                                                         className={`flex items-center justify-center
-                                                            ${i === 1 ? "w-[170px] h-[170px]" : "w-32 h-32"}
+                                                            ${i === 1 ? "w-[100px] h-[100px] lg:w-[170px] lg:h-[170px]" : "w-[90px] h-[90px] lg:w-32 lg:h-32"}
                                                             ${i === 0 || i === 2 ? "translate-y-[50px]" : ""}
                                                         `}
                                                     >
@@ -794,18 +797,16 @@ const checkAnswer = async (source = "manual") => {
                                         )}
                                     </div>
 
-                                    <div className="absolute inset-0 flex lg:-mb-5 flex-col items-center justify-center p-6 text-center">
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                                         <h2 className="
                                             font-mono
                                             mr-2
                                             ml-2
-                                            text-[55px] leading-[72px] 
+                                            text-[40px] lg:text-[55px] lg:leading-[72px] 
                                             font-bold 
                                             text-orange-800
                                             text-shadow
-                                            z-10
-                                            -mb-12
-                                            lg:-mb-12"
+                                            z-10"
                                         >
                                             {showModal === "correct" && successMessage}
                                             {showModal === "wrong" && "Subukan ulit!"}
@@ -861,7 +862,7 @@ const checkAnswer = async (source = "manual") => {
                                                                         <img
                                                                             src="/Img/Challenge/locked1.png"
                                                                             alt="Locked Gift"
-                                                                            className="w-[80px] h-[80px] object-contain"
+                                                                            className="w-[45px] h-[45px] lg:w-[80px] lg:h-[80px] object-contain"
                                                                         />
                                                                     </div>
                                                                     {/* Text below lock */}
@@ -884,14 +885,14 @@ const checkAnswer = async (source = "manual") => {
                                         )}
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[115px] md:bottom-[105px] lg:bottom-[105px]">
+                                        <div className="fixed flex gap-8 bottom-[170px] md:bottom-[105px] lg:bottom-[105px]">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
-                                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
+                                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                                     </button>
                                                     <button className="rounded-full relative z-20" onClick={handleRestart}>
-                                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
+                                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                                     </button>
                                                     {stars > 0 && (
                                                         <button
@@ -901,7 +902,7 @@ const checkAnswer = async (source = "manual") => {
                                                                 handleProceed();
                                                             }}
                                                         >
-                                                            <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
+                                                            <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                                         </button>
                                                     )}
                                                 </>
