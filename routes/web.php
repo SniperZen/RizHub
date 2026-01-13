@@ -23,9 +23,10 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('welcome'); // Add this line
+})->name('welcome');
 
 Route::get('/sample', [StudentController::class, 'sample'])->name('sample');
+
 Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(function () {
     
     Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
@@ -33,7 +34,6 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/dashboard/profile-update', [ProfileController::class, 'dashboardUpdate'])->name('dashboard.profile.update'); 
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
     Route::post('/student-exit', [StudentController::class, 'exit'])->name('student.exit');
     Route::post('/student/save-settings', [StudentController::class, 'saveSettings'])->name('student.saveSettings');
     Route::post('/student/send-invite', [StudentController::class, 'sendInvite'])->name('student.sendInvite');
@@ -43,19 +43,38 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     });
     Route::post('/student/save-audio-settings', [StudentController::class, 'updateAudioSettings'])->name('student.saveAudioSettings');
     Route::get('/challenge', [StudentController::class, 'challenge'])->name('challenge');
-    // Route::get('/dashboard', [StudentController::class, 'dashh'])->name('student.dashhboard');
     Route::get('/videos/{id}', [StudentController::class, 'show']);
     Route::post('/save-video-progress', [StudentController::class, 'saveVideoProgress'])->name('student.saveVideoProgress');
-    Route::get('/guess-characters/{kabanata?}', [StudentController::class, 'guessCharacters'])->name('guess-characters');
-    Route::get('/challenge/guessword/{characterId}/{kabanata?}', [StudentController::class, 'guessW'])->name('challenge.guessW');
+    
+    // Updated routes with pattern constraints for hashed parameters
+    Route::get('/guess-characters/{kabanata?}', [StudentController::class, 'guessCharacters'])
+        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->name('guess-characters');
+    
+    Route::get('/challenge/guessword/{characterId}/{kabanata?}', [StudentController::class, 'guessW'])
+        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->name('challenge.guessW');
+    
     Route::post('/guessword/save-progress', [StudentController::class, 'saveProgress'])->name('guessword.saveProgress');
+    
     Route::get('/challenge/quiz/{kabanata}', [StudentController::class, 'Quiz'])
-    ->name('challenge.quiz');
-    Route::get('/quiz/{kabanata}', [StudentController::class, 'shows'])->name('quiz.show');
+        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->name('challenge.quiz');
+    
+    Route::get('/quiz/{kabanata}', [StudentController::class, 'shows'])
+        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->name('quiz.show');
+    
     Route::post('/api/quiz/save-progress', [StudentController::class, 'saveProgresss'])->name('quiz.saveProgress');
     Route::post('/api/quiz/complete', [StudentController::class, 'complete'])->name('quiz.complete');
-    Route::get('/api/quiz/{kabanata}/progress', [StudentController::class, 'getProgress'])->name('api.quiz.progress');
-    Route::delete('/api/quiz/{kabanata}/reset', [StudentController::class, 'resetProgress'])->name('api.quiz.reset');
+    Route::get('/api/quiz/{kabanata}/progress', [StudentController::class, 'getProgress'])
+        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->name('api.quiz.progress');
+    
+    Route::delete('/api/quiz/{kabanata}/reset', [StudentController::class, 'resetProgress'])
+        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->name('api.quiz.reset');
+    
     Route::get('/Dashboard/image-gallery', [StudentController::class, 'gallery'])->name('image.gallery');
     Route::get('/notifications', [StudentController::class, 'notifications'])->name('notifications');
     Route::post('/notifications/mark-as-read', [StudentController::class, 'markAsRead'])->name('notifications.markAsRead');
@@ -68,15 +87,13 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::post('/user/update-settings', [StudentController::class, 'updateSettings'])->name('student.updateSettings');
     Route::post('/api/user/save-settings', [StudentController::class, 'saveSettings']);
     Route::get('/api/user/settings', [StudentController::class, 'getSettings']);
-    
-
 });
 
-Route::get('/book/{kabanata?}', [StudentController::class, 'book'])->name('book.read');
+Route::get('/book/{kabanata?}', [StudentController::class, 'book'])
+    ->where('kabanata', '.*')  // Accept any characters including encoded ones
+    ->name('book.read');
 
-        Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
-        Route::get('/help', [StudentController::class, 'help'])->name('help');
-
-// Route::get('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
+Route::get('/help', [StudentController::class, 'help'])->name('help');
 
 require __DIR__.'/auth.php';

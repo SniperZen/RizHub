@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\InvitationMail;
 use App\Models\Kabanata;
 use App\Models\GuessCharacter; 
@@ -41,30 +42,36 @@ class StudentController extends Controller
     }
 
     public function book($kabanata = null)
-{
-    // Your book reading logic here
-    return Inertia::render('Dashboard/Book/Page', [
-        'kabanata' => $kabanata,
-        // other data...
-    ]);
-}
-
-        public function help()
-        {
-            $user = Auth::user();
-            $unreadNotifications = $user->unreadNotifications()->count();
-            $notifications = $user->notifications()
-                ->orderBy('created_at', 'desc')
-                ->get();
-            
-            return Inertia::render('Dashboard/help/page', [ // Make sure this path matches your React component
-                'music' => $user->music ?? 40, 
-                'sound' => $user->sound ?? 70,
-                'name'  => $user->name ?? 'User101',
-                'unreadNotifications' => $unreadNotifications,
-                'notifications' => $notifications,
-            ]);
+    {
+        Log::info('Book route accessed', ['kabanata' => $kabanata]);
+        
+        // Decode if kabanata is hashed
+        if ($kabanata && !is_numeric($kabanata)) {
+            $decoded = HashIdHelper::decrypt($kabanata);
+            $kabanata = $decoded ? (int) $decoded : $kabanata;
         }
+        
+        return Inertia::render('Dashboard/Book/Page', [
+            'kabanata' => $kabanata,
+        ]);
+    }
+
+    public function help()
+    {
+        $user = Auth::user();
+        $unreadNotifications = $user->unreadNotifications()->count();
+        $notifications = $user->notifications()
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return Inertia::render('Dashboard/help/page', [
+            'music' => $user->music ?? 40, 
+            'sound' => $user->sound ?? 70,
+            'name'  => $user->name ?? 'User101',
+            'unreadNotifications' => $unreadNotifications,
+            'notifications' => $notifications,
+        ]);
+    }
 
     public function exit()
     {
@@ -86,9 +93,8 @@ class StudentController extends Controller
         $user->sound = $validated['sound'];
         $user->save();
         
-        // return response()->json(['message' => 'Settings saved successfully']);
+        return response()->json(['message' => 'Settings saved successfully']);
     }
-
 
     public function sendInvite(Request $request)
     {
@@ -97,7 +103,6 @@ class StudentController extends Controller
             'shareLink' => 'required|url',
         ]);
 
-        // Send the email logic
         Mail::to($request->email)->send(new InvitationMail($request->shareLink));
 
         return back()->with('success', 'Invitation sent');
@@ -111,13 +116,11 @@ class StudentController extends Controller
 
         $kabanatas = Kabanata::where('id', '<=', 64)->paginate($perPage, ['*'], 'page', $page);
 
-        // Get progress for these kabanatas for the user
         $progress = UserKabanataProgress::where('user_id', $user->id)
             ->whereIn('kabanata_id', $kabanatas->pluck('id'))
             ->get()
             ->keyBy('kabanata_id');
 
-        // Get video progress for these kabanatas
         $videoProgress = [];
         if ($progress->count() > 0) {
             $videoProgress = VideoProgress::whereIn('kabanata_progress_id', $progress->pluck('id'))
@@ -125,24 +128,19 @@ class StudentController extends Controller
                 ->toArray();
         }
 
-        // Merge progress into kabanata data
         $kabanatas->getCollection()->transform(function ($kabanata) use ($progress, $user) {
             $p = $progress[$kabanata->id] ?? null;
             
-            // Initialize progress to 0
             $totalScore = 0;
             $maxPossible = 10;
             
             if ($p) {
-                // Get quiz total score (max 5)
                 $quizScore = QuizProgress::where('kabanata_progress_id', $p->id)
                     ->sum('score');
                 
-                // Get guessword total score (max 5)
                 $guesswordScore = GuesswordProgress::where('kabanata_progress_id', $p->id)
                     ->sum('total_score');
                     
-                // Ensure we don't exceed max possible
                 $totalScore = min($quizScore + $guesswordScore, $maxPossible);
             }
 
@@ -150,7 +148,7 @@ class StudentController extends Controller
             $kabanata->stars = $p ? $p->stars : 0;
             $kabanata->unlocked = $p ? $p->unlocked : false;
 
-            // Add hashed id for frontend links
+            // Use URL-safe hash
             $kabanata->hash = HashIdHelper::encrypt($kabanata->id);
 
             return $kabanata;
@@ -164,7 +162,6 @@ class StudentController extends Controller
             'studentName' => auth()->user()->name,
         ]);
     }
-
 
     public function updateAudioSettings(Request $request)
     {
@@ -185,7 +182,6 @@ class StudentController extends Controller
         $file = $request->file('video');
         $path = $file->store('videos', 'public');
 
-        // Create FFProbe instance properly
         $ffprobe = FFProbe::create();
         $duration = $ffprobe->format(storage_path("app/public/" . $path))->get('duration');
 
@@ -196,7 +192,7 @@ class StudentController extends Controller
             'kabanata_id' => $request->kabanata_id,
         ]);
 
-        // return response()->json(['message' => 'Video added successfully!']);
+        return response()->json(['message' => 'Video added successfully!']);
     }
 
     private function getSessionKey($type, $kabanataId)
@@ -205,7 +201,6 @@ class StudentController extends Controller
         return "{$type}_progress_{$userId}_{$kabanataId}";
     }
 
-
     public function show($id)
     {
         $video = Video::findOrFail($id);
@@ -213,93 +208,87 @@ class StudentController extends Controller
     }
 
     public function saveVideoProgress(Request $request)
-{
-    // 1. Check if user is authenticated
-    if (!Auth::check()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'User not authenticated'
-        ], 401);
-    }
+    {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not authenticated'
+            ], 401);
+        }
 
-    $request->validate([
-        'kabanata_id' => 'required|exists:kabanatas,id',
-        'completed' => 'required|boolean',
-        'seconds_watched' => 'sometimes|integer|min:0',
-        'youtube_id' => 'sometimes|string|nullable',
-    ]);
+        $request->validate([
+            'kabanata_id' => 'required|exists:kabanatas,id',
+            'completed' => 'required|boolean',
+            'seconds_watched' => 'sometimes|integer|min:0',
+            'youtube_id' => 'sometimes|string|nullable',
+        ]);
 
-    $user = Auth::user();
-    $youtubeId = $request->youtube_id ? trim($request->youtube_id) : null;
+        $user = Auth::user();
+        $youtubeId = $request->youtube_id ? trim($request->youtube_id) : null;
 
-    // 2. Debug logging
-    \Log::info('Video progress save attempt', [
-        'user_id' => $user->id,
-        'kabanata_id' => $request->kabanata_id,
-        'youtube_id' => $youtubeId,
-        'completed' => $request->completed,
-        'seconds_watched' => $request->seconds_watched
-    ]);
+        Log::info('Video progress save attempt', [
+            'user_id' => $user->id,
+            'kabanata_id' => $request->kabanata_id,
+            'youtube_id' => $youtubeId,
+            'completed' => $request->completed,
+            'seconds_watched' => $request->seconds_watched
+        ]);
 
-    try {
-        // 3. First, ensure kabanata progress exists
-        $kabanataProgress = UserKabanataProgress::firstOrCreate(
-            [
-                'user_id' => $user->id,
-                'kabanata_id' => $request->kabanata_id,
-            ],
-            [
-                'unlocked' => true, // Default unlocked when first created
-                'progress' => 0,
-                'stars' => 0
-            ]
-        );
+        try {
+            $kabanataProgress = UserKabanataProgress::firstOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'kabanata_id' => $request->kabanata_id,
+                ],
+                [
+                    'unlocked' => true,
+                    'progress' => 0,
+                    'stars' => 0
+                ]
+            );
 
-        // 4. Create or update video record
-        $video = Video::updateOrCreate(
-            ['kabanata_id' => $request->kabanata_id],
-            [
-                'title' => $youtubeId ? 'YouTube - ' . $youtubeId : ('Video for kabanata ' . $request->kabanata_id),
-                'duration' => 0,
-                'youtube_id' => $youtubeId,
-            ]
-        );
+            $video = Video::updateOrCreate(
+                ['kabanata_id' => $request->kabanata_id],
+                [
+                    'title' => $youtubeId ? 'YouTube - ' . $youtubeId : ('Video for kabanata ' . $request->kabanata_id),
+                    'duration' => 0,
+                    'youtube_id' => $youtubeId,
+                ]
+            );
 
-        // 5. Save video progress
-        $videoProgress = VideoProgress::updateOrCreate(
-            [
+            $videoProgress = VideoProgress::updateOrCreate(
+                [
+                    'video_id' => $video->id,
+                    'kabanata_progress_id' => $kabanataProgress->id,
+                ],
+                [
+                    'seconds_watched' => $request->seconds_watched ?? 0,
+                    'completed' => (bool)$request->completed,
+                ]
+            );
+
+            Log::info('Video progress saved successfully', [
                 'video_id' => $video->id,
-                'kabanata_progress_id' => $kabanataProgress->id,
-            ],
-            [
-                'seconds_watched' => $request->seconds_watched ?? 0,
-                'completed' => (bool)$request->completed,
-            ]
-        );
+                'video_progress_id' => $videoProgress->id
+            ]);
 
-        \Log::info('Video progress saved successfully', [
-            'video_id' => $video->id,
-            'video_progress_id' => $videoProgress->id
-        ]);
+            return response()->json([
+                'success' => true, 
+                'video_id' => $video->id, 
+                'video_progress_id' => $videoProgress->id
+            ]);
 
-        // return response()->json([
-        //     'success' => true, 
-        //     'video_id' => $video->id, 
-        //     'video_progress_id' => $videoProgress->id
-        // ]);
+        } catch (\Exception $e) {
+            Log::error('Error saving video progress: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
 
-    } catch (\Exception $e) {
-        \Log::error('Error saving video progress: ' . $e->getMessage(), [
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        // return response()->json([
-        //     'success' => false,
-        //     'message' => 'Error saving progress: ' . $e->getMessage()
-        // ], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error saving progress: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
-
 
     public function GuessCharacterPicker()
     {
@@ -310,40 +299,66 @@ class StudentController extends Controller
         ]);
     }
 
-    public function guessCharacters(Request $request)
+    public function guessCharacters(Request $request, $kabanata = null)
     {
+        Log::info('guessCharacters accessed', [
+            'kabanata_parameter' => $kabanata,
+            'request_url' => $request->fullUrl()
+        ]);
+        
         $characters = GuessCharacter::all();
-        $kabanataParam = $request->input('kabanata');
-
+        
         // Decode hashed kabanata if necessary
-        if ($kabanataParam) {
-            $decoded = HashIdHelper::decrypt($kabanataParam);
-            $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanataParam) ? (int) $kabanataParam : null);
+        if ($kabanata) {
+            $decoded = HashIdHelper::decrypt($kabanata);
+            $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
         } else {
             $kabanataId = null;
         }
 
         $kabanata = $kabanataId ? Kabanata::find($kabanataId) : null;
 
+        Log::info('Decoded kabanata', [
+            'original' => $kabanata,
+            'decoded_id' => $kabanataId,
+            'found_kabanata' => $kabanata ? $kabanata->toArray() : null
+        ]);
+
         return Inertia::render('Challenge/GuessCharacter/page', [
             'characters' => $characters,
             'kabanata_id' => $kabanataId,
-            'kabanataHash' => $kabanataParam,
+            'kabanataHash' => $kabanata ? HashIdHelper::encrypt($kabanataId) : null,
             'kabanata_number' => $kabanata->id ?? 1,
             'kabanata_title' => $kabanata->title ?? 'Unknown',
         ]);
     }
 
-    public function guessW($characterId, $kabanata)
+    public function guessW($characterId, $kabanata = null)
     {
+        Log::info('guessW route accessed', [
+            'characterId' => $characterId,
+            'kabanata_parameter' => $kabanata,
+            'full_url' => request()->fullUrl()
+        ]);
+        
         $character = GuessCharacter::findOrFail($characterId);
         $user = Auth::user();
+        
         // Decode kabanata param (may be hashed)
-        $decoded = HashIdHelper::decrypt($kabanata);
-        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
+        $decoded = null;
+        if ($kabanata) {
+            $decoded = HashIdHelper::decrypt($kabanata);
+        }
+        
+        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : 1);
         
         // Get the kabanata details
         $kabanata = Kabanata::findOrFail($kabanataId);
+
+        Log::info('Decoded values', [
+            'kabanataId' => $kabanataId,
+            'kabanata_title' => $kabanata->title
+        ]);
 
         $questions = GuessWord::where('kabanata_id', $kabanataId)
             ->inRandomOrder()
@@ -376,7 +391,6 @@ class StudentController extends Controller
 
     public function saveProgress(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'kabanata_id' => 'required|exists:kabanatas,id',
             'character_id' => 'required|exists:guesscharacters,id',
@@ -390,14 +404,11 @@ class StudentController extends Controller
 
         $user = Auth::user();
         
-        // Get existing session data or initialize empty array
         $sessionKey = "guessword_progress_{$user->id}_{$request->kabanata_id}";
         $progressData = session()->get($sessionKey, []);
         
-        // Use question_id as key to prevent duplicates and overwriting
         $questionKey = $validated['question_id'];
         
-        // Only save if this question hasn't been processed yet, or if it's a new attempt
         if (!isset($progressData[$questionKey]) || $progressData[$questionKey]['current_index'] !== $validated['current_index']) {
             $progressData[$questionKey] = [
                 'character_id' => $validated['character_id'],
@@ -413,10 +424,8 @@ class StudentController extends Controller
             session()->put($sessionKey, $progressData);
         }
         
-        // Return empty Inertia response - THIS IS THE KEY FIX
         return back();
     }
-
 
     private function calculateStars($score)
     {
@@ -426,12 +435,13 @@ class StudentController extends Controller
         return 0;
     }
 
-
     public function Quiz($kabanata)
     {
+        Log::info('Quiz route accessed', ['kabanata_parameter' => $kabanata]);
+        
         // Decode kabanata param (may be hashed)
         $decoded = HashIdHelper::decrypt($kabanata);
-        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
+        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : 1);
 
         $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
 
@@ -453,14 +463,15 @@ class StudentController extends Controller
 
     public function shows($kabanata)
     {
+        Log::info('shows route accessed', ['kabanata_parameter' => $kabanata]);
+        
         // Decode kabanata param (may be hashed)
         $decoded = HashIdHelper::decrypt($kabanata);
-        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : null);
+        $kabanataId = $decoded ? (int) $decoded : (is_numeric($kabanata) ? (int) $kabanata : 1);
 
         $quizzes = Quiz::where('kabanata_id', $kabanataId)->get();
         $kabanata = Kabanata::findOrFail($kabanataId);
         
-        // Get user progress if authenticated
         $userProgress = null;
         if (Auth::check()) {
             $userProgress = $this->getQuizProgress(Auth::id(), $kabanataId);
@@ -475,9 +486,6 @@ class StudentController extends Controller
         ]);
     }
 
-    /**
-     * Save quiz progress.
-     */
     public function saveProgresss(Request $request)
     {
         $request->validate([
@@ -496,7 +504,6 @@ class StudentController extends Controller
 
         $user = Auth::user();
     
-        // 1. Get or create the kabanata progress record FIRST
         $kabanataProgress = UserKabanataProgress::firstOrCreate([
             'user_id' => $user->id,
             'kabanata_id' => $request->kabanata_id,
@@ -505,31 +512,25 @@ class StudentController extends Controller
         $quiz = Quiz::findOrFail($request->quiz_id);
         $isCorrect = $quiz->correct_answer === $request->selected_answer;
         
-        // 2. Check if a progress record for this specific quiz already exists in the DATABASE
         $existingProgress = QuizProgress::where([
             'kabanata_progress_id' => $kabanataProgress->id,
             'quiz_id' => $request->quiz_id,
         ])->first();
 
-        // 3. Decide if we should save this new attempt
         $shouldSave = false;
         $reason = '';
 
         if (!$existingProgress) {
-            // No record exists, so we save this first attempt.
             $shouldSave = true;
             $reason = 'first_attempt';
         } elseif ($request->score > $existingProgress->score) {
-            // A record exists, but the new score is HIGHER. We save the better attempt.
             $shouldSave = true;
             $reason = 'higher_score';
         } else {
-            // A record exists and the new score is LOWER or equal. We don't save it.
             $shouldSave = false;
             $reason = 'score_not_higher';
         }
 
-        // 4. Store the decision and data in the session
         $sessionKey = "quiz_progress_{$user->id}_{$request->kabanata_id}";
         $progressData = session()->get($sessionKey, []);
         
@@ -546,6 +547,7 @@ class StudentController extends Controller
         
         session()->put($sessionKey, $progressData);
 
+        return back();
     }
 
     public function complete(Request $request)
@@ -562,13 +564,11 @@ class StudentController extends Controller
 
         $user = Auth::user();
         
-        // Get kabanata progress
         $kabanataProgress = UserKabanataProgress::firstOrCreate([
             'user_id' => $user->id,
             'kabanata_id' => $request->kabanata_id,
         ]);
 
-        // Get all session data for this kabanata
         $quizSessionKey = "quiz_progress_{$user->id}_{$request->kabanata_id}";
         $guesswordSessionKey = "guessword_progress_{$user->id}_{$request->kabanata_id}";
         $videoSessionKey = "video_progress_{$user->id}_{$request->kabanata_id}";
@@ -578,19 +578,15 @@ class StudentController extends Controller
         $videoProgressData = session()->get($videoSessionKey, []);
 
         foreach ($quizProgressData as $quizId => $data) {
-            // Only proceed if the session data is flagged to be saved
             if ($data['should_save_to_db'] ?? false) {
-                // Check if ANY record already exists with this kabanata_progress_id
                 $existingRecord = QuizProgress::where([
                     'kabanata_progress_id' => $kabanataProgress->id,
                 ])->first();
 
                 if ($existingRecord) {
-                    // UPDATE existing record only if new score is higher
-                    // This maintains the ONE record per kabanata_progress_id rule
                     if ($data['score'] > $existingRecord->score) {
                         $existingRecord->update([
-                            'quiz_id' => $quizId, // Update the quiz_id too
+                            'quiz_id' => $quizId,
                             'selected_answer' => $data['selected_answer'],
                             'is_correct' => $data['is_correct'],
                             'score' => $data['score'],
@@ -599,9 +595,7 @@ class StudentController extends Controller
                             'completed' => $data['completed'] ?? false,
                         ]);
                     }
-                    // If score is not higher, do nothing (keep the existing record)
                 } else {
-                    // CREATE new record only if no record exists for this kabanata_progress_id
                     QuizProgress::create([
                         'kabanata_progress_id' => $kabanataProgress->id,
                         'quiz_id' => $quizId,
@@ -616,57 +610,46 @@ class StudentController extends Controller
             }
         }
 
-// Save guessword progress to database if exists in session
-if (!empty($guesswordProgressData)) {
-    // Since guesswordProgressData contains multiple questions, we need to process the one with highest score
-    $highestScoreData = null;
-    $highestScore = 0;
-    
-    // Find the question with the highest score
-    foreach ($guesswordProgressData as $questionData) {
-        if (isset($questionData['total_score']) && $questionData['total_score'] > $highestScore) {
-            $highestScore = $questionData['total_score'];
-            $highestScoreData = $questionData;
-        }
-    }
-    
-    if ($highestScoreData) {
-        // Get the highest existing score for this kabanata (regardless of character)
-        $existingGuesswordProgress = GuesswordProgress::where([
-            'kabanata_progress_id' => $kabanataProgress->id,
-        ])->orderBy('total_score', 'desc')->first();
+        if (!empty($guesswordProgressData)) {
+            $highestScoreData = null;
+            $highestScore = 0;
+            
+            foreach ($guesswordProgressData as $questionData) {
+                if (isset($questionData['total_score']) && $questionData['total_score'] > $highestScore) {
+                    $highestScore = $questionData['total_score'];
+                    $highestScoreData = $questionData;
+                }
+            }
+            
+            if ($highestScoreData) {
+                $existingGuesswordProgress = GuesswordProgress::where([
+                    'kabanata_progress_id' => $kabanataProgress->id,
+                ])->orderBy('total_score', 'desc')->first();
 
-        // Only create/update if new score is higher than existing or no record exists
-        if (!$existingGuesswordProgress || $highestScoreData['total_score'] > $existingGuesswordProgress->total_score) {
-            
-            // Build update data with null safety
-            $updateData = [
-                'question_id' => $highestScoreData['question_id'] ?? null,
-                'current_index' => $highestScoreData['current_index'] ?? 0,
-                'completed' => $highestScoreData['completed'] ?? false,
-                'total_score' => $highestScoreData['total_score'] ?? 0,
-            ];
-            
-            // Only include character_id if it exists in the data
-            if (isset($highestScoreData['character_id'])) {
-                $updateData['character_id'] = $highestScoreData['character_id'];
-            }
-            
-            if ($existingGuesswordProgress) {
-                // Update existing record with higher score
-                $existingGuesswordProgress->update($updateData);
-            } else {
-                // Create new record if none exists
-                $updateData['kabanata_progress_id'] = $kabanataProgress->id;
-                GuesswordProgress::create($updateData);
+                if (!$existingGuesswordProgress || $highestScoreData['total_score'] > $existingGuesswordProgress->total_score) {
+                    
+                    $updateData = [
+                        'question_id' => $highestScoreData['question_id'] ?? null,
+                        'current_index' => $highestScoreData['current_index'] ?? 0,
+                        'completed' => $highestScoreData['completed'] ?? false,
+                        'total_score' => $highestScoreData['total_score'] ?? 0,
+                    ];
+                    
+                    if (isset($highestScoreData['character_id'])) {
+                        $updateData['character_id'] = $highestScoreData['character_id'];
+                    }
+                    
+                    if ($existingGuesswordProgress) {
+                        $existingGuesswordProgress->update($updateData);
+                    } else {
+                        $updateData['kabanata_progress_id'] = $kabanataProgress->id;
+                        GuesswordProgress::create($updateData);
+                    }
+                }
             }
         }
-        // If new score is not higher, do nothing (don't create duplicate)
-    }
-}
 
         if (!empty($videoProgressData)) {
-            // Use updateOrCreate to ensure only one record exists per combination
             VideoProgress::updateOrCreate(
                 [
                     'video_id' => $videoProgressData['video_id'],
@@ -680,37 +663,29 @@ if (!empty($guesswordProgressData)) {
             );
         }
 
-        // Clear all session data
         session()->forget($quizSessionKey);
         session()->forget($guesswordSessionKey);
         session()->forget($videoSessionKey);
 
-        // Calculate final scores for star calculation
         $finalQuizScore = QuizProgress::where('kabanata_progress_id', $kabanataProgress->id)
             ->sum('score');
         
-        // Get the highest guessword score for this kabanata
         $finalGuesswordScore = GuesswordProgress::where('kabanata_progress_id', $kabanataProgress->id)
             ->max('total_score') ?? 0;
         
         $totalScore = min($finalQuizScore + $finalGuesswordScore, 10);
         
-        // Update kabanata progress with the total score
         $kabanataProgress->progress = $totalScore;
         
-        // Calculate stars based on guessword score (3 points = 1 star, 4 points = 2 stars, 5 points = 3 stars)
         $stars = $this->calculateStars($finalGuesswordScore);
         
-        // Update stars only if the new calculation is higher than current stars
         if ($stars > $kabanataProgress->stars) {
             $kabanataProgress->stars = $stars;
         }
 
-        // Mark current kabanata as completed and unlocked
         $kabanataProgress->unlocked = true;
         $kabanataProgress->save();
 
-        // Unlock the next kabanata
         $nextKabanataId = $request->kabanata_id + 1;
         
         if (Kabanata::where('id', $nextKabanataId)->exists()) {
@@ -725,60 +700,41 @@ if (!empty($guesswordProgressData)) {
             );
         }
 
-        $totalScore = min($finalQuizScore + $finalGuesswordScore, 10);
-    
-    // Update kabanata progress with the total score
-    $kabanataProgress->progress = $totalScore;
-    
-    // Calculate stars based on guessword score
-    $stars = $this->calculateStars($finalGuesswordScore);
-    
-    // Update stars only if the new calculation is higher than current stars
-    if ($stars > $kabanataProgress->stars) {
-        $kabanataProgress->stars = $stars;
-    }
-
-    // Check if this achievement unlocks any images
-    if ($finalGuesswordScore === 5) {
-        $this->checkAndNotifyImageUnlocks($user, $request->kabanata_id);
-    }
+        if ($finalGuesswordScore === 5) {
+            $this->checkAndNotifyImageUnlocks($user, $request->kabanata_id);
+        }
 
         return Inertia::location(route('challenge'));
     }
 
     private function checkAndNotifyImageUnlocks($user, $kabanataId)
-{
-    $images = ImageGallery::where('kabanata_id', $kabanataId)->get();
-    
-    foreach ($images as $image) {
-        // Check if this image should be unlocked but notification not sent yet
-        $alreadyNotified = Notification::where('user_id', $user->id)
-            ->where('type', 'image_unlock')
-            ->where('message', 'like', '%Kabanata ' . $kabanataId . '%')
-            ->exists();
+    {
+        $images = ImageGallery::where('kabanata_id', $kabanataId)->get();
+        
+        foreach ($images as $image) {
+            $alreadyNotified = Notification::where('user_id', $user->id)
+                ->where('type', 'image_unlock')
+                ->where('message', 'like', '%Kabanata ' . $kabanataId . '%')
+                ->exists();
 
-        if (!$alreadyNotified) {
-            // Create notification
-            $notification = Notification::create([
-                'user_id' => $user->id,
-                'title' => 'Na-unlock mo ang bagong larawan sa RizHub!',
-                'message' => 'Binabati kita! Nakapag-unlock ka ng bagong imahe mula sa Kabanata ' . $kabanataId . '. Suriin mo ang iyong gallery upang makita ito!!',
-                'type' => 'image_unlock',
-                'is_read' => false,
-            ]);
+            if (!$alreadyNotified) {
+                $notification = Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Na-unlock mo ang bagong larawan sa RizHub!',
+                    'message' => 'Binabati kita! Nakapag-unlock ka ng bagong imahe mula sa Kabanata ' . $kabanataId . '. Suriin mo ang iyong gallery upang makita ito!!',
+                    'type' => 'image_unlock',
+                    'is_read' => false,
+                ]);
 
-            // Send email notification
-            try {
-                Mail::to($user->email)->queue(new ImageUnlockMail($notification, $image));
-            } catch (\Exception $e) {
-                \Log::error('Failed to send image unlock email: ' . $e->getMessage());
+                try {
+                    Mail::to($user->email)->queue(new ImageUnlockMail($notification, $image));
+                } catch (\Exception $e) {
+                    Log::error('Failed to send image unlock email: ' . $e->getMessage());
+                }
             }
         }
     }
-}
-    /**
-     * Get user's quiz progress for a specific kabanata.
-     */
+
     private function getQuizProgress($userId, $kabanataId)
     {
         $kabanataProgress = UserKabanataProgress::where('user_id', $userId)
@@ -799,10 +755,22 @@ if (!empty($guesswordProgressData)) {
         ];
     }
 
-    /**
-     * Reset user's progress for a specific kabanata.
-     * Accepts a hashed kabanata id and decodes it via HashIdHelper::decrypt.
-     */
+    public function getProgress($kabanataHash)
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Decode the hashed kabanata id
+        $kabanataId = HashIdHelper::decrypt($kabanataHash);
+        if (!$kabanataId) {
+            return response()->json(['error' => 'Invalid ID'], 404);
+        }
+
+        $user = Auth::user();
+        return response()->json($this->getQuizProgress($user->id, $kabanataId));
+    }
+
     public function resetProgress($kabanataHash)
     {
         if (!Auth::check()) {
@@ -811,7 +779,7 @@ if (!empty($guesswordProgressData)) {
 
         // Decode the hashed kabanata id
         $kabanataId = HashIdHelper::decrypt($kabanataHash);
-        if (! $kabanataId) {
+        if (!$kabanataId) {
             return response()->json(['error' => 'Invalid ID'], 404);
         }
 
@@ -820,11 +788,9 @@ if (!empty($guesswordProgressData)) {
             ->first();
 
         if ($kabanataProgress) {
-            // Delete related progress records
             QuizProgress::where('kabanata_progress_id', $kabanataProgress->id)->delete();
             GuessWordProgress::where('kabanata_progress_id', $kabanataProgress->id)->delete();
 
-            // Reset kabanata progress
             $kabanataProgress->update([
                 'progress' => 0,
                 'stars' => 0,
@@ -843,31 +809,25 @@ if (!empty($guesswordProgressData)) {
     {
         $user = Auth::user();
         
-        // Get all images with their kabanata
         $images = ImageGallery::with('kabanata')
             ->orderBy('kabanata_id')
             ->get();
 
-        // For each image, check if it should be unlocked based on guessword progress
         $images->each(function ($image) use ($user) {
-            // Get the kabanata progress for this user and kabanata
             $kabanataProgress = UserKabanataProgress::where('user_id', $user->id)
                 ->where('kabanata_id', $image->kabanata_id)
                 ->first();
                 
-            // Check if there's a completed guessword progress with perfect score (5)
             $guesswordProgress = null;
             if ($kabanataProgress) {
                 $guesswordProgress = GuesswordProgress::where('kabanata_progress_id', $kabanataProgress->id)
                     ->where('completed', true)
-                    ->where('total_score', 5) // Perfect score
+                    ->where('total_score', 5)
                     ->first();
             }
             
-            // Unlock the image if perfect score was achieved
             $image->unlocked = (bool) $guesswordProgress;
             $image->image_url = asset($image->image_url);
-            // provide hashed kabanata id for frontend
             $image->kabanata_hash = HashIdHelper::encrypt($image->kabanata_id);
         });
 
@@ -895,7 +855,7 @@ if (!empty($guesswordProgressData)) {
         $user = Auth::user();
         $user->notifications()->update(['is_read' => true]);
 
-        // return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
     public function sendNotification(Request $request)
@@ -914,7 +874,7 @@ if (!empty($guesswordProgressData)) {
             'type' => $request->type ?? 'general',
         ]);
 
-        // return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
     public function markAsReads(Request $request)
@@ -929,7 +889,7 @@ if (!empty($guesswordProgressData)) {
 
         $notification->update(['is_read' => true]);
 
-        // return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
     public function markAsUnread(Request $request)
@@ -944,7 +904,7 @@ if (!empty($guesswordProgressData)) {
 
         $notification->update(['is_read' => false]);
 
-        // return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
     public function markAllAsRead()
@@ -963,14 +923,14 @@ if (!empty($guesswordProgressData)) {
 
         $notification->delete();
 
-        // return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
     public function destroyAll()
     {
         Notification::where('user_id', Auth::id())->delete();
 
-        // return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
     public function updateSettings(Request $request)
@@ -985,8 +945,15 @@ if (!empty($guesswordProgressData)) {
             'sound' => $validated['sound'],
         ]);
 
-        // return response()->json(['message' => 'Settings updated successfully']);
+        return response()->json(['message' => 'Settings updated successfully']);
     }
 
-
+    public function getSettings()
+    {
+        $user = Auth::user();
+        return response()->json([
+            'music' => $user->music ?? 40,
+            'sound' => $user->sound ?? 70,
+        ]);
+    }
 }
