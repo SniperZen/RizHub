@@ -856,13 +856,6 @@ const KabanataPage: React.FC<PageProps> = ({
                                         transform: "translate(-50%, -50%)",
                                     }}
                                 >
-                                    <p className="font-[Risque] text-[20px] lg:text-[20px] text-black">certificate</p>
-                                    <div 
-                                        className="max-w-24 h-24 rounded-full flex items-center justify-center cursor-pointer"
-                                        onClick={() => setShowCertificateModal(true)}
-                                    >
-                                        <img src="/Img/Challenge/Certificate2.png" alt="Certificate" className="w-full h-auto" />
-                                    </div>
                                 </div>
                             )}
                         </>
@@ -871,7 +864,7 @@ const KabanataPage: React.FC<PageProps> = ({
 
                 {/* Buildings with Kabanata Nodes and Stars - Only show when not on door page */}
                 {shouldShowKabanatas() && (
-                    <div className="w-full flex flex-row justify-center ml-2 items-end mt-[-100px] relative z-30 pointer-events-auto">
+                    <div className="w-full flex flex-row justify-center items-end mt-[-20px] lg:mt-[-70px] relative z-30 pointer-events-auto">
                         <style>
                             {`
                             @keyframes floatSmoothTogether {
@@ -906,7 +899,7 @@ const KabanataPage: React.FC<PageProps> = ({
                             {k.id === 64 ? (
                             <div className={`relative w-full flex justify-start ${
                                 screenSize === "mobile" ? "pl-6" : 
-                                screenSize === "tablet" ? "pl-10" : "pl-10"
+                                screenSize === "tablet" ? "pl-6" : "pl-6"
                             }`}>
                                 <img 
                                 src="/Img/Challenge/building(1).png" 
@@ -916,7 +909,7 @@ const KabanataPage: React.FC<PageProps> = ({
                                     top: buildingOffsets[itemsPerPage - 1] || "0px",
                                     left: "0",
                                     // Responsive width for Kabanata 64
-                                    width: screenSize === "mobile" ? "180px" : 
+                                    width: screenSize === "mobile" ? "125px" : 
                                            screenSize === "tablet" ? "250px" : "250px",
                                     height: "auto", 
                                 }}
@@ -928,11 +921,11 @@ const KabanataPage: React.FC<PageProps> = ({
                                 style={{
                                     // Responsive positioning for Kabanata 64 node
                                     top: screenSize === "mobile" ? 
-                                         `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)` :
+                                         `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 115px)` :
                                          screenSize === "tablet" ? 
                                          `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)` :
                                          `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} - 130px)`,
-                                    left: screenSize === "mobile" ? "90px" :
+                                    left: screenSize === "mobile" ? "65px" :
                                           screenSize === "tablet" ? "115px" : "125px",
                                     transform: "translateX(-50%)",
                                 }}
@@ -949,7 +942,7 @@ const KabanataPage: React.FC<PageProps> = ({
                                 <div className="relative">
                                     <div
                                     className={`rounded-full flex items-center justify-center z-50 cursor-pointer ${
-                                        screenSize === "mobile" ? "w-20 h-20" : 
+                                        screenSize === "mobile" ? "w-[75px] h-auto" : 
                                         screenSize === "tablet" ? "w-20 h-20" :
                                         "w-20 h-20"
                                     }`}
@@ -980,11 +973,11 @@ const KabanataPage: React.FC<PageProps> = ({
                                     className="absolute flex flex-col items-center"
                                     style={{ 
                                     top: screenSize === "mobile" ?
-                                         `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 35px)` :
+                                         `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 30px)` :
                                          screenSize === "tablet" ?
                                          `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 45px)` :
                                          `calc(${buildingOffsets[itemsPerPage - 1] || "0px"} + 55px)`,
-                                    left: screenSize === "mobile" ? "85px" :
+                                    left: screenSize === "mobile" ? "63px" :
                                           screenSize === "tablet" ? "115px" : "125px",
                                     transform: "translateX(-50%)"
                                     }}
@@ -1025,7 +1018,7 @@ const KabanataPage: React.FC<PageProps> = ({
                                 <img 
                                 src="/Img/Challenge/building(1).png" 
                                 alt="Building" 
-                                className="w-full max-w-[250px] h-auto object-contain absolute pointer-events-none"
+                                className="w-full max-w-[250px] lg:max-w-[250px] h-auto object-contain absolute pointer-events-none"
                                 style={{ top: buildingOffsets[index] || "0px" }}
                                 />
 
@@ -1033,7 +1026,11 @@ const KabanataPage: React.FC<PageProps> = ({
                                 <div
                                 className="absolute flex flex-col items-center pointer-events-auto z-40 floating-group" 
                                 style={{
-                                    top: `calc(${buildingOffsets[index] || "0px"} - 125px)`,
+                                    top: screenSize === "mobile" ? 
+                                         `calc(${buildingOffsets[index] || "0px"} - 150px)` :
+                                         screenSize === "tablet" ? 
+                                         `calc(${buildingOffsets[index] || "0px"} - 130px)` :
+                                         `calc(${buildingOffsets[index] || "0px"} - 130px)`,
                                     left: "50%",
                                     transform: "translateX(-50%)",
                                 }}
@@ -1075,7 +1072,11 @@ const KabanataPage: React.FC<PageProps> = ({
                                 <div 
                                     className="absolute flex flex-col items-center"
                                     style={{ 
-                                    top: `calc(${buildingOffsets[index] || "0px"} + 45px)`,
+                                    top: screenSize === "mobile" ?
+                                         `calc(${buildingOffsets[index] || "0px"} + 25px)` :
+                                         screenSize === "tablet" ?
+                                         `calc(${buildingOffsets[index] || "0px"} + 45px)` :
+                                         `calc(${buildingOffsets[index] || "0px"} + 45px)`,
                                     left: "50%",
                                     transform: "translateX(-50%)"
                                     }}
