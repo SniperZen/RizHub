@@ -760,21 +760,21 @@ const checkAnswer = async (source = "manual") => {
 
                         {/* Result Modal */}
                         {showModal && (
-                            <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
+                            <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-50 pointer-events-none">
                                 <div className="relative w-[600px] bg-transparent">
                                     <img
                                         src="/Img/Challenge/GuessWord/wooden_frame1.png"
                                         alt="Wooden Frame"
                                         className="w-full h-auto"
                                     />
-                                    <div className="absolute top-[-40px] lg:top-[-30px] ml-3 left-1/2 -translate-x-1/2 flex">
+                                    <div className="absolute top-[-35px] lg:top-[-30px] ml-3 left-1/2 -translate-x-1/2 flex">
                                         {(showModal === "finished") && (
                                             <>
                                                 {[...Array(3)].map((_, i) => (
                                                     <div
                                                         key={i}
                                                         className={`flex items-center justify-center
-                                                            ${i === 1 ? "w-[100px] h-[100px] lg:w-[170px] lg:h-[170px]" : "w-[90px] h-[90px] lg:w-32 lg:h-32"}
+                                                            ${i === 1 ? "mt-5 lg:mt-0 w-[100px] h-[100px] lg:w-[170px] lg:h-[170px]" : "w-[90px] h-[90px] lg:w-32 lg:h-32"}
                                                             ${i === 0 || i === 2 ? "translate-y-[50px]" : ""}
                                                         `}
                                                     >
@@ -797,29 +797,37 @@ const checkAnswer = async (source = "manual") => {
                                         )}
                                     </div>
 
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none">
                                         <h2 className="
+                                            modal-title
                                             font-mono
                                             mr-2
                                             ml-2
-                                            text-[40px] lg:text-[55px] lg:leading-[72px] 
+                                            text-[30px] lg:text-[55px] lg:leading-[72px] 
                                             font-bold 
                                             text-orange-800
                                             text-shadow
-                                            z-10"
+                                            z-10 lg:mb-0 mt-40 lg:mt-0 -mb-20 lg:-mb-[40px]"
                                         >
-                                            {showModal === "correct" && successMessage}
-                                            {showModal === "wrong" && "Subukan ulit!"}
-                                            {showModal === "timesup" && "Naubos ang oras!"}
-                                            {showModal === "finished" && (finishMessages[score] || "Natapos na!")}
+                                             {showModal === "finished" && (finishMessages[score] || "Natapos na!")}
                                         </h2>
+
+                                        <div className="absolute modal-title font-mono mt-5 text-[40px] lg:text-[50px] lg:leading-[72px] font-bold text-shadow z-10 text-orange-800 inset-0 mb-10 flex flex-col items-center justify-center p-6 text-center pointer-events-none">
+                                        <div className="modal-message-wrapper">
+                                            <h2 className="modal-title">
+                                                {showModal === "correct" && successMessage}
+                                                {showModal === "wrong" && "Subukan ulit!"}
+                                                {showModal === "timesup" && "Naubos ang oras!"}
+                                            </h2>
+                                            </div>
+                                        </div>
 
                                         {/* Gift/Unlock Image Section */}
                                         {showModal === "finished" && (
-                                            <div className="flex flex-col -mb-[65px] lg:-mb-10 items-center">
+                                            <div className="flex flex-col lg:-mb-[65px] lg:-mb-10 items-center pointer-events-none">
                                                 {/* Gift/Unlock Image Container */}
                                                 <div 
-                                                    className="relative w-60 h-60 flex items-center justify-center cursor-pointer transition-all duration-300"
+                                                    className="relative w-60 h-60 mb-20 lg:mb-0 flex items-center justify-center cursor-pointer transition-all duration-300 pointer-events-none"
                                                     onMouseEnter={() => {
                                                         if (score === 5) {
                                                             setShowGiftTooltip(true);
@@ -836,7 +844,7 @@ const checkAnswer = async (source = "manual") => {
                                                     <img
                                                         src="/Img/Challenge/lightBG1.png"
                                                         alt="Gift Background"
-                                                        className={`absolute inset-0 w-full h-full object-contain ${
+                                                        className={`absolute inset-0 ml-8 lg:ml-0 mt-10 lg:mt-0 w-[170px] h-[170px] lg:w-full lg:h-full object-contain pointer-events-none ${
                                                             score < 5 ? 'filter blur-lg' : ''
                                                         }`}
                                                     />
@@ -856,23 +864,23 @@ const checkAnswer = async (source = "manual") => {
                                                         ) : (
                                                             <div className="relative">
                                                                 {/* Lock overlay - only show for scores below 5 */}
-                                                                <div className="relative flex flex-col items-center justify-center">
+                                                                <div className="relative flex flex-col items-center justify-center pointer-events-none">
                                                                     {/* Lock Image Overlay */}
                                                                     <div className="relative z-20">
                                                                         <img
                                                                             src="/Img/Challenge/locked1.png"
                                                                             alt="Locked Gift"
-                                                                            className="w-[45px] h-[45px] lg:w-[80px] lg:h-[80px] object-contain"
+                                                                            className="w-[45px] h-[45px] lg:w-[80px] lg:h-[80px] object-contain pointer-events-none"
                                                                         />
                                                                     </div>
                                                                     {/* Text below lock */}
-                                                                    <div className="mt-2 text-center">
+                                                                    <div className="mt-2 text-center pointer-events-none">
                                                                     </div>
                                                                 </div>
                                                                 
                                                                 {/* Hover Effect - Show lock message */}
                                                                 {showLockTooltip && (
-                                                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white text-orange-800 font-bold p-3 rounded-lg whitespace-nowrap z-50 text-center">
+                                                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white text-orange-800 font-bold p-3 rounded-lg whitespace-nowrap z-50 text-center pointer-events-none">
                                                                         <p className="text-sm">Kumuha ng perpektong sagot</p>
                                                                         <p className="text-sm">upang makakuha ng bagong imahe.</p>
                                                                     </div>
@@ -885,13 +893,13 @@ const checkAnswer = async (source = "manual") => {
                                         )}
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[170px] md:bottom-[105px] lg:bottom-[105px]">
+                                        <div className="fixed flex gap-8 bottom-[170px] md:bottom-[105px] lg:bottom-[105px] pointer-events-auto">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
-                                                    <button className="rounded-full relative z-20" onClick={() => router.get(route('challenge'))}>
+                                                    <button className="rounded-full relative z-20 pointer-events-auto" onClick={() => router.get(route('challenge'))}>
                                                         <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                                     </button>
-                                                    <button className="rounded-full relative z-20" onClick={handleRestart}>
+                                                    <button className="rounded-full relative z-20 pointer-events-auto" onClick={handleRestart}>
                                                         <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                                     </button>
                                                     {stars > 0 && (

@@ -105,7 +105,7 @@ class QuizSeeder extends Seeder
             [
                 'kabanata_id'   => 1,
                 'question'      => 'Ano ang naramdaman ni Padre Damaso at halos mabitawan ang hawak na kopita?',
-                'choice_a'      => 'Natua',
+                'choice_a'      => 'Natuwa',
                 'choice_b'      => 'Nabigla',
                 'choice_c'      => 'Nalungkot',
                 'correct_answer'=> 'B',
@@ -6494,10 +6494,10 @@ class QuizSeeder extends Seeder
             [
                 'kabanata_id'   => 64,
                 'question'      => 'Sino ang inilibing sa libingan ng Paco?',
-                'choice_a'      => 'Linares',
+                'choice_a'      => 'Padre Damaso',
                 'choice_b'      => 'Ibarra',
-                'choice_c'      => 'Padre Damaso',
-                'correct_answer'=> 'A',
+                'choice_c'      => 'Linares',
+                'correct_answer'=> 'C',
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],

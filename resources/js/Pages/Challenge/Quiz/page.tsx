@@ -107,6 +107,12 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
         }, 100);
     };
 
+    // ADDED: Handle answer selection for mobile buttons
+    const handleSelectAnswer = (answer: string) => {
+        setSelectedAnswer(answer);
+        checkAnswer(answer);
+    };
+
     const playSound = async (soundRef: React.RefObject<HTMLAudioElement>) => {
         if (soundRef.current) {
             try {
@@ -300,15 +306,19 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 />
                 
                 {/* Wooden Frame Modal */}
-                <div className="relative w-[520px] md:w-[550px] lg:w-[600px] bg-transparent">
+                <div className="relative bg-transparent">
                     <img
                         src="/Img/Challenge/GuessWord/wooden_frame1.png"
                         alt="Wooden Frame"
-                        className="w-full h-[500px]"
+                        style={{
+                        width: '600px',
+                        height: '500px'
+                        }}                       
+                        className="w-full h-auto"
                     />
 
                     {/* Modal Content */}
-                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[-3px] overflow-hidden">
+                    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 text-center top-[5px] overflow-hidden">
                         <h2 className=" fixed
                             font-mono
                             mr-5
@@ -318,28 +328,25 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                             text-orange-800
                             z-10
                             mb-12
-                            -mt-10"
+                            -mt-10 lg:-mt-10"
                         >
-                           {isPerfectScore ? "MAGALING!" : "TAPOS NA!"}
+                           {isPerfectScore ? "MAGALING!" : "SUBUKAN MULI!"}
                         </h2>
                         
-                        <p className="fixed text-lg text-orange-800 mb-3 mt-20">
-                            Ikaw ay nakakuha ng markang "{score}/{selectedQuizzes.length}" sa huling hamon.
-                        </p>
 
                         {isPerfectScore ? (
-                            <p className="fixed text-white text-base top-15 mr-15 ml-15">
-                                {/* Binabati kita, Nakamit mo ang perpektong marka at nabuksan mo ang susunod na kabanata! */}
+                            <p className="fixed inset-x-0 mx-12 lg:mx-[240px] text-orange-800 text-sm lg:text-base mt-10 text-center">
+                                Binabati kita, Nakamit mo ang perpektong marka at nabuksan mo <br /> ang susunod na kabanata!
                             </p>
                         ) : (
                             <>
                                 {lives <= 0 ? (
-                                    <p className="text-red-500 text-lg mb-3 mt-8">
-                                        You ran out of lives!
+                                    <p className="text-red-500 text-sm lg:text-lg mb-3 mt-[90px]">
+                                        Naubos ang iyong mga buhay!
                                     </p>
                                 ) : (
-                                    <p className="text-red-500 text-lg mb-3">
-                                        You need a perfect score (10/10) to proceed.
+                                    <p className="text-red-500 text-sm lg:text-lg mb-3 mt-[100px]">
+                                       Kailangan mo ng perpektong marka para magpatuloy.
                                     </p>
                                 )}
                             </>
@@ -350,26 +357,26 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                             {isPerfectScore ? (
                                 <>
                                     <button className="rounded-full p-3 relative" onClick={proceedToHomePage}>
-                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
+                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                     </button>
                                     <button
                                         className="rounded-full p-3 relative"
                                         onClick={proceedToKabanataPage}
                                     >
-                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[60px] h-[60px]" />
+                                        <img src="/Img/Challenge/GuessWord/next.png" alt="Next" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                     </button>
                                 </>
                                 
                             ) : (
                                 <>
                                     <button className="rounded-full p-3 relative" onClick={() => router.get(route('challenge'))}>
-                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[60px] h-[60px]" />
+                                        <img src="/Img/Challenge/GuessWord/home.png" alt="Home" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                     </button>
                                     <button
                                         onClick={restartQuiz}
                                         className="rounded-full p-3 relative"
                                     >
-                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[60px] h-[60px]" />
+                                        <img src="/Img/Challenge/GuessWord/restart.png" alt="Restart" className="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px]" />
                                     </button>
                                 </>
                             )}
@@ -411,10 +418,10 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
             />
             
             <div className="absolute top-4 left-4 flex items-center">
-                <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-2xl">
+                <div className="bg-orange-600 text-white font-mono font-bold px-4 py-2 text-base sm:text-base md:text-xl lg:text-2xl">
                     Kabanata {kabanata_number}:
                 </div>
-                <div className="text-white font-bold font-mono px-2 py-2 text-2xl">
+                <div className="text-white font-bold font-mono px-2 py-2text-base sm:text-base md:text-xl lg:text-2xl">
                     {kabanata_title}
                 </div>
             </div>
@@ -423,22 +430,30 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                 <img
                     src="/Img/Challenge/Quiz/modalBG.png"
                     alt="Wooden Frame"
+                    style={{
+                    width: '900px',
+                    height: '500px'
+                  }}
                     className="w-full h-auto lg:block hidden"
                 />
                     <img
                     src="/Img/Challenge/Quiz/modalBG-mobile.png"
                     alt="Wooden Frame Mobile"
+                    style={{
+                    width: '380px',
+                    height: '500px'
+                  }}
                     className="w-[500px] h-auto block lg:hidden overflow-hidden"
                 />
                 <div className='absolute top-[20px] left-1/2 -translate-x-1/2 flex flex-col justify-center items-center w-full h-full overflow-hidden'>
                     {/* Lives Display */}
-                    <div className="absolute top-[45px] mb-4 flex items-center overflow-hidden">
+                    <div className="absolute top-[60px] lg:top-[45px] mb-4 flex items-center overflow-hidden">
                         <div className="flex">
                             {Array.from({ length: 3 }).map((_, index) => (
                                 lostHearts.includes(index) ? null : (
                                     <span 
                                         key={index} 
-                                        className="text-4xl mx-1 text-red-500"
+                                        className="text-2xl lg:text-4xl mx-1 text-red-500"
                                     >
                                         ❤️
                                     </span>
@@ -450,78 +465,128 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                     {/* Question */}
                     <div className="absolute top-[85px] p-4 rounded-lg w-[100%] max-w-[450px] lg:max-w-[600px] mx-auto">
                         <div className='w-full text-center rounded-lg p-4'>
-                            <p className="text-lg md:text-xl font-black text-white break-words">
+                            <p className="text-base ml-10 lg:ml-0 mr-10 lg:mr-0 md:text-xl font-black text-white break-words">
                                 {currentQuiz.question}
                             </p>
                         </div>
                     </div>
 
-                    {/* Drop Zone */}
-                    <div 
-                        className="absolute top-[290px] bg-orange-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-sm lg:max-w-md min-h-[10px] md:min-h-[40px] g:min-h-[40px] flex items-center justify-center overflow-hidden"
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                    >
-                        {selectedAnswer ? (
-                            <p className="text-xl font-bold text-amber-800">
-                                {selectedAnswer === 'A' && currentQuiz.choice_a}
-                                {selectedAnswer === 'B' && currentQuiz.choice_b}
-                                {selectedAnswer === 'C' && currentQuiz.choice_c}
-                            </p>
-                        ) : (
-                            <p className="text-gray-500">PINDUTIN AT IDALA RITO ANG SAGOT</p>
-                        )}
-                    </div>
+                    {/* Mobile vertical answer buttons */}
+                    <div className="lg:hidden">
+                        {/* Vertical answer buttons for mobile */}
+                        <div className="absolute top-[305px] left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 w-full max-w-[250px]">
+                            {/* Choice A */}
+                            <button
+                                onClick={() => handleSelectAnswer('A')}
+                                className={`w-full py-2 px-2 border-2 border-amber-800 rounded-lg transition-all duration-200
+                                    ${selectedAnswer === 'A' 
+                                        ? 'bg-orange-300 scale-105' 
+                                        : 'bg-orange-300'
+                                    }`}
+                            >
+                                <span className="text-amber-800 font-bold text-sm">
+                                   A. {currentQuiz.choice_a}
+                                </span>
+                            </button>
 
-                    {/* Answer Options */}
-                    <div className=" absolute bottom-[110px] flex flex-wrap justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
-                        <div
-                            className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, 'A')}
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => { setSelectedAnswer('A'); checkAnswer('A'); }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('A'); checkAnswer('A'); } }}
-                        >
-                            <p className="text-xl font-medium">{currentQuiz.choice_a}</p>
-                        </div>
-                        <div
-                            className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, 'B')}
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => { setSelectedAnswer('B'); checkAnswer('B'); }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('B'); checkAnswer('B'); } }}
-                        >
-                            <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
-                        </div>
-                        <div
-                            className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, 'C')}
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => { setSelectedAnswer('C'); checkAnswer('C'); }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('C'); checkAnswer('C'); } }}
-                        >
-                            <p className="text-lg font-medium">{currentQuiz.choice_c}</p>
+                            {/* Choice B */}
+                            <button
+                                onClick={() => handleSelectAnswer('B')}
+                                className={`w-full py-2 px-2 border-2 border-amber-800 rounded-lg transition-all duration-200
+                                    ${selectedAnswer === 'B' 
+                                        ? 'bg-orange-300 scale-105' 
+                                        : 'bg-orange-300'
+                                    }`}
+                            >
+                                <span className="text-amber-800 font-bold text-sm">
+                                   B. {currentQuiz.choice_b}
+                                </span>
+                            </button>
+
+                            {/* Choice C */}
+                            <button
+                                onClick={() => handleSelectAnswer('C')}
+                                className={`w-full py-2 px-2 border-2 border-amber-800 rounded-lg transition-all duration-200
+                                    ${selectedAnswer === 'C' 
+                                        ? 'bg-orange-300 scale-105' 
+                                        : 'bg-orange-300'
+                                    }`}
+                            >
+                                <span className="text-amber-800 font-bold text-sm">
+                                   C. {currentQuiz.choice_c}
+                                </span>
+                            </button>
                         </div>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className=" absolute bottom-0 w-full max-w-lg mb-6 overflow-hidden">
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                            <div 
-                                className="bg-amber-600 h-2.5 rounded-full transition-all duration-300" 
-                                style={{ width: `${((currentQuizIndex + 1) / selectedQuizzes.length) * 100}%` }}
-                            ></div>
+                    {/* Desktop Layout - original functionality */}
+                    <div className="hidden lg:block">
+                        {/* Drop Zone */}
+                        <div 
+                            className="absolute top-[290px] left-1/2 transform -translate-x-1/2 bg-orange-100 border-2 border-dashed border-gray-400 p-8 rounded-lg mb-6 w-full max-w-md min-h-[40px] flex items-center justify-center overflow-hidden"
+                            onDragOver={handleDragOver}
+                            onDrop={handleDrop}
+                        >
+                            {selectedAnswer ? (
+                                <p className="text-xl font-bold text-amber-800">
+                                    {selectedAnswer === 'A' && currentQuiz.choice_a}
+                                    {selectedAnswer === 'B' && currentQuiz.choice_b}
+                                    {selectedAnswer === 'C' && currentQuiz.choice_c}
+                                </p>
+                            ) : (
+                                <p className="text-gray-500">PINDUTIN AT IDALA RITO ANG SAGOT</p>
+                            )}
                         </div>
+
+                        {/* Answer Options */}
+                        <div className="absolute bottom-[110px] left-1/2 transform -translate-x-1/2 flex flex-wrap justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-4 mb-6 w-full scale-75 md:scale-75 lg:scale-90 max-w-base md:max-w-2xl lg:max-w-2xl overflow-hidden">
+                            <div
+                                className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, 'A')}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => { setSelectedAnswer('A'); checkAnswer('A'); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('A'); checkAnswer('A'); } }}
+                            >
+                                <p className="text-xl font-medium">{currentQuiz.choice_a}</p>
+                            </div>
+                            <div
+                                className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, 'B')}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => { setSelectedAnswer('B'); checkAnswer('B'); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('B'); checkAnswer('B'); } }}
+                            >
+                                <p className="text-lg font-medium">{currentQuiz.choice_b}</p>
+                            </div>
+                            <div
+                                className="bg-orange-300 p-4 rounded-lg shadow-md cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, 'C')}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => { setSelectedAnswer('C'); checkAnswer('C'); }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedAnswer('C'); checkAnswer('C'); } }}
+                            >
+                                <p className="text-lg font-medium">{currentQuiz.choice_c}</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        {/* Progress Bar - Mobile Responsive */}
+                        <div className="absolute bottom-10 lg:bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-xs sm:max-w-sm md:max-w-lg mb-4 md:mb-6 px-4 overflow-hidden">
+                            <div className="w-full bg-gray-300 rounded-full h-2 md:h-2.5 overflow-hidden">
+                                <div 
+                                    className="bg-amber-600 h-2 md:h-2.5 rounded-full transition-all duration-300" 
+                                    style={{ width: `${((currentQuizIndex + 1) / selectedQuizzes.length) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>                   
                     </div>
                 </div>
-            </div>
-
             <style>{`
                 .stroke-text {
                     -webkit-text-stroke: 5px #D35D28;
