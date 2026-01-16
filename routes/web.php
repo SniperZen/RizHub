@@ -1,20 +1,11 @@
 <?php
+
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KabanataController; // Add if you have one
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,7 +18,8 @@ Route::get('/', function () {
 
 Route::get('/sample', [StudentController::class, 'sample'])->name('sample');
 
-Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(function () {
+// Add HandleInertiaRequests middleware here
+Route::middleware(['auth', 'user.status', 'student', 'verified', \App\Http\Middleware\HandleInertiaRequests::class])->group(function () {
     
     Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,10 +29,14 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::post('/student-exit', [StudentController::class, 'exit'])->name('student.exit');
     Route::post('/student/save-settings', [StudentController::class, 'saveSettings'])->name('student.saveSettings');
     Route::post('/student/send-invite', [StudentController::class, 'sendInvite'])->name('student.sendInvite');
+    
+    // FIXED: Return Inertia response instead of JSON
     Route::get('/kabanatas', function () {
         $kabanatas = Kabanata::paginate(7);
-        return response()->json($kabanatas);
+        return inertia('Kabanatas/Index', ['kabanatas' => $kabanatas]); // ✅ Use inertia()
+        // OR if you need an API endpoint, move it to api.php
     });
+    
     Route::post('/student/save-audio-settings', [StudentController::class, 'updateAudioSettings'])->name('student.saveAudioSettings');
     Route::get('/challenge', [StudentController::class, 'challenge'])->name('challenge');
     Route::get('/videos/{id}', [StudentController::class, 'show']);
@@ -48,31 +44,31 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     
     // Updated routes with pattern constraints for hashed parameters
     Route::get('/guess-characters/{kabanata?}', [StudentController::class, 'guessCharacters'])
-        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->where('kabanata', '.*')
         ->name('guess-characters');
     
     Route::get('/challenge/guessword/{characterId}/{kabanata?}', [StudentController::class, 'guessW'])
-        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->where('kabanata', '.*')
         ->name('challenge.guessW');
     
     Route::post('/guessword/save-progress', [StudentController::class, 'saveProgress'])->name('guessword.saveProgress');
     
     Route::get('/challenge/quiz/{kabanata}', [StudentController::class, 'Quiz'])
-        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->where('kabanata', '.*')
         ->name('challenge.quiz');
     
     Route::get('/quiz/{kabanata}', [StudentController::class, 'shows'])
-        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->where('kabanata', '.*')
         ->name('quiz.show');
     
     Route::post('/api/quiz/save-progress', [StudentController::class, 'saveProgresss'])->name('quiz.saveProgress');
     Route::post('/api/quiz/complete', [StudentController::class, 'complete'])->name('quiz.complete');
     Route::get('/api/quiz/{kabanata}/progress', [StudentController::class, 'getProgress'])
-        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->where('kabanata', '.*')
         ->name('api.quiz.progress');
     
     Route::delete('/api/quiz/{kabanata}/reset', [StudentController::class, 'resetProgress'])
-        ->where('kabanata', '.*')  // Accept any characters including encoded ones
+        ->where('kabanata', '.*')
         ->name('api.quiz.reset');
     
     Route::get('/Dashboard/image-gallery', [StudentController::class, 'gallery'])->name('image.gallery');
@@ -89,11 +85,13 @@ Route::middleware(['auth', 'user.status', 'student', 'verified'])->group(functio
     Route::get('/api/user/settings', [StudentController::class, 'getSettings']);
 });
 
-Route::get('/book/{kabanata?}', [StudentController::class, 'book'])
-    ->where('kabanata', '.*')  // Accept any characters including encoded ones
-    ->name('book.read');
-
-Route::get('/dashboard', [StudentController::class, 'dash'])->name('dashboard');
-Route::get('/help', [StudentController::class, 'help'])->name('help');
+// Public routes that don't need auth but still need Inertia
+Route::middleware([\App\Http\Middleware\HandleInertiaRequests::class])->group(function () {
+    Route::get('/book/{kabanata?}', [StudentController::class, 'book'])
+        ->where('kabanata', '.*')
+        ->name('book.read');
+    
+    Route::get('/help', [StudentController::class, 'help'])->name('help');
+});
 
 require __DIR__.'/auth.php';

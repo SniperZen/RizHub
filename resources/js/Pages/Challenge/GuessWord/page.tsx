@@ -807,7 +807,7 @@ const checkAnswer = async (source = "manual") => {
                                             font-bold 
                                             text-orange-800
                                             text-shadow
-                                            z-10 lg:mb-0 mt-40 lg:mt-0 -mb-20 lg:-mb-[40px]"
+                                            z-10 lg:mb-0 mt-40 lg:mt-10 -mb-20 lg:-mb-[40px]"
                                         >
                                              {showModal === "finished" && (finishMessages[score] || "Natapos na!")}
                                         </h2>
@@ -844,7 +844,7 @@ const checkAnswer = async (source = "manual") => {
                                                     <img
                                                         src="/Img/Challenge/lightBG1.png"
                                                         alt="Gift Background"
-                                                        className={`absolute inset-0 ml-8 lg:ml-0 mt-10 lg:mt-0 w-[170px] h-[170px] lg:w-full lg:h-full object-contain pointer-events-none ${
+                                                        className={`absolute inset-0 ml-8 lg:ml-0 mt-10 lg:-mt-10 w-[170px] h-[170px] lg:w-full lg:h-full object-contain pointer-events-none ${
                                                             score < 5 ? 'filter blur-lg' : ''
                                                         }`}
                                                     />
@@ -893,7 +893,7 @@ const checkAnswer = async (source = "manual") => {
                                         )}
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[170px] md:bottom-[105px] lg:bottom-[105px] pointer-events-auto">
+                                        <div className="fixed flex gap-8 bottom-[215px] md:bottom-[105px] lg:bottom-[105px] pointer-events-auto">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20 pointer-events-auto" onClick={() => router.get(route('challenge'))}>

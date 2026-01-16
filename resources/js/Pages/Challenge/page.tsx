@@ -864,7 +864,7 @@ const KabanataPage: React.FC<PageProps> = ({
 
                 {/* Buildings with Kabanata Nodes and Stars - Only show when not on door page */}
                 {shouldShowKabanatas() && (
-                    <div className="w-full flex flex-row justify-center items-end mt-[-20px] lg:mt-[-70px] relative z-30 pointer-events-auto">
+                    <div className="w-full flex flex-row justify-center items-end mt-[-20px] lg:mt-[-30px] relative z-30 pointer-events-auto">
                         <style>
                             {`
                             @keyframes floatSmoothTogether {

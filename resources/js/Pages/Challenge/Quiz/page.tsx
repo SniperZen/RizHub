@@ -322,8 +322,8 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                         <h2 className=" fixed
                             font-mono
                             mr-5
-                            ml-5
-                            text-[58px] leading-[72px] 
+                            ml-7
+                            text-[50px] leading-[72px] 
                             font-black 
                             text-orange-800
                             z-10

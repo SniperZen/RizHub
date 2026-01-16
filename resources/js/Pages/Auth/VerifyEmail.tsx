@@ -214,7 +214,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                                 ) : isCooldownActive && cooldown > 0 ? (
                                     `Maghintay...`
                                 ) : (
-                                    "Ipadala Muli ang Verification Email"
+                                    "Magpadala ng Verification Email"
                                 )}
                             </button>
 
