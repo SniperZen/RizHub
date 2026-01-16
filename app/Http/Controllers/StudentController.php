@@ -93,7 +93,7 @@ class StudentController extends Controller
         $user->sound = $validated['sound'];
         $user->save();
         
-        return response()->json(['message' => 'Settings saved successfully']);
+        // return response()->json(['message' => 'Settings saved successfully']);
     }
 
     public function sendInvite(Request $request)
@@ -105,7 +105,7 @@ class StudentController extends Controller
 
         Mail::to($request->email)->send(new InvitationMail($request->shareLink));
 
-        return back()->with('success', 'Invitation sent');
+        return back();
     }
 
     public function challenge(Request $request)
@@ -192,7 +192,7 @@ class StudentController extends Controller
             'kabanata_id' => $request->kabanata_id,
         ]);
 
-        return response()->json(['message' => 'Video added successfully!']);
+        // return response()->json(['message' => 'Video added successfully!']);
     }
 
     private function getSessionKey($type, $kabanataId)
@@ -272,21 +272,21 @@ class StudentController extends Controller
                 'video_progress_id' => $videoProgress->id
             ]);
 
-            return response()->json([
-                'success' => true, 
-                'video_id' => $video->id, 
-                'video_progress_id' => $videoProgress->id
-            ]);
+            // return response()->json([
+            //     'success' => true, 
+            //     'video_id' => $video->id, 
+            //     'video_progress_id' => $videoProgress->id
+            // ]);
 
         } catch (\Exception $e) {
             Log::error('Error saving video progress: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Error saving progress: ' . $e->getMessage()
-            ], 500);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Error saving progress: ' . $e->getMessage()
+            // ], 500);
         }
     }
 
@@ -798,7 +798,7 @@ class StudentController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Progress reset successfully'], 200);
+        // return response()->json(['message' => 'Progress reset successfully'], 200);
     }
 
     public function sample(){
@@ -845,9 +845,9 @@ class StudentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return response()->json([
-            'notifications' => $notifications
-        ]);
+        // return response()->json([
+        //     'notifications' => $notifications
+        // ]);
     }
 
     public function markAsRead()
@@ -855,7 +855,7 @@ class StudentController extends Controller
         $user = Auth::user();
         $user->notifications()->update(['is_read' => true]);
 
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
     }
 
     public function sendNotification(Request $request)
@@ -874,7 +874,7 @@ class StudentController extends Controller
             'type' => $request->type ?? 'general',
         ]);
 
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
     }
 
     public function markAsReads(Request $request)
@@ -889,7 +889,7 @@ class StudentController extends Controller
 
         $notification->update(['is_read' => true]);
 
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
     }
 
     public function markAsUnread(Request $request)
@@ -904,7 +904,7 @@ class StudentController extends Controller
 
         $notification->update(['is_read' => false]);
 
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
     }
 
     public function markAllAsRead()
@@ -912,7 +912,7 @@ class StudentController extends Controller
         Notification::where('user_id', Auth::id())
             ->update(['is_read' => true]);
 
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
     }
 
     public function destroy($id)
@@ -923,7 +923,7 @@ class StudentController extends Controller
 
         $notification->delete();
 
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
     }
 
     public function destroyAll()
@@ -945,15 +945,15 @@ class StudentController extends Controller
             'sound' => $validated['sound'],
         ]);
 
-        return response()->json(['message' => 'Settings updated successfully']);
+        // return response()->json(['message' => 'Settings updated successfully']);
     }
 
     public function getSettings()
     {
         $user = Auth::user();
-        return response()->json([
-            'music' => $user->music ?? 40,
-            'sound' => $user->sound ?? 70,
-        ]);
+        // return response()->json([
+        //     'music' => $user->music ?? 40,
+        //     'sound' => $user->sound ?? 70,
+        // ]);
     }
 }

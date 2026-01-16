@@ -156,10 +156,10 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // Filter kabanatas (keep only first 64)
-    // const filteredKabanatas = {
-    //     ...kabanatas,
-    //     data: kabanatas.data.filter(k => k.id <= 64)
-    // };
+    const filteredKabanatas = {
+        ...kabanatas,
+        data: kabanatas.data.filter(k => k.id <= 64)
+    };
 
     // Function to check if all unlocked kabanatas have 80% or higher grade
     const areAllKabanatasAbove80Percent = () => {
@@ -177,17 +177,17 @@ const KabanataPage: React.FC<PageProps> = ({
     };
 
     // testing purposes only - remove this on production
-    const filteredKabanatas = {
-    ...kabanatas,
-    data: kabanatas.data
-        .filter(k => k.id <= 64)
-        .map(k => ({
-        ...k,
-        progress: 10,
-        stars: 3,
-        unlocked: true
-        }))
-    };
+    // const filteredKabanatas = {
+    // ...kabanatas,
+    // data: kabanatas.data
+    //     .filter(k => k.id <= 64)
+    //     .map(k => ({
+    //     ...k,
+    //     progress: 10,
+    //     stars: 3,
+    //     unlocked: true
+    //     }))
+    // };
 
     // Calculate total stars percentage with different display options
     const getTotalStarsPercentage = (displayType: "rounded" | "decimal" = percentageDisplayType) => {
