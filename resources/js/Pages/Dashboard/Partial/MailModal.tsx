@@ -54,7 +54,7 @@ function DeleteConfirmationModal({ isOpen, onClose, onConfirm, isDeletingAll = f
           
           {/* Close Button */}
           <button
-            className="absolute top-2 md:top-3 right-3 md:right-6 rounded-full w-[35px] h-[45px] md:w-[45px] md:h-[55px] flex items-center justify-center transition hover:scale-110 z-50 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="absolute top-7 right-9 rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
             onClick={onClose}
             aria-label="Close modal"
           >
@@ -267,13 +267,22 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                 {/* Content Container - Only show when image is loaded */}
                 {isBgLoaded && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <div className="flex flex-col items-center w-full px-4 md:px-[80px]">
-                            <span className="absolute text-white text-2xl md:text-4xl font-black tracking-wide top-3">
-                                Notifications {unreadCount > 0 && `(${unreadCount} unread)`}
-                            </span>
-                            
+                        <div className="flex flex-col items-center lg:mb-0 w-full px-4 md:px-[80px]">
+                            <div className="flex flex-col md:flex-row bottom-10 md:bottom-0 lg:bottom-0 absolute top-1 sm:top-3 md:top-3 lg:top-3 xl:top-3">
+                                <span className="text-white text-2xl md:text-4xl font-black tracking-wide">
+                                    Notifications
+                                </span>
+                                {unreadCount > 0 && (
+                                    <div className=" items-center ml-8 ">
+                                    <span className="text-white text-base md:text-4xl font-bold md:mt-0 md:ml-2">
+                                        ({unreadCount} unread)
+                                    </span>
+                                    </div>
+                                )}
+                            </div>
+                                            
                             <button
-                                className="absolute top-4 md:top-7 right-4 md:right-9 rounded-full w-[40px] h-[40px] md:w-[60px] md:h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
+                                className="absolute top-10 sm:top-10 md:top-10 right-4 sm:right-6 md:right-8 rounded-full w-12 h-12 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-[60px] lg:h-[60px] flex items-center justify-center shadow-lg transition hover:scale-110"
                                 onClick={onClose}
                                 aria-label="Close"
                                 disabled={isDeleting}
@@ -281,80 +290,78 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                 <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
                             </button>
                         </div>
+{/* Mobile View - Full Screen Modal */}
+<div className="lg:hidden mt-16 md:mt-20 w-full px-3 sm:px-4">
+{!selected ? (
+    // Notification List View
+    <div className="w-full max-w-full overflow-y-auto p-2 sm:p-3" 
+        style={{ maxHeight: 'calc(420px - 100px)' }}>
+    {localNotifications.length > 0 ? (
+        <div className="space-y-3 sm:space-y-4">
+        {localNotifications.map((notification) => ( // REMOVED .slice(0, 3)
+            <div
+            key={notification.id}
+            className={`cursor-pointer p-3 sm:p-4 rounded-lg border-2 border-[#88643D] transition-all duration-200 active:scale-[0.98] group relative ${
+                notification.is_read
+                ? 'bg-white/90'
+                : 'bg-yellow-100/90'
+            }`}
+            onClick={() => handleSelect(notification)}
+            >
+            {/* Unread indicator - more subtle */}
+            {!notification.is_read && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-lg"></div>
+            )}
 
-                        {/* Mobile View - Full Screen Modal */}
-                        <div className="lg:hidden mt-16 md:mt-20 w-full px-3 sm:px-4">
-                        {!selected ? (
-                            // Notification List View
-                            <div className="w-full max-w-full overflow-y-auto p-2 sm:p-3" 
-                                style={{ maxHeight: 'calc(500px - 100px)' }}>
-                            {localNotifications.length > 0 ? (
-                                <div className="space-y-3 sm:space-y-4">
-                                {localNotifications.map((notification) => (
-                                    <div
-                                    key={notification.id}
-                                    className={`cursor-pointer p-3 sm:p-4 rounded-lg border-2 border-[#88643D] transition-all duration-200 active:scale-[0.98] group relative ${
-                                        notification.is_read
-                                        ? 'bg-white/90'
-                                        : 'bg-yellow-100/90'
-                                    }`}
-                                    onClick={() => handleSelect(notification)}
-                                    >
-                                    {/* Unread indicator - more subtle */}
-                                    {!notification.is_read && (
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-lg"></div>
-                                    )}
+            {/* Action Buttons - Always visible on mobile */}
+            <div className="absolute top-2 right-2 flex gap-1.5 sm:gap-2">
+                <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    notification.is_read 
+                    ? markAsUnread(notification.id)
+                    : markAsRead(notification.id);
+                }}
+                className="w-6 h-6 sm:w-7 sm:h-7 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
+                >
+                {notification.is_read ? '↶' : '✓'}
+                </button>
+                <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    openDeleteModal(notification.id);
+                }}
+                className="w-6 h-6 sm:w-7 sm:h-7 bg-red-600 text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                title="Delete"
+                disabled={isDeleting}
+                >
+                ×
+                </button>
+            </div>
 
-                                    {/* Action Buttons - Always visible on mobile */}
-                                    <div className="absolute top-2 right-2 flex gap-1.5 sm:gap-2">
-                                        <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            notification.is_read 
-                                            ? markAsUnread(notification.id)
-                                            : markAsRead(notification.id);
-                                        }}
-                                        className="w-6 h-6 sm:w-7 sm:h-7 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                                        title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
-                                        >
-                                        {notification.is_read ? '↶' : '✓'}
-                                        </button>
-                                        <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openDeleteModal(notification.id);
-                                        }}
-                                        className="w-6 h-6 sm:w-7 sm:h-7 bg-red-600 text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                                        title="Delete"
-                                        disabled={isDeleting}
-                                        >
-                                        ×
-                                        </button>
-                                    </div>
+            <div className="pr-12 sm:pr-14">
+                <h3 className="font-bold text-[#3D2410] text-sm sm:text-base pr-2">
+                {notification.title}
+                </h3>
 
-                                    <div className="pr-12 sm:pr-14">
-                                        <h3 className="font-bold text-[#3D2410] text-sm sm:text-base pr-2">
-                                        {notification.title}
-                                        {/* Removed the floating dot for cleaner look */}
-                                        </h3>
-
-                                        <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-                                        {new Date(notification.created_at).toLocaleDateString('en-US', {
-                                            month: 'short',
-                                            day: 'numeric',
-                                            year: 'numeric'
-                                        })}
-                                        </p>
-                                    </div>
-                                    </div>
-                                ))}
-                                </div>
-                            ) : (
-                                <div className="text-center text-[#3D2410] py-8">
-                                <p className="text-sm sm:text-base">No notifications yet.</p>
-                                </div>
-                            )}
-                            </div>
+                <p className="text-xs text-gray-500 mt-1 sm:mt-2">
+                {new Date(notification.created_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                })}
+                </p>
+            </div>
+            </div>
+        ))}
+        </div>
+    ) : (
+        <div className="text-center text-[#3D2410] py-8">
+        <p className="text-sm sm:text-base">No notifications yet.</p>
+        </div>
+    )}
+    </div>
                         ) : (
                             // Full Screen Message View
                             <div className="w-full max-w-full flex flex-col p-3 sm:p-4" 
