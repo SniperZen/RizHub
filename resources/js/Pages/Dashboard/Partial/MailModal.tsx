@@ -290,78 +290,78 @@ export default function MailModal({ isOpen, onClose, notifications }: MailModalP
                                 <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
                             </button>
                         </div>
-{/* Mobile View - Full Screen Modal */}
-<div className="lg:hidden mt-16 md:mt-20 w-full px-3 sm:px-4">
-{!selected ? (
-    // Notification List View
-    <div className="w-full max-w-full overflow-y-auto p-2 sm:p-3" 
-        style={{ maxHeight: 'calc(420px - 100px)' }}>
-    {localNotifications.length > 0 ? (
-        <div className="space-y-3 sm:space-y-4">
-        {localNotifications.map((notification) => ( // REMOVED .slice(0, 3)
-            <div
-            key={notification.id}
-            className={`cursor-pointer p-3 sm:p-4 rounded-lg border-2 border-[#88643D] transition-all duration-200 active:scale-[0.98] group relative ${
-                notification.is_read
-                ? 'bg-white/90'
-                : 'bg-yellow-100/90'
-            }`}
-            onClick={() => handleSelect(notification)}
-            >
-            {/* Unread indicator - more subtle */}
-            {!notification.is_read && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-lg"></div>
-            )}
+                    {/* Mobile View - Full Screen Modal */}
+                    <div className="lg:hidden mt-16 md:mt-20 w-full px-3 sm:px-4">
+                    {!selected ? (
+                        // Notification List View
+                        <div className="w-full max-w-full overflow-y-auto p-2 sm:p-3" 
+                            style={{ maxHeight: 'calc(420px - 100px)' }}>
+                        {localNotifications.length > 0 ? (
+                            <div className="space-y-3 sm:space-y-4">
+                            {localNotifications.map((notification) => ( // REMOVED .slice(0, 3)
+                                <div
+                                key={notification.id}
+                                className={`cursor-pointer p-3 sm:p-4 rounded-lg border-2 border-[#88643D] transition-all duration-200 active:scale-[0.98] group relative ${
+                                    notification.is_read
+                                    ? 'bg-white/90'
+                                    : 'bg-yellow-100/90'
+                                }`}
+                                onClick={() => handleSelect(notification)}
+                                >
+                                {/* Unread indicator - more subtle */}
+                                {!notification.is_read && (
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-lg"></div>
+                                )}
 
-            {/* Action Buttons - Always visible on mobile */}
-            <div className="absolute top-2 right-2 flex gap-1.5 sm:gap-2">
-                <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    notification.is_read 
-                    ? markAsUnread(notification.id)
-                    : markAsRead(notification.id);
-                }}
-                className="w-6 h-6 sm:w-7 sm:h-7 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
-                >
-                {notification.is_read ? '↶' : '✓'}
-                </button>
-                <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteModal(notification.id);
-                }}
-                className="w-6 h-6 sm:w-7 sm:h-7 bg-red-600 text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                title="Delete"
-                disabled={isDeleting}
-                >
-                ×
-                </button>
-            </div>
+                                {/* Action Buttons - Always visible on mobile */}
+                                <div className="absolute top-2 right-2 flex gap-1.5 sm:gap-2">
+                                    <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        notification.is_read 
+                                        ? markAsUnread(notification.id)
+                                        : markAsRead(notification.id);
+                                    }}
+                                    className="w-6 h-6 sm:w-7 sm:h-7 bg-[#9A4112] text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                    title={notification.is_read ? 'Mark as unread' : 'Mark as read'}
+                                    >
+                                    {notification.is_read ? '↶' : '✓'}
+                                    </button>
+                                    <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        openDeleteModal(notification.id);
+                                    }}
+                                    className="w-6 h-6 sm:w-7 sm:h-7 bg-red-600 text-white text-xs rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                    title="Delete"
+                                    disabled={isDeleting}
+                                    >
+                                    ×
+                                    </button>
+                                </div>
 
-            <div className="pr-12 sm:pr-14">
-                <h3 className="font-bold text-[#3D2410] text-sm sm:text-base pr-2">
-                {notification.title}
-                </h3>
+                                <div className="pr-12 sm:pr-14">
+                                    <h3 className="font-bold text-[#3D2410] text-sm sm:text-base pr-2">
+                                    {notification.title}
+                                    </h3>
 
-                <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-                {new Date(notification.created_at).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                })}
-                </p>
-            </div>
-            </div>
-        ))}
-        </div>
-    ) : (
-        <div className="text-center text-[#3D2410] py-8">
-        <p className="text-sm sm:text-base">No notifications yet.</p>
-        </div>
-    )}
-    </div>
+                                    <p className="text-xs text-gray-500 mt-1 sm:mt-2">
+                                    {new Date(notification.created_at).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                    })}
+                                    </p>
+                                </div>
+                                </div>
+                            ))}
+                            </div>
+                        ) : (
+                            <div className="text-center text-[#3D2410] py-8">
+                            <p className="text-sm sm:text-base">No notifications yet.</p>
+                            </div>
+                        )}
+                        </div>
                         ) : (
                             // Full Screen Message View
                             <div className="w-full max-w-full flex flex-col p-3 sm:p-4" 
