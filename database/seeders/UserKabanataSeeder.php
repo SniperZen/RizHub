@@ -64,9 +64,9 @@ class UserKabanataSeeder extends Seeder
             $kabanataProgress[] = [
                 'user_id' => $userId,
                 'kabanata_id' => $i,
-                'progress' => 100,
+                'progress' => 10,
                 'stars' => 3,
-                'unlocked' => 1,
+                'unlocked' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -128,10 +128,102 @@ class UserKabanataSeeder extends Seeder
         DB::table('video_progress')->insert($videoProgress);
         $this->command->info("Inserted " . count($videoProgress) . " video progress records");
 
-        // Unlock certificate if all kabanatas are completed
+        // Get kabanata progress IDs for all kabanatas
+        $kabanataProgressIds = DB::table('user_kabanata_progress')
+            ->where('user_id', $userId)
+            ->pluck('id', 'kabanata_id');
+
+        // Clear existing guess word progress
+        DB::table('guessword_progress')->whereIn('kabanata_progress_id', $kabanataProgressIds->values())->delete();
+
+        // Insert guess word progress for all kabanatas
+        $guesswordProgress = [];
+        foreach ($kabanataProgressIds as $kabanataId => $kabanataProgressId) {
+            // Get guess words for this kabanata
+            $guessWords = DB::table('guess_words')->where('kabanata_id', $kabanataId)->get();
+            
+            if ($guessWords->count() > 0) {
+                foreach ($guessWords as $index => $guessWord) {
+                    $guesswordProgress[] = [
+                        'kabanata_progress_id' => $kabanataProgressId,
+                        'character_id' => 1, // Default character
+                        'question_id' => $guessWord->id,
+                        'current_index' => 0,
+                        'completed' => 1,
+                        'total_score' => 5, // Perfect score required for image unlock
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+        
+        if (!empty($guesswordProgress)) {
+            DB::table('guessword_progress')->insert($guesswordProgress);
+            $this->command->info("Inserted " . count($guesswordProgress) . " guess word progress records");
+        }
+
+        // Clear existing quiz progress
+        DB::table('quiz_progress')->whereIn('kabanata_progress_id', $kabanataProgressIds->values())->delete();
+
+        // Insert quiz progress for all kabanatas
+        $quizProgress = [];
+        foreach ($kabanataProgressIds as $kabanataId => $kabanataProgressId) {
+            // Get quizzes for this kabanata
+            $quizzes = DB::table('quizzes')->where('kabanata_id', $kabanataId)->get();
+            
+            if ($quizzes->count() > 0) {
+                foreach ($quizzes as $quizIndex => $quiz) {
+                    $quizProgress[] = [
+                        'kabanata_progress_id' => $kabanataProgressId,
+                        'quiz_id' => $quiz->id,
+                        'selected_answer' => $quiz->correct_answer, // Assume correct answer
+                        'is_correct' => 1,
+                        'score' => 1, // Points per question
+                        'question_number' => $quizIndex + 1,
+                        'total_questions' => $quizzes->count(),
+                        'completed' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+        
+        if (!empty($quizProgress)) {
+            DB::table('quiz_progress')->insert($quizProgress);
+            $this->command->info("Inserted " . count($quizProgress) . " quiz progress records");
+        }
+
+        // Clear existing notifications for this user
+        DB::table('notifications')->where('user_id', $userId)->delete();
+
+        // Insert image unlock notifications for all kabanatas
+        $notifications = [];
+        foreach ($kabanataProgressIds as $kabanataId => $kabanataProgressId) {
+            $kabanata = DB::table('kabanatas')->where('id', $kabanataId)->first();
+            if ($kabanata) {
+                $notifications[] = [
+                    'user_id' => $userId,
+                    'title' => "Larawan Nang-unlock: Kabanata $kabanataId",
+                    'message' => "Nakamit mo ang lahat ng hamon sa \"" . $kabanata->kabanata . "\". Ang mga eksklusibong larawan ay nang-unlock na!",
+                    'is_read' => 0,
+                    'type' => 'image_unlock',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+        
+        if (!empty($notifications)) {
+            DB::table('notifications')->insert($notifications);
+            $this->command->info("Inserted " . count($notifications) . " image unlock notifications");
+        }
+
+        // Unlock certificate if all kabanatas are completed (progress >= 8/10 = 80%)
         $allCompleted = DB::table('user_kabanata_progress')
             ->where('user_id', $userId)
-            ->where('progress', '<', 100)
+            ->where('progress', '<', 8)  // Check if any kabanata is below 80%
             ->doesntExist();
 
         if ($allCompleted) {
@@ -143,9 +235,9 @@ class UserKabanataSeeder extends Seeder
                     'updated_at' => now(),
                 ]
             );
-            $this->command->info("Certificate unlocked for user ID: $userId");
+            $this->command->info("✅ Certificate unlocked for user ID: $userId (All kabanatas at 80%+ progress)");
         } else {
-            $this->command->info("Certificate not unlocked. Not all kabanatas are completed.");
+            $this->command->info("Certificate not unlocked. Not all kabanatas are at 80% or above.");
         }
 
         $this->command->info('✅ Seeding completed successfully!');
