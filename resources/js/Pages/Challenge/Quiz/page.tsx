@@ -218,12 +218,8 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
             total_questions: selectedQuizzes.length,
             perfect_score: isPerfectScore,
         }, {
-            onSuccess: (response) => {
-                console.log('Quiz completed successfully', response);
-                if (response.props.perfect_score) {
-                    console.log('Perfect score achieved! Guessword and video progress updated.');
-                }
-                router.visit(route('challenge'));
+            onSuccess: () => {
+                console.log('Quiz completed successfully, redirecting...');
             },
             onError: (errors) => {
                 console.error('Failed to complete quiz:', errors);
@@ -240,27 +236,21 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
             total_questions: selectedQuizzes.length,
             perfect_score: isPerfectScore,
         }, {
-            onSuccess: (response) => {
-                console.log('Quiz completed successfully', response);
+            onSuccess: () => {
+                console.log('Quiz completed successfully');
                 if (isPerfectScore) {
                     console.log('Perfect score achieved!');
-                    
-                    // Use get instead of visit for client-side navigation
-                    router.get(route('challenge', {
-                    showVideo: true,
-                    kabanataId: kabanataId + 1
-                }), {
-                    preserveState: true,
-                    preserveScroll: true
-                });
-
+                    router.visit(route('challenge', {
+                        showVideo: true,
+                        kabanataId: kabanataId + 1
+                    }));
                 } else {
-                    router.get(route('challenge'));
+                    router.visit(route('challenge'));
                 }
             },
             onError: (errors) => {
                 console.error('Failed to complete quiz:', errors);
-                router.get(route('challenge'));
+                router.visit(route('challenge'));
             }
         });
     };
