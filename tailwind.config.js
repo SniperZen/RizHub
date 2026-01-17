@@ -13,6 +13,9 @@ export default {
 
     theme: {
         extend: {
+            screens: {
+                'xs': '375px', // Add custom breakpoint for extra small devices
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
                 inter: ['Inter', 'sans-serif'],
