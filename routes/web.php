@@ -29,7 +29,6 @@ Route::middleware(['auth', 'user.status', 'student', 'verified', \App\Http\Middl
     Route::post('/student-exit', [StudentController::class, 'exit'])->name('student.exit');
     Route::post('/student/save-settings', [StudentController::class, 'saveSettings'])->name('student.saveSettings');
     Route::post('/student/send-invite', [StudentController::class, 'sendInvite'])->name('student.sendInvite');
-    Route::post('/tutorial/complete', [StudentController::class, 'completeTutorial'])->name('tutorial.complete');
     
     // FIXED: Return Inertia response instead of JSON
     Route::get('/kabanatas', function () {

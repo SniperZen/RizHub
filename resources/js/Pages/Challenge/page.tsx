@@ -7,7 +7,6 @@ import CertificateModal from "../../Components/CertificateModal";
 import Button from '@/Components/Button';
 import AudioControls from "../../Components/AudioControls";
 import youtubeMappings from "./youtubeMappings";
-import InteractiveTutorial from "../../Tutorial/InteractiveTutorial";
 
 interface Kabanata {
     id: number;
@@ -46,8 +45,6 @@ interface PageProps {
     kabanataId?: number;
     completedKabanatasCount?: number;
     studentName?: string;
-    tutorialCompleted?: boolean;
-    userEmail?: string;
 }
 
 const KabanataPage: React.FC<PageProps> = ({ 
@@ -58,9 +55,7 @@ const KabanataPage: React.FC<PageProps> = ({
     showVideo = false, 
     kabanataId = null,
     completedKabanatasCount = 0, 
-    studentName = "Student",
-    tutorialCompleted = false,
-    userEmail = ""
+    studentName = "Student"
 }) => {
     const [currentPage, setCurrentPage] = useState(kabanatas.current_page);
     const [currentMusic, setCurrentMusic] = useState(music);
@@ -86,8 +81,6 @@ const KabanataPage: React.FC<PageProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [percentageDisplayType, setPercentageDisplayType] = useState<"rounded" | "decimal">("decimal");
     const [vibratingLockedId, setVibratingLockedId] = useState<number | null>(null);
-    const [showTutorial, setShowTutorial] = useState(!tutorialCompleted);
-    const [tutorialStep, setTutorialStep] = useState(0);
 
     // Helper: map numeric id to hashed id provided in `kabanatas` prop
     const getKabanataHash = (id: number | null) => {
@@ -749,31 +742,6 @@ const KabanataPage: React.FC<PageProps> = ({
         return currentPage === doorPage;
     };
 
-    // Tutorial handlers
-    const handleTutorialComplete = () => {
-        setShowTutorial(false);
-        // Mark tutorial as completed in database
-        router.post(route('tutorial.complete'), {}, {
-            preserveState: true,
-            preserveScroll: true,
-            onError: (errors) => {
-                console.error('Failed to save tutorial completion:', errors);
-            }
-        });
-    };
-
-    const handleTutorialSkip = () => {
-        setShowTutorial(false);
-        // Still mark it as completed even if skipped
-        router.post(route('tutorial.complete'), {}, {
-            preserveState: true,
-            preserveScroll: true,
-            onError: (errors) => {
-                console.error('Failed to save tutorial completion:', errors);
-            }
-        });
-    };
-
     // Get adjusted total pages for display (including door page)
     const getDisplayTotalPages = () => {
         if (screenSize === "tablet") {
@@ -808,14 +776,6 @@ const KabanataPage: React.FC<PageProps> = ({
             onVolumeChange={handleAudioSettingsChange}
         >
             <div className="relative min-h-[100vh] bg-cover bg-center overflow-hidden pointer-events-auto" style={{ backgroundImage: "url('/Img/Challenge/bg7.png')" }}>
-                {/* Interactive Tutorial */}
-                <InteractiveTutorial 
-                    isVisible={showTutorial}
-                    onComplete={handleTutorialComplete}
-                    onSkip={handleTutorialSkip}
-                    startStep={tutorialStep}
-                />
-
                 {/* Vibration Sound Effect */}
                 <audio 
                     ref={vibrationAudioRef} 
@@ -833,12 +793,11 @@ const KabanataPage: React.FC<PageProps> = ({
                         initialMusic={music}
                         initialSound={sound}
                         onSettingsChange={handleAudioSettingsChange}
-                        data-tutorial="audio-controls"
                     />
                 </div>
                 
                 {/* Banner Image Container Adjustment */}
-                <div className="absolute top-[35%] md-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0 z-100 dashboard-container">
+                <div className="absolute top-[35%] md-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] px-0 z-100">
                     <div className="relative flex justify-center items-center w-full">
                         
                         {/* Left Arrow - Very Close to Banner */}
@@ -1003,8 +962,7 @@ const KabanataPage: React.FC<PageProps> = ({
                         {filteredKabanatas.data.slice(0, itemsPerPage).map((k, index) => (
                         <div 
                             key={`building-${k.id}`}
-                            className="flex w-full relative pointer-events-auto kabanata-list"
-                            data-tutorial={index === 0 ? "kabanata-list" : undefined}
+                            className="flex w-full relative pointer-events-auto"
                         >
                             {/* Kabanata 64 Special Building - Made Responsive */}
                             {k.id === 64 ? (
@@ -1052,12 +1010,11 @@ const KabanataPage: React.FC<PageProps> = ({
 
                                 <div className="relative">
                                     <div
-                                    className={`rounded-full flex items-center justify-center z-50 cursor-pointer challenge-button ${
+                                    className={`rounded-full flex items-center justify-center z-50 cursor-pointer ${
                                         screenSize === "mobile" ? "w-[75px] h-auto" : 
                                         screenSize === "tablet" ? "w-20 h-20" :
                                         "w-20 h-20"
                                     }`}
-                                    data-tutorial="challenge-button"
                                     onClick={() => { 
                                         if (k.unlocked) {
                                             openVideoModal(k.id); 
