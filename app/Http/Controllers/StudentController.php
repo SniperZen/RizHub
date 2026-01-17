@@ -160,6 +160,8 @@ class StudentController extends Controller
             'music' => $user->music ?? 40, 
             'sound' => $user->sound ?? 70,
             'studentName' => auth()->user()->name,
+            'tutorialCompleted' => $user->tutorial_completed ?? false,
+            'userEmail' => $user->email,
         ]);
     }
 
@@ -948,5 +950,33 @@ class StudentController extends Controller
             'music' => $user->music ?? 40,
             'sound' => $user->sound ?? 70,
         ]);
+    }
+
+    /**
+     * Mark the onboarding tutorial as completed for the user
+     */
+    public function completeTutorial()
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        try {
+            $user->update([
+                'tutorial_completed' => true,
+                'tutorial_completed_at' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tutorial marked as completed',
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error completing tutorial: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to complete tutorial'], 500);
+        }
     }
 }
