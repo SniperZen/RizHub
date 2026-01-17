@@ -1191,21 +1191,64 @@ const KabanataPage: React.FC<PageProps> = ({
                     />
                 )}
 
-                {/* Resume/Restart Prompt */}
-                {showResumePrompt && (
-                    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                        <div className="absolute inset-0 bg-black/70"></div>
-                        <div className="relative w-full max-w-md bg-white rounded-lg p-6 z-60">
-                            <h3 className="text-lg font-bold mb-4">Resume video?</h3>
-                            <p className="text-sm mb-6">We detected you previously watched part of this video. Would you like to resume where you left off or restart from the beginning?</p>
-                            <div className="flex justify-end space-x-3">
-                                <button onClick={() => { setShowResumePrompt(false); setPendingKabanataId(null); }} className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-                                <button onClick={() => handleResumeChoice('restart')} className="px-4 py-2 bg-red-500 text-white rounded">Restart</button>
-                                <button onClick={() => handleResumeChoice('resume')} className="px-4 py-2 bg-green-600 text-white rounded">Resume</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+{/* Resume/Restart Prompt */}
+{showResumePrompt && (
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/70"></div>
+        
+        {/* Wooden modal background with animation */}
+        <div 
+            className="relative w-full max-w-2xl z-50 opacity-0"
+            style={{
+                animation: 'scaleIn 0.4s ease-out forwards, fadeIn 0.4s ease-out forwards',
+                transformOrigin: 'center'
+            }}
+        >
+            <img
+                src="/Img/Challenge/vidModal.png"
+                alt="Wooden Modal"
+                className="w-full h-auto object-contain max-w-[900px] mx-auto lg:h-[500px] lg:w-auto"
+            />
+            
+            {/* Text and buttons positioned over the wooden image */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
+                {/* Message text */}
+                <p className="font-black-han-sans font-black text-[12px] sm:text-sm md:text-base lg:text-2xl mt-10 lg:mt-0 md:mb-8 lg:mt-[98px] text-[#95512C] text-center leading-relaxed max-w-[80%]"
+                   style={{
+                       transform: 'translateY(-20px)'
+                   }}>
+                    Natagpuan namin na napanood mo na ang bahagi ng video na ito. Gusto mo bang ipagpatuloy kung saan ka natigil o simulan mula sa simula?
+                </p>
+                
+                {/* Buttons container */}
+                <div className="flex justify-center space-x-2 sm:space-x-3 md:space-x-4 mt-[10px] lg:mt-[55px]"
+                     style={{
+                         transform: 'translateY(10px)'
+                     }}>
+                    <button 
+                        onClick={() => { setShowResumePrompt(false); setPendingKabanataId(null); }} 
+                        className="w-auto h-[35px] md:h-[50px] lg:h-[60px] px-2 md:px-2 lg:px-6 rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-sm md:text-xl lg:text-xl font-extrabold relative transition hover:scale-105"
+                    >
+                        Kanselahin
+                    </button>
+                    <button 
+                        onClick={() => handleResumeChoice('restart')} 
+                        className="w-auto h-[35px] md:h-[50px] lg:h-[60px] px-2 md:px-6 lg:px-6 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm md:text-xl  lg:text-xl font-extrabold relative transition hover:scale-105"
+                    >
+                        Ulitin
+                    </button>
+                    <button 
+                        onClick={() => handleResumeChoice('resume')} 
+                        className="w-auto h-[35px] md:h-[50px] lg:h-[60px] px-2 md:px-6 lg:px-6 rounded-[40px] bg-gradient-to-b from-[#FFA500] to-[#D76D00] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm md:text-xl lg:text-xl font-extrabold relative transition hover:scale-105"
+                    >
+                        Ipagpatuloy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+)}
 
                 {showEndModal && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
