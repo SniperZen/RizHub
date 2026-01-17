@@ -11,6 +11,7 @@ interface YouTubeVideoModalProps {
     showSkipOption?: boolean;
     kabanataId?: number | null;
     isCompleted?: boolean; // track if video already completed from database
+    resumeSeconds?: number;
 }
 
 declare global {
@@ -26,6 +27,7 @@ export default function YouTubeVideoModal({
     showSkipOption = false,
     kabanataId = null,
     isCompleted = false,
+    resumeSeconds = 0,
 }: YouTubeVideoModalProps) {
     const playerRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -41,6 +43,14 @@ export default function YouTubeVideoModal({
     const lastCheckedTimeRef = useRef<number>(0); // Track last checked time
     const lastValidTimeRef = useRef<number>(0); // Track last valid time
 
+    // Initialize resume time if provided
+    useEffect(() => {
+        if (resumeSeconds && resumeSeconds > 0) {
+            secondsWatchedRef.current = Math.floor(resumeSeconds);
+            lastValidTimeRef.current = resumeSeconds;
+        }
+    }, [resumeSeconds]);
+
     // Load YT API if needed and create player
     useEffect(() => {
         let mounted = true;
@@ -51,39 +61,39 @@ export default function YouTubeVideoModal({
             const YT = window.YT;
             if (!containerRef.current) return;
 
-            // First-time watchers get different parameters
-            const playerVars = isRestrictedMode 
+                        // First-time watchers get different parameters
+                        // include `start` param when resuming
+                        const baseVars: any = {
+                                autoplay: 1,
+                                controls: 1,
+                                rel: 0,
+                                modestbranding: 1,
+                                enablejsapi: 1,
+                                fs: 1,
+                                showinfo: 0,
+                                iv_load_policy: 3,
+                                playsinline: 1,
+                        };
+
+                        if (resumeSeconds && resumeSeconds > 0) {
+                                baseVars.start = Math.floor(resumeSeconds);
+                        }
+
+                        const playerVars = isRestrictedMode 
                 ? {
-                    // For first-time viewers: hide controls but show play button
-                    autoplay: 1,
-                    controls: 1, // Keep controls visible
-                    rel: 0,
-                    modestbranding: 1,
-                    enablejsapi: 1,
-                    disablekb: 1,
-                    fs: 1,
-                    showinfo: 0,
-                    iv_load_policy: 3,
-                    playsinline: 1,
-                    // Add these for better control
-                    color: 'white',
-                    hl: 'en',
-                    cc_load_policy: 0,
-                    widget_referrer: window.location.href,
-                  }
+                                        // For first-time viewers: restrict some keyboard actions
+                                        ...baseVars,
+                                        disablekb: 1,
+                                        color: 'white',
+                                        hl: 'en',
+                                        cc_load_policy: 0,
+                                        widget_referrer: window.location.href,
+                                    }
                 : {
-                    // For rewatchers: full controls
-                    autoplay: 1,
-                    controls: 1,
-                    rel: 0,
-                    modestbranding: 1,
-                    enablejsapi: 1,
-                    disablekb: 0,
-                    fs: 1,
-                    showinfo: 0,
-                    iv_load_policy: 3,
-                    playsinline: 1,
-                  };
+                                        // For rewatchers: full controls
+                                        ...baseVars,
+                                        disablekb: 0,
+                                    };
 
             playerRef.current = new YT.Player(containerRef.current, {
                 height: "390",

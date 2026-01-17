@@ -69,6 +69,8 @@ const KabanataPage: React.FC<PageProps> = ({
     const [pendingKabanataId, setPendingKabanataId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentVideo, setCurrentVideo] = useState<string>("");
+    const [showResumePrompt, setShowResumePrompt] = useState(false);
+    const [resumeOverrideSeconds, setResumeOverrideSeconds] = useState<number | null>(null);
     const [hasVideoEnded, setHasVideoEnded] = useState(false);
     const [videoCompleted, setVideoCompleted] = useState<Record<number, boolean>>({});
     const [retryCounts, setRetryCounts] = useState<Record<number, number>>({});
@@ -473,15 +475,68 @@ const KabanataPage: React.FC<PageProps> = ({
         if (pendingKabanataId !== null) {
             const youtubeId = youtubeVideoMappings[pendingKabanataId];
             if (youtubeId) {
-                setCurrentVideo(youtubeId);
+                // If we have prior progress, ask whether to resume or restart
+                const priorSeconds = getResumeSeconds(pendingKabanataId);
+                const alreadyCompleted = isVideoCompleted(pendingKabanataId);
+
                 setLastPlayedVideo(youtubeId);
                 setSelectedKabanataId(pendingKabanataId);
-                setIsModalOpen(true);
-                pauseBackgroundMusic();
+
+                if (priorSeconds > 0 || alreadyCompleted) {
+                    // show prompt to resume or restart
+                    setResumeOverrideSeconds(null); // clear any previous override
+                    setShowResumePrompt(true);
+                } else {
+                    // no resume needed, open straight away
+                    setCurrentVideo(youtubeId);
+                    setIsModalOpen(true);
+                    pauseBackgroundMusic();
+                }
             } else {
                 console.error(`No YouTube ID found for kabanata ${pendingKabanataId}`);
                 // Fallback or show error message
             }
+        }
+    };
+
+    const handleResumeChoice = (choice: 'resume' | 'restart') => {
+        if (!pendingKabanataId) return;
+        const youtubeId = youtubeVideoMappings[pendingKabanataId];
+        if (!youtubeId) return;
+
+        if (choice === 'resume') {
+            setResumeOverrideSeconds(getResumeSeconds(pendingKabanataId));
+            setCurrentVideo(youtubeId);
+            setIsModalOpen(true);
+            setShowResumePrompt(false);
+            pauseBackgroundMusic();
+        } else {
+            // restart: clear server-side progress and local flags, then play from start
+            router.post(route('student.saveVideoProgress'), {
+                kabanata_id: pendingKabanataId,
+                completed: false,
+                seconds_watched: 0,
+                youtube_id: youtubeId,
+            }, {
+                preserveState: true,
+                onSuccess: () => {
+                    setVideoCompleted(prev => ({ ...prev, [pendingKabanataId]: false }));
+                    setResumeOverrideSeconds(0);
+                    setCurrentVideo(youtubeId);
+                    setIsModalOpen(true);
+                    setShowResumePrompt(false);
+                    pauseBackgroundMusic();
+                },
+                onError: (err) => {
+                    console.error('Failed to reset video progress:', err);
+                    // still open video from start as a fallback
+                    setResumeOverrideSeconds(0);
+                    setCurrentVideo(youtubeId);
+                    setIsModalOpen(true);
+                    setShowResumePrompt(false);
+                    pauseBackgroundMusic();
+                }
+            });
         }
     };
 
@@ -537,6 +592,20 @@ const KabanataPage: React.FC<PageProps> = ({
     // Check if video has been completed before for a specific kabanata
     const isVideoCompleted = (kabanataId: number) => {
         return videoCompleted[kabanataId] || false;
+    };
+
+    // Check if kabanata has been fully finished (progress 10/10)
+    const isKabanataFinished = (kabanataId: number) => {
+        const k = filteredKabanatas.data.find(item => item.id === kabanataId);
+        if (!k) return false;
+        return (k.progress || 0) >= 10;
+    };
+
+    // Find previously saved seconds watched for a kabanata so we can resume
+    const getResumeSeconds = (kabanataId: number | null) => {
+        if (!kabanataId) return 0;
+        const vp = videoProgress.find(v => (v.kabanata_id && v.kabanata_id === kabanataId) || v.video_id === kabanataId);
+        return vp ? Math.floor(vp.seconds_watched || 0) : 0;
     };
 
     // Check if video should be skippable based on retry count
@@ -1116,9 +1185,26 @@ const KabanataPage: React.FC<PageProps> = ({
                         kabanataId={selectedKabanataId}
                         isCompleted={selectedKabanataId !== null && isVideoCompleted(selectedKabanataId)} // NEW
                         skippable={selectedKabanataId !== null && isVideoSkippable(selectedKabanataId)}
-                        showSkipOption={pendingKabanataId !== null && isVideoCompleted(pendingKabanataId)}
+                        showSkipOption={selectedKabanataId !== null && isKabanataFinished(selectedKabanataId)}
+                        resumeSeconds={resumeOverrideSeconds !== null ? resumeOverrideSeconds : getResumeSeconds(selectedKabanataId)}
                         onSkip={() => selectedKabanataId !== null && handleSkipVideo(selectedKabanataId)}
                     />
+                )}
+
+                {/* Resume/Restart Prompt */}
+                {showResumePrompt && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+                        <div className="absolute inset-0 bg-black/70"></div>
+                        <div className="relative w-full max-w-md bg-white rounded-lg p-6 z-60">
+                            <h3 className="text-lg font-bold mb-4">Resume video?</h3>
+                            <p className="text-sm mb-6">We detected you previously watched part of this video. Would you like to resume where you left off or restart from the beginning?</p>
+                            <div className="flex justify-end space-x-3">
+                                <button onClick={() => { setShowResumePrompt(false); setPendingKabanataId(null); }} className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
+                                <button onClick={() => handleResumeChoice('restart')} className="px-4 py-2 bg-red-500 text-white rounded">Restart</button>
+                                <button onClick={() => handleResumeChoice('resume')} className="px-4 py-2 bg-green-600 text-white rounded">Resume</button>
+                            </div>
+                        </div>
+                    </div>
                 )}
 
                 {showEndModal && (
