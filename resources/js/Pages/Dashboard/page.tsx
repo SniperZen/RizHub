@@ -399,7 +399,7 @@ export default function Dashboard({
                 </style>
 
                 <img
-                    src="/Img/Dashboard/t-bg2.png"
+                    src="/Img/Dashboard/t-bg21.png"
                     alt="Noli Me Tangere BG"
                     className="
                         hidden xl:block
