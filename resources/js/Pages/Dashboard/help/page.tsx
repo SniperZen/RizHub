@@ -241,7 +241,7 @@ export default function HelpPage() {
               
               {/* Header stays centered with smooth floating animation */}
               <div 
-                className="absolute left-1/2 top-[115px] sm:top-[35px] md:top-[30px] lg:top-[80px] lg:ml-10 lg:top-[80px] lg:pr-[60px]
+                className="absolute left-1/2 top-[145px] sm:top-[35px] md:top-[30px] lg:top-[80px] lg:ml-10 lg:top-[80px] lg:pr-[60px]
                           transform -translate-x-1/2 z-30 h-60 scale-150 w-[500px]
                           md:w-[990px] lg:w-[650px] xl:w-[650px]"
                 style={{ animation: "smoothFloat 6s ease-in-out infinite" }}
