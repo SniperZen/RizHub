@@ -1410,7 +1410,7 @@ const KabanataPage: React.FC<PageProps> = ({
                     isOpen={showPreVideoModal}
                     onClose={handleLater}
                     onProceed={handleProceedToVideo}
-                    showSkipOption={pendingKabanataId !== null && isVideoCompleted(pendingKabanataId)}
+                    showSkipOption={pendingKabanataId !== null && (isVideoCompleted(pendingKabanataId) || isKabanataFinished(pendingKabanataId))}
                     onSkip={() => pendingKabanataId !== null && handleSkipVideo(pendingKabanataId)}
                 />
             )}
