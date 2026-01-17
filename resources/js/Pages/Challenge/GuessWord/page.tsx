@@ -659,7 +659,7 @@ const checkAnswer = async (source = "manual") => {
                                         {kabanata_title}
                                     </div>
                                 </div>
-                                <button
+                                {/* <button
                                     onClick={togglePause}
                                     className="fixed top-6 right-10 p-2 bg-amber-700 rounded-full hover:bg-amber-600 transition-colors overflow-hidden"
                                     title="Pause Game"
@@ -672,7 +672,7 @@ const checkAnswer = async (source = "manual") => {
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                </button>
+                                </button> */}
                             </div>
                         </div>
 
