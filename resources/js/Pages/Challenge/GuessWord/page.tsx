@@ -695,7 +695,7 @@ const checkAnswer = async (source = "manual") => {
                             </div>
 
                             {/* Answer Input */}
-                            <div className="flex items-center font-mono mt-3 lg:mt-8 md:mt-3 w-full max-w-6xl">
+                            <div className="flex items-center font-mono mt-3 sm:mt-5 lg:mt-8 md:mt-3 w-full max-w-6xl">
                                 {/* Answer display - compressed for mobile */}
                                 <div className="flex-1 min-w-0">
                                     <div className={`text-4xl sm:text-4xl md:text-5xl text-center font-black 
@@ -893,7 +893,7 @@ const checkAnswer = async (source = "manual") => {
                                         )}
 
                                         {/* Action Buttons */}
-                                        <div className="fixed flex gap-8 bottom-[215px] md:bottom-[105px] lg:bottom-[105px] pointer-events-auto">
+                                        <div className="fixed flex gap-8 bottom-[170px] md:bottom-[105px] lg:bottom-[105px] pointer-events-auto">
                                             {(showModal === "timesup" || showModal === "finished") && (
                                                 <>
                                                     <button className="rounded-full relative z-20 pointer-events-auto" onClick={() => router.get(route('challenge'))}>
