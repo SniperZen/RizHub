@@ -1307,14 +1307,14 @@ const KabanataPage: React.FC<PageProps> = ({
                                 }}>
                                 <button
                                     onClick={retryVideo}
-                                    className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8  rounded-[40px] bg-gradient-to-b from-gray-300 to-gray-500 shadow-[4px_8px_0_#888] border-4 border-gray-400 text-black text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
+                                    className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8  rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Panoorin muli
                                 </button>
 
                                 <button
                                     onClick={proceedNext}
-                                    className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8 rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
+                                    className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8 rounded-[40px] bg-gradient-to-b from-[#FFA500] to-[#D76D00] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Magpatuloy
                                 </button>
