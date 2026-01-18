@@ -10,27 +10,58 @@
   font-style: normal;
 }
 
-/* Prevent scrolling on the entire page by default */
+/* Base HTML and Body */
 html, body {
-    overflow: hidden !important;
-    height: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: fixed !important;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-/* Allow scrolling only on the landing page */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Inertia App Container */
+#app {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Landing Page - Enable Scrolling */
 .landing-page {
-    overflow: visible !important;
-    height: auto !important;
-    position: relative !important;
+    height: 100vh;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
-.landing-page html,
-.landing-page body {
+/* Ensure body allows scroll when landing page is active */
+body.landing-page-active {
     overflow-y: auto !important;
-    overflow-x: hidden !important;
     height: auto !important;
-    position: relative !important;
+}
+
+/* Guest and Authenticated Layouts - Disable Scrolling */
+.min-h-screen:not(.landing-page) {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Navigation elements */
+nav {
+    flex-shrink: 0;
+}
+
+/* Main content area for non-landing pages */
+main {
+    flex: 1;
+    overflow: hidden;
 }
