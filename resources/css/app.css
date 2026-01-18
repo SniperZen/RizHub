@@ -10,7 +10,7 @@
   font-style: normal;
 }
 
-/* Prevent scrolling on the entire page */
+/* Prevent scrolling on the entire page by default */
 html, body {
     overflow: hidden !important;
     height: 100% !important;
@@ -18,4 +18,19 @@ html, body {
     margin: 0 !important;
     padding: 0 !important;
     position: fixed !important;
+}
+
+/* Allow scrolling only on the landing page */
+.landing-page {
+    overflow: visible !important;
+    height: auto !important;
+    position: relative !important;
+}
+
+.landing-page html,
+.landing-page body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    position: relative !important;
 }

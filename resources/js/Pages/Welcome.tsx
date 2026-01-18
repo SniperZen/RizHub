@@ -281,7 +281,7 @@ export default function Welcome({ auth }: PageProps) {
         <>
             <Head title="Welcome" />
             
-            <div className={`min-h-screen font-sans ${showLoginModal ? 'blur-sm pointer-events-none select-none' : ''}`}>
+            <div className={`landing-page min-h-screen font-sans ${showLoginModal ? 'blur-sm pointer-events-none select-none' : ''}`}>
             {/* Hero Section - Always visible without scroll trigger */}
                     <motion.div
                     initial="hidden"
