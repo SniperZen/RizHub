@@ -23,8 +23,23 @@ export default function ResetPassword({ token, email }: { token: string; email: 
         hasMinLength: false,
     });
 
+    // Check if mobile device
+    const [isMobile, setIsMobile] = useState(false);
+
     useEffect(() => {
         return () => reset("password", "password_confirmation");
+    }, []);
+
+    // Check screen size on mount and resize
+    useEffect(() => {
+        const checkIfMobile = () => {
+            setIsMobile(window.innerWidth < 768); // md breakpoint in Tailwind
+        };
+        
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        
+        return () => window.removeEventListener('resize', checkIfMobile);
     }, []);
 
     // Handle live password validation
@@ -118,9 +133,9 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                 </div>
             )}
 
-            {/* ✅ Password Requirements - Styled like the image */}
-            {isPasswordFocused && (
-                <div className="fixed right-8 top-1/2 transform -translate-y-1/2 w-72 z-50">
+            {/* ✅ Password Requirements for DESKTOP/LAPTOP (fixed sidebar) */}
+            {!isMobile && isPasswordFocused && (
+                <div className="fixed right-8 top-1/2 transform -translate-y-1/2 w-72 z-50 hidden md:block">
                     <div className="relative p-6 bg-white rounded-lg shadow-xl border border-gray-200">
                         
                         <div className="mb-4">
@@ -227,8 +242,8 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                                     />
                                 </div>
 
-                                {/* Password */}
-                                <div>
+                                {/* Password Field with Mobile Requirements */}
+                                <div className="relative">
                                     <input
                                         id="password"
                                         type="password"
@@ -249,6 +264,49 @@ export default function ResetPassword({ token, email }: { token: string; email: 
                                             } placeholder-gray-500 focus:outline-none focus:ring-2 
                                             focus:ring-offset-2 focus:ring-orange-500`}
                                     />
+                                    
+                                    {/* ✅ Password Requirements - MOBILE VIEW ONLY (below password field) */}
+                                    <div className="md:hidden">
+                                        {isPasswordFocused && (
+                                            <div className="mt-3 w-full">
+                                                <div className="p-4 bg-white rounded-xl shadow-lg border border-gray-200">
+                                                    <p className="text-[#5A3416] text-base font-bold mb-3">Password must contain:</p>
+                                                    <ul className="text-sm space-y-1.5">
+                                                        <li className={`flex items-center ${passwordChecks.hasUppercase ? 'text-green-600' : 'text-red-600'}`}>
+                                                            <span className="mr-2 font-bold">{passwordChecks.hasUppercase ? '✓' : '✗'}</span>
+                                                            <span className={passwordChecks.hasUppercase ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                At least one uppercase letter
+                                                            </span>
+                                                        </li>
+                                                        <li className={`flex items-center ${passwordChecks.hasLowercase ? 'text-green-600' : 'text-red-600'}`}>
+                                                            <span className="mr-2 font-bold">{passwordChecks.hasLowercase ? '✓' : '✗'}</span>
+                                                            <span className={passwordChecks.hasLowercase ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                At least one lowercase letter
+                                                            </span>
+                                                        </li>
+                                                        <li className={`flex items-center ${passwordChecks.hasNumber ? 'text-green-600' : 'text-red-600'}`}>
+                                                            <span className="mr-2 font-bold">{passwordChecks.hasNumber ? '✓' : '✗'}</span>
+                                                            <span className={passwordChecks.hasNumber ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                At least one number (0-9)
+                                                            </span>
+                                                        </li>
+                                                        <li className={`flex items-center ${passwordChecks.hasSpecialChar ? 'text-green-600' : 'text-red-600'}`}>
+                                                            <span className="mr-2 font-bold">{passwordChecks.hasSpecialChar ? '✓' : '✗'}</span>
+                                                            <span className={passwordChecks.hasSpecialChar ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                At least one special character
+                                                            </span>
+                                                        </li>
+                                                        <li className={`flex items-center ${passwordChecks.hasMinLength ? 'text-green-600' : 'text-red-600'}`}>
+                                                            <span className="mr-2 font-bold">{passwordChecks.hasMinLength ? '✓' : '✗'}</span>
+                                                            <span className={passwordChecks.hasMinLength ? 'text-green-600' : 'text-[#5A3416]'}>
+                                                                At least 8 characters long
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 {/* Confirm Password */}

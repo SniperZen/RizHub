@@ -467,7 +467,7 @@ export default function YouTubeVideoModal({
                             
                             {/* Text appears after background image */}
                             <p 
-                                className="font-black-han-sans font-black text-sm sm:text-sm md:text-2xl lg:text-3xl leading-[25px] lg:leading-[30px] text-center text-[#95512C] relative top-[60px] lg:top-[40px] opacity-0"
+                                className="font-black-han-sans font-black text-sm sm:text-sm md:text-2xl lg:text-3xl leading-[25px] lg:leading-[30px] text-center text-[#95512C] relative top-[45px] lg:top-[40px] opacity-0"
                                 style={{
                                 animation: 'fadeIn 0.5s ease-out 0.6s both'
                                 }}
@@ -476,7 +476,7 @@ export default function YouTubeVideoModal({
                             </p>
 
                             {/* Buttons appear after text */}
-                            <div className="flex gap-6 mt-24 relative top-[2px] sm:top-[70px] md:top-[80px] lg:top-[80px] opacity-0"
+                            <div className="flex gap-6 mt-24 relative top-[10px] sm:top-[70px] md:top-[80px] lg:top-[80px] opacity-0"
                                 style={{
                                 animation: 'fadeIn 0.5s ease-out 0.8s both'
                                 }}>

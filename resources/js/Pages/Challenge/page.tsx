@@ -1214,7 +1214,7 @@ const KabanataPage: React.FC<PageProps> = ({
             {/* Text and buttons positioned over the wooden image */}
             <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                 {/* Message text */}
-                <p className="font-black-han-sans font-black text-[12px] sm:text-sm md:text-base lg:text-2xl mt-10 lg:mt-0 md:mb-8 lg:mt-[98px] text-[#95512C] text-center leading-relaxed max-w-[80%]"
+                <p className="font-black-han-sans font-black text-[12px] sm:text-sm md:text-base lg:text-2xl top-[10px] lg:top-0 mt-[15px] lg:mt-0 md:mb-8 lg:mt-[98px] text-[#95512C] text-center leading-relaxed max-w-[80%]"
                    style={{
                        transform: 'translateY(-20px)'
                    }}>
