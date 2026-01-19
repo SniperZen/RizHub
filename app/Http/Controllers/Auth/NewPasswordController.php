@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth; // ✅ ADD THIS LINE
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
@@ -52,6 +53,9 @@ class NewPasswordController extends Controller
                 ])->save();
 
                 event(new PasswordReset($user));
+                
+                // ✅ AUTO-LOGIN THE USER AFTER PASSWORD RESET
+                Auth::login($user);
             }
         );
 
@@ -59,7 +63,11 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+            // ✅ REDIRECT TO DASHBOARD INSTEAD OF LOGIN
+            return redirect()->route('dashboard')->with([
+                'status' => __($status),
+                'success' => 'Password reset successful! You have been logged in.'
+            ]);
         }
 
         throw ValidationException::withMessages([

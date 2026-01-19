@@ -26,15 +26,23 @@ class VerifyEmailController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
+            // If already verified, check if user is authenticated
+            if (Auth::check()) {
+                return redirect()->route('dashboard');
+            }
             return redirect()->route('login', ['verified' => 1]);
         }
 
         $user->markEmailAsVerified();
         event(new Verified($user));
 
-        // Do not auto-login the user here; redirect to login so they can sign in.
-        return redirect()->route('login', ['verified' => 1]);
+        // ✅ AUTO-LOGIN the user after verification
+        Auth::login($user);
+
+        // ✅ Redirect directly to dashboard
+        return redirect()->route('dashboard')->with([
+            'verified' => true,
+            'message' => 'Email verified successfully!'
+        ]);
     }
-
-
 }
