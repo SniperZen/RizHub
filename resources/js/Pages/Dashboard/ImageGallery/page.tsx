@@ -97,10 +97,10 @@ return (
           {/* Header */}
           <div className="mb-2 md:mb-2 lg:mb-2 lg:bottom-[90px] pointer-events-auto">
             <h2 className="font-black-han-sans mb-2 md:mb-3 font-black text-3xl md:text-4xl lg:text-4xl text-white">
-              Image Collection
+              Koleksyon ng imahe
             </h2>
             <p className="text-xl md:text-xl lg:text-lg mb-1 mt-10 md:mb-2 lg:mt-12 text-[#D27641] font-semibold">
-              {unlockedCount} of {totalImages} Unlocked ({completionPercentage}%)
+              {unlockedCount} sa {totalImages} na-unlock na ({completionPercentage}%)
             </p>
           </div>
 
@@ -422,9 +422,9 @@ const renderUnlockedContent = (image: PageData, index: number) => {
             {/* Gallery Collection Button - Desktop Only */}
 <button
     onClick={() => setShowGalleryModal(true)}
-    className="hidden w-[330px] xs:w-[340px] sm:w-[305px] md:w-[150px] lg:w-[150px] md:flex items-center space-x-1 xs:space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-3 xs:px-4 py-2 xs:py-2.5 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+    className="hidden w-[330px] xs:w-[340px] sm:w-[305px] md:w-[220px] lg:w-[220px] md:flex justify-center items-center space-x-1 xs:space-x-2 bg-gradient-to-b from-orange-400 to-orange-600 text-white px-3 xs:px-4 py-2 xs:py-2.5 md:px-4 md:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
     <svg 
-        className="w-4 h-4 xs:w-[245px] xs:h-3" 
+        className="w-4 h-4 xs:w-[245px] xs:h-3 md:w-4 md:h-4 lg:w-4 lg:h-4" 
         fill="none" 
         stroke="currentColor" 
         viewBox="0 0 24 24"
@@ -442,8 +442,8 @@ const renderUnlockedContent = (image: PageData, index: number) => {
             d="M9 4v16M4 9h16" 
         />
     </svg>
-    <span className="font-bold text-xs xs:text-sm md:text-[13px] truncate">
-        Collection: {unlockedCount}/{images.length}
+    <span className="font-bold text-xs xs:text-sm md:text-sm lg:text-sm whitespace-nowrap">
+        Koleksyon: {unlockedCount}/{images.length}
     </span>
 </button>
           </div>
