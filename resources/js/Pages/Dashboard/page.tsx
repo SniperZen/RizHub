@@ -900,7 +900,7 @@ export default function Dashboard({
                                                 <div className="flex flex-col items-end">
                                                     <div className="w-full">
                                                         <div className="mb-3 sm:mb-2">
-                                                            <label className="block text-[#3D2410] text-base sm:text-base md:text-base font-extrabold">Username</label>
+                                                            <label className="block text-[#3D2410] text-base sm:text-base md:text-base font-extrabold">Full Name</label>
                                                             <input
                                                                 type="text"
                                                                 name="name"

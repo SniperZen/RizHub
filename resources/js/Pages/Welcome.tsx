@@ -1222,7 +1222,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                                 transform: regData.name ? 'none' : 'translateY(-50%)'
                                             }}
                                         >
-                                            Name:
+                                            Full Name:
                                         </label>
                                     </div>
                                     
