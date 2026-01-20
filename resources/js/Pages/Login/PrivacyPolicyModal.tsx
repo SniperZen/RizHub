@@ -99,7 +99,6 @@ const PrivacyPolicyModal: React.FC<ModalProps> = ({ open, onClose }) => {
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
                 <li>Email: rizhub.caps@gmail.com</li>
-                <li>Facebook Page: RizHub EdGame</li>
                 <li>Lokasyon: Looc, Occidental Mindoro, Pilipinas</li>
               </ul>
             </div>
