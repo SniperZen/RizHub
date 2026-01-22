@@ -343,7 +343,7 @@ export default function Quiz({ kabanataId, kabanata_number, kabanata_title, quiz
                         )}
                     
                         
-                        <div className="fixed flex gap-4 bottom-[105px] lg:bottom-0 lg:bottom-[125px]">     
+                        <div className="fixed flex gap-4 bottom-[105px] lg:bottom-[125px]">     
                             {isPerfectScore ? (
                                 <>
                                     <button className="rounded-full p-3 relative" onClick={proceedToHomePage}>

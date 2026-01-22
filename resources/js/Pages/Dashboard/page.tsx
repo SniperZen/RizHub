@@ -461,6 +461,7 @@ export default function Dashboard({
                         soundClick="/Music/Sound.mp3"
                         soundVolume={volume}
                         onClick={() => router.get(route('image.gallery'))}
+                        title="Image  Gallery"
                     >
                         <img src="/Img/Dashboard/star-folder.png" alt="Star Folder" className="w-16 md:w-20" />
                         {/* Only show count for image gallery notifications */}
@@ -483,6 +484,7 @@ export default function Dashboard({
                             setShowMail(true);
                             markNonImageGalleryAsRead();
                         }}
+                        title="Mail"
                     >
                         <img src="/Img/Dashboard/mail.png" alt="Mail" className="w-16 md:w-20 h-12 md:h-14" />
                         {unreadCount > 0 && (
@@ -498,8 +500,10 @@ export default function Dashboard({
                         soundHover="/sounds/menu-hover.mp3"
                         soundClick="/Music/Sound.mp3"
                         soundVolume={volume}
+                        title="Settings"
                     >
                         <img src="/Img/Dashboard/gear.png" alt="Gear" className="w-16 md:w-20" />
+                        
                     </Button>
                 </div>
 
@@ -511,6 +515,7 @@ export default function Dashboard({
                         soundHover="/sounds/menu-hover.mp3"
                         soundClick="/Music/Sound.mp3"
                         soundVolume={volume}
+                        title="Help"
                     >
                         <img 
                             src="/Img/Dashboard/ques.png" 
@@ -562,6 +567,7 @@ export default function Dashboard({
                                                 setIsSettingsBgLoaded(false);
                                             }}
                                             aria-label="Close"
+                                            title="Close"
                                         >
                                             <img src="/Img/Dashboard/X.png" alt="X" className="w-full h-auto" />
                                         </Button>
@@ -695,6 +701,7 @@ export default function Dashboard({
                                                 soundHover="/sounds/button-hover.mp3"
                                                 soundClick="/Music/Sound.mp3"
                                                 soundVolume={volume}
+                                                title="Share"
                                             >
                                                 <img src="/Img/Dashboard/share.png" alt="Share" className="w-full h-full object-contain" />
                                             </Button>
@@ -710,6 +717,7 @@ export default function Dashboard({
                                                     setShowSettings(false);
                                                     setIsSettingsBgLoaded(false);
                                                 }}
+                                                title="Profile"
                                             >
                                                 <img src="/Img/Dashboard/profile.png" alt="Profile" className="w-20" />
                                             </Button>
@@ -719,6 +727,7 @@ export default function Dashboard({
                                                 soundVolume={volume}
                                                 className="rounded-full w-20 h-20 flex items-center justify-center transition hover:scale-110 overflow-hidden"
                                                 onClick={() => setShowLogoutModal(true)}
+                                                title="Logout"
                                             >
                                                 <img src="/Img/Dashboard/logout.png" alt="Logout" className="w-full h-full object-contain" />
                                             </Button>

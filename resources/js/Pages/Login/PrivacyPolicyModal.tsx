@@ -99,7 +99,7 @@ const PrivacyPolicyModal: React.FC<ModalProps> = ({ open, onClose }) => {
               </p>
               <ul className="list-disc pl-5 space-y-1 text-[#282725]">
                 <li>Email: rizhub.caps@gmail.com</li>
-                <li>Lokasyon: Looc, Occidental Mindoro, Pilipinas</li>
+                <li>Lokasyon: Lubang Occidental Mindoro</li>
               </ul>
             </div>
           </div>
