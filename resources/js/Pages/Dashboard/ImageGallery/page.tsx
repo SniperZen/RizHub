@@ -689,6 +689,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
             style={{
               animation: isFading ? "arrowClick 0.3s ease-in-out" : "none"
             }}
+            title="Previous"
           >
             {"<"}
           </button>
@@ -705,6 +706,7 @@ const renderUnlockedContent = (image: PageData, index: number) => {
             style={{
               animation: isFading ? "arrowClick 0.3s ease-in-out" : "none"
             }}
+            title="Next"
           >
             {">"}
           </button>

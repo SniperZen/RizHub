@@ -634,7 +634,7 @@ export default function Dashboard({
                                             
                                             {/* Music Slider */}
                                             <div className="flex items-center gap-6 w-full">
-                                                <div className="rounded-full w-16 h-21 flex items-center justify-center" onClick={toggleMusic}>
+                                                <div className="rounded-full w-16 h-21 flex items-center justify-center" onClick={toggleMusic }>
                                                     <img src="/Img/Dashboard/music.png" alt="Music" className="w-full h-auto" />
                                                 </div>
                                                 <div className="flex-1 flex items-center">
