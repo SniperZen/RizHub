@@ -870,7 +870,7 @@ const checkAnswer = async (source = "manual") => {
                                                                         <img
                                                                             src="/Img/Challenge/locked1.png"
                                                                             alt="Locked Gift"
-                                                                            className="w-[45px] h-[45px] lg:w-[80px] lg:h-[80px] object-contain pointer-events-none"
+                                                                            className="w-[45px] h-[45px] lg:w-[80px] lg:h-[80px] lg:mb-[75px] object-contain pointer-events-none"
                                                                         />
                                                                     </div>
                                                                     {/* Text below lock */}
