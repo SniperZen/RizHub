@@ -38,10 +38,64 @@ export default function YouTubeVideoModal({
     const [hasVideoEnded, setHasVideoEnded] = useState(false);
     const [showSkipButton, setShowSkipButton] = useState(isCompleted);
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-    const [isRestrictedMode, setIsRestrictedMode] = useState(!isCompleted); // NEW: track if we should restrict seeking
-    const [isPlaying, setIsPlaying] = useState(true); // Track if video is playing
-    const lastCheckedTimeRef = useRef<number>(0); // Track last checked time
-    const lastValidTimeRef = useRef<number>(0); // Track last valid time
+    const [isRestrictedMode, setIsRestrictedMode] = useState(!isCompleted);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const lastCheckedTimeRef = useRef<number>(0);
+    const lastValidTimeRef = useRef<number>(0);
+
+    // Determine if skip button should be shown
+    const shouldShowSkipButton = (showSkipOption || (skippable && (hasVideoEnded || isCompleted)));
+
+    // When skip button should be shown, also disable restrictions
+    useEffect(() => {
+        if (shouldShowSkipButton) {
+            setIsRestrictedMode(false);
+            removeProtectiveOverlay();
+        }
+    }, [shouldShowSkipButton]);
+
+    // Function to add protective overlay over progress bar
+    const addProtectiveOverlay = () => {
+        setTimeout(() => {
+            const iframe = containerRef.current;
+            if (iframe && iframe.parentNode) {
+                // Remove existing overlay first
+                const existingOverlay = document.getElementById('progress-bar-protector');
+                if (existingOverlay && existingOverlay.parentNode) {
+                    existingOverlay.parentNode.removeChild(existingOverlay);
+                }
+
+                const overlay = document.createElement('div');
+                overlay.id = 'progress-bar-protector';
+                overlay.style.position = 'absolute';
+                overlay.style.bottom = '40px';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '30px';
+                overlay.style.zIndex = '9999';
+                overlay.style.cursor = 'not-allowed';
+                overlay.style.backgroundColor = 'transparent';
+                
+                // Add tooltip
+                overlay.title = 'You must watch the video completely before you can seek';
+                
+                // Add to iframe wrapper
+                const wrapper = iframe.parentNode as HTMLElement;
+                if (wrapper.style.position !== 'relative') {
+                    wrapper.style.position = 'relative';
+                }
+                wrapper.appendChild(overlay);
+            }
+        }, 1000);
+    };
+
+    // Function to remove protective overlay
+    const removeProtectiveOverlay = () => {
+        const overlay = document.getElementById('progress-bar-protector');
+        if (overlay && overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+        }
+    };
 
     // Initialize resume time if provided
     useEffect(() => {
@@ -61,39 +115,41 @@ export default function YouTubeVideoModal({
             const YT = window.YT;
             if (!containerRef.current) return;
 
-                        // First-time watchers get different parameters
-                        // include `start` param when resuming
-                        const baseVars: any = {
-                                autoplay: 1,
-                                controls: 1,
-                                rel: 0,
-                                modestbranding: 1,
-                                enablejsapi: 1,
-                                fs: 1,
-                                showinfo: 0,
-                                iv_load_policy: 3,
-                                playsinline: 1,
-                        };
+            // First-time watchers get different parameters
+            // include `start` param when resuming
+            const baseVars: any = {
+                autoplay: 1,
+                controls: 1,
+                rel: 0,
+                modestbranding: 1,
+                enablejsapi: 1,
+                fs: 1,
+                showinfo: 0,
+                iv_load_policy: 3,
+                playsinline: 1,
+            };
 
-                        if (resumeSeconds && resumeSeconds > 0) {
-                                baseVars.start = Math.floor(resumeSeconds);
-                        }
+            if (resumeSeconds && resumeSeconds > 0) {
+                baseVars.start = Math.floor(resumeSeconds);
+            }
 
-                        const playerVars = isRestrictedMode 
+            // Check if we should be in restricted mode
+            const shouldBeRestricted = !isCompleted && !hasVideoEnded && !shouldShowSkipButton;
+            const playerVars = shouldBeRestricted 
                 ? {
-                                        // For first-time viewers: restrict some keyboard actions
-                                        ...baseVars,
-                                        disablekb: 1,
-                                        color: 'white',
-                                        hl: 'en',
-                                        cc_load_policy: 0,
-                                        widget_referrer: window.location.href,
-                                    }
+                    // For first-time viewers: restrict some keyboard actions
+                    ...baseVars,
+                    disablekb: 1,
+                    color: 'white',
+                    hl: 'en',
+                    cc_load_policy: 0,
+                    widget_referrer: window.location.href,
+                }
                 : {
-                                        // For rewatchers: full controls
-                                        ...baseVars,
-                                        disablekb: 0,
-                                    };
+                    // For rewatchers: full controls
+                    ...baseVars,
+                    disablekb: 0,
+                };
 
             playerRef.current = new YT.Player(containerRef.current, {
                 height: "390",
@@ -121,8 +177,11 @@ export default function YouTubeVideoModal({
                         }, 200); // Check every 200ms
                         
                         // For restricted mode, add a protective overlay
-                        if (isRestrictedMode) {
+                        if (shouldBeRestricted) {
                             addProtectiveOverlay();
+                        } else {
+                            // If not restricted mode (video already watched), remove any restrictions
+                            removeProtectiveOverlay();
                         }
                     },
                     onStateChange: (event: any) => {
@@ -159,7 +218,7 @@ export default function YouTubeVideoModal({
                         }
                         
                         // For restricted mode, prevent seeking
-                        if (isRestrictedMode) {
+                        if (shouldBeRestricted) {
                             if (event.data === YT.PlayerState.PLAYING || 
                                 event.data === YT.PlayerState.BUFFERING) {
                                 
@@ -179,43 +238,6 @@ export default function YouTubeVideoModal({
                     }
                 },
             });
-        };
-
-        // Function to add protective overlay over progress bar
-        const addProtectiveOverlay = () => {
-            setTimeout(() => {
-                const iframe = containerRef.current;
-                if (iframe && iframe.parentNode) {
-                    const overlay = document.createElement('div');
-                    overlay.id = 'progress-bar-protector';
-                    overlay.style.position = 'absolute';
-                    overlay.style.bottom = '40px'; // Position over progress bar
-                    overlay.style.left = '0';
-                    overlay.style.width = '100%';
-                    overlay.style.height = '30px'; // Cover progress bar area
-                    overlay.style.zIndex = '9999';
-                    overlay.style.cursor = 'not-allowed';
-                    overlay.style.backgroundColor = 'transparent';
-                    
-                    // Add tooltip
-                    overlay.title = 'You must watch the video completely before you can seek';
-                    
-                    // Add to iframe wrapper
-                    const wrapper = iframe.parentNode as HTMLElement;
-                    if (wrapper.style.position !== 'relative') {
-                        wrapper.style.position = 'relative';
-                    }
-                    wrapper.appendChild(overlay);
-                }
-            }, 1000); // Wait for player to load
-        };
-
-        // Function to remove protective overlay
-        const removeProtectiveOverlay = () => {
-            const overlay = document.getElementById('progress-bar-protector');
-            if (overlay && overlay.parentNode) {
-                overlay.parentNode.removeChild(overlay);
-            }
         };
 
         if (!window.YT) {
@@ -240,7 +262,7 @@ export default function YouTubeVideoModal({
             }
             removeProtectiveOverlay();
         };
-    }, [youtubeId, isRestrictedMode]);
+    }, [youtubeId, isRestrictedMode, shouldShowSkipButton]);
 
     // Effect to handle seeking prevention more aggressively
     useEffect(() => {
@@ -283,6 +305,22 @@ export default function YouTubeVideoModal({
         };
     }, [playerReady, isRestrictedMode]);
 
+    // Update restricted mode when isCompleted changes
+    useEffect(() => {
+        if (isCompleted) {
+            setIsRestrictedMode(false);
+            removeProtectiveOverlay();
+        }
+    }, [isCompleted]);
+
+    // Update restricted mode when hasVideoEnded changes
+    useEffect(() => {
+        if (hasVideoEnded) {
+            setIsRestrictedMode(false);
+            removeProtectiveOverlay();
+        }
+    }, [hasVideoEnded]);
+
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && ["s", "S", "u", "U"].includes((e.key || "").toString())) {
@@ -291,7 +329,7 @@ export default function YouTubeVideoModal({
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
                 e.preventDefault();
             }
-            // Prevent space bar from pausing
+            // Prevent space bar from pausing only in restricted mode
             if (isRestrictedMode && e.key === ' ') {
                 e.preventDefault();
             }
@@ -353,6 +391,11 @@ export default function YouTubeVideoModal({
                 },
                 onSuccess: (response) => {
                     console.log('Progress saved successfully:', response);
+                    // If video is marked as completed, disable restrictions
+                    if (completed) {
+                        setIsRestrictedMode(false);
+                        removeProtectiveOverlay();
+                    }
                 }
             });
         } catch (error) {
@@ -389,9 +432,6 @@ export default function YouTubeVideoModal({
     const handleSkip = () => {
         if (onSkip) onSkip();
     };
-
-    // Determine if skip button should be shown
-    const shouldShowSkipButton = (showSkipOption || (skippable && (hasVideoEnded || isCompleted)));
 
     return (
         <>
@@ -430,6 +470,13 @@ export default function YouTubeVideoModal({
                         Skip Video
                     </button>
                 )}
+
+                {/* Video Watched Status Indicator */}
+                {/* {!isRestrictedMode && (
+                    <div className="absolute top-4 left-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold z-30 backdrop-blur-sm">
+                        ✓ Video Watched
+                    </div>
+                )} */}
             </div>
 
             {/* Confirmation Modal */}
