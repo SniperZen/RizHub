@@ -181,7 +181,7 @@ class UserKabanataSeeder extends Seeder
                         'is_correct' => 1,
                         'score' => 1, // Points per question
                         'question_number' => $quizIndex + 1,
-                        'total_questions' => $quizzes->count(),
+                        'total_questions' => 10,
                         'completed' => 1,
                         'created_at' => now(),
                         'updated_at' => now(),
@@ -226,19 +226,6 @@ class UserKabanataSeeder extends Seeder
             ->where('progress', '<', 8)  // Check if any kabanata is below 80%
             ->doesntExist();
 
-        if ($allCompleted) {
-            DB::table('certificates')->updateOrInsert(
-                ['user_id' => $userId],
-                [
-                    'unlocked' => true,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
-            $this->command->info("✅ Certificate unlocked for user ID: $userId (All kabanatas at 80%+ progress)");
-        } else {
-            $this->command->info("Certificate not unlocked. Not all kabanatas are at 80% or above.");
-        }
 
         $this->command->info('✅ Seeding completed successfully!');
     }

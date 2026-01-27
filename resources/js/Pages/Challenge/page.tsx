@@ -475,26 +475,28 @@ const KabanataPage: React.FC<PageProps> = ({
         if (pendingKabanataId !== null) {
             const youtubeId = youtubeVideoMappings[pendingKabanataId];
             if (youtubeId) {
-                // If we have prior progress, ask whether to resume or restart
                 const priorSeconds = getResumeSeconds(pendingKabanataId);
                 const alreadyCompleted = isVideoCompleted(pendingKabanataId);
-
+                
                 setLastPlayedVideo(youtubeId);
                 setSelectedKabanataId(pendingKabanataId);
 
-                if (priorSeconds > 0 || alreadyCompleted) {
-                    // show prompt to resume or restart
-                    setResumeOverrideSeconds(null); // clear any previous override
+                // Check conditions:
+                // 1. If video is NOT completed AND has progress > 0 seconds → show resume modal
+                // 2. If video IS completed → start from beginning (no modal)
+                if (!alreadyCompleted && priorSeconds > 0) {
+                    // Show resume modal for partially watched videos
+                    setResumeOverrideSeconds(null);
                     setShowResumePrompt(true);
                 } else {
-                    // no resume needed, open straight away
+                    // For completed videos OR videos with no progress
+                    // Always start from beginning for completed videos
+                    const startTime = alreadyCompleted ? 0 : priorSeconds;
+                    setResumeOverrideSeconds(startTime);
                     setCurrentVideo(youtubeId);
                     setIsModalOpen(true);
                     pauseBackgroundMusic();
                 }
-            } else {
-                console.error(`No YouTube ID found for kabanata ${pendingKabanataId}`);
-                // Fallback or show error message
             }
         }
     };
@@ -512,6 +514,7 @@ const KabanataPage: React.FC<PageProps> = ({
             pauseBackgroundMusic();
         } else {
             // restart: clear server-side progress and local flags, then play from start
+            setShowEndModal(false);
             router.post(route('student.saveVideoProgress'), {
                 kabanata_id: pendingKabanataId,
                 completed: false,
@@ -1238,6 +1241,7 @@ const KabanataPage: React.FC<PageProps> = ({
                     >
                         Ulitin
                     </button>
+                    
                     <button 
                         onClick={() => handleResumeChoice('resume')} 
                         className="w-auto h-[35px] md:h-[50px] lg:h-[60px] px-2 md:px-6 lg:px-6 rounded-[40px] bg-gradient-to-b from-[#FFA500] to-[#D76D00] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm md:text-xl lg:text-xl font-extrabold relative transition hover:scale-105"
@@ -1306,7 +1310,7 @@ const KabanataPage: React.FC<PageProps> = ({
                                     animation: 'fadeIn 0.5s ease-out 0.8s both'
                                 }}>
                                 <button
-                                    onClick={retryVideo}
+                                    onClick={() => handleResumeChoice('restart')} 
                                     className="w-auto h-[35px] sm:h-[50px] md:h-[50px] lg:h-[50px] px-4 md:px-8 lg:px-8  rounded-[40px] bg-gradient-to-b from-[#FF7E47] to-[#B26D42] shadow-[4px_8px_0_#B97B4B] border-4 border-[#E6B07B] text-white text-sm sm:text-lg md:text-xl lg:text-2xl font-extrabold relative transition hover:scale-105"
                                 >
                                     Panoorin muli

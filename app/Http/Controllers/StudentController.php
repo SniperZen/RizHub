@@ -811,18 +811,22 @@ class StudentController extends Controller
                 ->where('kabanata_id', $image->kabanata_id)
                 ->first();
                 
-            $guesswordProgress = null;
+            $guesswordUnlocked = false;
             if ($kabanataProgress) {
-                $guesswordProgress = GuesswordProgress::where('kabanata_progress_id', $kabanataProgress->id)
-                    ->where('completed', true)
-                    ->where('total_score', 5)
-                    ->first();
+                // Check if ANY guessword progress has total_score >= 5
+                $guesswordUnlocked = GuesswordProgress::where('kabanata_progress_id', $kabanataProgress->id)
+                    ->where('total_score', '>=', 5) // Changed to >= 5
+                    ->exists();
             }
             
-            $image->unlocked = (bool) $guesswordProgress;
+            $image->unlocked = $guesswordUnlocked;
             $image->image_url = asset($image->image_url);
             $image->kabanata_hash = HashIdHelper::encrypt($image->kabanata_id);
         });
+
+        // Debug: Count unlocked images
+        $unlockedCount = $images->where('unlocked', true)->count();
+        \Log::info("Gallery: {$unlockedCount}/{$images->count()} images unlocked");
 
         return Inertia::render('Dashboard/ImageGallery/page', [
             'images' => $images,

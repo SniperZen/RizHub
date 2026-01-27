@@ -39,6 +39,7 @@ export default function YouTubeVideoModal({
     const [showSkipButton, setShowSkipButton] = useState(isCompleted);
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const [isRestrictedMode, setIsRestrictedMode] = useState(!isCompleted);
+    const [showResumeChoice, setShowResumeChoice] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState(true);
     const lastCheckedTimeRef = useRef<number>(0);
     const lastValidTimeRef = useRef<number>(0);
@@ -99,11 +100,22 @@ export default function YouTubeVideoModal({
 
     // Initialize resume time if provided
     useEffect(() => {
-        if (resumeSeconds && resumeSeconds > 0) {
-            secondsWatchedRef.current = Math.floor(resumeSeconds);
-            lastValidTimeRef.current = resumeSeconds;
+    if (resumeSeconds && resumeSeconds > 0) {
+        secondsWatchedRef.current = Math.floor(resumeSeconds);
+        lastValidTimeRef.current = resumeSeconds;
+        
+        // If video is completed, we might want to start from beginning
+        if (isCompleted && resumeSeconds > 0) {
+            // When re-watching a completed video, start from beginning
+            setTimeout(() => {
+                if (playerRef.current && playerRef.current.seekTo) {
+                    playerRef.current.seekTo(0, true);
+                }
+            }, 1000);
         }
-    }, [resumeSeconds]);
+    }
+}, [resumeSeconds, isCompleted]);
+
 
     // Load YT API if needed and create player
     useEffect(() => {
@@ -484,7 +496,7 @@ export default function YouTubeVideoModal({
                 <div className="fixed inset-0 flex items-center justify-center z-[60] p-4">
                     {/* Backdrop with fade-in animation */}
                     <div 
-                        className="absolute inset-0 bg-black/70"
+                        className="absolute inset-0 bg-black/70"                        
                         style={{
                             animation: 'fadeIn 0.3s ease-out forwards'
                         }}

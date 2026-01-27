@@ -286,27 +286,13 @@ class UserLaizaSeeder extends Seeder
             ->where('progress', '>=', 8)  // At least 80% progress
             ->count();
 
-        if ($completedKabanatas >= 35) { // Need at least 35 kabanatas completed for certificate
-            DB::table('certificates')->updateOrInsert(
-                ['user_id' => $userId],
-                [
-                    'unlocked' => true,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
-            $this->command->info("✅ Certificate unlocked for user ID: $userId");
-        } else {
-            $this->command->info("Certificate not unlocked. Only $completedKabanatas kabanatas completed (need 35+).");
-        }
-
         $this->command->info('✅ Seeding completed successfully for Laiza Venzon!');
         $this->command->info('📊 Progress Summary:');
         $this->command->info('   - Kabanatas 1-5: ✅ COMPLETED (ALL 3 STARS ⭐⭐⭐)');
         $this->command->info('   - Kabanata 6: 🔓 UNLOCKED but NOT STARTED (0 stars, 0 progress)');
         $this->command->info('   - Kabanatas 7-64: 🔒 LOCKED');
         $this->command->info('   - Image gallery: ✅ UNLOCKED for ALL completed kabanatas (1-5)');
-        $this->command->info('   - Certificate: ❌ NOT unlocked (need 35+ completed kabanatas)');
+        //$this->command->info('   - Certificate: ❌ NOT unlocked (need 35+ completed kabanatas)');
         $this->command->info('   - Email: ✅ VERIFIED');
         $this->command->info('   - Quiz Performance: PERFECT (100% correct answers for all kabanatas)');
     }
