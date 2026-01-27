@@ -1439,7 +1439,7 @@ function LoginModal({ open, onClose, setShowTermsModal, setShowPrivacyModal }: L
                                         className="w-full mt-4 rounded-full bg-[#5A3416] text-white text-base md:text-lg font-bold py-2 md:py-2.5 transition-all duration-200 hover:bg-[#3d2410] disabled:opacity-50 disabled:cursor-not-allowed"
                                         disabled={regProcessing}
                                     >
-                                        Sign Up
+                                        Sign up
                                     </button>
                                     
                                     <div className="w-full text-center mt-2">
